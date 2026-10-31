@@ -424,9 +424,6 @@ When a young couple or solo parent is raising children through the **First 2,000
 
 To test how New Zealand Superannuation interacts with fertility bargaining, child stunting, and tax solvency, we evaluate our coupled 4-region lifecycle model across every statutory retirement age from **Age 60 to Age 75** (`FigFert_4Region_Bargaining_Solvency.png` below; full sweep in [Document 1B](Document%201B.md), Table 8B):
 
-![4-Region Fertility Bargaining, Whanau Networks & The NZ Super Retirement-Age U-Curve](Output_NZ_4Region_Bargaining_Solvency.png)
-*(Note: If referencing from the repository root, image path is `Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png`.)*
-
 ![4-Region Fertility Bargaining, Whanau Networks & The NZ Super Retirement-Age U-Curve](Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png)
 
 Sweeping the statutory eligibility age reveals a striking **U-curve in required working-age PAYE taxation** and an **Inverted-U in national household welfare**:

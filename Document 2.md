@@ -368,48 +368,36 @@ with dual Treasury discount rates $r_{\mathrm{disc}} \in \{0.020, 0.080\}$, real
 
 ### 7.3 Multiphase Policy Announcements, Credibility-Weighted Belief Blending, and Logistic Seam Smoothing (`TransPath_4Region_Master.m`)
 
-At each transition period $t \in \{1, \dots, T_1 - 1\}$ prior to the Phase-2 ($SS2$) enactment date $T_1$ (Year 25), households and firms evaluate the **credibility-blended continuation value** $\tilde{V}_{k,t+1}$ inside the backward-induction Bellman operator:
+At each transition period $t \in \{1, \dots, T_1 - 1\}$ prior to the Phase-2 ($SS2$) enactment date $T_1$ (Year 25), households and firms evaluate the **credibility-blended continuation value** $`\tilde{V}_{k,t+1}`$ inside the backward-induction Bellman operator:
 
-$$
-V_{k,t}\left(a, h, z, j\right) = \max_{d_t \in \mathcal{D}} \left\{ u_k\left(d_t, a, h, z, j; \Phi(t)\right) + s_j \beta_{hh}\, \mathbb{E}_{z^{\prime}\mid z}\left[\tilde{V}_{k,t+1}\left(a^{\prime}, h^{\prime}, z^{\prime}, j+1\right)\right] + \left(1 - s_j\right) u_{\mathrm{beq}}\left(a^{\prime}; \tau_b(t)\right) \right\}
-$$
+$$V_{k,t}\left(a, h, z, j\right) = \max_{d_t \in \mathcal{D}} \left\{ u_k\left(d_t, a, h, z, j; \Phi(t)\right) + s_j \beta_{hh}\, \mathbb{E}_{z^{\prime}\mid z}\left[\tilde{V}_{k,t+1}\left(a^{\prime}, h^{\prime}, z^{\prime}, j+1\right)\right] + \left(1 - s_j\right) u_{\mathrm{beq}}\left(a^{\prime}; \tau_b(t)\right) \right\}$$
 
-$$
-\tilde{V}_{k,t+1}\left(a^{\prime}, h^{\prime}, z^{\prime}, j+1\right) = \left(1 - \lambda_{\mathrm{cred}}(t)\right) V_{k,t+1}^{\mathrm{perm,SS1}}\left(a^{\prime}, h^{\prime}, z^{\prime}, j+1\right) + \lambda_{\mathrm{cred}}(t) V_{k,t+1}^{\mathrm{full,SS2}}\left(a^{\prime}, h^{\prime}, z^{\prime}, j+1\right)
-$$
+$$\tilde{V}_{k,t+1}\left(a^{\prime}, h^{\prime}, z^{\prime}, j+1\right) = \left(1 - \lambda_{\mathrm{cred}}(t)\right) V_{k,t+1}^{\mathrm{perm,SS1}}\left(a^{\prime}, h^{\prime}, z^{\prime}, j+1\right) + \lambda_{\mathrm{cred}}(t) V_{k,t+1}^{\mathrm{full,SS2}}\left(a^{\prime}, h^{\prime}, z^{\prime}, j+1\right)$$
 
-Under endogenous actuarial credibility updating, $\lambda_{\mathrm{cred}}^{\mathrm{actuarial}}(t)$ updates as a function of the audited ratio of recognised actuarial fiscal return $\mathcal{V}_{\mathrm{National},t}^{(\mathrm{Fiscal})}(H; r_{0.02})$ to cumulative investment outlay $\mathcal{C}_{\mathrm{National,realized}}^{(\mathrm{Inv})}(t)$:
+Under endogenous actuarial credibility updating, $`\lambda_{\mathrm{cred}}^{\mathrm{actuarial}}(t)`$ updates as a function of the audited ratio of recognised actuarial fiscal return $`\mathcal{V}_{\mathrm{National},t}^{(\mathrm{Fiscal})}(H; r_{0.02})`$ to cumulative investment outlay $`\mathcal{C}_{\mathrm{National,realized}}^{(\mathrm{Inv})}(t)`$:
 
-$$
-\lambda_{\mathrm{cred}}^{\mathrm{actuarial}}\left(t\right) = \min\left\{ 1,\; \bar{\lambda}_0 + \left(1 - \bar{\lambda}_0\right)\max\left(0,\; \frac{\mathcal{V}_{\mathrm{National},t}^{(\mathrm{Fiscal})}\left(H; r_{0.02}\right) / \mathcal{C}_{\mathrm{National,realized}}^{(\mathrm{Inv})}\left(t\right) - 1}{\bar{\chi}_{\mathrm{target}} - 1}\right) \right\}
-$$
+$$\lambda_{\mathrm{cred}}^{\mathrm{actuarial}}\left(t\right) = \min\left\{ 1,\; \bar{\lambda}_0 + \left(1 - \bar{\lambda}_0\right)\max\left(0,\; \frac{\mathcal{V}_{\mathrm{National},t}^{(\mathrm{Fiscal})}\left(H; r_{0.02}\right) / \mathcal{C}_{\mathrm{National,realized}}^{(\mathrm{Inv})}\left(t\right) - 1}{\bar{\chi}_{\mathrm{target}} - 1}\right) \right\}$$
 
-where $\bar{\chi}_{\mathrm{target}} = 3.50$. Because the Year 5 Parliamentary Audit ($t = 1$) already achieves an actuarial coverage multiple of $35.25 / 9.19 = 3.84 > \bar{\chi}_{\mathrm{target}}$, publishing the ACC-style actuarial audit at Year 5 drives $\lambda_{\mathrm{cred}}^{\mathrm{actuarial}}(t) \to 1$. Finally, to prevent step-function tax arbitrage at seam $T_1$, continuous policy levers follow a logistic phase-in ramp:
+where $`\bar{\chi}_{\mathrm{target}} = 3.50`$. Because the Year 5 Parliamentary Audit ($t = 1$) already achieves an actuarial coverage multiple of $`35.25 / 9.19 = 3.84 > \bar{\chi}_{\mathrm{target}}`$, publishing the ACC-style actuarial audit at Year 5 drives $`\lambda_{\mathrm{cred}}^{\mathrm{actuarial}}(t) \to 1`$. Finally, to prevent step-function tax arbitrage at seam $T_1$, continuous policy levers follow a logistic phase-in ramp:
 
-$$
-\Phi(t) = \Phi_1 + \frac{\Phi_2 - \Phi_1}{1 + \exp\left(-\xi_{\mathrm{ramp}}\left(t - T_1\right)\right)}
-$$
+$$\Phi(t) = \Phi_1 + \frac{\Phi_2 - \Phi_1}{1 + \exp\left(-\xi_{\mathrm{ramp}}\left(t - T_1\right)\right)}$$
 
 ### 7.4 Constructive 11-Layer Supermodular Attribution, Mirror Investment Ledger, & 3D LTFM Sinkhole Surface (`Plot_Counterfactuals_And_MirrorInvestments.m` & `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m`)
 
-To decompose the multiphase Consumption-Equivalent welfare trajectory $\mathrm{CE}_{k,t}^{\mathrm{tot}}$ (`T1` rows `SS1_1..3` and `SS2_1..3`) into its underlying isolated policy levers and non-linear dynamic complementarity wedges across cohort entry years $c \in [-10, +60]$ and regions $k \in \{\mathrm{Rural}, \mathrm{Small}, \mathrm{Large}, \mathrm{Auckland}, \mathrm{National}\}$, `Plot_Counterfactuals_And_MirrorInvestments.m` constructs an **11-Layer Supermodular Hierarchy** (`Table 19`) comprising **7 Isolated Policy Factors** ($\Delta\mathrm{CE}_{k,m}^{\mathrm{iso}}$, summing to `+12.43% CE` nationally or `52.6%` of the prize) interleaved with **4 Named Dynamic Complementarity Wedges** ($\Delta_{\mathrm{syn},w} \equiv W(\mathcal{A}_w \cup \mathcal{B}_w) - W(\mathcal{A}_w) - W(\mathcal{B}_w) > 0$, summing to **`+11.20% CE` nationally or `47.4%` of the `+23.63% CE` total**):
+To decompose the multiphase Consumption-Equivalent welfare trajectory $`\mathrm{CE}_{k,t}^{\mathrm{tot}}`$ (`T1` rows `SS1_1..3` and `SS2_1..3`) into its underlying isolated policy levers and non-linear dynamic complementarity wedges across cohort entry years $c \in [-10, +60]$ and regions $`k \in \{\mathrm{Rural}, \mathrm{Small}, \mathrm{Large}, \mathrm{Auckland}, \mathrm{National}\}`$, `Plot_Counterfactuals_And_MirrorInvestments.m` constructs an **11-Layer Supermodular Hierarchy** (`Table 19`) comprising **7 Isolated Policy Factors** ($`\Delta\mathrm{CE}_{k,m}^{\mathrm{iso}}`$, summing to `+12.43% CE` nationally or `52.6%` of the prize) interleaved with **4 Named Dynamic Complementarity Wedges** ($`\Delta_{\mathrm{syn},w} \equiv W(\mathcal{A}_w \cup \mathcal{B}_w) - W(\mathcal{A}_w) - W(\mathcal{B}_w) > 0`$, summing to **`+11.20% CE` nationally or `47.4%` of the `+23.63% CE` total**):
 
-$$
-\mathrm{CE}_k^{SS2} = \underbrace{\sum_{m \in \{1,2,4,5,6,9,10\}} \Delta\mathrm{CE}_{k,m}^{\mathrm{iso}}}_{\text{7 Isolated Factors (+12.43\% Nat.)}} + \underbrace{\sum_{w \in \{3,7,8,11\}} \Delta\mathrm{CE}_{k,w}^{\mathrm{wedge}}}_{\text{4 Synergy Wedges (+11.20\% Nat., 47.4\%!)}} = +23.63\% \text{ CE (National)}
-$$
+$$\mathrm{CE}_k^{SS2} = \underbrace{\sum_{m \in \{1,2,4,5,6,9,10\}} \Delta\mathrm{CE}_{k,m}^{\mathrm{iso}}}_{\text{7 Isolated Factors (+12.43 pp)}} + \underbrace{\sum_{w \in \{3,7,8,11\}} \Delta\mathrm{CE}_{k,w}^{\mathrm{wedge}}}_{\text{4 Synergy Wedges (+11.20 pp, 47.4 share)}} = +23.63\text{ pp CE (National)}$$
 
-1. **Tier 1 (Dual-Gate Human Capital Stack = `+8.72% CE` Nat.):** Layer 1 (`Iso ECE1 = +3.47%`) + Layer 2 (`Iso Tuakana = +2.07%`) + **Layer 3 (`★ Wedge 1: Dual-Gate Synergy = +3.18%`, halting $\delta_{\theta,\mathrm{fade}} = 0.22$ fade-out)**.
+1. **Tier 1 (Dual-Gate Human Capital Stack = `+8.72% CE` Nat.):** Layer 1 (`Iso ECE1 = +3.47%`) + Layer 2 (`Iso Tuakana = +2.07%`) + **Layer 3 (`★ Wedge 1: Dual-Gate Synergy = +3.18%`, halting $`\delta_{\theta,\mathrm{fade}} = 0.22`$ fade-out)**.
 2. **Tier 2 (Spatial, LVR & Enterprise Stack = `+7.15% CE` Nat.):** Layer 4 (`Iso Estate/Property Rebalance = +2.57%`) + Layer 5 (`Iso Age-20 Youth Grant E = +1.30%`) + Layer 6 (`Iso Income x Geography Transfer = +1.06%`) + **Layer 7 (`★ Wedge 2: 20% LVR-Clearance & Whānau-Anchoring Synergy = +2.23%`)**.
-3. **Tier 3 (Cross-Stack Interaction = `+3.87% CE` Nat., `+5.19%` Akl):** **Layer 8 (`★ Wedge 3: Stack 1 x Stack 2 Synergy = +3.87%`, reversing 20–35 youth brain drain, relieving *Kaiako* rental crowd-out via $G_{\mathrm{ece},s}^{\mathrm{eff}}(Q_k)$, and matching thriving $h_6\text{--}h_7$ youth with expanding $z_h$ firms)**.
+3. **Tier 3 (Cross-Stack Interaction = `+3.87% CE` Nat., `+5.19%` Akl):** **Layer 8 (`★ Wedge 3: Stack 1 x Stack 2 Synergy = +3.87%`, reversing 20–35 youth brain drain, relieving *Kaiako* rental crowd-out via $`G_{\mathrm{ece},s}^{\mathrm{eff}}(Q_k)`$, and matching thriving $`h_6\text{--}h_7`$ youth with expanding $z_h$ firms)**.
 4. **Tier 4 (Fiscal, Super-64 & Demographic Harvest Stack = `+3.89% CE` Nat.):** Layer 9 (`Iso Sovereign Debt-Sinking -60 bps = +0.79%`) + Layer 10 (`Iso -3.12 pp PAYE Cut & Super Age-64 Kuia Dividend = +1.17%`) + **Layer 11 (`★ Wedge 4: Actuarial Solvency, Replacement TFR & 2nd-Gen Daruich Closure = +1.93%`)**.
 
-In particular, **Layer 9 ($\Delta\mathrm{CE}_{k,\mathrm{Debt}}$: Sovereign Debt-Sinking & Reduced Debt-Service Interest)** and **Wedge 4** isolate the general-equilibrium welfare gain generated by the 50% Sovereign Debt-Sinking allocation $\Omega_{\mathrm{debt},t} = 0.50\, \Omega_{\mathrm{reform},t}$ after Cash Breakeven ($t \ge 18.8$ years) in the national asset-market clearing condition:
+In particular, **Layer 9 ($`\Delta\mathrm{CE}_{k,\mathrm{Debt}}`$: Sovereign Debt-Sinking & Reduced Debt-Service Interest)** and **Wedge 4** isolate the general-equilibrium welfare gain generated by the 50% Sovereign Debt-Sinking allocation $`\Omega_{\mathrm{debt},t} = 0.50\, \Omega_{\mathrm{reform},t}`$ after Cash Breakeven ($t \ge 18.8$ years) in the national asset-market clearing condition:
 
-$$
-\sum_{k=1}^{4} \omega_{F,k} \int \left(k_k\left(a_f, z_f\right) - a_f\right) d\Gamma_{k,t} + B_{\mathrm{gov},t} = \sum_{k=1}^{4} \omega_{HH,k,t} \int a_{\mathrm{fin}}\, d\mu_{k,t} + B_t^{*}
-$$
+$$\sum_{k=1}^{4} \omega_{F,k} \int \left(k_k\left(a_f, z_f\right) - a_f\right) d\Gamma_{k,t} + B_{\mathrm{gov},t} = \sum_{k=1}^{4} \omega_{HH,k,t} \int a_{\mathrm{fin}}\, d\mu_{k,t} + B_t^{*}$$
 
-Finally, `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m` (`Tables 21 & 22` in [Document 3](Document%203.md)) maps this 11-layer system onto (i) the **3D Macroeconomic Welfare Surface** over Net Core Crown Debt ($B_{\mathrm{gov}}/Y \in [15\%, 200\%]$) and working-age PAYE tax rates ($\tau_l \in [17\%, 34\%]$)—contrasting the endogenous Treasury LTFM sinkhole (`-16.20% CE` at 185% debt / 28.2% PAYE) and an unfunded $+3.0\%$-of-GDP (+NZD 10.0B/yr) defense cost-sheet shock (`-23.05% CE`) against the $SS1 \to SS2$ hydrofoil trajectory (`+23.63% CE`, or `+19.23% CE` while carrying the 3% GDP defense load)—and (ii) the **$4 \times 4$ Coalition Complementarity Matrix** (`Table 22`).
+Finally, `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m` (`Tables 21 & 22` in [Document 3](Document%203.md)) maps this 11-layer system onto (i) the **3D Macroeconomic Welfare Surface** over Net Core Crown Debt ($`B_{\mathrm{gov}}/Y`$ from 15% to 200% of GDP) and working-age PAYE tax rates ($`\tau_l`$ from 17% to 34%)—contrasting the endogenous Treasury LTFM sinkhole (`-16.20% CE` at 185% debt / 28.2% PAYE) and an unfunded +3.0%-of-GDP (+NZD 10.0B/yr) defense cost-sheet shock (`-23.05% CE`) against the $`SS1 \to SS2`$ hydrofoil trajectory (`+23.63% CE`, or `+19.23% CE` while carrying the 3% GDP defense load)—and (ii) the $4 \times 4$ **Coalition Complementarity Matrix** (`Table 22`).
 
 ### 7.5 Zero-Dependency Interactive HTML5 + SVG Sankey Serialization & Cosine-S-Curve Ribbon Geometry (`exportSankeyToHTML.m`)
 When MATLAB's `SSankey.m` renders gradient ribbons on an axes where `set(ax, 'YDir', 'normal')` is applied post-draw, the internal $4 \times N_{\mathrm{strips}}$ normal-offset quad vertices invert the vertical tangent sign $\left(-dy, dx\right)$, which causes direct vertex polygon exports to exhibit sub-pixel vertical striping and mid-span bowtie pinching on steep diagonal ribbons. `exportSankeyToHTML.m` eliminates both artifacts by extracting only the exact left and right block attachment spans $\left\lbrack y_{L,\mathrm{bot}}, y_{L,\mathrm{top}} \right\rbrack$ at $x_L$ and $\left\lbrack y_{R,\mathrm{bot}}, y_{R,\mathrm{top}} \right\rbrack$ at $x_R$, and reconstructing parallel upper and lower rails over $\tau \in \left\lbrack 0, 1 \right\rbrack$ via the smooth cosine S-curve $s\left(\tau\right) = \frac{1}{2}\left(1 - \cos\left(\pi \tau\right)\right)$:
@@ -501,7 +489,7 @@ To ensure full replicability across the theoretical operators, VFI Toolkit scrip
 
 ## 10. Mini-Tutorial: "Thick" vs. "Thin" Numbers — Why State-Contingent Functional Conditioning Captures Tail Edge-Cases Without Expanding Grid Dimensions
 
-### 1. Pedagogical Motivation: Why "Thin" Spreadsheet Numbers Miss the Real Policy Story
+### 10.1. Pedagogical Motivation: Why "Thin" Spreadsheet Numbers Miss the Real Policy Story
 
 A recurring question in public-finance modeling is why a dynamic stochastic Overlapping Generations (OLG) model solved on the GPU via the Value Function Iteration (VFI) Toolkit yields starkly different policy conclusions from a deterministic spreadsheet projection—even when both models are calibrated to the exact same national averages.
 
@@ -531,7 +519,7 @@ In a deterministic spreadsheet, an average child with average family income $\ba
 
 ---
 
-### 2. The Curse of Dimensionality Trap vs. Zero-Cost State Conditioning
+### 10.2. The Curse of Dimensionality Trap vs. Zero-Cost State Conditioning
 
 When researchers realize that regional parameters like extended whānau support (`K_whanau_base`), housing user costs (`Q_base`), and public wraparound effectiveness (`G_ece`) vary across households, their first instinct is often to add new exogenous shock dimensions—for example, expanding `n_z` from a 1D vector of 5 states to a 3D tensor `n_z = [5, 3, 3]` ($45$ exogenous states per grid point).
 
@@ -543,7 +531,7 @@ Adding orthogonal $z$-dimensions is both computationally wasteful and economical
 
 ---
 
-### 3. Audit of the Four State-Contingent Structural Operators (Uniting the MBA and MPP Lenses across thick and thin)
+### 10.3. Audit of the Four State-Contingent Structural Operators (Uniting the MBA and MPP Lenses across thick and thin)
 
 Evaluating the model simultaneously through a **Long-Horizon Sovereign Turnaround (MBA) Lens** (focused on off-balance-sheet assets, Theory of Constraints bottlenecks, and R&D talent walkouts) and a **Master of Public Policy (MPP) Lens** (focused on actuarial equity, sandwich-generation care burdens, institutional trust, and workforce capacity) reveals four exact mechanisms where scalar approximations must be replaced with **dimension-free state-contingent parameterizations** and **comonotonic tail-risk coupling**:
 
@@ -556,9 +544,9 @@ Evaluating the model simultaneously through a **Long-Horizon Sovereign Turnaroun
 
 ---
 
-### 4. Mathematical Specification of the Four State-Contingent Operators
+### 10.4. Mathematical Specification of the Four State-Contingent Operators
 
-#### 4.1 State-Contingent Extended Whānau Care ($K_{\mathrm{wh\bar{a}nau}}^{\mathrm{net}}$): Comonotonic Sandwich-Generation Reversal & Trust-Gated Mentoring
+#### 10.4.1 State-Contingent Extended Whānau Care ($K_{\mathrm{wh\bar{a}nau}}^{\mathrm{net}}$): Comonotonic Sandwich-Generation Reversal & Trust-Gated Mentoring
 
 In a scalar parameterization, extended *whānau* support (grandmothers, *kuia*, aunties, and *kaumātua* aged 55–72) is represented as a static regional constant $K_{\mathrm{whanau,base},k} \in \lbrack 0.28, 0.42 \rbrack$. Under that deterministic scalar view, raising the New Zealand Superannuation eligibility age from 65 to 67 or 70 simply trims the regional constant by 36.2% as elders are forced back into market labor.
 
@@ -592,7 +580,7 @@ Notice the mathematical consequence of evaluating this **comonotonically coupled
 
 ---
 
-#### 4.2 Price-Manifold Conditioned Public Wraparound ($G_{\mathrm{ece},s}^{\mathrm{eff}}$): The Kaiako Housing-Affordability Supply Deflator
+#### 10.4.2 Price-Manifold Conditioned Public Wraparound ($G_{\mathrm{ece},s}^{\mathrm{eff}}$): The Kaiako Housing-Affordability Supply Deflator
 
 In public administration, scaling nominal early-childhood expenditure $G_{\mathrm{ece},1}$ (`G_ece_stage1`) and adolescent wraparound $G_{\mathrm{ece},2}$ (`G_ece_stage2`) encounters a severe spatial labor-supply friction: when metropolitan house prices $Q_k$ (`Params.Q_reg`) in `Auckland` (`3.10`) and `Large` regional cities (`2.05`) are inflated by speculative land hoarding, qualified early-childhood *Kaiako*, Montessori guides, and speech-language therapists are priced out of the high-deprivation suburbs where disadvantaged children live.
 
@@ -606,34 +594,28 @@ This functional conditioning generates an endogenous **Cross-Cohort I $\times$ I
 
 ---
 
-#### 4.3 Sub-Manifold Conditioned Housing User Costs ($p_H$): The 61-Point Asset-Grid LVR Hurdle & Comonotonic Eviction Tail
+### 10.4.3 Sub-Manifold Conditioned Housing User Costs ($p_H$): The 61-Point Asset-Grid LVR Hurdle & Comonotonic Eviction Tail
 
-In Kiyotaki, Michaelides, and Nikolov (2024), the baseline regional ownership share $\xi_{\mathrm{reg},k} = \min\left\lbrace 1, \displaystyle \frac{1}{\bar{\chi}}\left(\displaystyle \frac{rr_k}{rh_k}\right)\right\rbrace$ is a single regional scalar. If applied uniformly across all households in region $k$, an asset-poor family at $a = 0$ and a wealthy household at $a = 15$ face the exact same blended housing price $p_{H,k}$.
+In Kiyotaki, Michaelides, and Nikolov (2024), the baseline regional ownership share $`\xi_{\mathrm{reg},k} = \min\{1, \frac{1}{\bar{\chi}}(rr_k - rh_k)\}`$ is a single regional scalar. If applied uniformly across all households in region $k$, an asset-poor family at $a = 0$ and a wealthy household at $a = 15$ face the exact same blended housing price $`p_{H,k}`$.
 
-Because household net worth $a \in \lbrack 0, 25 \rbrack$ is already tracked on our 61-point cubic asset grid `a_grid_assets`, we apply **dimension-free sub-manifold conditioning** across both endogenous wealth $a$ and the 5-point Tauchen income shock $z$ inside `ReturnFn_SpatialHH.m`:
-
-$$
-\xi_{\mathrm{hh}}\left(a, Q_k\right) = \xi_{\mathrm{reg},k} \cdot \left(0.25 + 0.75 \min\left(1.0, \displaystyle \frac{a}{0.20 Q_k}\right)\right)
-$$
+Because household net worth $a \in [0, 25]$ is already tracked on our 61-point cubic asset grid `a_grid_assets`, we apply **dimension-free sub-manifold conditioning** across both endogenous wealth $a$ and the 5-point Tauchen income shock $z$ inside `ReturnFn_SpatialHH.m`:
 
 $$
-p_H\left(a, z, Q_k, j\right) =
-\begin{cases}
-\left(\xi_{\mathrm{hh}}\left(a, Q_k\right) rh_k + \left(1 - \xi_{\mathrm{hh}}\left(a, Q_k\right)\right) \displaystyle \frac{rr_k}{0.5 \bar{\chi}}\right) \cdot \left(1 + 0.12 \, \mathbb{I}\left(a < 0.08 Q_k \land z < 0.85\right)\right) & \text{if } j < J_r \\
-\left(0.70 + 0.30 \min\left(1.0, \displaystyle \frac{a}{0.20 Q_k}\right)\right) rh_k + 0.30 \left(1 - \min\left(1.0, \displaystyle \frac{a}{0.20 Q_k}\right)\right) \displaystyle \frac{rr_k}{0.5 \bar{\chi}} & \text{if } j \ge J_r
-\end{cases}
+\xi_{\mathrm{hh}}\left(a, Q_k\right) = \xi_{\mathrm{reg},k} \cdot \left(0.25 + 0.75 \min\left(1.0,\, \frac{a}{0.20 Q_k}\right)\right)
 $$
 
-Projecting $p_H$ onto the $\left(a, z\right)$ sub-manifold expands housing user costs from 1 scalar per region into $61 \times 5 = 305$ state-contingent values per region:
-1. **The 20% LVR Deposit Gate ($a < 0.20 Q_k$):** Young households without sufficient equity to clear the $0.20 Q_k$ deposit hurdle face the unblended rental user cost $rr_k / \left(0.5 \bar{\chi}\right)$—explaining why the Age-20 Youth Capital Grant ($E$) and metropolitan house-price cooling ($Q_k \downarrow$) interact multiplicatively to lift young-adult homeownership in Auckland from 28.0% to 41.2%.
-2. **Comonotonic Tail Coupling of Eviction & Transience Risk ($a < 0.08 Q_k \land z < 0.85$):** Renters with near-zero liquid buffers who simultaneously experience an adverse Tauchen earnings shock face a 12% effective housing cost and transience wedge (forced moves, emergency accommodation, and school disruption).
-3. **Retiree Renter Vulnerability ($j \ge J_r, a < 0.20 Q_k$):** Elderly households who reach age 65 (`agej >= Jr`) without home equity remain exposed to rental user costs $rr_k$ during retirement.
+$$
+p_H\left(a, z, Q_k, j\right) = \begin{cases} \left(\xi_{\mathrm{hh}}\left(a, Q_k\right) rh_k + \left(1 - \xi_{\mathrm{hh}}\left(a, Q_k\right)\right) \dfrac{rr_k}{0.5 \bar{\chi}}\right) \cdot \left(1 + 0.12\, \mathbb{I}\left(a < 0.08 Q_k \land z < 0.85\right)\right) & \text{if } j < J_r \\ \left(0.70 + 0.30 \min\left(1.0, \dfrac{a}{0.20 Q_k}\right)\right) rh_k + 0.30 \left(1 - \min\left(1.0, \dfrac{a}{0.20 Q_k}\right)\right) \dfrac{rr_k}{0.5 \bar{\chi}} & \text{if } j \ge J_r \end{cases}
+$$
 
----
+Projecting $p_H$ onto the $(a, z)$ sub-manifold expands housing user costs from 1 scalar per region into $61 \times 5 = 305$ state-contingent values per region:
+1. **The 20% LVR Deposit Gate ($`a < 0.20 Q_k`$):** Young households without sufficient equity to clear the $0.20 Q_k$ deposit hurdle face the unblended rental user cost $`rr_k / (0.5 \bar{\chi})`$—explaining why the Age-20 Youth Capital Grant ($E$) and metropolitan house-price cooling ($Q_k \downarrow$) interact multiplicatively to lift young-adult homeownership in Auckland from 28.0% to 41.2%.
+2. **Comonotonic Tail Coupling of Eviction & Transience Risk ($`a < 0.08 Q_k \land z < 0.85`$):** Renters with near-zero liquid buffers who simultaneously experience an adverse Tauchen earnings shock face a 12% effective housing cost and transience wedge (forced moves, emergency accommodation, and school disruption).
+3. **Retiree Renter Vulnerability ($`j \ge J_r, a < 0.20 Q_k`$):** Elderly households who reach age 65 (`agej >= Jr`) without home equity remain exposed to rental user costs $rr_k$ during retirement.
 
-### 4.4 Skill-Manifold Conditioned Survival and Late-Life Labor Disutility ($s_j^{\mathrm{eff}}$): Capturing Actuarial Regressivity
+### 10.4.4 Skill-Manifold Conditioned Survival and Late-Life Labor Disutility ($`s_j^{\mathrm{eff}}`$): Capturing Actuarial Regressivity
 
-Finally, to capture the MPP's warning regarding **differential mortality and physical wear-and-tear**, we condition late-life labor disutility and mortality hazard on the household's 7-point adult human-capital / occupational sub-manifold $h \in \{0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80\}$:
+Finally, to capture the MPP's warning regarding **differential mortality and physical wear-and-tear**, we condition late-life labor disutility and mortality hazard on the household's 7-point adult human-capital / occupational sub-manifold $`h \in \{0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80\}`$:
 
 $$
 \psi_{\mathrm{wear}}\left(h, j\right) = 1.0 + 0.35\, \mathbb{I}\left(\mathrm{Age}_j \ge 65\right)\max\left(0,\, \frac{1.00 - h}{0.55}\right)
@@ -643,4 +625,4 @@ $$
 1 - s_j^{\mathrm{eff}}\left(h, j\right) = \min\left(0.99,\; \left(1 - s_j\right)\exp\left(0.18\left(1.00 - h\right)\right)\right)
 $$
 
-When a policy simulation raises the NZ Superannuation eligibility age ($J_r$) above 65, manual, rural, and lower-skilled workers ($h_1 = 0.45$ and $h_2 = 0.65$, where Māori and Pasifika workers are disproportionately represented due to historical childhood stunting) face a 22% to 35% higher physical disutility of working past age 65 ($\psi_{\mathrm{wear}} > 1$) comonotonically coupled with a higher late-life mortality hazard $1 - s_j^{\mathrm{eff}}(h, j)$. Consequently, evaluating the Bellman expectation $\mathbb{E}[V]$ over the stationary distribution $\mu_k(a, h, \theta_c, z, j)$ endogenously reproduces both the **38% to 52% disability/hardship benefit substitution leak** and the **regressive life-expectancy penalty** that make raising the pension age fiscally and socially inferior to front-loaded human-capital investment.
+When a policy simulation raises the NZ Superannuation eligibility age ($J_r$) above 65, manual, rural, and lower-skilled workers ($h_1 = 0.45$ and $h_2 = 0.65$, where Māori and Pasifika workers are disproportionately represented due to historical childhood stunting) face a 22% to 35% higher physical disutility of working past age 65 ($`\psi_{\mathrm{wear}} > 1`$) comonotonically coupled with a higher late-life mortality hazard $`1 - s_j^{\mathrm{eff}}(h, j)`$. Consequently, evaluating the Bellman expectation $\mathbb{E}[V]$ over the stationary distribution $`\mu_k(a, h, \theta_c, z, j)`$ endogenously reproduces both the **38% to 52% disability/hardship benefit substitution leak** and the **regressive life-expectancy penalty** that make raising the pension age fiscally and socially inferior to front-loaded human-capital investment.

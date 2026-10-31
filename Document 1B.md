@@ -38,7 +38,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 | **1. Dual-Gate Capability** *(First 2000 Days + Montessori / Tuakana)* | `HumanCapital_Lifecycle_aprimeFn.m`, `Build_IntergenTransitionMatrix.m` ($\varphi_1 = 0.35$, $\varphi_2 = -0.95$, $\Delta_{\mathrm{Tuakana}} = +0.11$) | 22.0%–28.5% Stunted; 23.5% Thriving; 17.3% Mentored | **4.0%–4.5% Stunted; 57.3%–61.0% Thriving; 57.3% Mentored** | **1.5% Stunted; 65.0% Thriving; 65.0%+ Mentored** (-33.4% IGE) | `Table12A–12C`, `Table15`, `Fig_ChildFates_5Stage_*` |
 | **2. Coupled Markets** *(Property-to-Enterprise Tax Shift)* | `ReturnFn_Firm.m`, `WelfareDecomposition_4Region.m` ($\tau_a = 0.015$, $\tau_b = 0.25 \to 0.18$, $E = 0.065 \to 0.080$) | +0.0% Wage; 28.0% Young Own; 10.93% Nat. Emig ($S_t = 100$) | **+3.2% to +5.5% Wage; 38.2% Own; 8.56% Emig** ($S_t = 112.0\text{--}118.4$) | **+6.8% to +9.6% Wage; 41.2%–41.5% Own; 7.60% Emig** ($S_t = 126.0$) | `Table1`, `Table3`, `Fig2_Kiyotaki_*`, `Fig3_BrainDrain_*` |
 | **3. Sankey Fiscal Ledger** *(5-Stage Pop & 6-Gate Fiscal)* | `Plot_ChildFates_2Panel_SSankey.m`, `Plot_ChildFiscal_2Panel_SSankey.m` ($\Omega_{\mathrm{fiscal}}$) | -NZD 5.3k/yr (Age 30); -NZD 2.4k/yr (Career); NZD 17.7B/yr Exits | **+NZD 10.5k–11.1k/yr (Age 30); +NZD 13.7k–18.2k/yr (Career)** | **+NZD 12.4k–12.8k/yr (Age 30); +NZD 16.4k–16.8k/yr (Career)** | `Table14`, `Table15`, `Fig_ChildFiscal_5Stage_*` |
-| **4. Actuarial Valuation** *(ACC-Style Continuation Value)* | `Plot_ActuarialContinuationValuation.m` ($\mathcal{V}_{k,t_0}^{(L)}, r_{\mathrm{disc}} = 2.0\%$) | Cash breakeven takes **18.8 yrs** (46.4 yrs direct savings) | **Yr 5: NZD 35.25B Fiscal (3.84x) / NZD 85.40B GDP** (1.16x cost avoidance alone) | **60-Yr Cash: NZD 702.3B Fiscal / NZD 1,510.7B GDP (6.86x)** | `Table16_Actuarial_*`, `Fig_Actuarial_*` |
+| **4. Actuarial Valuation** *(ACC-Style Continuation Value)* | `Plot_ActuarialContinuationValuation.m` (`$\mathcal{V}_{k,t_0}^{(L)}, r_{\mathrm{disc}} = 0.02`$) | Cash breakeven takes **18.8 yrs** (46.4 yrs direct savings) | **Yr 5: NZD 35.25B Fiscal (3.84x) / NZD 85.40B GDP** (1.16x cost avoidance alone) | **60-Yr Cash: NZD 702.3B Fiscal / NZD 1,510.7B GDP (6.86x)** | `Table16_Actuarial_*`, `Fig_Actuarial_*` |
 | **5. The $SS2$ Rocket Ship** *(2050 50/50 Debt & Infra + Super U-Curve)* | `FertilityBargaining_Module.m`, `Plot_Counterfactuals_And_MirrorInvestments.m` ($\Omega_{\mathrm{debt}}, \Omega_{\mathrm{infra}}$) | 1.66 TFR; **23.60%–28.20% PAYE req.**; 22.0% actual PAYE | 1.85–1.93 TFR; **20.84% PAYE req.** (at 22.0% actual $\to$ Sinks Debt) | **Super Age 64 (+23.63% CE Peak, 18.85% PAYE) or Age 65 (18.57% PAYE Min)**; NZD 21.85B Debt + 14.90B Infra/Wave | `Table7`, `Table8`, `Table8B`, `Table19`, `Table20`, `FigFert_*` |
 
 ---
@@ -243,11 +243,9 @@ To resolve the unit disambiguation problem and reconcile model flows with the **
 +-----------------------------------------------------------------------------------+
 ```
 
-### 3.4 Placeholder (?)
+### 3.4 — Complete Standalone Mathematical Specification & Calibration Reference: Extended Whānau Networks, Pension Eligibility U-Curve, and Dynamic Complementarity
 
-### 3.5 — Complete Standalone Mathematical Specification & Calibration Reference: Extended Whānau Networks, Pension Eligibility U-Curve, and Dynamic Complementarity
-
-#### 3.5.1 Endogenous Coupling of NZ Superannuation, Housing User Costs, and Extended Whānau Capacity
+#### 3.4.1 Endogenous Coupling of NZ Superannuation, Housing User Costs, and Extended Whānau Capacity
 
 Let $K_{\mathrm{whanau},0}(k) \in [0, 1]$ denote the baseline regional extended-*whānau* proximity and alloparental network intensity across the four spatial regions $k \in \{\mathrm{Rural}, \mathrm{Small}, \mathrm{Large}, \mathrm{Auckland}\}$, calibrated at baseline to:
 
@@ -285,7 +283,7 @@ $$
 
 ---
 
-#### 3.5.2 Four Structural Channels in the Two-Stage CES Child Skill Law of Motion
+#### 3.4.2 Four Structural Channels in the Two-Stage CES Child Skill Law of Motion
 
 In `HumanCapital_Lifecycle_aprimeFn.m` (the single-experience-asset transition operator governing $\theta_c \to \theta_c^{\prime}$), extended *whānau* intensity $K_{\mathrm{whanau}}(k)$ operates alongside bidirectional *Tuakana–Teina* peer/school mentoring intensity $M_{\mathrm{mentor}} \in [0, 1]$, where:
 
@@ -335,7 +333,7 @@ $$
 
 ---
 
-#### 3.5.3 Mirroring in the Household Bellman Return Function (`ReturnFn_SpatialHH.m` and `ReturnFn_SpatialHH_Compact4D.m`)
+#### 3.4.3 Mirroring in the Household Bellman Return Function (`ReturnFn_SpatialHH.m` and `ReturnFn_SpatialHH_Compact4D.m`)
 
 To ensure that the household's behavioral first-order condition with respect to private child investment $i_c$ and late-life labor supply $\ell$ is incentive-compatible across all retirement ages $A_{\mathrm{super}} \in [60, 75]$, `ReturnFn_SpatialHH_Compact4D.m` incorporates both the *whānau* child-skill proxy and age-dependent late-life senescence and work disutility:
 
@@ -344,11 +342,11 @@ s_{\mathrm{sub}}(k) = \min\left(0.80,\; \frac{G_{\mathrm{ece}} + 0.015 K_{\mathr
 $$
 
 * **Late-Life Physiological Earning Decay & Work Disutility Past Age 65 ($A_{\mathrm{super}} > 65$ vs. $A_{\mathrm{super}} < 65$):**
-  For working-age brackets past biological age 65 ($\mathrm{age}_j \ge 65$ when $A_{\mathrm{super}} > 65$), earning capacity decays at rate $\delta_{\mathrm{sen},65+} = 0.08\text{ yr}^{-1}$ while physical labor disutility rises with slope $\psi_{\mathrm{wear},65+} = 0.14\text{ yr}^{-1}$ (amplified for manual/low-$h$ workers via $\max(0.5, 1.5 - 0.6 h)$). Conversely, when $A_{\mathrm{super}} < 65$, workers retiring between $A_{\mathrm{super}}$ and 65 gain early-retirement manual wear-and-tear relief $\psi_{\mathrm{relief},<65} = 0.38$ and provide positive *Kuia / Koroua* relational utility to young families.
+  For working-age brackets past biological age 65 ($`\mathrm{age}_j \ge 65`$ when $`A_{\mathrm{super}} > 65`$), earning capacity decays at rate $\delta_{\mathrm{sen},65+} = 0.08\text{ yr}^{-1}$ while physical labor disutility rises with slope $\psi_{\mathrm{wear},65+} = 0.14\text{ yr}^{-1}$ (amplified for manual/low-$h$ workers via $\max(0.5, 1.5 - 0.6 h)$). Conversely, when $A_{\mathrm{super}} < 65$, workers retiring between $A_{\mathrm{super}}$ and 65 gain early-retirement manual wear-and-tear relief $\psi_{\mathrm{relief},<65} = 0.38$ and provide positive *Kuia / Koroua* relational utility to young families.
 
 ---
 
-#### 3.5.4 Cross-Derivative Proof of the Dynamic Complementarity Casualty Under Super Age 70
+#### 3.4.4 Cross-Derivative Proof of the Dynamic Complementarity Casualty Under Super Age 70
 
 Why does raising the NZ Super age from 65 to 70 inflict disproportionate damage on low-income and shock-exposed children? Because $\varphi_2 = -0.95 < 0$, the elasticity of substitution in Stage 2 is $\sigma_2 = 1/(1 - \varphi_2) = 0.513 < 1$. Taking the cross-partial derivative of $\theta_c^{\mathrm{ces},2}$ with respect to retained early skill $\theta_c^{\mathrm{ret}}$ and total Stage-2 inputs $X_m \in \{I_{\mathrm{tot},2},\, h_p^{\mathrm{safe}}\}$ yields:
 
@@ -356,13 +354,13 @@ $$
 \frac{\partial^2 \theta_c^{\mathrm{ces},2}}{\partial \theta_c^{\mathrm{ret}}\, \partial X_m} = \left(1 - \varphi_2\right)\gamma_{2,\mathrm{self}}\gamma_{2,m}\left(\theta_c^{\mathrm{ces},2}\right)^{1 - 2\varphi_2}\left(\theta_c^{\mathrm{ret}} X_m\right)^{\varphi_2 - 1} > 0
 $$
 
-Because $1 - \varphi_2 = 1.95 > 0$, a reduction in $K_{\mathrm{whanau}}(k)$ caused by raising $A_{\mathrm{super}}$ from 65 to 70 ($\Delta K_{\mathrm{whanau}}(k) = -0.362 K_{\mathrm{whanau},0}(k)$) triggers a three-fold compounding loss: (i) it lowers $\theta_c^{\mathrm{ret}}$ entering Stage 2; (ii) it lowers $h_p^{\mathrm{safe}}$ and $I_{\mathrm{tot},2}$ inside the harmonic-mean aggregator; and (iii) for liquidity-constrained families at the $i_c = 0$ corner, it strips away $0.55 |\Delta K_{\mathrm{whanau}}(k)|$ of the exponential stress buffer in $\exp(\Psi_{\mathrm{adolescent}})$.
+Because $1 - \varphi_2 = 1.95 > 0$, a reduction in $K_{\mathrm{whanau}}(k)$ caused by raising $A_{\mathrm{super}}$ from 65 to 70 ($`\Delta K_{\mathrm{whanau}}(k) = -0.362 K_{\mathrm{whanau},0}(k)`$) triggers a three-fold compounding loss: (i) it lowers $\theta_c^{\mathrm{ret}}$ entering Stage 2; (ii) it lowers $h_p^{\mathrm{safe}}$ and $I_{\mathrm{tot},2}$ inside the harmonic-mean aggregator; and (iii) for liquidity-constrained families at the $i_c = 0$ corner, it strips away $0.55 |\Delta K_{\mathrm{whanau}}(k)|$ of the exponential stress buffer in $\exp(\Psi_{\mathrm{adolescent}})$.
 
 ---
 
-#### 3.5.5 Stationary OLG Cohort Pyramid & Unified Government Budget Identity Across $A_{\mathrm{super}} \in [60, 75]$
+#### 3.4.5 Stationary OLG Cohort Pyramid & Unified Government Budget Identity Across $A_{\mathrm{super}} \in [60, 75]$
 
-In `FertilityBargaining_Module.m`, for any statutory retirement age $A_{\mathrm{super}} \in [60, 75]$, the stationary 16-cohort OLG population pyramid $N_5(j)$ ($j = 1, \dots, 16$, spanning ages 20 to 99 in 5-year brackets) is constructed from the endogenous national fertility rate $\mathrm{TFR}_{\mathrm{nat}}$ and survival schedule $s_{j,5\mathrm{yr}}$, with exact continuous interpolation of the retirement boundary $A_{\mathrm{super}}$:
+In `FertilityBargaining_Module.m`, for any statutory retirement age $A_{\mathrm{super}} \in [60, 75]$, the stationary 16-cohort OLG population pyramid $N_5(j)$ ($j = 1, \dots, 16$, spanning ages 20 to 99 in 5-year brackets) is constructed from the endogenous national fertility rate $`\mathrm{TFR}_{\mathrm{nat}}`$ and survival schedule $s_{j,5\mathrm{yr}}$, with exact continuous interpolation of the retirement boundary $A_{\mathrm{super}}$:
 
 * **Above Age 65 ($A_{\mathrm{super}} > 65$):** Let $\Delta M_{\mathrm{cut}} = M_{\mathrm{ret}}(65) - M_{\mathrm{ret}}(A_{\mathrm{super}})$ denote the mechanical reduction in pensioner mass. The fraction of displaced seniors able to sustain healthy full-time work decays exponentially with age:
 
@@ -372,7 +370,7 @@ $$
 
   Unhealthy displaced seniors ($1 - \theta_{\mathrm{healthy}}$) shift onto Supported Living, Jobseeker hardship, and acute geriatric hospital/ACC care with cost multiplier $\phi_{\mathrm{leak}}(A_{\mathrm{super}}) = \phi_{\mathrm{leak},0} + \phi_{\mathrm{leak},1}(A_{\mathrm{super}} - 65.0)$, while prime-age adult children suffer a sandwich elder-care tax-base drag $\psi_{\mathrm{sandwich}}(1 - \theta_{\mathrm{healthy}})\Delta M_{\mathrm{cut}}$.
 
-* **Below Age 65 ($A_{\mathrm{super}} < 65$):** Let $\Delta M_{\mathrm{add}} = M_{\mathrm{ret}}(A_{\mathrm{super}}) - M_{\mathrm{ret}}(65)$ denote the added early-retiree mass. Avoided ACC, Supported Living, and Jobseeker payouts offset a decaying fraction $\bar{\omega}_{\mathrm{off}}(A_{\mathrm{super}})$ of the gross pension cost, while the working taxpayer denominator shrinks by the peak-earning weight $\nu_{\mathrm{peak}}(A_{\mathrm{super}}) = \nu_{\mathrm{peak},0} + \nu_{\mathrm{peak},1}(65.0 - A_{\mathrm{super}})$.
+* **Below Age 65 ($A_{\mathrm{super}} < 65$):** Let $\Delta M_{\mathrm{add}} = M_{\mathrm{ret}}(A_{\mathrm{super}}) - M_{\mathrm{ret}}(65)$ denote the added early-retiree mass. Avoided ACC, Supported Living, and Jobseeker payouts offset a decaying fraction $`\bar{\omega}_{\mathrm{off}}(A_{\mathrm{super}})`$ of the gross pension cost, while the working taxpayer denominator shrinks by the peak-earning weight $\nu_{\mathrm{peak}}(A_{\mathrm{super}}) = \nu_{\mathrm{peak},0} + \nu_{\mathrm{peak},1}(65.0 - A_{\mathrm{super}})$.
 
 * **Unified PAYE Tax Solvency Identity ($\tau_l^{\mathrm{req}}$):** Anchored to the 2026 statutory baseline $\tau_{l,0} = 22.00\%$ at $\mathrm{Dep}_{2026} = 24.50\%$:
 
@@ -382,7 +380,7 @@ $$
 
 ---
 
-#### 3.5.6 Named Calibration Parameters for NZ Superannuation Eligibility Age, Senescence, & Extended Whānau Elasticities (`Configure_TimeGrid_Params.m`)
+#### 3.4.6 Named Calibration Parameters for NZ Superannuation Eligibility Age, Senescence, & Extended Whānau Elasticities (`Configure_TimeGrid_Params.m`)
 
 Every behavioral, demographic, and fiscal elasticity governing the statutory retirement age $A_{\mathrm{super}} \in [60, 75]$ in `ReturnFn_SpatialHH_Compact4D.m`, `WelfareDecomposition_4Region.m`, and `FertilityBargaining_Module.m` is stored as a named parameter on `Params`:
 
@@ -411,7 +409,7 @@ Every behavioral, demographic, and fiscal elasticity governing the statutory ret
 
 ---
 
-#### 3.5.7 Audited Retirement-Age U-Curve (`Table8B_SuperAge_UCurve_60to75.csv` from `FertilityBargaining_Module.m`)
+#### 3.4.7 Audited Retirement-Age U-Curve (`Table8B_SuperAge_UCurve_60to75.csv` from `FertilityBargaining_Module.m`)
 
 Evaluating the unified government budget identity and household welfare decomposition across statutory retirement ages $A_{\mathrm{super}} \in [60, 75]$ reveals a textbook **U-curve in required working-age PAYE taxation** (minimized at **Age 65 = 18.57%** and **Age 64 = 18.85%**) and an **Inverted-U in national household welfare** (peaking at **Age 64 = +23.56% to +23.63% CE**):
 
