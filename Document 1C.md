@@ -50,6 +50,20 @@ When Aotearoa pairs **Phase 1 ($SS1$: Revenue-Neutral Incubation & Capital Reall
 4. **Achieving 3.84x Audited Breakeven Inside One Parliamentary Term (Actuarial Valuation):** Whereas traditional cash-flow accounting takes **18.8 years** to cross cash breakeven, **ACC-style Actuarial Continuation Valuation** proves that by **Year 5 (against NZD 9.19B invested)**, the Crown already locks in **3.84x fiscal breakeven (NZD 35.25B)** at Treasury's 2% discount rate—and achieves **1.16x breakeven (NZD 10.68B) on direct fiscal cost avoidance alone**, before counting a single dollar of future tax increases.
 5. **The Retirement-Age U-Curve Sweet Spot — Lowering NZ Super to Age 64 & Cutting PAYE Taxes to 18.85% (The $SS2$ Rocket Ship):** Sweeping the statutory retirement age across Ages 60 to 75 proves that raising NZ Super to 70 backfires (triggering a 45% disability leak and stripping -36.2% of grandmother/aunty childcare time), while our $SS2$ harvest unlocks the **Age 64–65 fiscal and welfare sweet spot**: New Zealand can **lower the universal NZ Super age to 64** (or hold 65), retire **NZD 17.8B–21.9B** of sovereign debt per cohort wave (cutting interest rates by **-60 bps**), and cut working-age PAYE taxes from **22.00% down to 18.85%** at Age 64 (or **18.57%** at Age 65)!
 
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
+---
+
 | Strategic Dimension | Status Quo Baseline ($SS0$ / LTFM Drift) | Phase 1 Reform ($SS1$ Incubation) | Phase 2 Harvest ($SS2$ — 2050 Protocol) | Why It Matters Across Audiences |
 | :--- | :---: | :---: | :---: | :--- |
 | **Cohort Skill Stunting & Hardship Share** | 22.0% *(Dunedin)* to 28.5% | **4.0% to 4.5%** | **1.5%** | Slashes Oranga Tamariki care, avoidable hospital nights, and justice burdens by **over 75%** |
@@ -70,6 +84,14 @@ To test the realism, rigor, and achievability of our framework, **Part VI of Doc
 * **Cautionary Warnings When Lenses Are Separated (Scotland, South Korea, and the 1989 Tokyo Bubble):** Equally important, contemporary history warns us what happens when nations act in a single silo—or fail to plan for how to *keep* their prosperity. **Scotland** (population 5.5 million) proved between 2017 and 2026 that front-loaded child payments, 1,140 hours of universal early learning, and school mentoring (*MCR Pathways* and *The Promise*) can drive child poverty **6 percentage points below the rest of the United Kingdom**—yet Scotland stalled short of its target because devolved constitutional rules prevented it from taxing land wealth or estates, forcing reliance on working-age PAYE tax hikes while urban rents climbed. And as **post-1985 Bubble Japan** and **21st-century South Korea** warn, even Deming's industrial miracle collapsed into three decades of stagnation when excess surpluses were allowed to pour into finite urban land—inflating the Imperial Palace grounds in Tokyo above the value of all real estate in California—rather than being recycled into debt retirement, public infrastructure, and young families.
 
 **The Lesson for Aotearoa:** Maintaining New Zealand's status quo—paying **NZD 17.7B every year** (climbing toward **NZD 28.5B**) to remediate preventable childhood hardship, underfunding infrastructure until systems fail, exporting our brightest young graduates, and watching net public debt spiral toward **185%–200% of GDP**—is *an expensive road to nowhere*. Because Aotearoa possesses the unitary sovereign fiscal powers that devolved Scotland lacks, we can unite all three lenses at once—restoring New Zealand's **Transparency International "social credit rating"** (which has slipped from #1 globally to a 30-year low of 81/100 behind Denmark, Finland, and Singapore) and building *prosperity we can keep* across generations.
+
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
 
 ---
 
@@ -92,6 +114,20 @@ Just as Emirates Team New Zealand could only get *Aotearoa* flying on foils when
 | **4. Policy-Makers, Ministers, Treasury, & Reserve Bank Officials** | Enactment of the *4-Region Income $\times$ Geography* rule, *ACC-style Actuarial Valuation* (3.84x breakeven in Year 5), and the *2050 50/50 Debt-Sinking Protocol*. | **Read [Document 1A](Document%201A.md) (*Parts I.3, IV, & V*) + [Document 1B](Document%201B.md) (Answer Key) + [Document 3](Document%203.md):** Doc 1B provides every line-item `CBAx` / `OIA 20250878` audit table and the full Super Age 60–75 U-Curve (`Table 8B`). |
 | **5. Academic Economists & Quantitative Researchers** | Inspection, critique, and extension of our open-source 8-PType GPU VFI Toolkit codebase and state-contingent operators. | **Read [Document 2](Document%202.md) (Technical Guide) + [Document 1B](Document%201B.md) (*Sections 3.5 & 7*):** Doc 2 provides all Bellman equations, $\Delta t$-scaling laws, SMM matrices, and the "Thick vs. Thin" state-contingent proof. |
 | **6. Creatives, Storytellers, & Artists** | Narrative imagination (*pūrākau*), cultural leadership, and creative agency at Gate 2 (Ages 12–14) and Gate 3 (Ages 20–35) to author a domestic renaissance. | **Read [Document 1A](Document%201A.md) (*Parts I.5, II Synthesis, & III*) + [Document 3](Document%203.md):** Explore the Interactive HTML5 Sankey Explorer and the coalition story that replaces "managed decline" with shared hope. |
+
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
 
 ---
 
