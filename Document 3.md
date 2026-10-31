@@ -3,7 +3,7 @@
 
 *Author:* Michael Tiemann (mdtiemann@gmail.com)  
 *Date:* November 2026 | *Code & Replication Repository:* [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)  
-*Companion to [Document 1A](Document%201A.md) (Strategic Monograph), [Document 1B](Document%201B.md) (Strategy & Policy Answer Key), [Document 1C](Document%201C.md) (Executive Brief), and [Document 2](Document%202.md) (Technical Specification Guide)*
+*Companion to [Document 1A](Document%201A.md) (Strategic Monograph), [Document 1B](Document%201B.md) (Strategy & Policy Answer Key), [Document 1C](Document%201C.md) (Executive Brief), [Document 2](Document%202.md) (Technical Specification Guide), and [Document 2B](Document%202B.md) ("Thick" vs. "Thin" Numbers Tutorial)*
 
 ---
 
@@ -11,7 +11,7 @@
 
 In Aotearoa New Zealand, our most dedicated policy advocates, business leaders, community trusts, and fiscal stewards spend vast energy competing for space in the annual Budget. Each constituency stays largely in its own lane—defending early childhood education, or housing affordability, or business competitiveness, or public debt reduction—while treating adjacent portfolios as rival claimants on a fixed fiscal pie.
 
-That single-lane habit rests on two hidden assumptions, and our quantitative overlapping-generations (OLG) model proves that **both assumptions are false**:
+That single-lane habit rests on two hidden assumptions, and our quantitative overlapping-generations (OLG) model demonstrates that **both assumptions are false**:
 
 1. **The Myth of the Flat Baseline:** Conventional policy analysis evaluates individual budget bids as if the status quo ($SS0$) were a stable, flat floor. Yet as the New Zealand Treasury's *Long-term Fiscal Statement (He Tirohanga Mokopuna 2025)* and 2026 background papers establish, New Zealand's status quo is a **multi-decade fiscal and demographic sinkhole**. Left unaddressed, an aging population, persistent childhood skill stunting, youth emigration, and compounding sovereign debt service drag baseline household welfare down by **-16.20% in Consumption-Equivalent (CE%) terms** over sixty years. Worse still, if geopolitical pressures require lifting New Zealand's defense spending from its historical ~0.75% of GDP to a 3.0%-of-GDP alliance standard (roughly +NZD 10.0B/yr in deadweight fiscal load), that rising cost sheet swamps every isolated reform and drags household welfare down to **-23.05% CE**.
 2. **The Myth of Additive Independence:** Even in an imaginary world without fiscal drift, implementing our seven core policy levers in isolation—without cross-sector coupling—leaves nearly half the generational prize on the table. Engineered as one coupled system across the human lifecycle, those exact same levers unlock **47.4% of our entire +23.63% CE national welfare gain through Dynamic Complementarity Wedges**—the non-linear dividends created only when early human capability, housing affordability, enterprise capital, and fiscal stewardship reinforce one another.
@@ -102,7 +102,7 @@ Policy coalitions rarely stall because their values are wrong; they stall becaus
 * **Why You Need Your Neighbors:**
   1. *Your Youth Grant Needs Barnardos' Childhood Pipeline:* A capital grant at Age 20 cannot substitute for missed early childhood brain development or adolescent executive function. Only when young adults arrive at Age 20 thriving in skill can they convert seed capital into homeownership and business formation rather than seeing it capitalized into landlord rents.
   2. *Your Wealth Tax Needs GrowthNZ's "Use-It-Or-Lose-It" Split:* Framing wealth taxation as an across-the-board penalty triggers political gridlock. By taxing dormant land hoarding while *cutting* tax drag on active business reinvestment, **active entrepreneurs remain net winners right up to NZD 50M in net worth and break even at the NBR Rich List median (NZD 140M)**—giving you a winning coalition with productive business owners.
-  3. *Lowering NZ Super to Age 64 Needs the Fiscal Loop:* Lowering the retirement age to **64** in Phase 2 releases a **+8.1% *Kuia / Koroua* caregiving time boost** for young families—but as our U-curve analysis proves, early retirement is only fiscally sustainable once stunting compression and debt-sinking have expanded the working tax base.
+  3. *Lowering NZ Super to Age 64 Needs the Fiscal Loop:* Lowering the retirement age to **64** in Phase 2 releases a **+8.1% *Kuia / Koroua* caregiving time boost** for young families—but as our U-curve analysis demonstrates, early retirement is only fiscally sustainable once stunting compression and debt-sinking have expanded the working tax base.
 
 ### 3.3 To the GrowthNZ, Founders & Venture Constituency (*The "Where Will the Jobs Come From?" Lane*)
 * **Your Core Truth:** Social transfers alone do not create high-wage jobs; New Zealand must rotate capital out of passive property and into collateral-constrained operating firms and productive infrastructure.
@@ -128,7 +128,7 @@ Why do conventional spreadsheets vastly underestimate the damage caused by this 
 
 ### 4.2 "Thin" Spreadsheets vs. "Thick" State-Contingent Reality
 
-A conventional spreadsheet models policy using **"thin" numbers**—evaluating linear formulas at population averages. Under a linear spreadsheet (`Trajectory 3a` in Panel B of Figure 1), funding a program 50% of the time (6 years On / 6 years Off) is assumed to deliver roughly half the long-run benefit (**+12.21% CE**), as if child development were a highway project that waits intact whenever the road crew is stood down for two terms.
+As formalized in our companion technical tutorial, **[Document 2B: "Thick" vs. "Thin" Numbers in Quantitative Public Policy](Document%202B.md)**, a conventional spreadsheet models policy using **"thin" numbers**—evaluating linear formulas at population averages. Under a linear spreadsheet (`Trajectory 3a` in Panel B of Figure 1), funding a program 50% of the time (6 years On / 6 years Off) is assumed to deliver roughly half the long-run benefit (**+12.21% CE**), as if child development were a highway project that waits intact whenever the road crew is stood down for two terms.
 
 In reality—and in our state-contingent VFI engine (`Trajectory 3b`)—human capability evolves across **"thick" probability distributions** with non-linear cliffs and developmental gates. Swinging between 6 years of pro-social investment and 6 years of deficit-hawk cuts triggers four compounding **perishability traps**:
 
@@ -173,13 +173,13 @@ In reality—and in our state-contingent VFI engine (`Trajectory 3b`)—human ca
 
 ---
 
-## Part V: The Grand Coalition Compact — Phasing $SS1$ Rocket Fuel Before $SS2$ Debt & Tax-Relief Harvest
+## Part V: The Grand Coalition Compact — Phasing $SS1$ Foundation & Incubation Before $SS2$ Debt & Tax-Relief Harvest
 
 ### 5.1 Resolving the Political Impasse: Not "Who Wins?", But "In What Order?"
 
 None of New Zealand's four policy tribes needs to abandon its core mission. The conflict between Child Advocates, Housing & WellBeing Reformers, GrowthNZ Venture Builders, and Fiscal Hawks is not an irreconcilable clash of values—it is a **sequencing error**:
 
-* **Phase 1 ($SS1$, Years 0–18.8 — Igniting the Rocket Fuel at a Strictly Revenue-Neutral 22.0% PAYE):**
+* **Phase 1 ($SS1$, Years 0–18.8 — Building the Human & Enterprise Foundation at a Strictly Revenue-Neutral 22.0% PAYE):**
   **Coalition 1** gets Universal First-2,000-Days wraparound and *Tuakana-Teina* / Montessori mentoring funded to scale and legally protected by **Year-5 ACC Actuarial Continuation Valuation (3.84x audited fiscal return)**. **Coalition 2** gets metropolitan housing cooling, regional transfers, universal Age-20 Youth Capital Grants, and NZ Super protected at Age 65. **Coalition 3** gets "use-it-or-lose-it" tax rebalancing that rotates capital and talent out of dormant land and into operating enterprises. **Coalition 4** gets ironclad cash neutrality (PAYE held at 22.0%) while stunting compression slashes reactive remediation costs by over 75%—driving the Crown ledger to hard **Cash Breakeven at Year 18.8**.
 * **Phase 2 ($SS2$, Year 25 / 2050 Protocol — Harvesting the Debt, Infrastructure, PAYE Cut, & Super Age-64 Dividend):**
   Once hard Cash Breakeven is crossed, the statutory **50/50 Dynamic Surplus Allocation Rule** locks **50% of all net fiscal surpluses into the Sovereign Debt Sinking Fund** (retiring debt down to **22.0% of GDP**, lowering interest rates by **-60 bps**, and unlocking a **-3.12 pp PAYE tax cut to 18.88%**) and **50% into the Public Infrastructure & Core Health Reinvestment Pool** (lifting regional wages, deepening early-years and mentoring reach, lifting fertility to replacement, and **lowering the NZ Super eligibility age to 64**).

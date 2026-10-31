@@ -8,7 +8,7 @@
 
 ## 1. Purpose, Scope, & Suite Cross-Reference
 
-This document is the quantitative and methodological companion ("Answer Key") to **[Document 1A](Document%201A.md)** (*Intergenerational Welfare, Capital Allocation, and Human Potential in New Zealand — A Multi-Audience Strategic Monograph*), **[Document 1C](Document%201C.md)** (*Flying, Not Floundering — Broad-Circulation Executive Brief & Suite Guide*), and **[Document 3](Document%203.md)** (*Leaving Our Silos, Lifting All Boats — Dynamic Complementarity & Coalition Architecture*), sitting directly alongside **[Document 2](Document%202.md)** (*Technical Documentation & Model Specification Guide*).
+This document is the quantitative and methodological companion ("Answer Key") to **[Document 1A](Document%201A.md)** (*Intergenerational Welfare, Capital Allocation, and Human Potential in New Zealand — A Multi-Audience Strategic Monograph*), **[Document 1C](Document%201C.md)** (*Flying, Not Floundering — Broad-Circulation Executive Brief & Suite Guide*), and **[Document 3](Document%203.md)** (*Leaving Our Silos, Lifting All Boats — Dynamic Complementarity & Coalition Architecture*), sitting directly alongside **[Document 2](Document%202.md)** (*Technical Documentation & Model Specification Guide*) and the mini-tutorial **[Document 2B: "Thick" vs. "Thin" Numbers in Quantitative Public Policy](Document%202B.md)**.
 
 To make cross-referencing effortless for readers who want every technical, empirical, and parametric detail, the sections of this Answer Key follow the exact sequence of Document 1A:
 
