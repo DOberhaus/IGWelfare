@@ -427,15 +427,15 @@ Sweeping the statutory eligibility age reveals a striking **U-curve in required 
   * **At Age 65 ($SS2$ Tax Minimum):** Required working-age PAYE falls to its global minimum of **18.57%** (a **-3.43 percentage-point tax cut** below today's 22.0% PAYE, and **-5.03 pp** below the 23.60% 2050 Status Quo drift) while delivering **+23.39% CE** in national welfare.
   * **At Age 64 ($SS2$ Global Welfare Peak!):** Lowering the universal NZ Super age by one full year to **64** in Phase 2 releases a **+8.1% *Kuia / Koroua* caregiving time boost** ($K_{\mathrm{whanau}} \uparrow$), reduces the rural struggling launch share to 3.0% (and 2.2% across Small, Large, and Auckland), lifts Rural and Small-town fertility to replacement (**TFR = 2.09 and 2.06**, National **1.87–2.03**), and achieves the **global national welfare maximum (+23.56% to +23.63% CE)** while still cutting working-age PAYE taxes by **-3.15 percentage points down to 18.85%**!
 
-| Policy Pathway & Retirement-Age Regime (`Tables 7, 8, & 8B`) | NZ Super Eligibility Age | Impact on Extended *Whānau* & Elders (Ages 64–69) | Struggling Launch Share (Rural $\to$ Auckland) | Effective Fiscal Dep. Ratio | Required Working-Age PAYE Tax ($\tau_l$) | National Long-Run Welfare (CE %) |
+| **Policy Pathway & Retirement-Age Regime (`Tables 7, 8, & 8B`)** | **NZ Super Eligibility Age** | **Impact on Extended *Whānau* & Elders (Ages 64–69)** | **Struggling Launch Share (Rural $\to$ Auckland)** | **Effective Fiscal Dep. Ratio** | **Required Working-Age PAYE Tax ($\tau_l$)** | **National Long-Run Welfare (CE %)** |
 | :--- | :---: | :--- | :---: | :---: | :---: | :---: |
-| **1. Status Quo Aging Drift ($SS0$, No Reform)** | **Age 65** | High metro housing costs displace urban *whānau* networks | 19.8% $\to$ 14.3% | 31.78% | **23.60%** *(+1.60 pp hike)* | **0.00%** *(-16.20% LTFM)* |
-| **2. Hyperbolic Delay ($\beta=0.72$, No Commitment/ECE)** | **Age 65** | Delayed family formation swells old-age dependency | 21.3% $\to$ 16.4% | 41.44% | **25.99%** *(+3.99 pp hike)* | *-4.85%* |
-| **3. Status Quo Austerity: Raise Super to Age 70** | **Age 70** | **45%–52% disability leak**; **-36.2% loss** in *kuia/whānau* care | **25.4% $\to$ 18.0%** *(Spikes!)* | 31.90% | **24.30%–25.00%** *(Hike!)* | *-3.40%* |
-| **4. Phase 1 ($SS1$) Full Package (Incubation)** | **Protect Age 65** | Cooler housing lets *kuia* & aunties stay anchored in community | **5.8% $\to$ 2.2%** | 28.33% | **20.84%** *(1.16 pp sinks debt!)* | **+14.18%** |
-| **5. Phase 2 ($SS2$) Early Boundary Test: Age 60** | **Age 60** | Max +15.9% *kuia* boost, but loses 60–64 peak taxpayers | 2.3% $\to$ 2.2% | 39.78% | **21.05%** *(-0.95 pp cut)* | **+20.93%** |
-| **6. ★ Phase 2 ($SS2$) Tax Minimum: Keep Age 65** | **Keep Age 65** | Full *whānau* home stability + 50% Debt-Sinking harvest | 2.6% avg | **27.79%** | **18.57% (-3.43 pp Cut!)** | **+23.39%** |
-| **7. ★ Phase 2 ($SS2$) Welfare Peak: Lower to Age 64!** | **Lower to Age 64** | **1 yr early retirement + +8.1% *Kuia / Whānau* time dividend!** | **3.0% $\to$ 2.2% (2.4% avg)** | **29.66%** | **18.85% (-3.15 pp Cut!)** | **+23.56%–23.63% (PEAK!)** |
+| **1. Status Quo Aging Drift ($SS0$, No Reform)** | **Age 65** | High metro housing costs displace urban *whānau* networks | 19.8% $\to$ 14.3% | 31.80% | **23.61%** *(+1.61 pp hike)* | **0.00%** *(-16.21% LTFM)* |
+| **2. Hyperbolic Delay ($\beta = 0.72$, No Commitment/ECE)** | **Age 65** | Delayed family formation swells old-age dependency | 21.3% $\to$ 16.4% | 41.44% | **25.99%** *(+3.99 pp hike)* | **-4.85%** |
+| **3. Status Quo Austerity: Raise Super to Age 70** | **Age 70** | **45%–52% disability leak**; **-36.2% loss** in *kuia/whānau* care | **25.4%** $\to$ **18.0%** *(Spikes)* | 35.15% | **24.30%–25.01%** *(Hike)* | **-3.40%** |
+| **4. Phase 1 ($SS1$) Full Package (Incubation)** | **Protect Age 65** | Cooler housing lets *kuia* & aunties stay anchored in community | **5.8%** $\to$ **2.2%** | 28.33% | **20.84%** *(1.16 pp sinks debt)* | **+14.21%** |
+| **5. Phase 2 ($SS2$) Early Boundary Test: Age 60** | **Age 60** | Max +15.9% *kuia* boost, but loses 60–64 peak taxpayers | 2.3% $\to$ 2.2% | 39.80% | **21.05%** *(-0.95 pp cut)* | **+21.61%** |
+| **6. ★ Phase 2 ($SS2$) Tax Minimum: Keep Age 65** | **Keep Age 65** | Full *whānau* home stability + 50% Debt-Sinking harvest | 2.6% avg | **27.81%** | **18.57% (-3.43 pp Cut)** | **+24.07%** |
+| **7. ★ Phase 2 ($SS2$) Welfare Peak: Lower to Age 64** | **Lower to Age 64** | **1 yr early retirement + +8.1% *Kuia / Whānau* time dividend** | **3.0%** $\to$ **2.2% (2.4% avg)** | **29.68%** | **18.85% (-3.15 pp Cut)** | **+24.24% (PEAK)** |
 
 ---
 
@@ -530,20 +530,20 @@ The Mirror Investment chart below (`Fig_7Segment_Welfare_And_MirrorInvestments_D
 
 Rather than arbitrary top-down slicing, our constructive attribution (`Table 19` in [Document 1B](Document%201B.md) and [Document 3](Document%203.md)) evaluates what each of the **7 policy factors** achieves **entirely in isolation**, and then measures the **4 supermodular Dynamic Complementarity Wedges** unlocked when the stacks operate together:
 
-| Constructive Tier & Layer (`Table 19`) | Component Type | Phase 1 ($SS1$) Nat. CE % | Phase 2 ($SS2$) Rural | Phase 2 ($SS2$) Small | Phase 2 ($SS2$) Large | Phase 2 ($SS2$) Auckland | Phase 2 ($SS2$) National | Share of $SS2$ Prize |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1. First-2,000-Days Universal ECE Alone** ($G_{\mathrm{ece},1}$) | Isolated Factor | +2.64% | +2.50% | +3.12% | +3.48% | +4.17% | **+3.47%** | 14.7% |
-| **2. *Tuakana–Teina* / Montessori Mentoring Alone** ($G_{\mathrm{ece},2}$) | Isolated Factor | +1.57% | +1.50% | +1.86% | +2.07% | +2.49% | **+2.07%** | 8.8% |
-| **3. ★ WEDGE 1: Dual-Gate Human Capital Synergy** ($\mathrm{ECE}_1 \times \mathrm{Tuakana}_2$) | **SYNERGY WEDGE** | **+2.39%** | **+2.10%** | **+2.76%** | **+3.18%** | **+3.97%** | **+3.18%** | **13.5%** |
-| **4. Estate & Property Tax Rebalance Alone** ($\tau_b, \tau_a \to \mathrm{Firm}$) | Isolated Factor | +1.81% | +1.60% | +2.16% | +2.57% | +3.31% | **+2.57%** | 10.9% |
-| **5. Age-20 Youth Capital Grant Alone** ($E$) | Isolated Factor | +0.99% | +0.90% | +1.16% | +1.31% | +1.58% | **+1.30%** | 5.5% |
-| **6. Income $\times$ Geography Transfer Alone** ($T_k$) | Isolated Factor | +0.83% | +1.15% | +1.11% | +1.01% | +1.02% | **+1.06%** | 4.5% |
-| **7. ★ WEDGE 2: LVR-Clearance & *Whānau*-Anchoring Synergy** | **SYNERGY WEDGE** | **+1.43%** | **+1.35%** | **+1.86%** | **+2.22%** | **+2.90%** | **+2.23%** | **9.4%** |
-| **8. ★ WEDGE 3: Cross-Stack Synergy ($\mathrm{Stack\ 1} \times \mathrm{Stack\ 2}$)** | **SYNERGY WEDGE** | **+2.10%** | **+2.15%** | **+3.12%** | **+3.89%** | **+5.19%** | **+3.87%** | **16.4%** |
-| **9. Sovereign Debt-Sinking & Interest Relief Alone** ($\Delta r = -60\text{ bps}$) | Isolated Factor | +0.25% | +0.55% | +0.70% | +0.81% | +0.97% | **+0.79%** | 3.3% |
-| **10. PAYE Cut (-3.12 pp to 18.88%) & Super Age-64 *Kuia* Dividend Alone** | Isolated Factor | +0.00% | +0.90% | +1.06% | +1.16% | +1.37% | **+1.17%** | 5.0% |
-| **11. ★ WEDGE 4: Actuarial Solvency, Replacement TFR & 2nd-Gen Closure** | **SYNERGY WEDGE** | **+0.17%** | **+0.95%** | **+1.73%** | **+1.89%** | **+2.57%** | **+1.93%** | **8.2%** |
-| **TOTAL INTEGRATED REFORM (`T1` Exact Convergence)** | **7 Iso (`+12.43%`) + 4 Wedges (`+11.20%`)** | **+14.18%** | **+15.65%** | **+20.63%** | **+23.59%** | **+29.53%** | **+23.63%** | **100.0%** *(47.4% Wedges!)* |
+| **Layer Code (`Table 19`)** | **Component Type** | **$SS1$ Nat. CE %** | **$SS2$ Rural** | **$SS2$ Small** | **$SS2$ Large** | **$SS2$ Auckland** | **$SS2$ National** | **Cumulative $SS2$ Nat.** | **Share of $SS2$ Prize** |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **L01_Iso_ECE1_First2000d** | Isolated_Factor | +2.61% | +2.91% | +3.29% | +3.60% | +4.05% | **+3.57%** | +3.57% | 14.7% |
+| **L02_Iso_Tuakana_Mentoring** | Isolated_Factor | +1.56% | +1.75% | +1.96% | +2.14% | +2.42% | **+2.13%** | +5.70% | 8.8% |
+| **L03_WEDGE1_DualGate_HC_Synergy** | **SYNERGY_WEDGE** | **+2.35%** | **+2.44%** | **+2.91%** | **+3.29%** | **+3.86%** | **+3.26%** | **+8.96%** | **13.4%** |
+| **L04_Iso_EstateProperty_Rebal** | Isolated_Factor | +1.79% | +1.86% | +2.28% | +2.66% | +3.21% | **+2.63%** | +11.59% | 10.9% |
+| **L05_Iso_YouthGrant_Age20** | Isolated_Factor | +0.98% | +1.05% | +1.22% | +1.36% | +1.53% | **+1.33%** | +12.92% | 5.5% |
+| **L06_Iso_GeoTransfer_Income** | Isolated_Factor | +0.83% | +1.34% | +1.17% | +1.04% | +0.99% | **+1.10%** | +14.03% | 4.5% |
+| **L07_WEDGE2_LVR_Whanau_Synergy** | **SYNERGY_WEDGE** | **+1.39%** | **+1.57%** | **+1.96%** | **+2.30%** | **+2.82%** | **+2.28%** | **+16.30%** | **9.4%** |
+| **L08_WEDGE3_CrossStack_HC_x_Spatial** | **SYNERGY_WEDGE** | **+2.09%** | **+2.50%** | **+3.29%** | **+4.02%** | **+5.04%** | **+3.95%** | **+20.25%** | **16.3%** |
+| **L09_Iso_DebtSinking_Interest** | Isolated_Factor | +0.25% | +0.64% | +0.74% | +0.84% | +0.94% | **+0.82%** | +21.07% | 3.4% |
+| **L10_Iso_PAYE_SuperAge_64** | Isolated_Factor | +0.00% | +1.05% | +1.11% | +1.20% | +1.33% | **+1.20%** | +22.27% | 5.0% |
+| **L11_WEDGE4_Fiscal_TFR_2ndGen_Closure** | **SYNERGY_WEDGE** | **+0.35%** | **+1.10%** | **+1.82%** | **+1.95%** | **+2.50%** | **+1.97%** | **+24.24%** | **8.1%** |
+| **TOTAL INTEGRATED REFORM (`T1`)** | **7 Iso (`+12.79%`) + 4 Wedges (`+11.46%`)** | **+14.21%** | **+18.21%** | **+21.75%** | **+24.41%** | **+28.70%** | **+24.24%** | **+24.24%** | **100.0%** *(47.3% Wedges)* |
 
 > **Bridge to [Document 3: Leaving Our Silos, Lifting All Boats](Document%203.md):** Notice that **47.4% (+11.20% CE) of the entire +23.63% CE national prize** lives inside the four Dynamic Complementarity Wedges (Layers 3, 7, 8, and 11). In **[Document 3](Document%203.md)**, we map these 11 layers onto New Zealand's four primary policy coalitions (*Barnardos/Youth*, *WellBeing/Housing*, *GrowthNZ/Venture*, and *Fiscal Stewards*)—showing why each single-lane silo stalls against the Treasury LTFM drift (-16.20% CE) and an unfunded 3%-of-GDP defense commitment (-21.68% CE), why 6-year (two-term) "Stop-Go" political cycles erode 83.7% of the prize (+3.84% CE), and how uniting all four coalitions unlocks the full **+39.83 percentage-point welfare swing**.
 

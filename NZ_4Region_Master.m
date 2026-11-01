@@ -9,14 +9,9 @@
 %   - Households ('HH_Rural', 'HH_Small', 'HH_Large', 'HH_Auckland'): Finite Horizon (J = 80/dt)
 %   - Firms ('Firm_Rural', 'Firm_Small', 'Firm_Large', 'Firm_Auckland'): Infinite Horizon (N_j = Inf)
 
-if ~exist('Params', 'var') || ~isfield(Params, 'dt')
-    Params = struct();
-    % Default period length is 5 years
-    % Default z-grid length is 7 divisions using Rouwenhorst
-    Params = Configure_TimeGrid_Params(Params, 5, 7);
-else
-    Params = Configure_TimeGrid_Params(Params, Params.dt, Params.n_z_pts);
-end
+if ~exist('Params', 'var'), Params = struct(); end
+% The following will initialize Params.dt=5 and Params.n_z_pts=7 if Params doesn't define them
+Params = Configure_TimeGrid_Params(Params);
 
 %% 1. DEFINE 8 PERMANENT TYPES (4 REGIONS x 2 SECTORS)
 Regions = {'Rural', 'Small', 'Large', 'Auckland'};
@@ -184,14 +179,6 @@ Params.sigma_hc_ig = 0.18;
 % vs. nuclear-household isolation in high-rent metropolitan Auckland (shockable via papakainga / zoning policy),
 % and connects NZ Super age (Jr vs 65), pension adequacy (p_super), and elders' ability to stay in their
 % communities (Params.Q_reg vs immutable baseline Params.Q_reg_base)
-% 
-% Ensure immutable SS0 baselines exist in Params (even if loading an older Step 1 .mat cache)
-if ~isfield(Params, 'K_whanau_base')
-    Params.K_whanau_base = struct('HH_Rural', 0.42, 'HH_Small', 0.38, 'HH_Large', 0.32, 'HH_Auckland', 0.28);
-end
-if ~isfield(Params, 'Q_reg_base')
-    Params.Q_reg_base    = struct('HH_Rural', 1.05, 'HH_Small', 1.40, 'HH_Large', 2.05, 'HH_Auckland', 3.10);
-end
 
 % Update active regional whanau capacity Params.K_whanau(k) from fixed Params.K_whanau_base(k)
 % as a function of current NZ Super age (Jr), pension rate (p_super), and current house prices (Params.Q_reg):
