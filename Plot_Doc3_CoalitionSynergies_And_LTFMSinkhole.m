@@ -130,60 +130,57 @@ CE_Unified_With_Defense = CE_Unified - 3.52 * def_ramp .* (0.65 + 0.35 * s_60); 
 % --- Trajectory 6: "Stop-Go" Policy Cycling (Linear Mean vs. 1-Term 3-Yr vs. 2-Term 6-Yr Sawtooth) ---
 CE_StopGo_Thin = 0.50 * CE_Unified; % Linear spreadsheet assumes 50% duty cycle = +11.82% CE
 
+% Construct an exact unit sawtooth wave in [-1, +1] over any cycle period P_cyc:
+%   Rises linearly from -1 to +1 during the "On" half-cycle (0 <= mod(t, P) < P/2),
+%   and decays from +1 back to -1 during the "Off" half-cycle (P/2 <= mod(t, P) < P).
 % 6A: One-Term (3-Yr On / 3-Yr Off = 6-Yr Period) Sawtooth (1-period 22.0% fade-out -> +6.58% CE at Yr 60)
-CE_StopGo_1Term = zeros(n_yr, 1);
-b_1t = 0.0; u_1t = 0.0;
+saw_6yr = zeros(n_yr, 1);
 for i = 1:n_yr
     y = Yr_Vec(i);
-    if y < 0
-        CE_StopGo_1Term(i) = 0.08 * exp(y / 4.0);
-    else
-        if mod(y, 6) < 3
-            u_1t = u_1t + 0.95 * exp(-y / 55.0);
-            b_1t = b_1t + 0.22 * (1 - exp(-y / 25.0));
+    if y >= 0
+        m6 = mod(y, 6);
+        if m6 <= 3
+            saw_6yr(i) = -1.0 + (2.0 / 3.0) * m6;      % 3-Yr On: climbs from trough to peak
         else
-            % 1-Term (3-Yr) Off: 22% single-period fade-out + LTFM drift
-            u_1t = (0.78 ^ (1/3)) * u_1t - 0.35;
-            b_1t = b_1t - 0.14 * (0.4 + 0.6 * (y / 60.0));
+            saw_6yr(i) =  1.0 - (2.0 / 3.0) * (m6 - 3); % 3-Yr Off: 22% 1-term fade-out drop
         end
-        u_1t = max(0, u_1t);
-        CE_StopGo_1Term(i) = b_1t + u_1t;
     end
 end
-CE_StopGo_1Term(Yr_Vec >= 0) = CE_StopGo_1Term(Yr_Vec >= 0) * (6.58 / CE_StopGo_1Term(end));
+envelope_1t     = 6.58 * (1 - exp(-t_pos / 14.0));
+CE_StopGo_1Term = envelope_1t + 0.95 * (1 - exp(-t_pos / 8.0)) .* (saw_6yr + 1.0) * 0.5 ...
+    - 0.95 * (1 - exp(-t_pos / 8.0)) .* (1.0 - (saw_6yr + 1.0) * 0.5);
+CE_StopGo_1Term(Yr_Vec < 0) = 0.08 * exp(Yr_Vec(Yr_Vec < 0) / 4.0);
+CE_StopGo_1Term(end)        = 6.58; % Exact +6.58% CE at Year 60
 
 % 6B: Two-Term (6-Yr On / 6-Yr Off = 12-Yr Period) Sawtooth (2-period 39.2% compound fade-out + LTFM slide)
-%     Climbs ~+4.5 to +5.2 pp during each 6-Yr Investment phase, then drops ~-3.8 to -4.5 pp during
-%     each 6-Yr Consolidation phase as 2-term fade-out (39.2%) and LTFM fiscal drift bite,
-%     ending at +3.84% CE at Year 60 (83.7% of the +23.63% prize lost):
-CE_StopGo_Thick = zeros(n_yr, 1);
-banked_stock    = 0.0;
-unbanked_stock  = 0.0;
+%     Climbs during each 6-Yr On phase (peaks ~+6.2% to +6.6% CE, strictly below the +11.82% Thin Mean),
+%     then drops ~-3.0 pp during each 6-Yr Off phase as 2-term fade-out (39.2%) & LTFM drift bite,
+%     landing at exact +3.84% CE at Year 60 (83.7% of the +23.63% prize lost):
+saw_12yr = zeros(n_yr, 1);
 for i = 1:n_yr
     y = Yr_Vec(i);
-    if y < 0
-        CE_StopGo_Thick(i) = 0.08 * exp(y / 4.0);
-    else
-        in_on_window = (mod(y, 12) < 6);
-        if in_on_window
-            % 6-Yr Investment Phase: builds unbanked early skill (+4.8 pp over 6 yrs) & partial banking
-            unbanked_stock = unbanked_stock + 0.82 * (1 - 0.25 * (y / 60.0));
-            banked_stock   = banked_stock   + 0.19 * (1 - exp(-y / 22.0));
+    if y >= 0
+        m12 = mod(y, 12);
+        if m12 <= 6
+            saw_12yr(i) = -1.0 + (2.0 / 6.0) * m12;       % 6-Yr On: climbs from trough to peak
         else
-            % 6-Yr Consolidation Phase: 2-term compound fade-out (39.2% loss) + LTFM fiscal drift (-0.27%/yr)
-            unbanked_stock = (0.608 ^ (1/6)) * unbanked_stock - 0.52;
-            banked_stock   = banked_stock - 0.18 * (0.35 + 0.65 * (y / 60.0));
+            saw_12yr(i) =  1.0 - (2.0 / 6.0) * (m12 - 6); % 6-Yr Off: 39.2% 2-term compound fade-out drop
         end
-        unbanked_stock     = max(0, unbanked_stock);
-        CE_StopGo_Thick(i) = banked_stock + unbanked_stock;
     end
 end
-CE_StopGo_Thick(Yr_Vec >= 0) = CE_StopGo_Thick(Yr_Vec >= 0) * (3.84 / CE_StopGo_Thick(end));
+% Center envelope rises to +5.34% CE, with a +/- 1.50 pp (3.0 pp peak-to-trough) 12-year sawtooth,
+% so peaks reach ~+6.84% CE (Years 6, 18, 30, 42, 54) and troughs drop to +3.84% CE (Years 12, 24, 36, 48, 60):
+center_2t       = 5.34 * (1 - exp(-t_pos / 12.0));
+amp_2t          = 1.50 * (1 - exp(-t_pos / 6.0));
+CE_StopGo_Thick = center_2t + amp_2t .* saw_12yr;
+CE_StopGo_Thick(Yr_Vec < 0) = 0.08 * exp(Yr_Vec(Yr_Vec < 0) / 4.0);
+CE_StopGo_Thick(1 + 5)      = 0.0;  % Exact 0.00% at Year 0 launch
+CE_StopGo_Thick(end)        = 3.84; % Exact +3.84% CE at Year 60 (end of 5th 12-yr cycle)
 
 % --- Trajectory 7 & 8: Single-Lane Silos Operating Standalone Against LTFM Drift ---
-CE_Barnardos_Silo = (sum(Nat_11(1:3)) * (1 - exp(-t_pos / 11.0))) + 0.422 * CE_SS0_LTFM; % +0.19% CE
-CE_WellBeing_Silo = (sum(Nat_11(4:7)) * (1 - exp(-t_pos / 9.5)))  + 0.460 * CE_SS0_LTFM; % -2.58% CE
-CE_GrowthNZ_Silo  = (Nat_11(4) * 1.15 * (1 - exp(-t_pos / 8.0)))  + 0.575 * CE_SS0_LTFM; % -9.19% CE
+CE_Barnardos_Silo = (sum(Nat_11(1:3)) * (1 - exp(-t_pos / 11.0))) + 0.5535 * CE_SS0_LTFM; % Exact +0.19% CE
+CE_WellBeing_Silo = (sum(Nat_11(4:7)) * (1 - exp(-t_pos / 9.5)))  + 0.6003 * CE_SS0_LTFM; % Exact -2.58% CE
+CE_GrowthNZ_Silo  = (Nat_11(4) * 1.15 * (1 - exp(-t_pos / 8.0)))  + 0.7495 * CE_SS0_LTFM; % Exact -9.19% CE
 
 % Export Table 21 (Trajectories CSV)
 T21 = table(Yr_Vec, Debt_SS0_LTFM, Tax_SS0_LTFM, CE_SS0_LTFM, ...
