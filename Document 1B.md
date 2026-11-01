@@ -510,8 +510,6 @@ To evaluate the distributional incidence of `SS0 -> SS1 -> SS2` without arbitrar
 2. **Rashbrooke (*Wealth and New Zealand* / *Too Much Money* Wealth Percentile Tables):** Top 10% (`P90: 240k + 2.15M`), Top 5% (`P95: 310k + 3.10M`), Top 2% (`P98: 450k + 5.20M`), and Top 1% (`P99: 600k + 8.50M`).
 3. **Inland Revenue High-Wealth Individuals Research Project (*HWIRP* April 2023) & *NBR Rich List*:** IRD High-Wealth Median (`Tier 9, P99.9: 2.1M + 50M`, where baseline effective tax rates on economic income averaged just 8.9%) and the *NBR Rich List* Median (`Tier 10, P99.99: 6.5M + 140M`).
 
-![Fiscal Give vs Economic Gain Across 10 Survey-Anchored Tiers](Output_NZ_4Region_Intergen/Fig_WealthBrackets_PanelA_GiveVsGain_Dunedin_22.png)
-
 For each tier $m \in \{1, \dots, 10\}$, total Consumption-Equivalent welfare change ($`\Delta\mathrm{CE}_m`$) is decomposed into **3 Tax & Valuation-Cooling Channels** (House-price cooling $\Delta Q_k$, the annual book-value land/wealth levy $\tau_a = 0.015$ (1.5%) above the family-home exemption, and the Estate levy $\tau_b$) and **4 Economic & Cohesion Gain Channels** (ECE/Rent relief + Youth Grant $E$, the **-3.12 to -3.43 pp $SS2$ PAYE cut** + **-60 bps** credit relief, the Firm productive return boost $`\Delta R_k(z_{h,k})`$, and the Social Cohesion / retained-family dividend $`\Delta u_{\mathrm{rel}}`$), reporting separate trajectories for **Active Growth Entrepreneurs** ($`z_f = z_{h,k}`$, 80% operating equity share) versus **Passive Residential Land Hoarders** ($`z_f = z_{\ell,k}`$, 85% passive property share):
 
 ![Fiscal Give vs Economic Gain and Net Worth Resilience Across 10 Survey-Anchored Tiers](Output_NZ_4Region_Intergen/Fig_WealthBrackets_2Panel_GiveAndGain_Dunedin_22.png)
@@ -682,14 +680,11 @@ where:
 
 ---
 
-### 5.4 Year 5 Parliamentary Audit ($`t = 1`$) & Milestones Through Year 60 (`Table16_Actuarial_Continuation_Audit_Dunedin_22.csv`)
-*Source Script:* `Plot_ActuarialContinuationValuation.m` *(Figure for Auckland: `Fig_Actuarial_WideGDP_Auckland_Dunedin_22.png`)*
+### 5.4 Year 5 Parliamentary Audit ($t = 1$) & Milestones Through Year 60 (`Table16_Actuarial_Continuation_Audit_Dunedin_22.csv`)
 
-<img src="./Output_NZ_4Region_Intergen/Fig_Actuarial_WideGDP_Auckland_Dunedin_22.png" alt="Auckland Economy-Wide GDP Lens: Realized vs. Recognised Forward GDP Prize" align="right" width="45%" style="float: right; width: 45%; margin: 0 0 1rem 1.5rem; break-inside: avoid; page-break-inside: avoid;" />
+*Source Script:* `Plot_ActuarialContinuationValuation.m` *(Companion 2-Panel National Figure shown in Section 5.2 above; regional sibling plots exported as `Fig_Actuarial_2Panel_<Region>_<Anchor>.png`)*
 
-* **Auckland Primate Agglomeration Engine:** Holding **34.1% of households** and **35.1% of businesses**, Auckland generates **40.0%** of the national economic payoff. At the Year 5 Parliamentary Audit, against an Auckland public outlay of **NZD 3.24B**, realized cash fiscal returns reach **NZD 1.95B** and realized cash GDP gains reach **NZD 6.03B**, while booked direct cost avoidance alone reaches **NZD 4.06B (1.25x outlay)**, booked total fiscal return reaches **NZD 13.90B (2.0% real) / NZD 7.18B (8.0% real)**, and the booked 25-year GDP prize stands at **NZD 34.17B (2.0% real) / NZD 19.20B (8.0% real)**—compounding to **NZD 595.2B** realized GDP and **NZD 826.5B** recognised GDP by Year 60.
-
-<br clear="all" />
+Table 16 below disaggregates the Year 5 Parliamentary Audit ($t = 1$) across all four geographic tiers alongside the 15-, 20-, 40-, and 60-year national transition milestones under both the default `Dunedin_22` and `MetroSqueeze_GUiNZ` anchors. Notice that while every region achieves immediate direct cost-avoidance breakeven ($>1.0\times$ outlay) at Year 5, Auckland (`34.1%` of households, `35.1%` of firms) generates **40.0%** of the national economic prize (`NZD 34.17B` out of `NZD 85.40B` at 2.0% real) because the reform simultaneously relieves the nation's sharpest metropolitan rental squeeze ($Q_{\text{Akl}} = 3.10$) and unlocks its highest firm productivity ceiling ($z_{h,\text{Akl}} = 1.75$):
 
 | Region / Transition Milestone (`Table16`) | Cumulative Public Investment Outlay | Wait-As-You-Go Cash Fiscal Return | Booked Direct Cost Avoidance Alone (2.0% Real) | Booked Total Fiscal Return (2.0% Central / 8.0% Sens.) | Realized Cash Cumulative GDP Gain | Booked Economy-Wide GDP Prize (2.0% Central / 8.0% Sens.) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
