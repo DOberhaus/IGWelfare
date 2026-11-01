@@ -151,7 +151,6 @@ for u_i = 1:n_ug
     else
         kuia_leisure_lift = -1.85 * ((a_u - 65.0) ^ 1.18);
     end
-    tax_drag_vs_65 = -1.80 * (tax_u - Tax_UCurve_SS2(SuperAge_Grid == 65)); % anchored after loop
     CE_UCurve_SS2(u_i) = kuia_leisure_lift;
 
     % 2) Status Quo (SS0) Austerity Sweep across Super Age 60..75:

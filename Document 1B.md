@@ -25,7 +25,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 ## 1.1 Cross-Reference for Document 1A (Introduction & Overview), Document 1C, and Document 3 ($SS0 \to SS1 \to SS2$)
 
 * **The Treasury Status Quo Binary (185%–200% Net Crown Debt vs. Punitive Tax/Entitlement Cliffs — Doc 1A Intro & Doc 3 Part II):**
-  * *Document 1A & Doc 3 Claim:* Under unchanged policy settings, the New Zealand Treasury's *Long-term Fiscal Statement (He Tirohanga Mokopuna 2025)* and 2026 background papers project net core Crown debt spiraling toward **185%–200% of GDP**, or require punitive tax hikes (working-age PAYE or GST rising from 22.0% toward 28.2%–30.7%) and/or entitlement cuts (raising the NZ Superannuation eligibility age toward 67–72), eroding household welfare by **-16.20% CE** (or **-21.68% CE** under an unfunded 3.0%-of-GDP defense commitment).
+  * *Document 1A & Doc 3 Claim:* Under unchanged policy settings, the New Zealand Treasury's *Long-term Fiscal Statement (He Tirohanga Mokopuna 2025)* and 2026 background papers project net core Crown debt spiraling toward **185%–200% of GDP**, or require punitive tax hikes (working-age PAYE or GST rising from 22.0% toward 28.2%–30.7%) and/or entitlement cuts (raising the NZ Superannuation eligibility age toward 67–72), eroding household welfare by **-16.21% CE** (or **-21.69% CE** under an unfunded 3.0%-of-GDP defense commitment).
   * *Empirical & Literature Anchor:* New Zealand Treasury (*He Tirohanga Mokopuna: The Treasury's Combined Statement on the Long-term Fiscal Position*, Sept 2025); New Zealand Treasury *Analytical Note 26/01* (*Long-term Fiscal Model: 2025 Update*, Feb/March 2026, Table 2, downgrading long-run annual labour productivity growth from 1.0% to 0.9%/yr); and New Zealand Treasury *Working Paper 26/01* (March 2026, OLG general-equilibrium simulations of demographic ageing). Modeled in `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m` (`Table 21`).
 * **Preventative vs. Reactive Infrastructure Stewardship (The 2026 Moa Point Lesson & The 2050 50/50 Protocol — Doc 1A Part I.3 & Part V.1):**
   * *Document 1A Claim:* Underfunding preventative social and physical infrastructure forces ballooning reactive remediation costs—mirrored physically in the February 2026 Moa Point wastewater failure—whereas locking 50% of post-breakeven fiscal surpluses ($SS1$ Foundation & Incubation $\to$ $SS2$ 2050 Solvency & Dividend Harvest) into the **Sovereign Debt Reduction Sinking Fund** ($\Omega_{\mathrm{debt}}$) and 50% into the **Public Infrastructure Reinvestment Pool** ($\Omega_{\mathrm{infra}}$, at multiplier $\mu_{\mathrm{infra}} = 1.65$) retires **NZD 17.50B–17.82B ($SS1$) to NZD 21.85B ($SS2$)** of sovereign debt per cohort wave and mobilizes **NZD 11.52B–12.16B ($SS1$) to NZD 14.90B ($SS2$)** per wave for core public infrastructure.
@@ -39,7 +39,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 | **2. Coupled Markets** *(Property-to-Enterprise Tax Shift)* | `ReturnFn_Firm.m`, `WelfareDecomposition_4Region.m` ($`\tau_a = 0.015, \tau_b = 0.25 \to 0.18, E = 0.065 \to 0.080`$) | +0.0% Wage; 28.0% Young Own; 10.93% Nat. Emig ($S_t = 100$) | **+3.2% to +5.5% Wage; 38.2% Own; 8.56% Emig** ($S_t = 112.0\text{--}118.4$) | **+6.8% to +9.6% Wage; 41.2%–41.5% Own; 7.60% Emig** ($S_t = 126.0$) | `Table1`, `Table3`, `Fig2_Kiyotaki_*`, `Fig3_BrainDrain_*` |
 | **3. Sankey Fiscal Ledger** *(5-Stage Pop & 6-Gate Fiscal)* | `Plot_ChildFates_SSankey.m`, `Plot_ChildFiscal_SSankey.m` ($\Omega_{\mathrm{fiscal}}$) | -NZD 5.3k/yr (Age 30); -NZD 2.4k/yr (Career); NZD 17.7B/yr Exits | **+NZD 10.5k–11.1k/yr (Age 30); +NZD 13.7k–18.2k/yr (Career)** | **+NZD 12.4k–12.8k/yr (Age 30); +NZD 16.4k–16.8k/yr (Career)** | `Table14`, `Table15`, `Fig_ChildFiscal_6Gate_*` |
 | **4. Actuarial Valuation** *(ACC-Style Continuation Value)* | `Plot_ActuarialContinuationValuation.m` ($`\mathcal{V}_{k,t_0}^{(L)}, r_{\mathrm{disc}} = 0.02`$) | Cash breakeven takes **18.8 yrs** (46.4 yrs direct savings) | **Yr 5: NZD 35.25B Fiscal (3.84x) / NZD 85.40B GDP** (1.16x cost avoidance alone) | **60-Yr Cash: NZD 702.3B Fiscal / NZD 1,510.7B GDP (6.86x)** | `Table16_Actuarial_*`, `Fig_Actuarial_*` |
-| **5. The $SS2$ Dividend Harvest** *(2050 50/50 Debt & Infra + Super U-Curve)* | `FertilityBargaining_Module.m`, `Plot_Counterfactuals_And_MirrorInvestments.m` ($`\Omega_{\mathrm{debt}}, \Omega_{\mathrm{infra}}`$) | 1.66 TFR; **23.60%–28.20% PAYE req.**; 22.0% actual PAYE | 1.85–1.93 TFR; **20.84% PAYE req.** (at 22.0% actual → Sinks Debt) | **Super Age 64 (+23.63% CE Peak, 18.85% PAYE) or Age 65 (18.57% PAYE Min)**; NZD 21.85B Debt + 14.90B Infra/Wave | `Table7`, `Table8`, `Table8B`, `Table19`, `Table20`, `FigFert_*` |
+| **5. The $SS2$ Dividend Harvest** *(2050 50/50 Debt & Infra + Super U-Curve)* | `FertilityBargaining_Module.m`, `Plot_Counterfactuals_And_MirrorInvestments.m` ($`\Omega_{\mathrm{debt}}, \Omega_{\mathrm{infra}}`$) | 1.66 TFR; **23.60%–28.20% PAYE req.**; 22.0% actual PAYE | 1.85–1.93 TFR; **20.84% PAYE req.** (at 22.0% actual → Sinks Debt) | **Super Age 64 (+24.24% CE Peak, 18.85% PAYE) or Age 65 (18.57% PAYE Min)**; NZD 21.85B Debt + 14.90B Infra/Wave | `Table7`, `Table8`, `Table8B`, `Table19`, `Table20`, `FigFert_*` |
 
 ---
 
@@ -411,26 +411,26 @@ Every behavioral, demographic, and fiscal elasticity governing the statutory ret
 
 #### 3.4.7 Audited Retirement-Age U-Curve (`Table8B_SuperAge_UCurve_60to75.csv` from `FertilityBargaining_Module.m`)
 
-Evaluating the unified government budget identity and household welfare decomposition across statutory retirement ages $A_{\mathrm{super}} \in [60, 75]$ reveals a textbook **U-curve in required working-age PAYE taxation** (minimized at **Age 65 = 18.57%** and **Age 64 = 18.85%**) and an **Inverted-U in national household welfare** (peaking at **Age 64 = +23.56% to +23.63% CE**):
+Evaluating the unified government budget identity and household welfare decomposition across statutory retirement ages $A_{\mathrm{super}} \in [60, 75]$ reveals a textbook **U-curve in required working-age PAYE taxation** (minimized at **Age 65 = 18.57%** and **Age 64 = 18.85%**) and an **Inverted-U in national household welfare** (peaking at **Age 64 = +24.24 CE**):
 
-| Statutory NZ Super Age ($A_{\mathrm{super}}$) | $SS2$ Required PAYE Tax ($\tau_l$) | $SS2$ Effective Dependency Ratio | $SS2$ National TFR | $SS2$ Mean Struggling Share | $SS2$ National Welfare Gain (CE%) | $SS0$ Status Quo Required PAYE Tax | Structural & Fiscal Regime Interpretation |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Age 60** | `21.05%` | `39.78%` | `1.872` | `2.22%` | `+20.93%` | `26.39%` | *Too Early:* Moving 60–64 peak earners onto Super swells DepRatio to 39.8%, consuming +2.48 pp of the PAYE tax cut. |
-| **Age 61** | `20.42%` | `36.93%` | `1.872` | `2.23%` | `+21.82%` | `25.67%` | Prime-earner denominator loss still outweighs marginal *Kuia* time gain. |
-| **Age 62** | `19.84%` | `34.29%` | `1.872` | `2.24%` | `+22.61%` | `25.02%` | Unlocks a -2.16 pp PAYE cut alongside 3 years of early retirement. |
-| **Age 63** | `19.32%` | `31.86%` | `1.871` | `2.29%` | `+23.23%` | `24.44%` | Strong +12.9% *Kuia/Koroua* time boost + -2.68 pp PAYE tax cut. |
-| **★ Age 64** | **`18.85%`** | **`29.66%`** | **`1.870`** | **`2.41%`** | **`+23.56%` (PEAK!)** | `23.96%` | **★ Global Welfare Peak:** 1 yr early retirement + +8.1% *Kuia* boost + **-3.15 pp PAYE cut** (costs only +0.28 pp vs Age 65!). |
-| **★ Age 65** | **`18.57%` (MIN!)** | **`27.79%`** | **`1.867`** | **`2.60%`** | **`+23.39%`** | `23.60%` | **★ Global Tax Minimum:** Full **-3.43 pp PAYE cut** at current statutory retirement age 65. |
-| **Age 66** | `18.98%` | `27.43%` | `1.865` | `3.21%` | `+20.95%` | `23.64%` | *Inflection Point:* Losing grandparent care (-8.6%) & late-life wear turns tax curve UP and welfare DOWN. |
-| **Age 67** | `19.63%` | `27.54%` | `1.862` | `4.06%` | `+17.66%` | `23.81%` | Disability leak & *whānau* squeeze (-16.5%) erode +1.06 pp of tax relief and -5.90% CE of welfare. |
-| **Age 68** | `20.44%` | `28.09%` | `1.860` | `5.00%` | `+13.91%` | `24.09%` | Sandwich care drag on 40–55-year-old adult children begins shrinking the effective working denominator. |
-| **Age 69** | `21.40%` | `29.05%` | `1.858` | `6.01%` | `+9.79%` | `24.49%` | Almost the entire $SS2$ PAYE cut is wiped out by geriatric/disability leaks and hardship rebound. |
-| **Age 70** | **`22.48%`** | `30.42%` | `1.856` | `7.07%` | `+5.36%` | `25.00%` | **Crosses Above 22.0% PAYE!** Forcing 65–69-year-olds to work (-36.2% *whānau* care) forces a net tax HIKE! |
-| **Age 71** | `23.66%` | `32.09%` | `1.854` | `8.19%` | `+0.68%` | `25.59%` | Nearly 100% of the generational welfare gain is destroyed by pension confiscation and hardship. |
-| **Age 72** | `24.94%` | `34.07%` | `1.852` | `9.34%` | `-4.23%` | `26.27%` | Severe pension confiscation + sandwich drag pulls long-run household welfare negative (-4.23% CE). |
-| **Age 73** | `26.31%` | `36.37%` | `1.851` | `10.52%` | `-9.36%` | `27.03%` | Compounding morbidity and benefit substitution drive required PAYE above 26.3%. |
-| **Age 74** | `27.77%` | `38.97%` | `1.849` | `11.73%` | `-14.69%` | `27.88%` | Approaches Status Quo LTFM tax cliff while confiscating 9 years of retirement. |
-| **Age 75** | **`29.32%`** | `41.87%` | `1.848` | `12.95%` | `-20.21%` | `28.80%` | Total collapse of intergenerational *whānau* scaffolding and geriatric safety-net overload (+7.32 pp tax hike). |
+| **Statutory NZ Super Age ($A_{\mathrm{super}}$)** | **$SS2$ Required PAYE Tax ($\tau_l$)** | **$SS2$ Effective Dependency Ratio** | **$SS2$ National TFR** | **$SS2$ Mean Struggling Share** | **$SS2$ National Welfare Gain (CE%)** | **$SS0$ Status Quo Required PAYE Tax** | **Structural & Fiscal Regime Interpretation** |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Age 60** | 21.05% | 39.80% | 1.871 | 2.22% | +21.61% | 26.40% | **Too Early:** Moving 60–64 peak earners onto Super swells DepRatio to 39.8%, consuming +2.48 pp of the PAYE tax cut. |
+| **Age 61** | 20.43% | 36.95% | 1.871 | 2.23% | +22.51% | 25.68% | Prime-earner denominator loss still outweighs marginal *Kuia* time gain. |
+| **Age 62** | 19.85% | 34.31% | 1.871 | 2.24% | +23.29% | 25.03% | Unlocks a -2.15 pp PAYE cut alongside 3 years of early retirement. |
+| **Age 63** | 19.32% | 31.87% | 1.870 | 2.29% | +23.91% | 24.45% | Strong +12.9% *Kuia/Koroua* time boost + -2.68 pp PAYE tax cut. |
+| **★ Age 64** | **18.85%** | **29.68%** | **1.869** | **2.41%** | **+24.24% (PEAK)** | 23.97% | **★ Global Welfare Peak:** 1 yr early retirement + +8.1% *Kuia* boost + **-3.15 pp PAYE cut** (costs only +0.28 pp vs Age 65). |
+| **★ Age 65** | **18.57% (MIN)** | **27.81%** | **1.866** | **2.60%** | **+24.07%** | 23.61% | **★ Global Tax Minimum:** Full **-3.43 pp PAYE cut** at current statutory retirement age 65. |
+| **Age 66** | 18.98% | 27.45% | 1.864 | 3.21% | +21.63% | 23.65% | **Inflection Point:** Losing grandparent care (-8.6%) & late-life wear turns tax curve UP and welfare DOWN. |
+| **Age 67** | 19.63% | 27.55% | 1.861 | 4.06% | +18.34% | 23.81% | Disability leak & *whānau* squeeze (-16.5%) erode +1.06 pp of tax relief and -5.90% CE of welfare. |
+| **Age 68** | 20.45% | 28.10% | 1.859 | 5.00% | +14.59% | 24.10% | Sandwich care drag on 40–55-year-old adult children begins shrinking the effective working denominator. |
+| **Age 69** | 21.40% | 29.07% | 1.857 | 6.01% | +10.47% | 24.50% | Almost the entire $SS2$ PAYE cut is wiped out by geriatric/disability leaks and hardship rebound. |
+| **Age 70** | **22.48%** | 30.44% | 1.855 | 7.07% | +6.04% | 25.01% | **Crosses Above 22.0% PAYE:** Forcing 65–69-year-olds to work (-36.2% *whānau* care) forces a net tax hike. |
+| **Age 71** | 23.66% | 32.11% | 1.853 | 8.19% | +1.36% | 25.60% | Nearly 100% of the generational welfare gain is eroded by pension confiscation and hardship. |
+| **Age 72** | 24.94% | 34.10% | 1.851 | 9.34% | -3.55% | 26.28% | Severe pension confiscation + sandwich drag pulls long-run household welfare negative (-3.55% CE). |
+| **Age 73** | 26.32% | 36.39% | 1.849 | 10.52% | -8.68% | 27.05% | Compounding morbidity and benefit substitution drive required PAYE above 26.3%. |
+| **Age 74** | 27.78% | 38.99% | 1.848 | 11.73% | -14.01% | 27.89% | Approaches Status Quo LTFM tax cliff while confiscating 9 years of retirement. |
+| **Age 75** | **29.33%** | 41.89% | 1.847 | 12.95% | -19.53% | 28.82% | Total collapse of intergenerational *whānau* scaffolding and geriatric safety-net overload (+7.33 pp tax hike). |
 
 ---
 
@@ -452,7 +452,7 @@ Evaluating the unified government budget identity and household welfare decompos
 | **`SS1_3_LongRun_GE_EndoIntergen`** | **+8.71%** (`8.712`) | **+11.74%** (`11.743`) | **+14.13%** (`14.131`) | **+18.49%** (`18.494`) | **+14.18%** | **57.0% (*Rural*), 59.8% (*Small*), 54.7% (*Large*), 51.3% (*Auckland*)** from $\mu_1^{SS1}$ shift |
 | **`SS2_1_ShortRun_PE`** | **+6.32%** (`6.318`) | **+6.55%** (`6.549`) | **+7.09%** (`7.091`) | **+9.15%** (`9.152`) | **+7.54%** | Adds -3.12 pp PAYE tax cut ($\tau_l: 22.0\% \to 18.88\%$), Super Age 64, $G_{\mathrm{ece},1} = 0.130$, $G_{\mathrm{ece},2} = 0.105$, $E = 0.080$ |
 | **`SS2_2_LongRun_GE_ExoSkills`** | **+9.55%** (`9.551`) | **+11.65%** (`11.652`) | **+13.61%** (`13.610`) | **+17.17%** (`17.174`) | **+13.70%** | Adds 2050 Debt-Sinking ($\Delta r = -0.006$), 1.65x infra wage lift ($w_k +6.8\%\text{ to }+9.6\%$), $Q_{\mathrm{Akl}} -10.5\%$ |
-| **`SS2_3_LongRun_GE_EndoIntergen`** | **+15.65%** (`15.650`) | **+20.63%** (`20.630`) | **+23.59%** (`23.590`) | **+29.53%** (`29.530`) | **+23.63%** | **42.0% of Total National $SS2$ Gain (+9.93% out of +23.63%)** stems from $\mu_1^{SS2}$ dynastic & *Kuia/Whānau* compounding |
+| **`SS2_3_LongRun_GE_EndoIntergen`** | **+15.65%** (`15.650`) | **+20.63%** (`20.630`) | **+23.59%** (`23.590`) | **+29.53%** (`29.530`) | **+24.24%** | **42.0% of Total National $SS2$ Gain (+9.93% out of +24.24%)** stems from $\mu_1^{SS2}$ dynastic & *Kuia/Whānau* compounding |
 
 ---
 
@@ -742,22 +742,22 @@ where the time-$`t`$ credibility weight $`\lambda_{\mathrm{cred}}(t)`$ evolves b
 
 ### Table 5.6A: 11-Layer Constructive Synergy Attribution of Phase 1 ($SS1$) and Phase 2 ($SS2$) Long-Run Welfare Gains (`Table 19`)
 
-To provide an exact constructive accounting of the **+15.65% (*Rural*), +20.63% (*Small*), +23.59% (*Large*), +29.53% (*Auckland*), and +23.63% (*National*)** long-run Consumption-Equivalent (CE %) welfare gains in row `SS2_3_LongRun_GE_EndoIntergen` of `Table 1`, `Plot_Counterfactuals_And_MirrorInvestments.m` evaluates the **7 isolated policy factors** standalone and interleaves the **4 supermodular Dynamic Complementarity Wedges**:
+To provide an exact constructive accounting of the **+18.21% (*Rural*), +21.75% (*Small*), +24.41% (*Large*), +28.70% (*Auckland*), and +24.24% (*National*)** long-run Consumption-Equivalent (CE %) welfare gains in row `SS2_3_LongRun_GE_EndoIntergen` of `Table 1`, `Plot_Counterfactuals_And_MirrorInvestments.m` evaluates the **7 isolated policy factors** standalone and interleaves the **4 supermodular Dynamic Complementarity Wedges**:
 
-| Layer Code (`Table 19`) | Component Type | $SS1$ Nat. CE % | $SS2$ Rural | $SS2$ Small | $SS2$ Large | $SS2$ Auckland | $SS2$ National | Cumulative $SS2$ Nat. | Share of $SS2$ Prize |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **`L01_Iso_ECE1_First2000d`** | `Isolated_Factor` | +2.64% | +2.50% | +3.12% | +3.48% | +4.17% | **+3.47%** | +3.47% | 14.7% |
-| **`L02_Iso_Tuakana_Mentoring`** | `Isolated_Factor` | +1.57% | +1.50% | +1.86% | +2.07% | +2.49% | **+2.07%** | +5.54% | 8.8% |
-| **`L03_WEDGE1_DualGate_HC_Synergy`** | **`SYNERGY_WEDGE`** | **+2.39%** | **+2.10%** | **+2.76%** | **+3.18%** | **+3.97%** | **+3.18%** | **+8.72%** | **13.5%** |
-| **`L04_Iso_EstateProperty_Rebal`** | `Isolated_Factor` | +1.81% | +1.60% | +2.16% | +2.57% | +3.31% | **+2.57%** | +11.29% | 10.9% |
-| **`L05_Iso_YouthGrant_Age20`** | `Isolated_Factor` | +0.99% | +0.90% | +1.16% | +1.31% | +1.58% | **+1.30%** | +12.59% | 5.5% |
-| **`L06_Iso_GeoTransfer_Income`** | `Isolated_Factor` | +0.83% | +1.15% | +1.11% | +1.01% | +1.02% | **+1.06%** | +13.65% | 4.5% |
-| **`L07_WEDGE2_LVR_Whanau_Synergy`** | **`SYNERGY_WEDGE`** | **+1.43%** | **+1.35%** | **+1.86%** | **+2.22%** | **+2.90%** | **+2.23%** | **+15.88%** | **9.4%** |
-| **`L08_WEDGE3_CrossStack_HC_x_Spatial`** | **`SYNERGY_WEDGE`** | **+2.10%** | **+2.15%** | **+3.12%** | **+3.89%** | **+5.19%** | **+3.87%** | **+19.75%** | **16.4%** |
-| **`L09_Iso_DebtSinking_Interest`** | `Isolated_Factor` | +0.25% | +0.55% | +0.70% | +0.81% | +0.97% | **+0.79%** | +20.54% | 3.3% |
-| **`L10_Iso_PAYE_SuperAge_64`** | `Isolated_Factor` | +0.00% | +0.90% | +1.06% | +1.16% | +1.37% | **+1.17%** | +21.71% | 5.0% |
-| **`L11_WEDGE4_Fiscal_TFR_2ndGen_Closure`** | **`SYNERGY_WEDGE`** | **+0.17%** | **+0.95%** | **+1.73%** | **+1.89%** | **+2.57%** | **+1.93%** | **+23.63%** | **8.2%** |
-| **TOTAL INTEGRATED REFORM (`T1`)** | **7 Iso (`+12.43%`) + 4 Wedges (`+11.20%`)** | **+14.18%** | **+15.65%** | **+20.63%** | **+23.59%** | **+29.53%** | **+23.63%** | **+23.63%** | **100.0%** *(47.4% Wedges!)* |
+| **Layer Code (`Table 19`)** | **Component Type** | **$SS1$ Nat. CE %** | **$SS2$ Rural** | **$SS2$ Small** | **$SS2$ Large** | **$SS2$ Auckland** | **$SS2$ National** | **Cumulative $SS2$ Nat.** | **Share of $SS2$ Prize** |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **L01_Iso_ECE1_First2000d** | Isolated_Factor | +2.61% | +2.91% | +3.29% | +3.60% | +4.05% | **+3.57%** | +3.57% | 14.7% |
+| **L02_Iso_Tuakana_Mentoring** | Isolated_Factor | +1.56% | +1.75% | +1.96% | +2.14% | +2.42% | **+2.13%** | +5.70% | 8.8% |
+| **L03_WEDGE1_DualGate_HC_Synergy** | **SYNERGY_WEDGE** | **+2.35%** | **+2.44%** | **+2.91%** | **+3.29%** | **+3.86%** | **+3.26%** | **+8.96%** | **13.4%** |
+| **L04_Iso_EstateProperty_Rebal** | Isolated_Factor | +1.79% | +1.86% | +2.28% | +2.66% | +3.21% | **+2.63%** | +11.59% | 10.9% |
+| **L05_Iso_YouthGrant_Age20** | Isolated_Factor | +0.98% | +1.05% | +1.22% | +1.36% | +1.53% | **+1.33%** | +12.92% | 5.5% |
+| **L06_Iso_GeoTransfer_Income** | Isolated_Factor | +0.83% | +1.34% | +1.17% | +1.04% | +0.99% | **+1.10%** | +14.03% | 4.5% |
+| **L07_WEDGE2_LVR_Whanau_Synergy** | **SYNERGY_WEDGE** | **+1.39%** | **+1.57%** | **+1.96%** | **+2.30%** | **+2.82%** | **+2.28%** | **+16.30%** | **9.4%** |
+| **L08_WEDGE3_CrossStack_HC_x_Spatial** | **SYNERGY_WEDGE** | **+2.09%** | **+2.50%** | **+3.29%** | **+4.02%** | **+5.04%** | **+3.95%** | **+20.25%** | **16.3%** |
+| **L09_Iso_DebtSinking_Interest** | Isolated_Factor | +0.25% | +0.64% | +0.74% | +0.84% | +0.94% | **+0.82%** | +21.07% | 3.4% |
+| **L10_Iso_PAYE_SuperAge_64** | Isolated_Factor | +0.00% | +1.05% | +1.11% | +1.20% | +1.33% | **+1.20%** | +22.27% | 5.0% |
+| **L11_WEDGE4_Fiscal_TFR_2ndGen_Closure** | **SYNERGY_WEDGE** | **+0.35%** | **+1.10%** | **+1.82%** | **+1.95%** | **+2.50%** | **+1.97%** | **+24.24%** | **8.1%** |
+| **TOTAL INTEGRATED REFORM (`T1`)** | **7 Iso (`+12.79%`) + 4 Wedges (`+11.46%`)** | **+14.21%** | **+18.21%** | **+21.75%** | **+24.41%** | **+28.70%** | **+24.24%** | **+24.24%** | **100.0%** *(47.3% Wedges)* |
 
 ---
 
@@ -767,20 +767,20 @@ To provide an exact constructive accounting of the **+15.65% (*Rural*), +20.63% 
 
 Anchored to the national household consumption base (`NZD_Billion_Per_CE_Pct = NZD 2.38B/yr per 1.0% CE`), `Table 20` tracks the four annual public investment pillars against total welfare gains and the Net Unrecovered Public Outlay (`Net_Fiscal_Outlay_Mirror_CE`, which hits strictly **0.00% at Year 18.8 Cash Breakeven**):
 
-| Transition Milestone (`Table 20`) | Gross Inv 1: Universal ECE ($\Delta G_{\mathrm{ece},1}$) | Gross Inv 2: Tuakana Mentoring ($\Delta G_{\mathrm{ece},2}$) | Gross Inv 3: Youth Grant ($\Delta E$) | Gross Inv 4: Geo Transfer ($\Delta T_k$) | Total Gross Public Investment (CE% / NZD B/yr) | Net Unrecovered Public Cost (CE%) | Total Household Welfare Gain (CE% / NZD B/yr) |
+| **Transition Milestone (`Table 20`)** | **Gross Inv 1: Universal ECE ($\Delta G_{\mathrm{ece},1}$)** | **Gross Inv 2: Tuakana Mentoring ($\Delta G_{\mathrm{ece},2}$)** | **Gross Inv 3: Youth Grant ($\Delta E$)** | **Gross Inv 4: Geo Transfer ($\Delta T_k$)** | **Total Gross Public Investment (CE% / NZD B/yr)** | **Net Unrecovered Public Cost (CE%)** | **Total Household Welfare Gain (CE% / NZD B/yr)** |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Year 0 (2026 Launch)** | -0.94% | -0.34% | -0.44% | -0.42% | **-2.15% (-NZD 5.11B/yr)** | -2.06% | **+2.52% (+NZD 6.00B/yr)** |
-| **Year 5 (1st Audit)** | -1.38% | -0.50% | -0.65% | -0.62% | **-3.15% (-NZD 7.49B/yr)** | -2.87% | **+6.14% (+NZD 14.61B/yr)** |
-| **Year 15 (Full Pipe)** | -1.45% | -0.52% | -0.68% | -0.65% | **-3.30% (-NZD 7.85B/yr)** | -1.38% | **+10.55% (+NZD 25.11B/yr)** |
-| **★ Year 18.8 (Cash Breakeven)** | -1.45% | -0.52% | -0.68% | -0.65% | **-3.30% (-NZD 7.86B/yr)** | **0.00% (BREAKEVEN!)** | **+11.75% (+NZD 27.97B/yr)** |
-| **Year 25 ($SS2$ Trigger)** | -1.45% | -0.52% | -0.68% | -0.65% | **-3.30% (-NZD 7.86B/yr)** | **0.00% (Self-Financing)** | **+13.06% (+NZD 31.08B/yr)** |
-| **Year 60 ($SS2$ Steady State)** | -1.72% | -0.78% | -0.92% | -0.82% | **-4.24% (-NZD 10.10B/yr)** | **0.00% (+Surplus Sinks Debt)** | **+23.63% (+NZD 56.24B/yr, 5.57x!)** |
+| **Year 0 (2026 Launch)** | -0.94% | -0.34% | -0.44% | -0.42% | **-2.15% (-NZD 5.11B/yr)** | -2.06% | **+2.07% (+NZD 4.94B/yr)** |
+| **Year 5 (1st Audit)** | -1.38% | -0.50% | -0.65% | -0.62% | **-3.14% (-NZD 7.48B/yr)** | -2.86% | **+5.58% (+NZD 13.27B/yr)** |
+| **Year 15 (Full Pipe)** | -1.45% | -0.52% | -0.68% | -0.65% | **-3.30% (-NZD 7.85B/yr)** | -1.38% | **+10.86% (+NZD 25.85B/yr)** |
+| **★ Year 18.8 (Cash Breakeven)** | -1.45% | -0.52% | -0.68% | -0.65% | **-3.30% (-NZD 7.85B/yr)** | **0.00% (BREAKEVEN)** | **+12.18% (+NZD 28.99B/yr)** |
+| **Year 25 ($SS2$ Trigger)** | -1.45% | -0.52% | -0.68% | -0.65% | **-3.30% (-NZD 7.85B/yr)** | **0.00% (Self-Financing)** | **+13.48% (+NZD 32.08B/yr)** |
+| **Year 60 ($SS2$ Steady State)** | -1.72% | -0.78% | -0.92% | -0.82% | **-4.24% (-NZD 10.09B/yr)** | **0.00% (+Surplus Sinks Debt)** | **+24.07%–24.24% (+NZD 57.28B–57.70B/yr, 5.72x)** |
 
 * **Literature & Equation Defense of Layer 9 (Sovereign Debt-Service Interest Relief):**
   1. *Direct Crown Budget Relief ($`r_t d_t \downarrow`$):* Following Ferriere et al. (2025, Sec. 4.2 & 6.1), where government debt service $r_t d_t$ absorbs ~2.8%–3.1% of public outlays in the intertemporal budget constraint $(1 + r_t)d_t + G_t + T_t = d_{t+1} + T_{\mathrm{rev},t}$, locking 50% of post-breakeven surpluses ($\Omega_{\mathrm{debt},g}$) into sovereign debt retirement saves **NZD 0.22k to NZD 0.38k/yr per worker** in deadweight bond interest.
   2. *Domestic Bond-Market Crowding-In ($`\Delta r = -60\text{ bps}`$):* In the national asset market clearing condition $\sum_k \omega_{F,k} \int (k_k - a_f) d\Gamma_k + B_{\mathrm{gov}} = \sum_k \omega_{HH,k} \int a_{\mathrm{fin}} d\mu_k$, retiring $B_{\mathrm{gov}}$ reduces sovereign crowding-out of private capital, lowering equilibrium interest rates (`r_delta = -0.006`) and reducing SME credit and young-homeowner mortgage costs (Kiyotaki et al., 2024, Fig. 9).
   3. *Stopping External Debt-Service Leakage:* In a small open economy with net foreign debt obligations $B_t^* / R_t$ (Kiyotaki et al., 2024, Eq. 29), retiring public debt prevents domestic tax revenues from leaking abroad to foreign bondholders.
-  4. *Cross-Reference to [Document 3](Document%203.md) (`Tables 21 & 22`):* For the 60-year LTFM Sinkhole (-16.20% CE), the 3.0%-of-GDP (+NZD 8.0B/yr) Defense Commitment (-21.68% CE under SS0 vs. +20.11% CE under the Unified Plan), the Two-Term (6-Year) "Stop-Go" Policy Cycle (+3.84% CE vs. +6.58% CE for a 1-Term Cycle), and the $4 \times 4$ Coalition Dependency Matrix (`Table 22`), see **[Document 3](Document%203.md)** and its Appendix Tables A.1–A.3.
+  4. *Cross-Reference to [Document 3](Document%203.md) (`Tables 21 & 22`):* For the 60-year LTFM Sinkhole (-16.21% CE), the 3.0%-of-GDP (+NZD 8.0B/yr) Defense Commitment (-21.69% CE under SS0 vs. +20.72% CE under the Unified Plan), the Two-Term (6-Year) "Stop-Go" Policy Cycle (+3.84% CE vs. +6.58% CE for a 1-Term Cycle), and the $4 \times 4$ Coalition Dependency Matrix (`Table 22`), see **[Document 3](Document%203.md)** and its Appendix Tables A.1–A.3.
 
 ---
 

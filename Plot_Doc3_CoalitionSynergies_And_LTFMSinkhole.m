@@ -44,8 +44,8 @@ if evalin('base', 'exist(''T1'', ''var'')')
         SS2_Target_Reg = table2array(T1_ws(6, 1:4));
     end
 end
-SS1_Nat = sum(SS1_Target_Reg .* Pop_Weights); % ~14.18%
-SS2_Nat = sum(SS2_Target_Reg .* Pop_Weights); % ~23.63%
+SS1_Nat = sum(SS1_Target_Reg .* Pop_Weights); % ~14.21%
+SS2_Nat = sum(SS2_Target_Reg .* Pop_Weights); % ~24.24%
 
 % Canonical 11-Layer National SS2 Breakdown (from Table 19 / Fig_Counterfactual):
 %   L1: Iso ECE1 (+3.47%), L2: Iso Tuakana (+2.07%), L3: Wedge 1 ECE1xTuakana (+3.18%) -> Tier 1 = +8.72%
@@ -121,7 +121,7 @@ for i = 1:n_yr
         CE_Unified(i) = base25 + (SS2_Nat - base25) * (1 - exp(-(y - 25) / 8.5));
     end
 end
-% Pin Year 60 to exact SS2_Nat (+23.63% CE) so callouts & tables match to 2 decimal places:
+% Pin Year 60 to exact SS2_Nat (+24.24% CE) so callouts & tables match to 2 decimal places:
 CE_Unified(Yr_Vec >= 25) = CE_Unified(Yr_Vec >= 25) * (SS2_Nat / CE_Unified(end));
 
 % --- Trajectory 5: Unified Coalition Carrying the 3.0% GDP (+NZD 8.0B/yr) Defense Commitment in SS2 ---
@@ -155,7 +155,7 @@ CE_StopGo_1Term(end)        = 6.58; % Exact +6.58% CE at Year 60
 % 6B: Two-Term (6-Yr On / 6-Yr Off = 12-Yr Period) Sawtooth (2-period 39.2% compound fade-out + LTFM slide)
 %     Climbs during each 6-Yr On phase (peaks ~+6.2% to +6.6% CE, strictly below the +11.82% Thin Mean),
 %     then drops ~-3.0 pp during each 6-Yr Off phase as 2-term fade-out (39.2%) & LTFM drift bite,
-%     landing at exact +3.84% CE at Year 60 (83.7% of the +23.63% prize lost):
+%     landing at exact +3.84% CE at Year 60 (83.7% of the +24.24% prize lost):
 saw_12yr = zeros(n_yr, 1);
 for i = 1:n_yr
     y = Yr_Vec(i);
