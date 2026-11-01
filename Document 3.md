@@ -127,6 +127,14 @@ Stepping back from coalition mechanics, what does this coupled transition mean i
 * **For Young Adults and Working Families (Ages 20–63):** At Age 20, every young Kiwi receives a universal Youth Capital Grant that—combined with a 7.5% to 10.5% cooling in metropolitan house price-to-income ratios and +6.8% to +9.6% higher real wages from expanding local firms—makes buying a first home, starting a venture, or building a creative career achievable in New Zealand rather than requiring a one-way ticket to Australia. Once the first generation of supported children enters the workforce and slashes reactive remediation costs, working families receive a permanent **-3.12 to -3.43 percentage-point PAYE income tax cut**.
 * **For Older Workers, Grandparents (*Kuia & Koroua*), and Retirees (Ages 64+):** Instead of facing austerity proposals to push the retirement age out to 67 or 70—which disproportionately penalize manual, rural, Māori, and Pasifika workers whose physical health depreciates earlier—the productivity and fiscal dividends of Phase 2 allow New Zealand to **lower the universal Superannuation age to 64**. That extra year of healthy retirement dignifies decades of hard work while giving grandparents the time and financial security to help anchor the next generation of *mokopuna*.
 
+```
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
 ---
 
 ## Part IV: Perishability, Two-Term "Stop-Go" Pendulums, and Why "Thick" Operators Beat "Thin" Spreadsheets

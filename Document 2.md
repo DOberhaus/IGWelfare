@@ -89,13 +89,11 @@ Following Kiyotaki, Michaelides, and Nikolov (2024), households with net worth b
 
 In the two-stage Cunha–Heckman–Schennach skill technology (`HumanCapital_Lifecycle_aprimeFn.m`), childhood skill $\theta_c$ evolves across Stage 1 (${\mathcal{J}_{c,1}}$, ages 0–5, where $\varphi_1 = 0.35 > 0$) and Stage 2 (${\mathcal{J}_{c,2}}$, ages 6–17, where $\varphi_2 = -0.95 < 0$).
 
-$$
-\theta_{c,\mathrm{ret}} = \theta_c - \delta_{\theta,\mathrm{fade}}\left(1 - M_{\mathrm{mentor}}\right)\max\left(0,\, \theta_c - \theta_{\mathrm{base}}\right)
-$$
+$$\theta_{c,\mathrm{ret}} = \theta_c - \delta_{\theta,\mathrm{fade}}\left(1 - M_{\mathrm{mentor}}\right)\max\left(0,\; \theta_c - \theta_{\mathrm{base}}\right)$$
 
-$$
-\theta_c^{\prime} = \begin{cases} \left(1 - \omega_{s1}\right)\theta_c + \omega_{s1}\left[\gamma_{1,\mathrm{self}}\theta_c^{\varphi_1} + \gamma_{1,\mathrm{inv}}\left(i_c + G_{\mathrm{ECE},1}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}\right)^{\varphi_1} + \gamma_{1,\mathrm{par}}\bar{h}_p^{\varphi_1}\right]^{1/\varphi_1} & \text{if } j \in \mathcal{J}_{c,1} \\ \left(1 - \omega_{s2}\right)\theta_{c,\mathrm{ret}} + \omega_{s2}\left[\gamma_{2,\mathrm{self}}\theta_{c,\mathrm{ret}}^{\varphi_2} + \gamma_{2,\mathrm{inv}}\left(i_c + G_{\mathrm{ECE},2}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}\right)^{\varphi_2} + \gamma_{2,\mathrm{par}}\bar{h}_p^{\varphi_2}\right]^{1/\varphi_2}\exp\left(\Psi_{J=5}\left(z_p, a_p, M_{\mathrm{mentor}}\right)\right) & \text{if } j \in \mathcal{J}_{c,2} \\ \theta_c & \text{otherwise} \end{cases}
-$$
+$$\Theta_s\left(\tilde{\theta}_c\right) = \left[\gamma_{s,\mathrm{self}}\tilde{\theta}_c^{\varphi_s} + \gamma_{s,\mathrm{inv}}\left(i_c + G_{\mathrm{ECE},s}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}\right)^{\varphi_s} + \gamma_{s,\mathrm{par}}\bar{h}_p^{\varphi_s}\right]^{1/\varphi_s}, \quad s \in \{1, 2\}$$
+
+$$\theta_c^{\prime} = \begin{cases} \left(1 - \omega_{s1}\right)\theta_c + \omega_{s1}\,\Theta_1\left(\theta_c\right) & \text{if } j \in \mathcal{J}_{c,1} \\ \left(1 - \omega_{s2}\right)\theta_{c,\mathrm{ret}} + \omega_{s2}\,\Theta_2\left(\theta_{c,\mathrm{ret}}\right)\exp\left(\Psi_{J=5}\left(z_p, a_p, M_{\mathrm{mentor}}\right)\right) & \text{if } j \in \mathcal{J}_{c,2} \\ \theta_c & \text{otherwise} \end{cases}$$
 
 Because Stage 2 exhibits strong dynamic complementarity ($\sigma_2 = \frac{1}{1 - \varphi_2} = 0.51 < 1$) and unbanked gain depreciation $\delta_{\theta,\mathrm{fade}} > 0$, early skill gains $\theta_c$ erode during middle childhood and early adolescence ($J = 5$, child ages 12–14) if Stage-2 investment or socio-emotional stability collapses. We formalize two countervailing mechanisms operating at this gate:
 
@@ -409,7 +407,7 @@ $$\Phi(t) = \Phi_1 + \frac{\Phi_2 - \Phi_1}{1 + \exp\left(-\xi_{\mathrm{ramp}}\l
 
 To decompose the multiphase Consumption-Equivalent welfare trajectory $\mathrm{CE}_{k,t}^{\mathrm{tot}}$ (`T1` rows `SS1_1..3` and `SS2_1..3`) into its underlying isolated policy levers and non-linear dynamic complementarity wedges across cohort entry years $c \in [-10, +60]$ and regions $k \in \{\mathrm{Rural}, \mathrm{Small}, \mathrm{Large}, \mathrm{Auckland}, \mathrm{National}\}$, `Plot_Counterfactuals_And_MirrorInvestments.m` constructs an **11-Layer Supermodular Hierarchy** (`Table 19`) comprising **7 Isolated Policy Factors** ($\Delta \mathrm{CE}_{k,m}^{\mathrm{iso}}$, summing to `+12.79% CE` nationally or `52.7%` of the prize) interleaved with **4 Named Dynamic Complementarity Wedges** ($\Delta_{\mathrm{syn},w} \equiv W(A_w \cup B_w) - W(A_w) - W(B_w) > 0$, summing to **`+11.46% CE` nationally or `47.3%` of the `+24.24% CE` total**):
 
-$$\mathrm{CE}_k^{SS2} = \underbrace{\sum_{m \in \{1,2,4,5,6,9,10\}} \Delta \mathrm{CE}_{k,m}^{\mathrm{iso}}}_{\text{7 Isolated Factors (+12.79 pp)}} + \underbrace{\sum_{w \in \{3,7,8,11\}} \Delta \mathrm{CE}_{k,w}^{\mathrm{wedge}}}_{\text{4 Synergy Wedges (+11.46 pp, 47.3\% share)}} = +24.24\text{ pp CE (National)}$$
+$$\mathrm{CE}_k^{SS2} = \underbrace{\sum_{m \in \{1,2,4,5,6,9,10\}} \Delta \mathrm{CE}_{k,m}^{\mathrm{iso}}}_{\text{7 Isolated Factors (+12.79 pp, 52.7\\\% share)}} + \underbrace{\sum_{w \in \{3,7,8,11\}} \Delta \mathrm{CE}_{k,w}^{\mathrm{wedge}}}_{\text{4 Synergy Wedges (+11.46 pp, 47.3\\\% share)}} = +24.24\text{ pp CE (National)}$$
 
 1. **Tier 1 (Dual-Gate Human Capital Stack = `+8.96% CE` Nat.):** Layer 1 (`Iso ECE1 = +3.57%`) + Layer 2 (`Iso Tuakana = +2.13%`) + **Layer 3 (`★ Wedge 1: Dual-Gate Synergy = +3.26%`, halting $\delta_{\theta,\mathrm{fade}} = 0.22$ fade-out)**.
 2. **Tier 2 (Spatial, LVR & Enterprise Stack = `+7.35% CE` Nat.):** Layer 4 (`Iso Estate/Property Rebalance = +2.63%`) + Layer 5 (`Iso Age-20 Youth Grant E = +1.33%`) + Layer 6 (`Iso Income x Geography Transfer = +1.10%`) + **Layer 7 (`★ Wedge 2: 20% LVR-Clearance & Whānau-Anchoring Synergy = +2.28%`)**.
