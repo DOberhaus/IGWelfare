@@ -7,9 +7,8 @@
 %   - Stage 3: Long-Run GE with Endogenous 4x5 Intergenerational Matrix (jDist_SSm)
 %   - Populates workspace structs (StatDist_SS0, StatDist_SS1, ..., Phases(1:M+1))
 
-if ~exist('Params', 'var') || ~isfield(Params, 'dt')
-    Params = Configure_TimeGrid_Params(Params, 5);
-end
+if ~exist('Params', 'var'), Params = struct(); end
+Params = Configure_TimeGrid_Params(Params);
 N_reg = length(Regions);
 
 %% 1. STORE & SOLVE CLEAN 4D BASELINE ANCHOR (SS0) ON IDENTICAL RETURN FUNCTION
@@ -89,11 +88,7 @@ if Enable_SS2_Phase
         'HH_Small',    0.037, ...
         'HH_Large',    0.031, ...
         'HH_Auckland', 0.033);
-    if isfield(Params_SS0, 'super_age_SS2')
-        Reform_Phase_Specs(2).super_age = Params_SS0.super_age_SS2; % Default 64.0 (or set 63.0, 62.0!)
-    else
-        Reform_Phase_Specs(2).super_age = 64.0;
-    end
+    Reform_Phase_Specs(2).super_age = Params_SS0.super_age_SS2; % Default 64.0 (or set 63.0, 62.0!)
 
     % Endogenous SS2 PAYE tax cut (tau_l_delta) consistent with Required_LaborTax_Pct in T_Fert2:
     % - At Super Age 65: Required PAYE = 18.50% -> tau_l_delta = -0.0350 (-3.50 pp PAYE cut)
@@ -180,10 +175,8 @@ for m = 1:M_reforms
     if isfield(spec, 'S_cohesion')
         P_GE.S_cohesion = spec.S_cohesion;
     end
-    eta_elder       = 0.09;
-    if isfield(Params_SS0, 'eta_elder_whanau'), eta_elder = Params_SS0.eta_elder_whanau; end
     if super_age_m >= 65
-        elder_time_mult = exp(-eta_elder*(super_age_m - 65));
+        elder_time_mult = exp(-Params_SS0.eta_elder_whanau*(super_age_m - 65));
     else
         elder_time_mult = 1 + 0.16*tanh((65 - super_age_m)/1.8);
     end
@@ -192,10 +185,8 @@ for m = 1:M_reforms
         P_GE.w_reg.(['HH_', reg])   = Params_SS0.w_reg.(['HH_', reg])   * spec.w_mult_vs_SS0(r_idx);
         P_GE.w_reg.(['Firm_', reg]) = Params_SS0.w_reg.(['Firm_', reg]) * spec.w_mult_vs_SS0(r_idx);
         P_GE.Q_reg.(['HH_', reg])   = Params_SS0.Q_reg.(['HH_', reg])   * spec.Q_mult_vs_SS0(r_idx);
-        if isfield(Params_SS0, 'K_whanau_base')
-            elder_home_mult = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
-            P_GE.K_whanau.(['HH_', reg]) = Params_SS0.K_whanau_base.(['HH_', reg]) * elder_home_mult * elder_time_mult;
-        end
+        elder_home_mult = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
+        P_GE.K_whanau.(['HH_', reg]) = Params_SS0.K_whanau_base.(['HH_', reg]) * elder_home_mult * elder_time_mult;
     end
 
     [V_GE_Exo_m, Policy_GE_Exo_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
@@ -269,15 +260,9 @@ for m = 1:M_reforms
 
         % Incorporate Daruich (2018) 2nd-generation skill & Montessori mentoring compounding in Stage 3
         % using canonical regional multiplier anchored in Configure_TimeGrid_Params.m:
-        if isfield(Params_SS0, 'daruich_ig_mult')
-            daruich_mult = Params_SS0.daruich_ig_mult;
-        else
-            daruich_mult = [5.51, 7.27, 8.00, 9.93];
-        end
-        ig_step_raw = max(0, CE_Stage_m(3, r_idx) - CE_Stage_m(2, r_idx));
-        whanau_ig_factor = elder_time_mult ^ 0.55; % < 1 when super_age > 65 (whanau squeeze), > 1 when super_age < 65
-        ig_step_raw      = max(0, CE_Stage_m(3, r_idx) - CE_Stage_m(2, r_idx));
-        ig_step          = 0.90 * daruich_mult(r_idx) * spec.Intensity * whanau_ig_factor + 0.10 * min(12.0, ig_step_raw);
+        whanau_ig_factor     = elder_time_mult ^ 0.55; % < 1 when super_age > 65 (whanau squeeze), > 1 when super_age < 65
+        ig_step_raw          = max(0, CE_Stage_m(3, r_idx) - CE_Stage_m(2, r_idx));
+        ig_step              = 0.90 * Params_SS0.daruich_ig_mult(r_idx) * spec.Intensity * whanau_ig_factor + 0.10 * min(12.0, ig_step_raw);
         CE_Stage_m(3, r_idx) = CE_Stage_m(2, r_idx) + ig_step;
 
         base_ce = CE_Stage_m(3, r_idx);
@@ -327,8 +312,8 @@ if ~exist('OutputDir', 'var') || isempty(OutputDir)
     OutputDir = 'Output_NZ_4Region_Intergen';
 end
 if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
-writetable(T1, fullfile(OutputDir, 'Table1_WelfareDecomposition_4Region.csv'), 'WriteRowNames', true);
-writetable(T2, fullfile(OutputDir, 'Table2_QuintileWelfare_4Region.csv'),      'WriteRowNames', true);
-writetable(T3, fullfile(OutputDir, 'Table3_HousingTenure_4Region.csv'),        'WriteRowNames', true);
+writetable(T1, fullfile(OutputDir, 'Table1_4Region_Daruich_LeeSeshadri_Decomposition.csv'), 'WriteRowNames', true);
+writetable(T2, fullfile(OutputDir, 'Table2_4Region_LabroussePerdereau_SpatialQuintiles.csv'), 'WriteRowNames', true);
+writetable(T3, fullfile(OutputDir, 'Table3_4Region_Kiyotaki_TenureGenerationalCleavage.csv'), 'WriteRowNames', true);
 disp('=== TABLE 1: MULTIPHASE 4-REGION WELFARE DECOMPOSITION (CE %) ===');
 disp(T1);
