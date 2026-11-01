@@ -63,7 +63,7 @@ Params.T_trans_years = 60;
 Params.T_trans       = round(Params.T_trans_years / dt); % 12 (dt=5), 20 (dt=3), 30 (dt=2)
 Params.zeta_cohort   = 1 - (1 - 0.085)^scale_dt;
 
-%% 5. CANONICAL 4-REGION WHANAU, STUNTING, & MIGRATION CALIBRATION (SINGLE SOURCE OF TRUTH)
+%% 5. CANONICAL 4-REGION WHANAU, HARDSHIP, & MIGRATION CALIBRATION (SINGLE SOURCE OF TRUTH)
 Params.K_whanau_base_vec = [0.42, 0.38, 0.32, 0.28]; % [Rural, Small, Large, Auckland]
 if ~isfield(Params, 'K_whanau_base')
     Params.K_whanau_base = struct('HH_Rural', 0.42, 'HH_Small', 0.38, 'HH_Large', 0.32, 'HH_Auckland', 0.28);
@@ -75,8 +75,8 @@ if ~isfield(Params, 'Q_reg_base')
     Params.Q_reg_base = struct('HH_Rural', 1.05, 'HH_Small', 1.40, 'HH_Large', 2.05, 'HH_Auckland', 3.10);
 end
 
-% Canonical regional stunting targets (%) & launch skill drift vector
-Params.base_stunt_vec  = [19.8, 18.2, 15.6, 14.3];
+% Canonical regional early hardship targets (%) & launch skill drift vector
+Params.base_struggle_vec  = [19.8, 18.2, 15.6, 14.3];
 Params.reg_skill_drift = [-0.083, -0.059, -0.024, -0.020];
 
 % Canonical 4x5 Gumbel migration utility matrix [Rural, Small, Large, Auckland, Abroad]
@@ -117,7 +117,7 @@ if ~isfield(Params, 'nu_peak_earn_u65'),         Params.nu_peak_earn_u65        
 if ~isfield(Params, 'nu_peak_earn_slope_u65'),   Params.nu_peak_earn_slope_u65   = 0.040; end % Additional tax-capacity loss per yr below 65
 if ~isfield(Params, 'dep_ratio_2026_anchor'),    Params.dep_ratio_2026_anchor    = 24.50; end % 2026 OLG dependency ratio anchor at tau_l = 22%
 if ~isfield(Params, 'beta_aging_tax_drift'),     Params.beta_aging_tax_drift     = 0.220; end % Marginal PAYE tax sensitivity to dependency ratio
-if ~isfield(Params, 'beta_exits_skill_div'),     Params.beta_exits_skill_div     = 0.145; end % Marginal PAYE tax relief per pp of stunting cut
+if ~isfield(Params, 'beta_exits_skill_div'),     Params.beta_exits_skill_div     = 0.145; end % Marginal PAYE tax relief per pp of early hardship cut
 if ~isfield(Params, 'ss2_harvest_div_base'),     Params.ss2_harvest_div_base     = 2.070; end % SS2 debt-sinking (-60 bps) + GE tax-base dividend (pp)
 if ~isfield(Params, 'psi_austerity_tax_drag'),   Params.psi_austerity_tax_drag   = 0.220; end % SS2 harvest erosion coefficient when Super > 65
 

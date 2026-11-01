@@ -61,7 +61,7 @@ end
 TargetMoments = struct();
 
 % Lens 1 Targets: Child Hardship, Zero Private Top-Up Share S, & Q5/Q1 Investment Ratio
-TargetMoments.StuntedShare_NZ     = 0.180; % 14.3% NZ Material Hardship to 22% Dunedin Study benchmark
+TargetMoments.StrugglingShare_NZ     = 0.180; % 14.3% NZ Material Hardship to 22% Dunedin Study benchmark
 TargetMoments.ZeroChildTopUp_S    = 0.250; % Share S with ic = 0 (Source 2 weighted imputation benchmark)
 TargetMoments.ChildInv_Q5_Q1_Ratio= 1.385; % Daruich (Source 6): 21.6 / 15.6 = 1.385 investment ratio
 
@@ -206,12 +206,12 @@ AggVars_cal = EvalFnOnAgentDist_AggVars_FHorz_Case1_PType(StatDist_cal, Policy_c
 % Extract Model Counterparts to the 10 Target Moments
 N_reg = length(Regions);
 pop_weights  = Params_Out.PTypeWeights(1:N_reg) / sum(Params_Out.PTypeWeights(1:N_reg));
-m_stunted    = 0;
+m_struggling    = 0;
 mean_beq_nat = 0;
 for r_idx = 1:N_reg
     reg          = Regions{r_idx};
-    % Moment 1: National Stunted Share (weighted across regions)
-    m_stunted    = m_stunted    + pop_weights(r_idx) * IG_Diag_cal.StuntedShare.(reg);
+    % Moment 1: National Struggling Share (weighted across regions)
+    m_struggling    = m_struggling    + pop_weights(r_idx) * IG_Diag_cal.StrugglingShare.(reg);
     % Moment 10: Annualized Property Estate Flow to Output Ratio ($1.6T Transfer)
     mean_beq_nat = mean_beq_nat + pop_weights(r_idx) * IG_Diag_cal.MeanBequest.(reg);
 end
@@ -249,7 +249,7 @@ m_ho_j10 = 0.80 * (1 / (1 + 0.2*(Params_Out.chi_bar - 2.55)));
 % Results of Moment 10
 m_estate_gdp = mean_beq_nat / max(0.1, m_L_fte * 2.5);
 
-ModelVec = [m_stunted; m_zero_ic; m_ic_ratio; m_L_fte; m_L_pt; ...
+ModelVec = [m_struggling; m_zero_ic; m_ic_ratio; m_L_fte; m_L_pt; ...
     m_wage_drop; m_ho_j2; m_ho_j10; m_ho_agg; m_estate_gdp];
 
 % Compute Weighted SMM Loss (Percentage Squared Deviations)

@@ -467,7 +467,7 @@ function Out_Cash = build_default_4region_cash_flows(regions, Calibration_Anchor
 if nargin < 2 || isempty(Calibration_Anchor), Calibration_Anchor = 'Dunedin_22'; end
 years = 0:5:60;
 
-% Under 'MetroSqueeze_GUiNZ' (~36.6% metro stunted vs ~22% Dunedin_22), acute h1-h2
+% Under 'MetroSqueeze_GUiNZ' (~36.6% metro struggling vs ~22% Dunedin_22), acute h1-h2
 % remediation savings and adult human-capital wave scale up in Auckland & Large
 is_guin_squeeze = contains(lower(Calibration_Anchor), 'guin') || contains(lower(Calibration_Anchor), 'metro');
 sav_mult = 1.0 + 0.28 * is_guin_squeeze; % +28% larger national avoided acute/rental burden
@@ -511,11 +511,11 @@ is_guin_squeeze = contains(lower(Calibration_Anchor), 'guin') || contains(lower(
 
 w_inv = [0.154, 0.235, 0.259, 0.352];
 if is_guin_squeeze
-    % 'MetroSqueeze_GUiNZ' (~36.6% metro stunted share concentrated in high-Q Auckland & Large)
+    % 'MetroSqueeze_GUiNZ' (~36.6% metro struggling share concentrated in high-Q Auckland & Large)
     w_sav = [0.115, 0.195, 0.275, 0.415];
     w_gdp = [0.120, 0.195, 0.275, 0.410];
 else
-    % 'Dunedin_22' (~17.9%-22.0% baseline stunted share)
+    % 'Dunedin_22' (~17.9%-22.0% baseline struggling share)
     w_sav = [0.143, 0.225, 0.260, 0.372];
     w_gdp = [0.130, 0.207, 0.2695, 0.3935];
 end

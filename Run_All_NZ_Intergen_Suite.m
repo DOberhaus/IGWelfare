@@ -134,7 +134,7 @@ if Use_ExpAsset_Pipeline && Run_Fertility_Module && exist('FertilityBargaining_M
         StationaryDist = StationaryDist_5D_BM;
         jequaloneDist  = jequaloneDist_5D_BM;
         run('FertilityBargaining_Module.m');
-        save(Cache_Step3, 'T_Fert1', 'T_Fert2', 'TFR_mat', 'DiffFert_mat', 'Stunted_mat', 'DepRatio_vec', 'ReqTax_vec');
+        save(Cache_Step3, 'T_Fert1', 'T_Fert2', 'TFR_mat', 'DiffFert_mat', 'Struggling_mat', 'DepRatio_vec', 'ReqTax_vec');
         fprintf('    [CACHE SAVED] Saved Step 3 checkpoint to %s\n', Cache_Step3);
     end
     fprintf('    Step 3 completed in %.2f seconds.\n\n', toc(step3_timer));
@@ -258,11 +258,11 @@ if exist('Plot_Fertility_SuperSolvency_2Panel.m', 'file')
     Out_FertPlot = Plot_Fertility_SuperSolvency_2Panel(Params_SS0, T_Fert1, T_Fert2);
 end
 
-if exist('Plot_SS2_7Factor_StackedAttribution.m', 'file') && exist('T1', 'var')
-    fprintf('>>> [STEP 7C] Generating 7-Factor SS2 Stacked Attribution Plots across %d Regions...\n', ...
-        numel(Target_Plot_Regions));
-    Out_AttrPlot = Plot_SS2_7Factor_StackedAttribution(T1, Params_SS0, Target_Plot_Regions);
-end
+% if exist('Plot_SS2_7Factor_StackedAttribution.m', 'file') && exist('T1', 'var')
+%     fprintf('>>> [STEP 7C] Generating 7-Factor SS2 Stacked Attribution Plots across %d Regions...\n', ...
+%         numel(Target_Plot_Regions));
+%     Out_AttrPlot = Plot_SS2_7Factor_StackedAttribution(T1, Params_SS0, Target_Plot_Regions);
+% end
 
 %% GENERATE 10-TIER EARN + OWN WEALTH BRACKET PAIN & CELEBRATION FIGURE
 if ~exist('Params_SS0', 'var') && exist('Params', 'var')
@@ -287,7 +287,7 @@ run('Plot_PreEmployment_OpportunityIndex.m');
 Out_Auckland_Dunedin = Plot_ActuarialContinuationValuation([], struct('Calibration_Anchor', 'Dunedin_22'), 'Auckland');
 Out_National_Dunedin = Plot_ActuarialContinuationValuation([], struct('Calibration_Anchor', 'Dunedin_22'), 'National');
 
-% 2. Growing Up in NZ / Metro Rental Squeeze Sensitivity (~36.6% Metro Stunted):
+% 2. Growing Up in NZ / Metro Rental Squeeze Sensitivity (~36.6% Metro Struggling):
 Out_Auckland_GUiNZ   = Plot_ActuarialContinuationValuation([], struct('Calibration_Anchor', 'MetroSqueeze_GUiNZ'), 'Auckland');
 Out_National_GUiNZ   = Plot_ActuarialContinuationValuation([], struct('Calibration_Anchor', 'MetroSqueeze_GUiNZ'), 'National');
 
@@ -310,13 +310,13 @@ if Export_Tables_Figures
     end
     if exist('IG_Diag_5D_BM', 'var') && isfield(IG_Diag_5D_BM, 'MigrationMatrix_4x5')
         Pi_4x5    = 100 * IG_Diag_5D_BM.MigrationMatrix_4x5;
-        Stunt_vec = 100 * [IG_Diag_5D_BM.StuntedShare.Rural; IG_Diag_5D_BM.StuntedShare.Small; ...
-            IG_Diag_5D_BM.StuntedShare.Large; IG_Diag_5D_BM.StuntedShare.Auckland];
+        Struggle_vec = 100 * [IG_Diag_5D_BM.StrugglingShare.Rural; IG_Diag_5D_BM.StrugglingShare.Small; ...
+            IG_Diag_5D_BM.StrugglingShare.Large; IG_Diag_5D_BM.StrugglingShare.Auckland];
         Beq_vec   = [IG_Diag_5D_BM.MeanBequest.Rural; IG_Diag_5D_BM.MeanBequest.Small; ...
             IG_Diag_5D_BM.MeanBequest.Large; IG_Diag_5D_BM.MeanBequest.Auckland];
-        T3B = array2table([Pi_4x5, Stunt_vec, Beq_vec], 'RowNames', Regions, ...
+        T3B = array2table([Pi_4x5, Struggle_vec, Beq_vec], 'RowNames', Regions, ...
             'VariableNames', {'To_Rural_Pct', 'To_Small_Pct', 'To_Large_Pct', 'To_Auckland_Pct', ...
-            'Emig_Abroad_Pct', 'Stunted_Cohort_Pct', 'Mean_Net_Bequest'});
+            'Emig_Abroad_Pct', 'Struggling_Cohort_Pct', 'Mean_Net_Bequest'});
         writetable(T3B, fullfile(OutputDir, 'Table3B_4Region_Abroad_SteadyState_Summary.csv'), 'WriteRowNames', true);
     end
     if exist('T_IGE', 'var')
@@ -329,12 +329,16 @@ if Export_Tables_Figures
     end
     if exist('T_Fert1', 'var')
         writetable(T_Fert1, fullfile(OutputDir, 'Table7_4Region_Endogenous_TFR_DiffFertility.csv'), 'WriteRowNames', true);
-        writetable(T_Fert2, fullfile(OutputDir, 'Table8_4Region_Fertility_Stunting_NZSuperTax.csv'), 'WriteRowNames', true);
+        writetable(T_Fert2, fullfile(OutputDir, 'Table8_4Region_Fertility_Struggling_NZSuperTax.csv'), 'WriteRowNames', true);
         writetable(T_Fert1, fullfile(OutputDir, 'Table_Fert1_4Region_TFR_DiffFertility.csv'), 'WriteRowNames', true);
-        writetable(T_Fert2, fullfile(OutputDir, 'Table_Fert2_4Region_Stunting_NZSuper.csv'), 'WriteRowNames', true);
+        writetable(T_Fert2, fullfile(OutputDir, 'Table_Fert2_4Region_Hardship_NZSuper.csv'), 'WriteRowNames', true);
+    end
+    if exist('T_CohortWelfare', 'var')
+        writetable(T_CohortWelfare, fullfile(OutputDir, 'Table_Trans1_Daruich_Cohort_Welfare_4Region.csv'));
     end
     if exist('T_PopShares', 'var')
         writetable(T_PopShares, fullfile(OutputDir, 'Table9_4Region_Dynamic_Population_Shares.csv'));
+        writetable(T_PopShares, fullfile(OutputDir, 'Table_Trans2_Kiyotaki_Housing_PopShares_4Region.csv'));
     end
     if exist('Emig_path', 'var') && exist('Years_grid', 'var')
         T_BrainDrain = table(Years_grid, Emig_path(:,1), Emig_path(:,2), Emig_path(:,3), Emig_path(:,4), ...
@@ -342,6 +346,7 @@ if Export_Tables_Figures
             'VariableNames', {'Year', 'Emig_Rural_Pct', 'Emig_Small_Pct', 'Emig_Large_Pct', ...
             'Emig_Auckland_Pct', 'Nat_Emig_Abroad_Pct', 'Social_Cohesion_Index_St'});
         writetable(T_BrainDrain, fullfile(OutputDir, 'Table10_4Region_Abroad_BrainDrain_Cohesion.csv'));
+        writetable(T_BrainDrain, fullfile(OutputDir, 'Table_Trans3_BrainDrain_Cohesion_4Region.csv'));
     end
     save(fullfile(OutputDir, 'NZ_4Region_Intergen_Complete_Results.mat'));
     fprintf('  Saved Full Workspace Checkpoint: NZ_4Region_Intergen_Complete_Results.mat\n');

@@ -209,7 +209,7 @@ for r_idx = 1:N_reg
         .* reshape(Prob_h_child, [1, n_h, 1]) ...
         .* reshape(stat_z,       [1, 1, n_z1]);
 
-    Diag.StuntedShare.(reg)  = sum(Prob_h_child(1:2));
+    Diag.StrugglingShare.(reg)  = sum(Prob_h_child(1:2));
     Diag.ThrivingShare.(reg) = sum(Prob_h_child(max(1, end-1):end));
     Diag.MeanBequest.(reg)   = total_beq_val / beq_mass;
     Diag.K_whanau.(reg)      = K_reg;
@@ -339,11 +339,11 @@ raw_S = ((1 - Diag.EmigRate_Youth)^Params_Mig.nu_retention) ...
     * ((1 + Diag.Churn_Rate)^(-Params_Mig.nu_churn));
 Diag.SocialCohesion_Index  = 100.0 * (raw_S / 0.885);
 
-nat_stunted = 0;
+nat_struggling = 0;
 for r_i = 1:N_reg
-    nat_stunted = nat_stunted + pop_weights(r_i) * Diag.StuntedShare.(Regions{r_i});
+    nat_struggling = nat_struggling + pop_weights(r_i) * Diag.StrugglingShare.(Regions{r_i});
 end
-rel_util = Params_Mig.gamma_thrive * log(max(0.01, 1 - nat_stunted)) ...
+rel_util = Params_Mig.gamma_thrive * log(max(0.01, 1 - nat_struggling)) ...
     + Params_Mig.gamma_proximity * log(max(0.01, 1 - Diag.EmigRate_Youth));
 Diag.ParentalRelational_CE = 100 * (exp(rel_util + 0.22) - 1);
 

@@ -3,7 +3,7 @@
 % Uses named structural parameters from Configure_TimeGrid_Params.m (Document 1B / Document 2).
 % Outputs:
 %   - T_Fert1 (Table7_4Region_Fertility_Bargaining_TFR.csv)
-%   - T_Fert2 (Table8_4Region_Fertility_Stunting_NZSuperTax.csv)
+%   - T_Fert2 (Table8_4Region_Fertility_Struggling_NZSuperTax.csv)
 %   - T_UCurve (Table8B_SuperAge_UCurve_60to75.csv)
 %   - FigFert_4Region_Bargaining_Solvency.png (2x2 figure with continuous Age 60-75 U-Curve in Panel D)
 
@@ -47,7 +47,7 @@ N_reg  = length(Regions);
 
 TFR_mat      = zeros(N_scen, N_reg);
 DiffFert_mat = zeros(N_scen, N_reg);
-Stunted_mat  = zeros(N_scen, N_reg);
+Struggling_mat  = zeros(N_scen, N_reg);
 DepRatio_vec = zeros(N_scen, 1);
 ReqTax_vec   = zeros(N_scen, 1);
 
@@ -68,10 +68,10 @@ if isfield(Params, 'K_whanau_base') && isstruct(Params.K_whanau_base)
         if isfield(Params.K_whanau_base, f_n), K_base_vec(r_i) = Params.K_whanau_base.(f_n); end
     end
 end
-if isfield(Params, 'base_stunt_vec')
-    base_stunt_vec = Params.base_stunt_vec;
+if isfield(Params, 'base_struggle_vec')
+    base_struggle_vec = Params.base_struggle_vec;
 else
-    base_stunt_vec = [19.8, 18.2, 15.6, 14.3];
+    base_struggle_vec = [19.8, 18.2, 15.6, 14.3];
 end
 if isfield(Params, 'sj_5yr_ref')
     sj_ref = Params.sj_5yr_ref;
@@ -138,15 +138,15 @@ for s_idx = 1:N_scen
             is_ss2_flag = true;
     end
 
-    [TFR_mat(s_idx,:), DiffFert_mat(s_idx,:), Stunted_mat(s_idx,:), DepRatio_vec(s_idx), ReqTax_vec(s_idx)] = ...
+    [TFR_mat(s_idx,:), DiffFert_mat(s_idx,:), Struggling_mat(s_idx,:), DepRatio_vec(s_idx), ReqTax_vec(s_idx)] = ...
         eval_super_age_point(super_age_s, beta_hyp, chi_f_pen, G_ece1_s, G_ece2_s, Q_mult, p_super_s, is_ss2_flag, ...
-        Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_stunt_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, mean(Stunted_mat(1,:)));
+        Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_struggle_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, mean(Struggling_mat(1,:)));
 
     if s_idx == 1
-        % Re-evaluate Scenario 1 with its own baseline stunting anchor (stunt_reduction = 0)
+        % Re-evaluate Scenario 1 with its own baseline early hardship anchor (struggle_reduction = 0)
         [~, ~, ~, DepRatio_vec(1), ReqTax_vec(1)] = ...
             eval_super_age_point(super_age_s, beta_hyp, chi_f_pen, G_ece1_s, G_ece2_s, Q_mult, p_super_s, is_ss2_flag, ...
-            Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_stunt_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, mean(Stunted_mat(1,:)));
+            Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_struggle_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, mean(Struggling_mat(1,:)));
     end
 end
 
@@ -158,8 +158,8 @@ Params.tau_l_delta_SS2   = (ReqTax_vec(6) / 100.0) - Params.tau_l;
 T_Fert1 = array2table([TFR_mat, DiffFert_mat], 'RowNames', FertScenarios, ...
     'VariableNames', {'TFR_Rural','TFR_Small','TFR_Large','TFR_Auckland', ...
     'DiffFert_Rural','DiffFert_Small','DiffFert_Large','DiffFert_Auckland'});
-T_Fert2 = array2table([Stunted_mat, DepRatio_vec, ReqTax_vec], 'RowNames', FertScenarios, ...
-    'VariableNames', {'Stunted_Pct_Rural','Stunted_Pct_Small','Stunted_Pct_Large','Stunted_Pct_Auckland', ...
+T_Fert2 = array2table([Struggling_mat, DepRatio_vec, ReqTax_vec], 'RowNames', FertScenarios, ...
+    'VariableNames', {'Struggling_Pct_Rural','Struggling_Pct_Small','Struggling_Pct_Large','Struggling_Pct_Auckland', ...
     'DepRatio_65Plus_Pct','Required_LaborTax_Pct'});
 
 %% 2. CONTINUOUS RETIREMENT-AGE U-CURVE SWEEP (AGES 60 TO 75: SS2 HARVEST VS. SS0 AUSTERITY)
@@ -172,13 +172,13 @@ Stn_UCurve_SS2 = zeros(n_ug, 1);
 CE_UCurve_SS2  = zeros(n_ug, 1);
 Tax_UCurve_SS0 = zeros(n_ug, 1);
 
-base_stunt_mean = mean(Stunted_mat(1, :));
+base_struggle_mean = mean(Struggling_mat(1, :));
 for u_i = 1:n_ug
     a_u = SuperAge_Grid(u_i);
     % 1) Phase 2 (SS2) Harvest Package across Super Age 60..75:
     [tfr_u, ~, stn_u, dep_u, tax_u] = eval_super_age_point(a_u, 1.00, 0.132, 0.130, 0.105, ...
         [0.985, 0.955, 0.925, 0.895], Params.p_super, true, ...
-        Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_stunt_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, base_stunt_mean);
+        Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_struggle_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, base_struggle_mean);
     Tax_UCurve_SS2(u_i) = tax_u;
     Dep_UCurve_SS2(u_i) = dep_u;
     TFR_UCurve_SS2(u_i) = sum(tfr_u(:) .* Reg_HH_Shares(:));
@@ -197,7 +197,7 @@ for u_i = 1:n_ug
     % 2) Status Quo (SS0) Austerity Sweep across Super Age 60..75:
     [~, ~, ~, ~, tax_ss0_u] = eval_super_age_point(a_u, 1.00, 0.24, Params.G_ece_stage1, Params.G_ece_stage2, ...
         [1.00, 1.00, 1.00, 1.00], Params.p_super, false, ...
-        Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_stunt_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, base_stunt_mean);
+        Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_struggle_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, base_struggle_mean);
     Tax_UCurve_SS0(u_i) = tax_ss0_u;
 end
 
@@ -214,7 +214,7 @@ CE_UCurve_SS2 = (ce_anchor_64 - 0.25) + CE_UCurve_SS2 - 1.45 * (Tax_UCurve_SS2 -
 
 T_UCurve = table(SuperAge_Grid, Tax_UCurve_SS2, Dep_UCurve_SS2, TFR_UCurve_SS2, Stn_UCurve_SS2, CE_UCurve_SS2, Tax_UCurve_SS0, ...
     'VariableNames', {'NZ_Super_Age', 'SS2_Required_PAYE_Pct', 'SS2_Effective_DepRatio_Pct', ...
-    'SS2_National_TFR', 'SS2_Mean_Stunted_Pct', 'SS2_National_Welfare_CE_Pct', 'SS0_StatusQuo_Required_PAYE_Pct'});
+    'SS2_National_TFR', 'SS2_Mean_Struggling_Pct', 'SS2_National_Welfare_CE_Pct', 'SS0_StatusQuo_Required_PAYE_Pct'});
 
 %% 3. RENDER 2x2 FIGURE WITH CONTINUOUS RETIREMENT-AGE U-CURVE IN PANEL D
 figFert = figure('Name', '4-Region Fertility Bargaining, Whanau Networks & NZ Super U-Curve', ...
@@ -253,13 +253,13 @@ title(ax2, 'B. Metropolitan Differential Fertility Gap (Large vs Auckland)', 'Fo
 legend(ax2, {'Large','Auckland'}, 'Location', 'northeast', 'FontSize', 8.5);
 grid(ax2, 'on'); box(ax2, 'on');
 
-% --- PANEL C: 4-REGION LOW-SKILL COHORT STUNTING SHARE ---
+% --- PANEL C: 4-REGION LOW-SKILL COHORT HARDSHIP SHARE ---
 ax3 = nexttile;
-bar(ax3, scen_cats, Stunted_mat, 'grouped');
-ylim(ax3, [0, max(30, max(Stunted_mat(:)) * 1.25)]);
+bar(ax3, scen_cats, Struggling_mat, 'grouped');
+ylim(ax3, [0, max(30, max(Struggling_mat(:)) * 1.25)]);
 xtickangle(ax3, 20);
-ylabel(ax3, 'Stunted Cohort Share (%)', 'FontWeight', 'bold');
-title(ax3, sprintf('C. 4-Region Low-Skill Cohort Stunting Share (Age 70 Spike vs Age %.0f Compression)', super_age_ss2_target), 'FontWeight', 'bold');
+ylabel(ax3, 'Struggling Launch Share (%)', 'FontWeight', 'bold');
+title(ax3, sprintf('C. 4-Region Struggling Launch Cohort Share (Age 70 Spike vs Age %.0f Compression)', super_age_ss2_target), 'FontWeight', 'bold');
 legend(ax3, Regions, 'Location', 'northeast', 'FontSize', 8.5);
 grid(ax3, 'on'); box(ax3, 'on');
 
@@ -336,16 +336,16 @@ grid(ax4, 'on'); box(ax4, 'on');
 if exist('Export_Tables_Figures', 'var') && Export_Tables_Figures
     exportgraphics(figFert, fullfile(OutputDir, 'FigFert_4Region_Bargaining_Solvency.png'), 'Resolution', 300, 'BackgroundColor', 'white');
     writetable(T_Fert1,  fullfile(OutputDir, 'Table7_4Region_Fertility_Bargaining_TFR.csv'), 'WriteRowNames', true);
-    writetable(T_Fert2,  fullfile(OutputDir, 'Table8_4Region_Fertility_Stunting_NZSuperTax.csv'), 'WriteRowNames', true);
+    writetable(T_Fert2,  fullfile(OutputDir, 'Table8_4Region_Fertility_Struggling_NZSuperTax.csv'), 'WriteRowNames', true);
     writetable(T_UCurve, fullfile(OutputDir, 'Table8B_SuperAge_UCurve_60to75.csv'));
 end
 
 %% ========================================================================
-% LOCAL HELPER: EVALUATE FERTILITY, STUNTING, DEP RATIO & TAX FOR ANY SUPER AGE
+% LOCAL HELPER: EVALUATE FERTILITY, HARDSHIP, DEP RATIO & TAX FOR ANY SUPER AGE
 %% ========================================================================
-function [tfr_row, diff_row, stunt_row, dep_ratio, req_tax] = eval_super_age_point( ...
+function [tfr_row, diff_row, struggle_row, dep_ratio, req_tax] = eval_super_age_point( ...
     super_age_s, beta_hyp, chi_f_pen, G_ece1_s, G_ece2_s, Q_mult, p_super_s, is_ss2_flag, ...
-    Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_stunt_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, base_stunt_mean)
+    Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_struggle_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, base_struggle_mean)
 
 A_base = Params.super_age_base;
 if super_age_s >= A_base
@@ -361,7 +361,7 @@ N_reg     = numel(Dist_Reg_Cell);
 n_h       = numel(h_vec);
 tfr_row   = zeros(1, N_reg);
 diff_row  = zeros(1, N_reg);
-stunt_row = zeros(1, N_reg);
+struggle_row = zeros(1, N_reg);
 
 for r_idx = 1:N_reg
     Dist_k = Dist_Reg_Cell{r_idx};
@@ -398,8 +398,8 @@ for r_idx = 1:N_reg
     whanau_squeeze_pen = max(0.0, -dK_r) * (22.5 + 2.8 * yrs_late_r);
     hyp_pen            = 6.50 * (1 - beta_hyp) * reg_weight;
 
-    stunt_post_ece   = max(2.2, base_stunt_vec(r_idx) - ece_relief - whanau_gain + hyp_pen);
-    stunt_row(r_idx) = min(98.5, stunt_post_ece + whanau_squeeze_pen);
+    struggle_post_ece   = max(2.2, base_struggle_vec(r_idx) - ece_relief - whanau_gain + hyp_pen);
+    struggle_row(r_idx) = min(98.5, struggle_post_ece + whanau_squeeze_pen);
 end
 
 nat_TFR    = sum(tfr_row(:) .* Reg_HH_Shares(:));
@@ -447,8 +447,8 @@ end
 dep_ratio       = 100.0 * (eff_ret_mass / max(1e-8, eff_wrk_mass));
 tau_l_base_pct  = 100.0 * Params.tau_l;
 aging_tax_drift = Params.beta_aging_tax_drift * (dep_ratio - Params.dep_ratio_2026_anchor);
-stunt_reduction = base_stunt_mean - mean(stunt_row);
-exits_skill_div = Params.beta_exits_skill_div * stunt_reduction;
+struggle_reduction = base_struggle_mean - mean(struggle_row);
+exits_skill_div = Params.beta_exits_skill_div * struggle_reduction;
 
 yrs_over_65_s   = max(0.0, super_age_s - A_base);
 austerity_drag  = Params.psi_austerity_tax_drag * (yrs_over_65_s ^ 1.35);

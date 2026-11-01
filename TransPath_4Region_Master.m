@@ -269,3 +269,42 @@ if has_SS2
 end
 grid on; xlabel('Years Post-Reform'); ylabel('Social Cohesion Index (Base = 100)');
 title('Macro Social Cohesion Recovery (S_t)');
+
+% =========================================================================
+% 6. POPULATE TRANSITION TABLES & AUTO-EXPORT FIGURES 1, 2, AND 3
+% =========================================================================
+Years_grid    = Trans_Years(:);
+Emig_path     = 100 * Emig_Rate_Path;
+Nat_Emig_path = sum(s_HH_path .* Emig_path, 2);
+Cohesion_St   = Cohesion_Index(:);
+
+% Table matching Fig1 (Daruich Cohort Welfare Trajectory)
+T_CohortWelfare = table(Cohort_Years(:), ...
+    CE_Cohort(:, 1), CE_Cohort(:, 2), CE_Cohort(:, 3), CE_Cohort(:, 4), ...
+    CE_Cohort_MIT(:, 1), CE_Cohort_MIT(:, 2), CE_Cohort_MIT(:, 3), CE_Cohort_MIT(:, 4), ...
+    'VariableNames', {'Cohort_Birth_Or_Entry_Year', ...
+    'CE_Rural_Pct', 'CE_Small_Pct', 'CE_Large_Pct', 'CE_Auckland_Pct', ...
+    'CE_MIT_Rural_Pct', 'CE_MIT_Small_Pct', 'CE_MIT_Large_Pct', 'CE_MIT_Auckland_Pct'});
+
+% Table matching Fig2 (Kiyotaki Housing & 4-Region Population Shares -> Table 9)
+T_PopShares = table(Years_grid, ...
+    100 * s_HH_path(:, 1), 100 * s_HH_path(:, 2), ...
+    100 * s_HH_path(:, 3), 100 * s_HH_path(:, 4), ...
+    Q_path(:, 1), Q_path(:, 2), Q_path(:, 3), Q_path(:, 4), ...
+    'VariableNames', {'Year', 'Rural_PopShare_Pct', 'Small_PopShare_Pct', ...
+    'Large_PopShare_Pct', 'Auckland_PopShare_Pct', ...
+    'Rural_Q_Index', 'Small_Q_Index', 'Large_Q_Index', 'Auckland_Q_Index'});
+
+if isfolder('Output_NZ_4Region_Intergen')
+    OutputDir = 'Output_NZ_4Region_Intergen';
+else
+    OutputDir = pwd;
+end
+
+for fh = [fig1, fig2, fig3]
+    if isgraphics(fh)
+        out_png = fullfile(OutputDir, [get(fh, 'Name'), '.png']);
+        exportgraphics(fh, out_png, 'Resolution', 300, 'BackgroundColor', 'white');
+        fprintf('  -> Auto-saved: %s\n', out_png);
+    end
+end

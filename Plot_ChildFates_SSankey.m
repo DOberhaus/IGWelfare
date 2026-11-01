@@ -8,14 +8,13 @@
 %   - Gate 3 (J = 5, Adolescent Gate, Ages 12-14):
 %       (6) Family Unemp Stress z1 (~18.9% -> ~4.9%), (7) Standard Schooling, (8) Montessori / Tuakana Mentoring (~17.3% -> ~57.3%)
 %   - Gate 4 (J = 6..7, Adult Skill Launch, Age 20):
-%       (9) Stunted Tier h1-h2 (~74.7% -> ~4.0%), (10) Core Skill Tier h3-h5 (~22.8% -> ~80.6%), (11) Thriving Tier h6-h7 (~2.5% -> ~15.4%)
+%       (9) Struggling Tier h1-h2 (~74.7% -> ~4.0%), (10) Core Skill Tier h3-h5 (~22.8% -> ~80.6%), (11) Thriving Tier h6-h7 (~2.5% -> ~15.4%)
 %   - Gate 5 (J = 10, Adulthood Fates, Age 30+):
 %       (12) Exit 1: State Care, (13) Exit 2: Avoidable Hospitalisation, (14) Exit 3: Lower Lifetime Income,
 %       (15) Exit 4: Benefit & Justice Burden, (16) Retained NZ Secure/Thriving Adult, (17) Emigrated Abroad (20-35 Brain Drain)
 
 %% 1. CONFIGURATION SWITCHES (N-PHASE COMPATIBLE: 1, 2, 3, OR MORE PANELS)
 Target_Regions     = {'National', 'Auckland', 'Large', 'Small', 'Rural', 'Urban'};
-Target_Regions = 'National';
 if ischar(Target_Regions) || isstring(Target_Regions), Target_Regions = cellstr(Target_Regions); end
 
 % Specify any 1, 2, 3, or N phases: e.g. {'SS0'}, {'SS0','SS1'}, or {'SS0','SS1','SS2'}
@@ -54,7 +53,7 @@ Fate_Node_Names = { ...
     '1_Material_Hardship_Housing_Squeeze'; '2_Secure_Parental_Asset_Buffer'; ...
     '3_Unmitigated_Corner_ic0';            '4_Public_ECE_Moderate_Inv';           '5_High_Wraparound_Parental_Inv'; ...
     '6_Family_Unemp_Stress_z1';            '7_Standard_Public_Schooling';         '8_Montessori_Tuakana_Mentoring'; ...
-    '9_Stunted_Tier_h1_h2';                '10_Core_Skill_Tier_h3_h5';            '11_Thriving_Tier_h6_h7'; ...
+    '9_Struggling_Tier_h1_h2';                '10_Core_Skill_Tier_h3_h5';            '11_Thriving_Tier_h6_h7'; ...
     '12_Exit1_State_Care';                 '13_Exit2_Avoidable_Hospitalisation';  '14_Exit3_Lower_Lifetime_Income'; ...
     '15_Exit4_Benefit_Justice_Burden';     '16_Retained_NZ_Secure_Thriving';      '17_Emigrated_Abroad_BrainDrain'};
 
@@ -287,10 +286,10 @@ for r_i = 1:length(reg_list)
     inv_gap_4D = log(ic_eff_4D + G_ece_eff + 0.02) - log(0.20 + 0.05 + 0.02);
     if strcmpi(Calibration_Anchor, 'Dunedin_22')
         crowd_pen_4D = 0.14 * log(max(1.0, Q_house)) .* is_hard_4D;
-        grid_anchor  = +0.265; % Calibrates National SS0 Stunted h1-h2 to the ~22.0% Dunedin Study benchmark!
+        grid_anchor  = +0.265; % Calibrates National SS0 Struggling h1-h2 to the ~22.0% Dunedin Study benchmark!
     else
         crowd_pen_4D = 0.18 * log(max(1.0, Q_house)) .* is_hard_4D;
-        grid_anchor  = +0.105; % Metropolitan Squeeze sensitivity (~34-36% Stunted in Auckland)
+        grid_anchor  = +0.105; % Metropolitan Squeeze sensitivity (~34-36% Struggling in Auckland)
     end
     base_log_h_4D = rho_hc .* log(h_G) + gamma_ic .* inv_gap_4D - crowd_pen_4D + grid_anchor;
     s3_shifts     = [-0.22, 0.00, montessori_bank];
@@ -337,11 +336,11 @@ for r_i = 1:length(reg_list)
         end
     end
 
-    % Conditional mapping from Adult Skill Launch Tiers [Stunted h1-h2; Core h3-h5; Thriving h6-h7]
+    % Conditional mapping from Adult Skill Launch Tiers [Struggling h1-h2; Core h3-h5; Thriving h6-h7]
     % into the 6 Adulthood Fate Nodes [Exit 1 Care, Exit 2 Hosp, Exit 3 LowInc, Exit 4 Ben/Just, Retained Secure, Emigrated]:
     S4_Shares = sum(reg_F34, 1);
     reg_F45   = zeros(3, 6);
-    % Row 1: Stunted h1-h2 (~22% Dunedin segment drives ~74% of Exits 1, 2, 4; State Care = ~2.1% of cohort)
+    % Row 1: Struggling h1-h2 (~22% Dunedin segment drives ~74% of Exits 1, 2, 4; State Care = ~2.1% of cohort)
     ret_1 = 1 - emig_t(1);
     reg_F45(1, :) = S4_Shares(1) * [ret_1*0.090, ret_1*0.165, ret_1*0.260, ret_1*0.385, ret_1*0.100, emig_t(1)];
     % Row 2: Core Skill Tier h3-h5 (~54.5% of cohort in SS0)
@@ -361,7 +360,7 @@ end
 S1_Pct = sum(Flow_S1_to_S2, 2);  % 2x1: [1. Material Hardship %, 2. Secure Buffer %]
 S2_Pct = sum(Flow_S1_to_S2, 1)'; % 3x1: [3. Unmitigated Corner %, 4. Public ECE %, 5. High Wraparound %]
 S3_Pct = sum(Flow_S2_to_S3, 1)'; % 3x1: [6. Unemp Stress %, 7. Standard School %, 8. Montessori / Tuakana %]
-S4_Pct = sum(Flow_S3_to_S4, 1)'; % 3x1: [9. Stunted h1-h2 %, 10. Core h3-h5 %, 11. Thriving h6-h7 %]
+S4_Pct = sum(Flow_S3_to_S4, 1)'; % 3x1: [9. Struggling h1-h2 %, 10. Core h3-h5 %, 11. Thriving h6-h7 %]
 S5_Pct = sum(Flow_S4_to_S5, 1)'; % 6x1: [12. Exit 1 %, 13. Exit 2 %, 14. Exit 3 %, 15. Exit 4 %, 16. Retained %, 17. Emigrated %]
 
 Ledger = struct();
@@ -394,7 +393,7 @@ if reform_intensity <= 0
         lbl_16 = sprintf('16. Retained NZ Thriving Builder [z_h] (%.1f%%)',       S5_Pct(5));
 end
 
-Nodes_S4 = {sprintf('9. Stunted Tier h1-h2 (%.1f%%)', S4_Pct(1)), ...
+Nodes_S4 = {sprintf('9. Struggling Tier h1-h2 (%.1f%%)', S4_Pct(1)), ...
     sprintf('10. Core Skill Tier h3-h5 (%.1f%%)',     S4_Pct(2)), ...
     lbl_11};
 
@@ -471,7 +470,7 @@ Master_Colors = [
     0.82, 0.28, 0.14;  % 6. Family Unemp Stress z1
     0.34, 0.54, 0.68;  % 7. Standard Schooling
     0.10, 0.60, 0.46;  % 8. Montessori / Tuakana Mentoring
-    0.74, 0.18, 0.18;  % 9. Stunted Tier h1-h2
+    0.74, 0.18, 0.18;  % 9. Struggling Tier h1-h2
     0.28, 0.54, 0.68;  % 10. Core Skill Tier h3-h5
     0.10, 0.58, 0.46;  % 11. Thriving Tier h6-h7
     0.82, 0.22, 0.20;  % 12. Exit 1: State Care
@@ -566,7 +565,7 @@ else
     disp_reg = reg_choice;
 end
 
-t_str = sprintf('%s — %s (Mean Q = %.2f) | J=5 Unemp Stress: %.1f%% | Stunted h1-h2: %.1f%% | Thriving: %.1f%%', ...
+t_str = sprintf('%s — %s (Mean Q = %.2f) | J=5 Unemp Stress: %.1f%% | Struggling h1-h2: %.1f%% | Thriving: %.1f%%', ...
     Panel_Tag, disp_reg, mean_Q, S3_Pct(1), S4_Pct(1), S4_Pct(3));
 t_obj = title(ax, t_str, 'FontName', 'Helvetica', 'FontSize', 11.2, 'FontWeight', 'bold');
 set(t_obj, 'Units', 'normalized');
@@ -668,7 +667,7 @@ else
         '1_Material_Hardship_Housing_Squeeze'; '2_Secure_Parental_Asset_Buffer'; ...
         '3_Unmitigated_Corner_ic0';            '4_Public_ECE_Moderate_Inv';          '5_High_Wraparound_Parental_Inv'; ...
         '6_Family_Unemp_Stress_z1';            '7_Standard_Public_Schooling';        '8_Montessori_Peer_Mentoring'; ...
-        '9_Stunted_Tier_h1_h2';                '10_Core_Skill_Tier_h3_h5';           '11_Thriving_Tier_h6_h7'; ...
+        '9_Struggling_Tier_h1_h2';                '10_Core_Skill_Tier_h3_h5';           '11_Thriving_Tier_h6_h7'; ...
         '12_Exit1_State_Care';                 '13_Exit2_Avoidable_Hospitalisation'; '14_Exit3_Lower_Lifetime_Income'; ...
         '15_Exit4_Benefit_Justice_Burden';     '16_Retained_NZ_Secure_Thriving';     '17_Emigrated_Abroad_BrainDrain'};
 end

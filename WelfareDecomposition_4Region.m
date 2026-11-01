@@ -51,8 +51,8 @@ if ~exist('Reform_Phase_Specs', 'var') || isempty(Reform_Phase_Specs)
     Reform_Phase_Specs(1).r_delta       = -0.004;
     Reform_Phase_Specs(1).w_mult_vs_SS0 = [1.032, 1.038, 1.048, 1.055]; % Guvenen (2023) capital + Murphy-Shleifer-Vishny (1991) talent reallocation lift
     Reform_Phase_Specs(1).Q_mult_vs_SS0 = [0.990, 0.975, 0.950, 0.925]; % Guvenen (2023) capital + Murphy-Shleifer-Vishny (1991) talent reallocation lift
-    Reform_Phase_Specs(1).Frac_stunted  = 0.045; % Stunting compression from 28.5% -> 4.5% (lifts relational utility u_rel)
-    Reform_Phase_Specs(1).S_cohesion    = 112.0; % Social cohesion lift from brain-drain & stunting reduction
+    Reform_Phase_Specs(1).Frac_struggling  = 0.045; % Hardship compression from 28.5% -> 4.5% (lifts relational utility u_rel)
+    Reform_Phase_Specs(1).S_cohesion    = 112.0; % Social cohesion lift from brain-drain & early hardship reduction
     Reform_Phase_Specs(1).Transfer_Geo  = struct( ...
         'HH_Rural',    0.038, ...
         'HH_Small',    0.031, ...
@@ -82,7 +82,7 @@ if Enable_SS2_Phase
     Reform_Phase_Specs(2).r_delta       = -0.006; % 50% Debt-Sinking Fund lowers sovereign crowding-out
     Reform_Phase_Specs(2).w_mult_vs_SS0 = [1.068, 1.075, 1.088, 1.096]; % 1.65x Public Infra Reinvestment + TFP lift
     Reform_Phase_Specs(2).Q_mult_vs_SS0 = [0.985, 0.955, 0.925, 0.895]; % Long-run spatial housing supply elasticity
-    Reform_Phase_Specs(2).Frac_stunted  = 0.015; % 2nd-gen Daruich compounding + Stage-2 mentoring reaches 1.5%
+    Reform_Phase_Specs(2).Frac_struggling  = 0.015; % 2nd-gen Daruich compounding + Stage-2 mentoring reaches 1.5%
     Reform_Phase_Specs(2).S_cohesion    = 126.0;
     Reform_Phase_Specs(2).Transfer_Geo  = struct( ...
         'HH_Rural',    0.044, ...
@@ -143,8 +143,8 @@ for m = 1:M_reforms
     if isfield(spec, 'tau_l_delta') && ~isempty(spec.tau_l_delta)
         P_PE.tau_l = max(0.05, P_PE.tau_l + spec.tau_l_delta);
     end
-    if isfield(spec, 'Frac_stunted') && isfield(P_PE, 'Frac_stunted')
-        P_PE.Frac_stunted = 0.5 * P_PE.Frac_stunted + 0.5 * spec.Frac_stunted;
+    if isfield(spec, 'Frac_struggling') && isfield(P_PE, 'Frac_struggling')
+        P_PE.Frac_struggling = 0.5 * P_PE.Frac_struggling + 0.5 * spec.Frac_struggling;
     end
     P_PE.Transfer_Geo     = spec.Transfer_Geo;
     P_PE.Reform_Intensity = spec.Intensity;
@@ -159,7 +159,7 @@ for m = 1:M_reforms
 
     % Fiscal U-curve penalty on PAYE tax rate when super_age deviates from the 64-65 sweet spot:
     % - Below 64: shrinking the 60-63 peak-earner denominator erodes the -3.5 pp PAYE cut
-    % - Above 65: disability/geriatric health leaks & stunted tax-base erosion eat into the fiscal surplus
+    % - Above 65: disability/geriatric health leaks & struggling tax-base erosion eat into the fiscal surplus
     if super_age_m < 64.0
         super_tax_wedge = 0.0045 * ((64.0 - super_age_m) ^ 1.35); % +2.9 pp at Age 60
     elseif super_age_m > 65.0
@@ -174,8 +174,8 @@ for m = 1:M_reforms
     % 3B. Stage B: Long-Run GE with Exogenous Skills (Phase-m GE prices; prior jDist)
     P_GE   = P_PE;
     P_GE.r = Params_SS0.r + spec.r_delta;
-    if isfield(spec, 'Frac_stunted')
-        P_GE.Frac_stunted = spec.Frac_stunted;
+    if isfield(spec, 'Frac_struggling')
+        P_GE.Frac_struggling = spec.Frac_struggling;
     end
     if isfield(spec, 'S_cohesion')
         P_GE.S_cohesion = spec.S_cohesion;

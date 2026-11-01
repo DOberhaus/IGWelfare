@@ -9,7 +9,7 @@
 %   - Gate 3 (J = 5, Adolescent Gate, Ages 12-14):
 %       Exposes Unemp Stress + Early Exits 1,2,4 (Care, Hosp, Youth Justice/Benefit) vs. Montessori / Tuakana Mentoring
 %   - Gate 4 (J = 6..7, Adult Skill Launch, Age 20):
-%       Stunted h1-h2 (carrying Exits 1,2,4; Exit 3 not yet active) vs. Core h3-h5 vs. Thriving h6-h7
+%       Struggling h1-h2 (carrying Exits 1,2,4; Exit 3 not yet active) vs. Core h3-h5 vs. Thriving h6-h7
 %   - Gate 5 (J = 10, Age 30) & Gate 6 (J = 11..16, Career to Retirement):
 %       All 4 Barnardos Exits (Exits 1,2,4 Direct Crown Cost + Exit 3 Lower Income/Super Draw) at Bottom (BAD),
 %       GST/Cap/Estate Tax + PAYE Tax in Middle (GOOD), Emigrated Tax Loss at Top (BEYOND),
@@ -17,7 +17,6 @@
 
 %% 1. CONFIGURATION SWITCHES (N-PHASE COMPATIBLE: 1, 2, 3, OR MORE PANELS)
 Target_Regions     = {'National', 'Auckland', 'Large', 'Small', 'Rural', 'Urban'};
-Target_Regions = 'National';
 if ischar(Target_Regions) || isstring(Target_Regions), Target_Regions = cellstr(Target_Regions); end
 
 % Specify any 1, 2, 3, or N phases: e.g. {'SS0'}, {'SS0','SS1'}, or {'SS0','SS1','SS2'}
@@ -158,7 +157,7 @@ Ih_vec = d_grid.(ref_type)(n_l+1 : n_l+n_Ih);
 ic_vec = d_grid.(ref_type)(n_l+n_Ih+1 : end);
 
 fertile_j = [3, 4];
-Jr        = getfield_def(P_Sim, 'Jr',          10);
+Jr        = round(getfield_def(P_Sim, 'Jr',          10));
 J_tot     = getfield_def(P_Sim, 'J',           16);
 rho_hc    = getfield_def(P_Sim, 'rho_hc_ig',   0.40);
 gamma_ic  = getfield_def(P_Sim, 'gamma_ic',    0.35);
@@ -199,7 +198,7 @@ end
 %   Gate 3 (J=5 Adolescent Gate, Ages 12-14, 3 nodes):
 %     [7: Unemp Stress + Exits 1,2,4 (Care/Hosp/Just); 8: Std Schooling; 9: Montessori / Tuakana Mentoring]
 %   Gate 4 (J=6..7 Adult Skill Launch, Age 20, 3 nodes):
-%     [10: Stunted h1-h2 (Exits 1,2,4 active); 11: Core h3-h5; 12: Thriving h6-h7]
+%     [10: Struggling h1-h2 (Exits 1,2,4 active); 11: Core h3-h5; 12: Thriving h6-h7]
 %   Gate 5 (J=10 Age 30 Annual Fiscal Balance, 5 nodes):
 %     [13: Exits 1,2,4 Care/Hosp/Corrections/Ben (Bad 1); 14: Exit 3 Lower Income Drag (Bad 2);
 %      15: Age 30 GST & Cap Tax (Good 1); 16: Age 30 PAYE Tax (Good 2); 17: Age 30 Emig Loss (Beyond)]
@@ -213,7 +212,7 @@ Flow_S3_to_S4 = zeros(3, 3);
 Pop_S1_Birth  = zeros(1, 3); % [Means-Tested Hardship %, Universal 100%, Private Out-of-Pocket %]
 Pop_S2_ECE    = zeros(1, 3); % [Corner ic=0 %, Mod ECE %, High ECE %] — matches Fate Chart!
 Pop_S3_Adol   = zeros(1, 3); % [Unemp Stress + Exits 1,2,4 %, Std School %, Montessori / Tuakana %]
-Pop_S4_Skill  = zeros(1, 3); % [Stunted h1-h2 %, Core h3-h5 %, Thriving h6-h7 %]
+Pop_S4_Skill  = zeros(1, 3); % [Struggling h1-h2 %, Core h3-h5 %, Thriving h6-h7 %]
 
 ECE_Step_Dollars  = zeros(1, 3); % Cohort-weighted $/yr at J=2-3 (including early benefit/health need in Corner)
 Adol_Step_Dollars = zeros(1, 3); % Cohort-weighted $/yr at J=5   (including Exits 1,2,4 in Unemp Stress node)
@@ -362,10 +361,10 @@ for r_i = 1:length(reg_list)
     inv_gap_4D = log(ic_eff_4D + G_ece_eff + 0.02) - log(0.20 + 0.05 + 0.02);
     if strcmpi(Calibration_Anchor, 'Dunedin_22')
         crowd_pen_4D = 0.14 * log(max(1.0, Q_house)) .* is_hard_4D;
-        grid_anchor  = +0.265; % Calibrates National SS0 Stunted h1-h2 to the ~22.0% Dunedin Study benchmark!
+        grid_anchor  = +0.265; % Calibrates National SS0 Struggling h1-h2 to the ~22.0% Dunedin Study benchmark!
     else
         crowd_pen_4D = 0.18 * log(max(1.0, Q_house)) .* is_hard_4D;
-        grid_anchor  = +0.105; % Metropolitan Squeeze sensitivity (~34-36% Stunted in Auckland)
+        grid_anchor  = +0.105; % Metropolitan Squeeze sensitivity (~34-36% Struggling in Auckland)
     end
     base_log_h_4D = rho_hc .* log(h_G) + gamma_ic .* inv_gap_4D - crowd_pen_4D + grid_anchor;
     s3_shifts     = [-0.22, 0.00, montessori_bank];
@@ -644,7 +643,7 @@ S6_Widths = sum(S4_Totals) * (CR_Col_Dollars  / max(1e-8, sum(CR_Col_Dollars)));
 %   (1) Row sums equal S4_Totals(1:3) -> ribbons leaving Gate 4 fill 100% of Nodes 12, 13, 14!
 %   (2) Column sums equal S5_Widths(1:6) -> ribbons arriving at Gate 5 fill 100% of Nodes 15..20!
 Flow_S4_to_S5 = max(Age30_Fiscal, 0);
-% Keep structural zero where Thriving (Row 3) has zero Exit-3 Stunting Lost Tax (Col 5):
+% Keep structural zero where Thriving (Row 3) has zero Exit-3 Lower-Skill Lost Tax (Col 5):
 Flow_S4_to_S5(3, 5) = 0;
 for iter_ras = 1:15
     for c5 = 1:6
@@ -757,7 +756,7 @@ else
     lbl_14 = sprintf('14. Thriving Tier h6-h7\n        [z_h Builders]\n        (%.1f%% pop | $%.1fk/yr)',      100*Pop_S4_Skill(3), S4_Totals(3));
 end
 
-Nodes_S4 = {sprintf('12. Stunted Tier h1-h2 [Exits 1,2,4]\n       (%.1f%% pop | $%.1fk/yr)', 100*Pop_S4_Skill(1), S4_Totals(1)), ...
+Nodes_S4 = {sprintf('12. Struggling Tier h1-h2 [Exits 1,2,4]\n       (%.1f%% pop | $%.1fk/yr)', 100*Pop_S4_Skill(1), S4_Totals(1)), ...
     sprintf('13. Core Skill Tier h3-h5\n       (%.1f%% pop | $%.1fk/yr)',                    100*Pop_S4_Skill(2), S4_Totals(2)), ...
     lbl_14};
 
@@ -769,11 +768,11 @@ else
     lbl_18 = sprintf('18. Age 30 PAYE Income Tax\n        ($%.1fk/yr)',          A30_Col_Dollars(4));
 end
 
-Nodes_S5 = {sprintf('15. Exits 1,2,4: Care/Hosp/Just\n       ($%.1fk/yr | @$32k/stunted)', A30_Col_Dollars(1)), ...
+Nodes_S5 = {sprintf('15. Exits 1,2,4: Care/Hosp/Just\n       ($%.1fk/yr | @$32k/struggling)', A30_Col_Dollars(1)), ...
     sprintf('16. Infra, Roads & Base Health\n       ($%.1fk/yr per adult)',                A30_Col_Dollars(2)), ...
     lbl_17, ...
     lbl_18, ...
-    sprintf('19. Exit 3: Stunting Lost Tax\n       ($%.1fk/yr foregone)',          A30_Col_Dollars(5)), ...
+    sprintf('19. Exit 3: Lower-Skill Lost Tax\n       ($%.1fk/yr foregone)',          A30_Col_Dollars(5)), ...
     sprintf('20. Age 30 Emig Tax Loss\n       ($%.1fk/yr to Abroad)',              A30_Col_Dollars(6))};
 
 if Surplus_CR > 0.05
@@ -861,7 +860,7 @@ end
 %   Gate 1 (1..3):   Red (Means-Tested), Blue (Universal), Warm Gold-Green (Private Birth)
 %   Gate 2 (4..7):   Red (Corner), Steel Blue (Public ECE), Teal (High Public ECE), Warm Gold-Emerald (Private Parental ECE Cash+Time)
 %   Gate 3 (8..11):  Red (Unemp Stress), Steel Blue (Public Schooling), Teal (Montessori / Tuakana Mentoring), Warm Gold-Emerald (Private Adol Cash+Time)
-%   Gate 4 (12..14): Red (Stunted), Slate Blue (Core), Emerald (Thriving)
+%   Gate 4 (12..14): Red (Struggling), Slate Blue (Core), Emerald (Thriving)
 %   Gate 5 (15..20): Red (Exits 1,2,4), Amber (Infra/Health), Blue (GST/Cap), Teal (PAYE),Mauve (Exit 3), Purple (Emig)
 %   Gate 6 (21..26): Red (Ongoing Exits), Amber (Super/Infra), Blue (GST/Cap/Est), Teal (PAYE), Mauve (Exit 3), Purple (Abroad)
 Master_Colors = [
@@ -876,20 +875,20 @@ Master_Colors = [
     0.26, 0.52, 0.70;  % 9. Public Schooling (d_2) (Public Steel Blue)
     0.14, 0.62, 0.50;  % 10. Montessori / Tuakana Mentoring (Public Teal)
     0.84, 0.56, 0.14;  % 11. Private Adol. Commit (Cash+Time) (Warm Amber-Gold)
-    0.74, 0.18, 0.18;  % 12. Stunted Tier h1-h2
+    0.74, 0.18, 0.18;  % 12. Struggling Tier h1-h2
     0.30, 0.56, 0.68;  % 13. Core Skill Tier h3-h5
     0.12, 0.58, 0.46;  % 14. Thriving Tier h6-h7
     0.80, 0.22, 0.18;  % 15. Age 30 Exits 1,2,4 Remediation
     0.76, 0.46, 0.18;  % 16. Age 30 Infra, Roads & Base Health
     0.22, 0.48, 0.70;  % 17. Age 30 GST & Cap Tax
     0.14, 0.60, 0.48;  % 18. Age 30 PAYE Income Tax
-    0.68, 0.30, 0.48;  % 19. Age 30 Exit 3: Stunting Lost Tax
+    0.68, 0.30, 0.48;  % 19. Age 30 Exit 3: Lower-Skill Lost Tax
     0.50, 0.32, 0.68;  % 20. Age 30 Emig Tax Loss
     0.76, 0.20, 0.18;  % 21. Career Exits 1,2,4 Ongoing Burden
     0.74, 0.44, 0.16;  % 22. Career NZ Super, Infra & Health
     0.20, 0.46, 0.68;  % 23. Career GST, Cap & Estate Tax Pool
     0.12, 0.58, 0.46;  % 24. Career PAYE Income Tax
-    0.64, 0.28, 0.46;  % 25. Career Exit 3: Stunting Lost Tax
+    0.64, 0.28, 0.46;  % 25. Career Exit 3: Lower-Skill Lost Tax
     0.46, 0.28, 0.66   % 26. Career Permanent Abroad Tax Loss
     ];
 
@@ -1240,11 +1239,11 @@ Node_Names = { ...
     '1_MeansTested_Birth_Support';       '2_Universal_Birth_Benefit';          '3_Private_Birth_OutOfPocket'; ...
     '4_ECE_Corner_Benefit_Need';         '5_Public_ECE_Wraparound';            '6_High_Intensity_Public_ECE';      '7_Private_Parental_ECE_CashTime'; ...
     '8_Adol_Unemp_Stress_Exits124';      '9_Public_Secondary_Schooling';       '10_Montessori_Public_Program';     '11_Private_Adol_Commit_CashTime'; ...
-    '12_Stunted_Tier_h1_h2_Launch';      '13_Core_Skill_Tier_h3_h5_Launch';    '14_Thriving_Tier_h6_h7_Launch'; ...
+    '12_Struggling_Tier_h1_h2_Launch';      '13_Core_Skill_Tier_h3_h5_Launch';    '14_Thriving_Tier_h6_h7_Launch'; ...
     '15_Age30_Exits124_CareHospJust';    '16_Age30_Infra_Roads_BaseHealth';    '17_Age30_GST_Cap_Tax'; ...
-    '18_Age30_PAYE_Income_Tax';          '19_Age30_Exit3_Stunting_LostTax';    '20_Age30_Emigrated_Abroad_LostTax'; ...
+    '18_Age30_PAYE_Income_Tax';          '19_Age30_Exit3_LowerSkill_LostTax';    '20_Age30_Emigrated_Abroad_LostTax'; ...
     '21_Career_Ongoing_Exits124';        '22_Career_NZSuper_Health_Infra';     '23_Career_GST_Cap_Estate_Tax'; ...
-    '24_Career_PAYE_Income_Tax';         '25_Career_Exit3_Stunting_LostTax';   '26_Career_Perm_Abroad_LostTax'};
+    '24_Career_PAYE_Income_Tax';         '25_Career_Exit3_LowerSkill_LostTax';   '26_Career_Perm_Abroad_LostTax'};
 
 T_Fiscal = table(Gate_Labels, Node_Names, 'VariableNames', {'Gate', 'Node_Name'});
 Flow_Mat = zeros(26, N_p);
@@ -1363,7 +1362,7 @@ else
         '1_Material_Hardship_Housing_Squeeze'; '2_Secure_Parental_Asset_Buffer'; ...
         '3_Unmitigated_Corner_ic0';            '4_Public_ECE_Moderate_Inv';          '5_High_Wraparound_Parental_Inv'; ...
         '6_Family_Unemp_Stress_z1';            '7_Standard_Public_Schooling';        '8_Montessori_Peer_Mentoring'; ...
-        '9_Stunted_Tier_h1_h2';                '10_Core_Skill_Tier_h3_h5';           '11_Thriving_Tier_h6_h7'; ...
+        '9_Struggling_Tier_h1_h2';                '10_Core_Skill_Tier_h3_h5';           '11_Thriving_Tier_h6_h7'; ...
         '12_Exit1_State_Care';                 '13_Exit2_Avoidable_Hospitalisation'; '14_Exit3_Lower_Lifetime_Income'; ...
         '15_Exit4_Benefit_Justice_Burden';     '16_Retained_NZ_Secure_Thriving';     '17_Emigrated_Abroad_BrainDrain'};
 end

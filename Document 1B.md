@@ -393,7 +393,7 @@ Every behavioral, demographic, and fiscal elasticity governing the statutory ret
 | `Params.kappa_kuia_max` | $\kappa_{\mathrm{kuia}}^{\max}$ | `0.160` | Maximum asymptotic *Kuia / Koroua* alloparental time boost when $A_{\mathrm{super}} < 65$ (+16% saturation ceiling; Compton & Pollak, 2014). |
 | `Params.tau_kuia_sat` | $\tau_{\mathrm{kuia}}$ | `1.800` | Concave saturation scale (in years below 65) in $\tanh((65 - A_{\mathrm{super}})/\tau_{\mathrm{kuia}})$ (+8.1% boost at Age 64, +12.9% at Age 63). |
 | `Params.delta_senescence_post65` | $\delta_{\mathrm{sen},65+}$ | `0.080` | Annual physiological earning-capacity decay past age 65 (8%/yr; Fan, Seshadri, & Taber, 2022; French, 2005). |
-| `Params.psi_wear_post65` | $\psi_{\mathrm{wear},65+}$ | `0.140` | Annual late-life labor disutility slope per year worked past 65 (amplified for low-$h$ manual workers; French & Jones, 2011). |
+| `Params.psi_wear_post65` | $\psi_{\mathrm{wear},65+}$ | `0.140` | Annual late-life labor disutility slope per year worked past 65 (amplified for low-*h* manual workers; French & Jones, 2011). |
 | `Params.psi_wear_early_relief` | $\psi_{\mathrm{relief},<65}$ | `0.380` | Pre-65 manual labor disutility relief when eligible for early NZ Superannuation ($A_{\mathrm{super}} < 65$). |
 | `Params.theta_healthy_wrk_65` | $\theta_{\mathrm{healthy},65}$ | `0.480` | Share of displaced 65-year-olds able to sustain full-time healthy employment without benefit leak (implies 52% initial / 38%–45% average leak; NZ Treasury LTFM / MSD Supported Living tables). |
 | `Params.lambda_health_decay_65` | $\lambda_{\mathrm{morb},65+}$ | `0.180` | Exponential morbidity decay rate per year above 65 for displaced seniors ($\theta_{\mathrm{healthy}}(A) = \theta_{\mathrm{healthy},65} \exp(-\lambda_{\mathrm{morb},65+}(A - 65))$; Case & Deaton, 2005). |
@@ -501,18 +501,18 @@ Evaluating the unified government budget identity and household welfare decompos
 
 ## 4.5 Table 17: Distributional Incidence Across 10 Survey-Anchored Earn + Own Tiers — Productive vs. Passive Asset Bifurcation and Balance-Sheet Resilience (`Plot_WealthBracket_PainAndCelebration.m`)
 
-*Source Script:* `Plot_WealthBracket_PainAndCelebration.m`; *Output CSV:* `Table17_Survey10Tier_EarnOwn_Welfare_Dunedin_22.csv`; *Figures:* `Fig_WealthBrackets_2Panel_PainAndCelebration_Dunedin_22.png`, `Fig_WealthBrackets_PanelA_PainVsGain_Dunedin_22.png`, and `Fig_WealthBrackets_PanelB_LeftToCelebrate_Dunedin_22.png`
+*Source Script:* `Plot_WealthBracket_PainAndCelebration.m`; *Output CSV:* `Table17_Survey10Tier_EarnOwn_Welfare_Dunedin_22.csv`; *Figures:* `Fig_WealthBrackets_2Panel_GiveAndGain_Dunedin_22.png`, `Fig_WealthBrackets_PanelA_GiveVsGain_Dunedin_22.png`, and `Fig_WealthBrackets_PanelB_WealthResilience_Dunedin_22.png`
 
 To evaluate the distributional incidence of `SS0 -> SS1 -> SS2` without arbitrary brackets, `Plot_WealthBracket_PainAndCelebration.m` maps **10 official survey-anchored `Earn + Own` (*Annual Household Income + Net Worth*) benchmarks** drawn directly from:
 1. **Statistics New Zealand Household Economic Survey (*HES* June 2024/2025):** Median household income = **NZD 119k** (`Tier 3: 120k + 340k`); median household net worth = **NZD 529k** (`Tier 4: 135k + 530k`), alongside `Q1` Hardship Renters (`Tier 1: 45k + 12k`, P12) and `Q2` Young Savers (`Tier 2: 85k + 115k`, P35).
 2. **Rashbrooke (*Wealth and New Zealand* / *Too Much Money* Wealth Percentile Tables):** Top 10% (`P90: 240k + 2.15M`), Top 5% (`P95: 310k + 3.10M`), Top 2% (`P98: 450k + 5.20M`), and Top 1% (`P99: 600k + 8.50M`).
 3. **Inland Revenue High-Wealth Individuals Research Project (*HWIRP* April 2023) & *NBR Rich List*:** IRD High-Wealth Median (`Tier 9, P99.9: 2.1M + 50M`, where baseline effective tax rates on economic income averaged just 8.9%) and the *NBR Rich List* Median (`Tier 10, P99.99: 6.5M + 140M`).
 
-![Redistribution Pain vs Gain Across 10 Survey-Anchored Tiers](Output_NZ_4Region_Intergen/Fig_WealthBrackets_PanelA_PainVsGain_Dunedin_22.png)
+![Fiscal Give vs Economic Gain Across 10 Survey-Anchored Tiers](Output_NZ_4Region_Intergen/Fig_WealthBrackets_PanelA_GiveVsGain_Dunedin_22.png)
 
 For each tier $m \in \{1, \dots, 10\}$, total Consumption-Equivalent welfare change ($`\Delta\mathrm{CE}_m`$) is decomposed into **3 Tax & Valuation-Cooling Channels** (House-price cooling $\Delta Q_k$, the annual book-value land/wealth levy $\tau_a = 0.015$ (1.5%) above the family-home exemption, and the Estate levy $\tau_b$) and **4 Economic & Cohesion Gain Channels** (ECE/Rent relief + Youth Grant $E$, the **-3.12 to -3.43 pp $SS2$ PAYE cut** + **-60 bps** credit relief, the Firm productive return boost $`\Delta R_k(z_{h,k})`$, and the Social Cohesion / retained-family dividend $`\Delta u_{\mathrm{rel}}`$), reporting separate trajectories for **Active Growth Entrepreneurs** ($`z_f = z_{h,k}`$, 80% operating equity share) versus **Passive Residential Land Hoarders** ($`z_f = z_{\ell,k}`$, 85% passive property share):
 
-![Redistribution Pain vs Gain and Retained Wealth Across 10 Survey-Anchored Tiers](Output_NZ_4Region_Intergen/Fig_WealthBrackets_2Panel_PainAndCelebration_Dunedin_22.png)
+![Fiscal Give vs Economic Gain and Net Worth Resilience Across 10 Survey-Anchored Tiers](Output_NZ_4Region_Intergen/Fig_WealthBrackets_2Panel_GiveAndGain_Dunedin_22.png)
 
 | Survey Tier (`Table17_Survey10Tier_*`) | `Income + Net Worth` | Tax & Cooling (`H+W+E`) | Economic & Cohesion Gain (`ECE+Tax+Firm+S`) | **Tier Avg (CE %)** | **Active** ($`z_{h,k}`$) vs. **Passive** ($`z_{\ell,k}`$) | **Post-Reform Retained Net Worth (`% Base`)** | **After-Tax Cash (`/yr`)** |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |

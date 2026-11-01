@@ -223,7 +223,7 @@ msg_A = sprintf(['90%% Unconditionally Ahead, 98%% Net Ahead & Active Breakeven 
 text(ax1, 3.25, 22.8, msg_A, 'FontSize', 7.5, 'FontWeight', 'bold', 'Color', [0.00 0.25 0.10], ...
     'BackgroundColor', [0.95 0.99 0.96], 'EdgeColor', [0.00 0.43 0.17], 'Margin', 4, 'Interpreter', 'none');
 
-title(ax1, 'A. Redistribution Pain vs. Gain Across 10 Survey-Anchored Earn + Own Tiers (HES / Rashbrooke / IRD / NBR)', ...
+title(ax1, 'A. Redistribution Fiscal Give vs. Economic Gain Across 10 Survey-Anchored Earn + Own Tiers (HES / Rashbrooke / IRD / NBR)', ...
     'FontSize', 10.2, 'FontWeight', 'bold');
 xlabel(ax1, 'Survey Benchmark Archetype: Annual Household Income + Net Worth', ...
     'FontSize', 9.8, 'FontWeight', 'bold');
@@ -277,18 +277,18 @@ ylabel(ax2, 'Post-Reform Compounded Net Worth (% of Status Quo Baseline)', 'Font
 ylim(ax2, [68, 172]);
 ax2.YColor = [0.10 0.10 0.10];
 
-% Right Axis: Absolute Post-Reform Net Worth Left to Celebrate (Log-Scale NZD Millions)
+% Right Axis: Absolute Post-Reform Net Worth Net Worth Resilience (Log-Scale NZD Millions)
 yyaxis(ax2, 'right'); hold(ax2, 'on');
 bar_cel = bar(ax2, x_idx, PostReform_NetWorth_MNZD, 'BarWidth', 0.36, ...
     'FaceColor', [0.17 0.51 0.73], 'FaceAlpha', 0.25, 'EdgeColor', [0.17 0.51 0.73], ...
-    'LineWidth', 0.9, 'DisplayName', 'Absolute Post-Reform Net Worth Left to Celebrate (NZD Millions, Right Axis)');
+    'LineWidth', 0.9, 'DisplayName', 'Absolute Post-Reform Net Worth Net Worth Resilience (NZD Millions, Right Axis)');
 set(ax2, 'YScale', 'log');
-ylabel(ax2, 'Absolute Post-Reform Net Worth Left to Celebrate (NZD Millions, Log Scale)', 'FontSize', 9.8, 'FontWeight', 'bold');
+ylabel(ax2, 'Absolute Post-Reform Net Worth Net Worth Resilience (NZD Millions, Log Scale)', 'FontSize', 9.8, 'FontWeight', 'bold');
 ylim(ax2, [0.02, 350]);
 ax2.YColor = [0.17 0.51 0.73];
 
 yyaxis(ax2, 'left');
-msg_B = sprintf(['What the Wealthy Have Left to Celebrate After Redistribution:\n', ...
+msg_B = sprintf(['What the Wealthy Have Net Worth Resilience After Redistribution:\n', ...
     '• A Top 1%% household (P99: 600k+8.5M) retains NZD 8.04M (94.6%% of net worth)\n', ...
     '  and NZD 455k/yr in after-tax income (98.5%% if invested in active firms z_h).\n', ...
     '• An NBR Rich List Median family (6.5M+140M) experiences a mild -5.9%% avg\n', ...
@@ -310,9 +310,9 @@ lgd2.BoxFace.ColorType = 'truecoloralpha';
 lgd2.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
 
 % Export 2-Panel combined figure + 2 individual sibling panels
-f_2p   = fullfile(OutputDir, sprintf('Fig_WealthBrackets_2Panel_PainAndCelebration_%s.png', AnchorTag));
-f_panA = fullfile(OutputDir, sprintf('Fig_WealthBrackets_PanelA_PainVsGain_%s.png',         AnchorTag));
-f_panB = fullfile(OutputDir, sprintf('Fig_WealthBrackets_PanelB_LeftToCelebrate_%s.png',    AnchorTag));
+f_2p   = fullfile(OutputDir, sprintf('Fig_WealthBrackets_2Panel_GiveAndGain_%s.png', AnchorTag));
+f_panA = fullfile(OutputDir, sprintf('Fig_WealthBrackets_PanelA_GiveVsGain_%s.png',         AnchorTag));
+f_panB = fullfile(OutputDir, sprintf('Fig_WealthBrackets_PanelB_WealthResilience_%s.png',    AnchorTag));
 
 exportgraphics(fig_wb, f_2p,   'Resolution', 300, 'BackgroundColor', 'white');
 exportgraphics(ax1,    f_panA, 'Resolution', 300, 'BackgroundColor', 'white');

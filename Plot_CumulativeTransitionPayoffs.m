@@ -68,10 +68,10 @@ for t = 1:T_trans
             (Params.dG_ECE.(reg) * mass_parents + ic_subsidy + Params.YouthGrant_E * mass_j1);
 
         % 2. Regional Direct Cost Savings (Dunedin h1-h2 acute reduction + transfer savings)
-        mass_stunted_adult = sum(mu_t(:, 1:2, :, 1:9), 'all');
+        mass_struggleed_adult = sum(mu_t(:, 1:2, :, 1:9), 'all');
         transfer_outlay    = sum(pol.Transfers .* mu_t, 'all');
         acute_reg_t        = Params.NZD_Scale * w_pop_k * ...
-            (Params.c_acute_dunedin * mass_stunted_adult + transfer_outlay);
+            (Params.c_acute_dunedin * mass_struggleed_adult + transfer_outlay);
         acute_reg_SS0      = Params.AcuteBurden_Reg_SS0.(reg);
         sav_reg            = max(0, acute_reg_SS0 - acute_reg_t);
 
