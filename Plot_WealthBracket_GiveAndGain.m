@@ -1,18 +1,18 @@
-function Out = Plot_WealthBracket_PainAndCelebration(Params)
-% PLOT_WEALTHBRACKET_PAINANDCELEBRATION
-% Evaluates and plots the welfare impact (CE %), tax/cooling pain vs.
-% productivity/cohesion gains, and post-reform retained wealth ("What's Left
-% to Celebrate") across 10 Survey-Anchored Earn + Own (Income + Net Worth)
-% household archetypes anchored to Stats NZ HES (2024/2025: Median Inc $119k,
-% Median NW $529k), Max Rashbrooke (Wealth in NZ percentiles), IRD High-Wealth
-% Individuals Research Project (2023: Median NW $50M, Median Inc $2.1M), and
-% the NBR Rich List Median ($140M).
+function Out = Plot_WealthBracket_GiveAndGain(Params)
+% PLOT_WEALTHBRACKET_GIVEANDGAIN
+% Evaluates and plots the welfare impact (CE %), tax/cooling fiscal costs
+% vs. productivity/cohesion gains, and post-reform retained wealth across
+% 10 Survey-Anchored Earn + Own (Income + Net Worth) household archetypes
+% anchored to Stats NZ HES (2024/2025: Median Inc $119k, Median NW $529k),
+% Max Rashbrooke (Wealth in NZ percentiles), IRD High-Wealth Individuals
+% Research Project (2023: Median NW $50M, Median Inc $2.1M), and the NBR
+% Rich List Median ($140M).
 %
 % Exports:
-%   1) Fig_WealthBrackets_2Panel_PainAndCelebration_<Anchor>.png (2-Panel Combined)
-%   2) Fig_WealthBrackets_PanelA_PainVsGain_<Anchor>.png          (Panel A Sibling)
-%   3) Fig_WealthBrackets_PanelB_LeftToCelebrate_<Anchor>.png     (Panel B Sibling)
-%   4) Table17_Rashbrooke_10Tier_EarnOwn_Welfare_<Anchor>.csv     (Audit CSV)
+%   1) Fig_WealthBrackets_2Panel_GiveAndGain_<Anchor>.png      (2-Panel Combined)
+%   2) Fig_WealthBrackets_PanelA_GiveVsGain_<Anchor>.png       (Panel A Sibling)
+%   3) Fig_WealthBrackets_PanelB_WealthResilience_<Anchor>.png (Panel B Sibling)
+%   4) Table17_Rashbrooke_10Tier_EarnOwn_Welfare_<Anchor>.csv  (Audit CSV)
 
 if nargin < 1 || isempty(Params), Params = struct(); end
 if isfield(Params, 'Calibration_Anchor') && ~isempty(Params.Calibration_Anchor)
@@ -63,28 +63,28 @@ Own_MNZD  = [0.012; 0.115; 0.34; 0.53; 2.15; 3.10; 5.20; 8.50; 50.0; 140.0];
 N_tiers   = length(Earn_kNZD);
 
 % =========================================================================
-% 2. DECOMPOSE WELFARE IMPACT (CE %) INTO 3 "PAIN" & 4 "GAIN" CHANNELS
+% 2. DECOMPOSE WELFARE IMPACT (CE %) INTO 3 "GIVE" & 4 "GAIN" CHANNELS
 % =========================================================================
-% --- THREE "PAIN" CHANNELS (Negative CE % Components on Unproductive/Taxed Wealth) ---
-% Pain 1: Property Price Cooling (Q_k down -7.5% to -10.5% on net housing/land equity)
-%   Sums with Pain 2 & Pain 3 to: [0.0; -0.3; -0.9; -1.6; -5.1; -6.9; -8.6; -10.3; -13.2; -14.7]
-Pain_HouseCool = -[0.00; 0.30; 0.75; 1.25; 2.75; 3.25; 3.55; 3.75; 3.15; 2.65];
+% --- THREE "GIVE" CHANNELS (Negative CE % Components on Unproductive/Taxed Wealth) ---
+% Give 1: Property Price Cooling (Q_k down -7.5% to -10.5% on net housing/land equity)
+%   Sums with Give 2 & Give 3 to: [0.0; -0.3; -0.9; -1.6; -5.1; -6.9; -8.6; -10.3; -13.2; -14.7]
+Give_HouseCool = -[0.00; 0.30; 0.75; 1.25; 2.75; 3.25; 3.55; 3.75; 3.15; 2.65];
 
-% Pain 2: Annual Book-Value Land/Wealth Levy (tau_a = 1.5% on dormant/unproductive equity)
-Pain_WealthTax = -[0.00; 0.00; 0.15; 0.35; 1.65; 2.40; 3.25; 4.15; 5.95; 6.95];
+% Give 2: Annual Book-Value Land/Wealth Levy (tau_a = 1.5% on dormant/unproductive equity)
+Give_WealthTax = -[0.00; 0.00; 0.15; 0.35; 1.65; 2.40; 3.25; 4.15; 5.95; 6.95];
 
-% Pain 3: Estate / Bequest Levy (tau_b = 25% -> 18% on De Nardi luxury bequest above b_2)
-Pain_EstateTax = -[0.00; 0.00; 0.00; 0.00; 0.70; 1.25; 1.80; 2.40; 4.10; 5.10];
+% Give 3: Estate / Bequest Levy (tau_b = 25% -> 18% on De Nardi luxury bequest above b_2)
+Give_EstateTax = -[0.00; 0.00; 0.00; 0.00; 0.70; 1.25; 1.80; 2.40; 4.10; 5.10];
 
 % Optional Wealth/Estate Exemption Cutoff (e.g. Params.Exempt_Bottom_Pct = 80 or 90):
 if isfield(Params, 'Exempt_Bottom_Pct') && Params.Exempt_Bottom_Pct > 0
     W_ex_M = interp1([0, 50, 80, 90, 95, 99], [0.0, 0.53, 1.35, 2.15, 3.10, 8.50], Params.Exempt_Bottom_Pct, 'pchip');
     tax_frac = max(0, (Own_MNZD - W_ex_M) ./ max(1e-6, Own_MNZD));
-    Pain_WealthTax = Pain_WealthTax .* tax_frac;
-    Pain_EstateTax = Pain_EstateTax .* tax_frac;
+    Give_WealthTax = Give_WealthTax .* tax_frac;
+    Give_EstateTax = Give_EstateTax .* tax_frac;
 end
 
-% --- FOUR "GAIN / CELEBRATION" CHANNELS (Positive CE % Components) ---
+% --- FOUR "GAIN / RETENTION" CHANNELS (Positive CE % Components) ---
 %   Sums across Gains 1-4 to: [+25.4; +19.4; +16.1; +13.0; +8.7; +8.3; +8.7; +9.2; +9.1; +8.8]
 % Gain 1: Early-Years ECE (G_ECE), Montessori/Tuakana-Teina, Youth Grant E, & Lower Rents
 Gain_EarlyRent =  [18.90; 12.50; 8.35; 5.65; 1.35; 0.75; 0.45; 0.25; 0.10; 0.05];
@@ -100,7 +100,7 @@ Gain_Cohesion   = [ 1.80;  1.60; 1.65; 1.65; 1.55; 1.55; 1.85; 2.25; 2.30; 2.25]
 
 % Net Portfolio-Weighted Welfare Impact (CE %):
 %   [+25.4; +19.1; +15.2; +11.4; +3.6; +1.4; +0.1; -1.1; -4.1; -5.9]
-Net_CE_Avg = Pain_HouseCool + Pain_WealthTax + Pain_EstateTax + ...
+Net_CE_Avg = Give_HouseCool + Give_WealthTax + Give_EstateTax + ...
     Gain_EarlyRent + Gain_PAYE_Wage + Gain_FirmUpside + Gain_Cohesion;
 
 % Split at each tier between:
@@ -110,7 +110,7 @@ Net_CE_Entrepreneur_zh = [25.40; 19.10; 15.60; 12.40; 6.40;  5.20;  4.30;  3.60;
 Net_CE_LandHoarder_zl  = [25.40; 19.10; 14.30;  9.60; 0.40; -2.70; -4.40; -6.20; -9.70; -11.20];
 
 % =========================================================================
-% 3. COMPUTE "WHAT'S LEFT TO CELEBRATE" (RETENTION OF WEALTH & PURCHASING POWER)
+% 3. COMPUTE RETENTION OF WEALTH & PURCHASING POWER
 % =========================================================================
 % Percentage of Baseline Compounded Net Worth Retained in SS2:
 %   - Tiers 1-4 EXPAND net worth (>100%) via Youth Grant E, homeownership entry & wage growth
@@ -124,7 +124,7 @@ PostReform_NetWorth_MNZD(1) = 0.074; % Tier 1 (45k+12k) seeds NZD 74k via Youth 
 
 % Export CSV Audit Tables (Both legacy Table17 filename and explicit 10-Tier filename)
 T17 = table(Tier_Clean_Names, Earn_kNZD, Own_MNZD, ...
-    Pain_HouseCool, Pain_WealthTax, Pain_EstateTax, ...
+    Give_HouseCool, Give_WealthTax, Give_EstateTax, ...
     Gain_EarlyRent, Gain_PAYE_Wage, Gain_FirmUpside, Gain_Cohesion, ...
     Net_CE_Avg, Net_CE_Entrepreneur_zh, Net_CE_LandHoarder_zl, ...
     Retained_Wealth_Avg_Pct, Retained_Wealth_zh_Pct, PostReform_NetWorth_MNZD);
@@ -135,9 +135,9 @@ writetable(T17, csv_10p);
 fprintf('  -> Exported 10-Tier Survey-Anchored Earn+Own Welfare & Wealth Retention Table to:\n     %s\n', csv_path);
 
 % =========================================================================
-% 4. RENDER 2-PANEL FIGURE: PAIN VS. GAIN (PANEL A) & LEFT TO CELEBRATE (PANEL B)
+% 4. RENDER 2-PANEL FIGURE: Give VS. Gain (PANEL A) & Wealth Retention (PANEL B)
 % =========================================================================
-fig_wb = figure('Name', sprintf('Fig_WealthBrackets_PainAndCelebration_%s', AnchorTag), ...
+fig_wb = figure('Name', sprintf('Fig_WealthBrackets_GiveAndRetain_%s', AnchorTag), ...
     'Color', 'w', 'Position', [30, 40, 1820, 780]);
 
 x_idx = 1:N_tiers;
@@ -146,7 +146,7 @@ x_idx = 1:N_tiers;
 ax1 = subplot('Position', [0.055, 0.165, 0.435, 0.765]); hold(ax1, 'on');
 
 Pos_Mat = [Gain_EarlyRent, Gain_PAYE_Wage, Gain_FirmUpside, Gain_Cohesion];
-Neg_Mat = [Pain_HouseCool, Pain_WealthTax, Pain_EstateTax];
+Neg_Mat = [Give_HouseCool, Give_WealthTax, Give_EstateTax];
 
 b_pos = bar(ax1, x_idx, Pos_Mat, 'stacked', 'BarWidth', 0.58, 'EdgeColor', [0.15 0.15 0.15], 'LineWidth', 0.6);
 b_neg = bar(ax1, x_idx, Neg_Mat, 'stacked', 'BarWidth', 0.58, 'EdgeColor', [0.15 0.15 0.15], 'LineWidth', 0.6);
@@ -158,12 +158,12 @@ pos_colors = [ ...
     0.99, 0.68, 0.38];    % Gain 4: Warm Gold (Relational Cohesion & Retained Grandchildren u_rel)
 
 neg_colors = [ ...
-    0.96, 0.43, 0.26; ... % Pain 1: Coral Orange (Metropolitan Property Cooling Q_k)
-    0.80, 0.15, 0.15; ... % Pain 2: Crimson Red (1.5% Annual Book-Value Land/Wealth Levy tau_a)
-    0.46, 0.16, 0.51];    % Pain 3: Deep Purple (Estate/Bequest Levy tau_b on >b_2 Estates)
+    0.96, 0.43, 0.26; ... % Give 1: Coral Orange (Metropolitan Property Cooling Q_k)
+    0.80, 0.15, 0.15; ... % Give 2: Crimson Red (1.5% Annual Book-Value Land/Wealth Levy tau_a)
+    0.46, 0.16, 0.51];    % Give 3: Deep Purple (Estate/Bequest Levy tau_b on >b_2 Estates)
 
 % Compact legend labels so the Southwest legend stays strictly under Tiers 1-4
-% and NEVER overlaps the Pain bars of Tiers 5-10 (P90 to NBR Rich List)!
+% and NEVER overlaps the Give bars of Tiers 5-10 (P90 to NBR Rich List)!
 pos_names = { ...
     'Gain 1: Universal ECE, Mentoring, Grant E & Rent Relief', ...
     'Gain 2: Phase 2 (-3.5 pp) PAYE Cut, Wages & -60 bps Rate', ...
@@ -171,9 +171,9 @@ pos_names = { ...
     'Gain 4: Social Cohesion (Less Crime + Grandkids Stay in NZ)'};
 
 neg_names = { ...
-    'Pain 1: Property Price Cooling (Q_k: -7.5% to -10.5%)', ...
-    'Pain 2: Annual 1.5% Land/Wealth Levy (\tau_a on Dormant Equity)', ...
-    'Pain 3: Estate Levy (\tau_b: 25%\rightarrow18% Above Exemption)'};
+    'Give 1: Property Price Cooling (Q_k: -7.5% to -10.5%)', ...
+    'Give 2: Annual 1.5% Land/Wealth Levy (\tau_a on Dormant Equity)', ...
+    'Give 3: Estate Levy (\tau_b: 25%\rightarrow18% Above Exemption)'};
 
 for k = 1:4
     b_pos(k).FaceColor   = pos_colors(k, :);
@@ -223,7 +223,7 @@ msg_A = sprintf(['90%% Unconditionally Ahead, 98%% Net Ahead & Active Breakeven 
 text(ax1, 3.25, 22.8, msg_A, 'FontSize', 7.5, 'FontWeight', 'bold', 'Color', [0.00 0.25 0.10], ...
     'BackgroundColor', [0.95 0.99 0.96], 'EdgeColor', [0.00 0.43 0.17], 'Margin', 4, 'Interpreter', 'none');
 
-title(ax1, 'A. Redistribution Fiscal Give vs. Economic Gain Across 10 Survey-Anchored Earn + Own Tiers (HES / Rashbrooke / IRD / NBR)', ...
+title(ax1, 'A. Fiscal Give vs. Economic & Cohesion Gain Across 10 Survey-Anchored Earn + Own Tiers (HES / Rashbrooke / IRD / NBR)', ...
     'FontSize', 10.2, 'FontWeight', 'bold');
 xlabel(ax1, 'Survey Benchmark Archetype: Annual Household Income + Net Worth', ...
     'FontSize', 9.8, 'FontWeight', 'bold');
@@ -235,11 +235,11 @@ lgd1 = legend(ax1, 'Location', 'southwest', 'FontSize', 6.7, 'NumColumns', 1);
 lgd1.BoxFace.ColorType = 'truecoloralpha';
 lgd1.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
 
-% --- PANEL B: "HOW MUCH THEY HAVE LEFT TO CELEBRATE" (RETAINED FORTUNE + SOCIAL COHESION) ---
+% --- PANEL B: RETAINED FORTUNE + SOCIAL COHESION ---
 ax2 = subplot('Position', [0.540, 0.165, 0.405, 0.765]);
 yyaxis(ax2, 'left'); hold(ax2, 'on');
 
-% Shaded celebration band between Land Hoarder and Active Entrepreneur retained wealth %
+% Shaded retention/cohesion band between Land Hoarder and Active Entrepreneur retained wealth %
 fill(ax2, [x_idx, fliplr(x_idx)], [Retained_Wealth_zl_Pct', fliplr(Retained_Wealth_zh_Pct')], ...
     [0.65 0.85 0.42], 'FaceAlpha', 0.35, 'EdgeColor', 'none', ...
     'DisplayName', 'Retained Net Worth Range (Passive z_l to Active Entrepreneur z_h)');
@@ -253,7 +253,7 @@ plot(ax2, x_idx, Retained_Wealth_zl_Pct, '--s', 'Color', [0.80 0.15 0.15], 'Mark
 
 yline(ax2, 100.0, 'k:', 'LineWidth', 1.5, 'DisplayName', '100% Baseline Net Worth Parity Line');
 
-% High-Contrast Pill Badges for exact NZD left to celebrate on Tiers 3 to 10
+% High-Contrast Pill Badges for exact NZD retained on Tiers 3 to 10
 % Placed cleanly BELOW the red dashed z_l curve (or above for Tier 3/4) so lines never cross text!
 for i = 3:N_tiers
     nw_val = PostReform_NetWorth_MNZD(i);
@@ -277,9 +277,9 @@ ylabel(ax2, 'Post-Reform Compounded Net Worth (% of Status Quo Baseline)', 'Font
 ylim(ax2, [68, 172]);
 ax2.YColor = [0.10 0.10 0.10];
 
-% Right Axis: Absolute Post-Reform Net Worth Net Worth Resilience (Log-Scale NZD Millions)
+% Right Axis: Absolute Post-Reform Net Worth Resilience (Log-Scale NZD Millions)
 yyaxis(ax2, 'right'); hold(ax2, 'on');
-bar_cel = bar(ax2, x_idx, PostReform_NetWorth_MNZD, 'BarWidth', 0.36, ...
+bar_retained = bar(ax2, x_idx, PostReform_NetWorth_MNZD, 'BarWidth', 0.36, ...
     'FaceColor', [0.17 0.51 0.73], 'FaceAlpha', 0.25, 'EdgeColor', [0.17 0.51 0.73], ...
     'LineWidth', 0.9, 'DisplayName', 'Absolute Post-Reform Net Worth Net Worth Resilience (NZD Millions, Right Axis)');
 set(ax2, 'YScale', 'log');
@@ -288,17 +288,17 @@ ylim(ax2, [0.02, 350]);
 ax2.YColor = [0.17 0.51 0.73];
 
 yyaxis(ax2, 'left');
-msg_B = sprintf(['What the Wealthy Have Net Worth Resilience After Redistribution:\n', ...
+msg_B = sprintf(['Retained Wealth & Increased Social Cohesion After Rebalancing:\n', ...
     '• A Top 1%% household (P99: 600k+8.5M) retains NZD 8.04M (94.6%% of net worth)\n', ...
     '  and NZD 455k/yr in after-tax income (98.5%% if invested in active firms z_h).\n', ...
     '• An NBR Rich List Median family (6.5M+140M) experiences a mild -5.9%% avg\n', ...
-    '  adjustment (no worse than a sluggish equity year), celebrating NZD 126.3M\n', ...
+    '  adjustment (no worse than a sluggish equity year), retaining NZD 126.3M\n', ...
     '  (90.2%%; or NZD 133.4M / 95.3%% active) + NZD 4.62M/yr after-tax cash flow\n', ...
     '  in a high-cohesion NZ (S_t: 100 -> 126) where their own grandchildren stay!']);
 text(ax2, 2.75, 153.0, msg_B, 'FontSize', 7.4, 'FontWeight', 'bold', 'Color', [0.00 0.25 0.10], ...
     'BackgroundColor', [0.95 0.99 0.96], 'EdgeColor', [0.00 0.43 0.17], 'Margin', 4, 'Interpreter', 'none');
 
-title(ax2, 'B. What Remains to Celebrate: Retained Net Worth (%) & Absolute Fortune (NZD Millions)', ...
+title(ax2, 'B. Post-Reform Retained Net Worth (% of Baseline) & Absolute Wealth Resilience (NZD Millions)', ...
     'FontSize', 10.2, 'FontWeight', 'bold');
 xlabel(ax2, 'Survey Benchmark Archetype: Annual Household Income + Net Worth', ...
     'FontSize', 9.8, 'FontWeight', 'bold');
@@ -317,14 +317,14 @@ f_panB = fullfile(OutputDir, sprintf('Fig_WealthBrackets_PanelB_WealthResilience
 exportgraphics(fig_wb, f_2p,   'Resolution', 300, 'BackgroundColor', 'white');
 exportgraphics(ax1,    f_panA, 'Resolution', 300, 'BackgroundColor', 'white');
 exportgraphics(ax2,    f_panB, 'Resolution', 300, 'BackgroundColor', 'white');
-fprintf('  -> Saved 10-Tier Survey-Anchored Wealth Bracket Pain & Celebration sibling plots:\n     1) %s\n     2) %s\n     3) %s\n', f_2p, f_panA, f_panB);
+fprintf('  -> Saved 10-Tier Survey-Anchored Wealth Bracket Give & Gain sibling plots:\n     1) %s\n     2) %s\n     3) %s\n', f_2p, f_panA, f_panB);
 
 Out.T17_Table = T17;
 Out.f_2panel  = f_2p;
 Out.f_panelA  = f_panA;
 Out.f_panelB  = f_panB;
 
-% Optional: Stitch the 7-Segment Gain Graph (Left) directly adjacent to the 10-Tier Pain/Gain Graph (Right)
+% Optional: Stitch the 7-Segment Gain Graph (Left) directly adjacent to the 10-Tier Give/Gain Graph (Right)
 f_7fac = fullfile(OutputDir, sprintf('Fig1_SS2_7Factor_AreaTrajectory_National_%s.png', AnchorTag));
 if exist(f_7fac, 'file') && exist(f_panA, 'file')
     imgL = imread(f_7fac);
@@ -334,10 +334,10 @@ if exist(f_7fac, 'file') && exist(f_panA, 'file')
     imgR_rs  = imresize(imgR, [h_target, round(size(imgR, 2) * h_target / size(imgR, 1))]);
     pad_mid  = uint8(255 * ones(h_target, 30, 3));
     img_adj  = [imgL_rs, pad_mid, imgR_rs];
-    f_adj    = fullfile(OutputDir, sprintf('Fig_Sec6_Adjacent_7FactorGain_And_10TierPain_%s.png', AnchorTag));
+    f_adj    = fullfile(OutputDir, sprintf('Fig_Sec6_Adjacent_7FactorGain_And_10TierGive_%s.png', AnchorTag));
     imwrite(img_adj, f_adj);
     Out.f_adjacent = f_adj;
-    fprintf('  -> Saved Adjacent 7-Factor Gain + 10-Tier Pain/Gain composite: %s\n', f_adj);
+    fprintf('  -> Saved Adjacent 7-Factor Gain + 10-Tier Give/Gain composite: %s\n', f_adj);
 end
 
 end

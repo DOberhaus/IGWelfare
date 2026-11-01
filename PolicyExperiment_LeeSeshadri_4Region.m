@@ -271,7 +271,19 @@ title('D. Long-Run Newborn Welfare Gain (CE\_LR %)');
 set(ax4, 'TickLabelInterpreter', 'none');
 grid on;
 
-if Export_Tables_Figures
-    exportgraphics(figE8, fullfile(OutputDir, 'FigE8_LeeSeshadri_4Region_Counterfactuals.png'), 'Resolution', 300);
-    exportgraphics(figE8, fullfile(OutputDir, 'Lee___Seshadri__2019__Fig_E8__4_Region_Parent.png'), 'Resolution', 300);
+if ~exist('Export_Tables_Figures', 'var') || Export_Tables_Figures
+    if ~exist('OutputDir', 'var') || isempty(OutputDir)
+        if isfolder('Output_NZ_4Region_Intergen')
+            OutputDir = 'Output_NZ_4Region_Intergen';
+        else
+            OutputDir = pwd;
+        end
+    end
+    exportgraphics(figE8, fullfile(OutputDir, 'FigE8_LeeSeshadri_4Region_Counterfactuals.png'), 'Resolution', 300, 'BackgroundColor', 'white');
+    writetable(T_IGE,     fullfile(OutputDir, 'Table4_4Region_LeeSeshadri_IGE.csv'), 'WriteRowNames', true);
+    writetable(T_Out,     fullfile(OutputDir, 'Table5_4Region_LeeSeshadri_Output_Welfare.csv'), 'WriteRowNames', true);
+    writetable(T_VarExpl, fullfile(OutputDir, 'Table6_4Region_LeeSeshadri_Table12_VarianceExplained.csv'), 'WriteRowNames', true);
+    writetable(T_IGE,     fullfile(OutputDir, 'Table12A_LeeSeshadri_4Region_IGE.csv'), 'WriteRowNames', true);
+    writetable(T_VarExpl, fullfile(OutputDir, 'Table12B_LeeSeshadri_4Region_VarExpl.csv'), 'WriteRowNames', true);
+    writetable(T_Out,     fullfile(OutputDir, 'Table12C_LeeSeshadri_4Region_Welfare.csv'), 'WriteRowNames', true);
 end
