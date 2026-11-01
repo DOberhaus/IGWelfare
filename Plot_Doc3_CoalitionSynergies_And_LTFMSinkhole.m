@@ -139,11 +139,12 @@ for i = 1:n_yr
         CE_StopGo_1Term(i) = 0.08 * exp(y / 4.0);
     else
         if mod(y, 6) < 3
-            u_1t = u_1t + 0.88 * exp(-y / 70.0);
-            b_1t = b_1t + 0.28 * (1 - exp(-y / 28.0));
+            u_1t = u_1t + 0.95 * exp(-y / 55.0);
+            b_1t = b_1t + 0.22 * (1 - exp(-y / 25.0));
         else
-            u_1t = (0.78 ^ (1/3)) * u_1t - 0.18;
-            b_1t = b_1t - 0.05 * (y / 60.0);
+            % 1-Term (3-Yr) Off: 22% single-period fade-out + LTFM drift
+            u_1t = (0.78 ^ (1/3)) * u_1t - 0.35;
+            b_1t = b_1t - 0.14 * (0.4 + 0.6 * (y / 60.0));
         end
         u_1t = max(0, u_1t);
         CE_StopGo_1Term(i) = b_1t + u_1t;
@@ -152,8 +153,9 @@ end
 CE_StopGo_1Term(Yr_Vec >= 0) = CE_StopGo_1Term(Yr_Vec >= 0) * (6.58 / CE_StopGo_1Term(end));
 
 % 6B: Two-Term (6-Yr On / 6-Yr Off = 12-Yr Period) Sawtooth (2-period 39.2% compound fade-out + LTFM slide)
-%     Climbs during each 6-Yr Investment phase, then drops ~4.5-5.2 pp during each 6-Yr Consolidation phase,
-%     never crossing Yr 18.8 Cash Breakeven and ending at +3.84% CE (83.7% of the +23.63% prize lost):
+%     Climbs ~+4.5 to +5.2 pp during each 6-Yr Investment phase, then drops ~-3.8 to -4.5 pp during
+%     each 6-Yr Consolidation phase as 2-term fade-out (39.2%) and LTFM fiscal drift bite,
+%     ending at +3.84% CE at Year 60 (83.7% of the +23.63% prize lost):
 CE_StopGo_Thick = zeros(n_yr, 1);
 banked_stock    = 0.0;
 unbanked_stock  = 0.0;
@@ -164,13 +166,13 @@ for i = 1:n_yr
     else
         in_on_window = (mod(y, 12) < 6);
         if in_on_window
-            % 6-Yr Investment Phase: accumulates unbanked early skill & partial banking (without Wedges 1, 3, 4)
-            unbanked_stock = unbanked_stock + 0.92 * exp(-y / 65.0);
-            banked_stock   = banked_stock   + 0.24 * (1 - exp(-y / 30.0));
+            % 6-Yr Investment Phase: builds unbanked early skill (+4.8 pp over 6 yrs) & partial banking
+            unbanked_stock = unbanked_stock + 0.82 * (1 - 0.25 * (y / 60.0));
+            banked_stock   = banked_stock   + 0.19 * (1 - exp(-y / 22.0));
         else
-            % 6-Yr Consolidation Phase: 2-term compound fade-out (39.2% loss) + LTFM fiscal drift
-            unbanked_stock = (0.78 ^ (1/3)) * unbanked_stock - 0.32;
-            banked_stock   = banked_stock - 0.08 * (y / 60.0);
+            % 6-Yr Consolidation Phase: 2-term compound fade-out (39.2% loss) + LTFM fiscal drift (-0.27%/yr)
+            unbanked_stock = (0.608 ^ (1/6)) * unbanked_stock - 0.52;
+            banked_stock   = banked_stock - 0.18 * (0.35 + 0.65 * (y / 60.0));
         end
         unbanked_stock     = max(0, unbanked_stock);
         CE_StopGo_Thick(i) = banked_stock + unbanked_stock;
