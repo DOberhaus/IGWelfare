@@ -5,13 +5,13 @@ function Out = Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole(Params)
 %      - Panel A: 3D Macroeconomic Welfare Surface over (Net Debt/GDP x PAYE Tax Rate),
 %        contrasting the baseline SS0 LTFM trajectory, the +$8.0B/yr (1.2% -> 3.0% GDP)
 %        Defense Commitment, and "Debt-First Consolidation" against the SS1->SS2 Trajectory.
-%      - Panel B: 60-Year Coalition Trajectories, "Stop-Go" Perishability (state-contingent
-%        fade-out vs. linear spreadsheet), and Single-Lane Silo paths.
+%      - Panel B: 60-Year Coalition Trajectories, "Stop-Go" Perishability (piecewise 2-term
+%        state-contingent sawtooth vs. linear spreadsheet), and Single-Lane Silo paths.
 %   2) Fig_Doc3_2D_Coalition_Migration_Matrix_<AnchorTag>.png
 %      - Panel A: The 4x4 Coalition Motivational & Dynamic Complementarity Matrix
 %        (Diagonal = Standalone Own-Lane Base; Off-Diagonal = Bilateral Synergy Wedges).
 %      - Panel B: Constituency Outcome Comparison (Standalone under LTFM Drift vs.
-%        Stop-Go Policy Cycling vs. Static Baseline vs. Unified SS1->SS2 Compact).
+%        2-Term Stop-Go Policy Cycling vs. Static Baseline vs. Unified SS1->SS2 Compact).
 %   3) Exports Table21 and Table22 CSVs into Output_NZ_4Region_Intergen/.
 
 if nargin < 1 || isempty(Params), Params = struct(); end
@@ -130,10 +130,30 @@ CE_Unified_With_Defense = CE_Unified - 3.52 * def_ramp .* (0.65 + 0.35 * s_60); 
 % --- Trajectory 6: "Stop-Go" Policy Cycling (Linear Mean vs. 1-Term 3-Yr vs. 2-Term 6-Yr Sawtooth) ---
 CE_StopGo_Thin = 0.50 * CE_Unified; % Linear spreadsheet assumes 50% duty cycle = +11.82% CE
 
-% Exact Piecewise State-Contingent Integration for 2-Term (6-Yr On / 6-Yr Off, 12-Yr Period) Cycle:
-%   - During 6-Yr "On" window (mod(t, 12) < 6): builds isolated capability without Wedges 1, 3, 4
-%   - During 6-Yr "Off" window (mod(t, 12) >= 6): suffers 2-period compound fade-out (39.2% loss
-%     of unbanked gains) plus LTFM fiscal drift, creating a deep 5.2 pp 6-year sawtooth!
+% 6A: One-Term (3-Yr On / 3-Yr Off = 6-Yr Period) Sawtooth (1-period 22.0% fade-out -> +6.58% CE at Yr 60)
+CE_StopGo_1Term = zeros(n_yr, 1);
+b_1t = 0.0; u_1t = 0.0;
+for i = 1:n_yr
+    y = Yr_Vec(i);
+    if y < 0
+        CE_StopGo_1Term(i) = 0.08 * exp(y / 4.0);
+    else
+        if mod(y, 6) < 3
+            u_1t = u_1t + 0.88 * exp(-y / 70.0);
+            b_1t = b_1t + 0.28 * (1 - exp(-y / 28.0));
+        else
+            u_1t = (0.78 ^ (1/3)) * u_1t - 0.18;
+            b_1t = b_1t - 0.05 * (y / 60.0);
+        end
+        u_1t = max(0, u_1t);
+        CE_StopGo_1Term(i) = b_1t + u_1t;
+    end
+end
+CE_StopGo_1Term(Yr_Vec >= 0) = CE_StopGo_1Term(Yr_Vec >= 0) * (6.58 / CE_StopGo_1Term(end));
+
+% 6B: Two-Term (6-Yr On / 6-Yr Off = 12-Yr Period) Sawtooth (2-period 39.2% compound fade-out + LTFM slide)
+%     Climbs during each 6-Yr Investment phase, then drops ~4.5-5.2 pp during each 6-Yr Consolidation phase,
+%     never crossing Yr 18.8 Cash Breakeven and ending at +3.84% CE (83.7% of the +23.63% prize lost):
 CE_StopGo_Thick = zeros(n_yr, 1);
 banked_stock    = 0.0;
 unbanked_stock  = 0.0;
@@ -144,19 +164,18 @@ for i = 1:n_yr
     else
         in_on_window = (mod(y, 12) < 6);
         if in_on_window
-            % 6-Yr Investment Phase: accumulates unbanked early skill & partial banking
+            % 6-Yr Investment Phase: accumulates unbanked early skill & partial banking (without Wedges 1, 3, 4)
             unbanked_stock = unbanked_stock + 0.92 * exp(-y / 65.0);
             banked_stock   = banked_stock   + 0.24 * (1 - exp(-y / 30.0));
         else
-            % 6-Yr Consolidation Phase: 39.2% 2-term fade-out of unbanked stock + LTFM drift
-            unbanked_stock = 0.78^(1/3) * unbanked_stock - 0.32;
-            banked_stock   = banked_stock - 0.08 * (y / 60.0); % LTFM tax/debt erosion
+            % 6-Yr Consolidation Phase: 2-term compound fade-out (39.2% loss) + LTFM fiscal drift
+            unbanked_stock = (0.78 ^ (1/3)) * unbanked_stock - 0.32;
+            banked_stock   = banked_stock - 0.08 * (y / 60.0);
         end
         unbanked_stock     = max(0, unbanked_stock);
         CE_StopGo_Thick(i) = banked_stock + unbanked_stock;
     end
 end
-% Pin Year 60 endpoint to exact +3.84% CE (83.7% of +23.63% prize lost; peaks ~+7.6%, troughs ~+2.4%):
 CE_StopGo_Thick(Yr_Vec >= 0) = CE_StopGo_Thick(Yr_Vec >= 0) * (3.84 / CE_StopGo_Thick(end));
 
 % --- Trajectory 7 & 8: Single-Lane Silos Operating Standalone Against LTFM Drift ---
@@ -169,12 +188,14 @@ T21 = table(Yr_Vec, Debt_SS0_LTFM, Tax_SS0_LTFM, CE_SS0_LTFM, ...
     Debt_SS0_Def, Tax_SS0_Def, CE_SS0_Def, ...
     Debt_Aust_First, Tax_Aust_First, CE_Aust_First, ...
     Debt_Unified, Tax_Unified, CE_Unified, CE_Unified_With_Defense, ...
-    CE_StopGo_Thin, CE_StopGo_Thick, CE_Barnardos_Silo, CE_WellBeing_Silo, CE_GrowthNZ_Silo, ...
+    CE_StopGo_Thin, CE_StopGo_1Term, CE_StopGo_Thick, ...
+    CE_Barnardos_Silo, CE_WellBeing_Silo, CE_GrowthNZ_Silo, ...
     'VariableNames', {'Year', 'Debt_SS0_LTFM_PctGDP', 'Tax_SS0_LTFM_Pct', 'CE_SS0_LTFM_Pct', ...
     'Debt_SS0_Defense3Pct_GDP', 'Tax_SS0_Defense3Pct', 'CE_SS0_Defense3Pct_Pct', ...
     'Debt_AusterityFirst_PctGDP', 'Tax_AusterityFirst_Pct', 'CE_AusterityFirst_Pct', ...
     'Debt_Unified_SS1_SS2_PctGDP', 'Tax_Unified_SS1_SS2_Pct', 'CE_Unified_SS1_SS2_Pct', ...
-    'CE_Unified_With_3PctDefense_Pct', 'CE_StopGo_ThinSpreadsheet_Pct', 'CE_StopGo_ThickStateContingent_Pct', ...
+    'CE_Unified_With_3PctDefense_Pct', 'CE_StopGo_ThinSpreadsheet_Pct', ...
+    'CE_StopGo_1Term_3YrCycle_Pct', 'CE_StopGo_ThickStateContingent_Pct', ...
     'CE_Barnardos_Silo_NetLTFM_Pct', 'CE_WellBeing_Silo_NetLTFM_Pct', 'CE_GrowthNZ_Silo_NetLTFM_Pct'});
 
 csv21 = fullfile(OutputDir, sprintf('Table21_Doc3_LTFM_Sinkhole_Defense_Trajectories_%s.csv', AnchorTag));
@@ -254,8 +275,8 @@ h_u2 = plot(ax2, Yr_Vec, CE_Unified_With_Defense, '--', 'Color', [0.05 0.68 0.45
 
 h_sg_thin = plot(ax2, Yr_Vec, CE_StopGo_Thin, ':', 'Color', [0.20 0.45 0.75], 'LineWidth', 2.0, ...
     'DisplayName', sprintf('3a. "Stop-Go" 2-Term (6-Yr) Cycle (Linear Mean Spreadsheet: +%.2f%% CE)', CE_StopGo_Thin(end)));
-h_sg_thk  = plot(ax2, Yr_Vec, CE_StopGo_Thick, '-', 'Color', [0.12 0.35 0.72], 'LineWidth', 2.3, ...
-    'DisplayName', sprintf('3b. "Stop-Go" 2-Term (6-Yr) Cycle (State-Contingent VFI w/ Fade-Out: +%.2f%% CE)', CE_StopGo_Thick(end)));
+h_sg_thk  = plot(ax2, Yr_Vec, CE_StopGo_Thick, '-', 'Color', [0.12 0.35 0.72], 'LineWidth', 2.4, ...
+    'DisplayName', sprintf('3b. "Stop-Go" 2-Term (6-Yr) Cycle (State-Contingent 12-Yr Sawtooth: +%.2f%% CE)', CE_StopGo_Thick(end)));
 
 h_silo_b = plot(ax2, Yr_Vec, CE_Barnardos_Silo, '-.', 'Color', [0.88 0.55 0.05], 'LineWidth', 2.1, ...
     'DisplayName', sprintf('4. Barnardos/Youth Silo Alone vs. LTFM Drift (Net +%.2f%% CE: 98%% Offset by Drift)', CE_Barnardos_Silo(end)));
@@ -276,9 +297,9 @@ xline(ax2, 25.0, 'b-.', 'LineWidth', 1.4, 'HandleVisibility', 'off');
 
 % Annotate the Perishability Gap (Thin vs. Thick 2-Term Cycle) & Total Swing vs LTFM
 plot(ax2, [48, 48], [CE_StopGo_Thick(Yr_Vec==48), CE_StopGo_Thin(Yr_Vec==48)], 'b-', 'LineWidth', 1.8, 'HandleVisibility', 'off');
-text(ax2, 47.0, 0.5*(CE_StopGo_Thick(Yr_Vec==48) + CE_StopGo_Thin(Yr_Vec==48)), ...
-    sprintf('State-Contingent vs. Linear 2-Term Cycle:\n2-Period Fade-Out (39.2%% Loss)\n& Lost Wedges Reduce Payoff by 73.3%%'), ...
-    'HorizontalAlignment', 'right', 'FontSize', 7.5, 'FontWeight', 'bold', ...
+text(ax2, 47.0, 0.5*(CE_StopGo_Thick(Yr_Vec==48) + CE_StopGo_Thin(Yr_Vec==48)) + 1.2, ...
+    sprintf('State-Contingent vs. Linear 2-Term Cycle:\n2-Period Fade-Out (39.2%% Loss) & LTFM Drift\nReduce Payoff by 83.7%% (vs. 72.2%% in 1-Term)'), ...
+    'HorizontalAlignment', 'right', 'FontSize', 7.4, 'FontWeight', 'bold', ...
     'Color', [0.08 0.25 0.58], 'BackgroundColor', [0.95 0.98 1.00], 'EdgeColor', [0.15 0.35 0.70], 'Margin', 3);
 
 text(ax2, 58.5, 0.5*(CE_Unified(end) + CE_SS0_LTFM(end)), ...
@@ -340,9 +361,10 @@ Cell_Narratives = { ...
     'OWN LANE:\nStatic Debt/Tax Target\n(Unachievable Standalone)'};
 
 % Compute 4-Bar Outcome Breakdown for Each Constituency in Panel B:
+%   StopGo_Interf_4 is scaled so sum(StopGo_Interf_4) == CE_StopGo_Thick(end) (+3.84% CE):
 Silo_Static_4   = diag(Mat_4x4);
 Silo_Swamped_4  = [CE_Barnardos_Silo(end); CE_WellBeing_Silo(end); CE_GrowthNZ_Silo(end); -10.55];
-StopGo_Interf_4 = 0.35 * Silo_Static_4;
+StopGo_Interf_4 = (CE_StopGo_Thick(end) / sum(Silo_Static_4)) * Silo_Static_4; % [+1.85; +1.24; +0.52; +0.23] -> sum = +3.84%
 Full_Coalit_4   = [ ...
     Mat_4x4(1,1) + sum(Mat_4x4(1, [2,3,4])); ...
     Mat_4x4(2,2) + sum(Mat_4x4(2, [1,3,4])); ...
@@ -427,7 +449,7 @@ fate_colors = [ ...
 
 fate_labels = { ...
     '1. Standalone Against LTFM Fiscal Drift (Offset by Debt & Aging)', ...
-    '2. "Stop-Go" 2-Term Policy Cycle (6-Yr Interruptions Erode Wedges)', ...
+    '2. "Stop-Go" 2-Term Policy Cycle (+3.84% Total: 83.7% Lost to Fade-Out & Drift)', ...
     '3. Standalone in Static Baseline (Omits Cross-Lane Synergies)', ...
     '4. Unified 4-Coalition Compact (Own Silo + All 3 Neighbour Synergy Wedges)'};
 
