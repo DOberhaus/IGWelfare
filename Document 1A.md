@@ -492,9 +492,7 @@ A natural question arises from the Year 5 audit: if the reform already generates
 
 ```text
 +-----------------------------------------------------------------------------------+
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
 
