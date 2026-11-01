@@ -258,12 +258,6 @@ if exist('Plot_Fertility_SuperSolvency_2Panel.m', 'file')
     Out_FertPlot = Plot_Fertility_SuperSolvency_2Panel(Params_SS0, T_Fert1, T_Fert2);
 end
 
-% if exist('Plot_SS2_7Factor_StackedAttribution.m', 'file') && exist('T1', 'var')
-%     fprintf('>>> [STEP 7C] Generating 7-Factor SS2 Stacked Attribution Plots across %d Regions...\n', ...
-%         numel(Target_Plot_Regions));
-%     Out_AttrPlot = Plot_SS2_7Factor_StackedAttribution(T1, Params_SS0, Target_Plot_Regions);
-% end
-
 %% GENERATE 10-TIER EARN + OWN WEALTH BRACKET PAIN & CELEBRATION FIGURE
 if ~exist('Params_SS0', 'var') && exist('Params', 'var')
     Params_SS0 = Params;

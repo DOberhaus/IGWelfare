@@ -168,7 +168,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 ### 2.4 Part II Synthesis — Calibrating the Social Cohesion Index ($`S_t: 100.0 \to 112.0\text{–}118.4 \to 126.0`$) to Transparency International's CPI ("Social Credit Rating")
 
 * **Document 1A Claim (Part II Synthesis):** New Zealand's slide on Transparency International's Corruption Perceptions Index (CPI) from **#1 globally** (peaking at **96/100** in 2004 and still **88/100** as #1-equal in 2021) down to a 30-year low of **81/100** (**#4 equal** in the 2025/2026 index, behind **#1 Denmark at 89, #2 Finland at 88, and #3 Singapore at 84**) reflects the institutional and civic cost of child material deprivation, high replacement-migration turnover (`Churn_Rate`), and opaque property-wealth shelters.
-* **Code & Literature Mapping:** In `WelfareDecomposition_4Region.m` and `Plot_SS2_7Factor_StackedAttribution.m` (Engine 5), the macro Social Cohesion Index $`S_t`$ enters relational utility $`u_{\mathrm{rel}}(S_t, \mathrm{RetainedYouth}_t)`$ as a decreasing function of the struggling cohort share ($`h_1`$–$`h_2`$) and skilled demographic churn (`Churn_Rate`). Empirical references: Transparency International (*Corruption Perceptions Index 2025/2026*); Office of the Controller and Auditor-General of New Zealand (*New Zealand's Integrity Inheritance*, Feb 2026); and Transparency International New Zealand (*National Integrity System Assessment: 2026 Gap Analysis*, June 2026).
+- **Code & Literature Mapping:** In `WelfareDecomposition_4Region.m`, `TransPath_4Region_Master.m`, and `Plot_Counterfactuals_And_MirrorInvestments.m`, the macro Social Cohesion Index $S_t$ enters relational utility $u_{\text{rel}}(S_t, \text{RetainedYouth}_t)$ as a decreasing function of the struggling cohort share ($h_1\text{–}h_2$) and skilled demographic churn (`Churn_Rate`).
 
 ---
 
@@ -627,7 +627,7 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 
 ---
 
-## 5. Part V Cross-Reference: The 2050 Debt-Sinking Protocol, Actuarial Continuation Valuation, & 7-Factor Attribution
+# 5. Part V Cross-Reference: The 2050 Debt-Sinking Protocol, Actuarial Continuation Valuation, & 11-Layer Constructive Synergy Attribution
 
 ### 5.1 The 2050 Sovereign Debt-Sinking & Public Reinvestment Protocol (`FiscalLedger.Protocol_2050_Summary`)
 *Source Function:* `Build_Custom_Protocol_2050_Table` in `Plot_ChildFiscal_2Panel_SSankey.m` (`Cohort_Births = 60,000/yr`, `r_bond_yield = 0.042`, `mult_reinvest = 1.65`, `Horizon_2050 = 25 yrs`)
