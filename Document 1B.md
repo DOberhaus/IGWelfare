@@ -566,17 +566,15 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
-|                                                                                   |
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-|                                                                                   |
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
+
+---
 
 ### Table 4.7A: Six Benchmark Fertility, Differential Fertility, Struggling Launch Share, & PAYE Solvency Regimes (`Tables 7 & 8`)
 
