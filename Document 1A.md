@@ -161,6 +161,7 @@ No single sector can enact this transformation alone, and no sector needs to wai
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
+|                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
 
@@ -345,6 +346,18 @@ To evaluate the distributional incidence of wealth and estate taxation transpare
 * **Passive Residential Land Hoarders ($z_{\ell}$, Red Dashed Trajectory):** High-net-worth households whose portfolios are concentrated in leveraged, low-yield residential land bear the direct incidence of metropolitan house-price cooling (-7.5% in $SS1$ to -10.5% in $SS2$), the 1.5% annual book-value land/wealth levy above the family-home threshold, and the estate tax—experiencing a net welfare adjustment ranging from **-2.7% CE at `P95` and -4.4% CE at `P98` to -11.2% CE at the `NBR Rich List Median`**.
 
 **3. Balance-Sheet Resilience and Macroeconomic Context in the Top 1% (`P99` to `P99.99`):** A central question for fiscal policymakers and family-trust advisors is whether the net contribution required from top-percentile wealth holders is macroeconomically proportionate and financially stable. On a portfolio-average basis, a **Top 1% (`P99: 600k + 8.5M`)** household experiences a **-1.1% CE** adjustment—retaining **94.6% of its baseline net worth (NZD 8.04M; or 98.5% for active entrepreneurs)** alongside **NZD 455k/yr in after-tax cash flow**. At the **NBR Rich List Median (`6.5M + 140M`)**, an ultra-high-net-worth household contributes roughly NZD 13.7M over the transition to help close the childhood hardship pipeline and retire sovereign debt: their portfolio-average adjustment (**-5.9% CE**, retaining **NZD 126.3M / 90.2%** of baseline net worth, or **NZD 133.4M / 95.3%** for active business families, plus **NZD 4.62M/yr in after-tax income**) is comparable to a modest single-year equity market fluctuation, and even the pure passive land-banking adjustment (**-11.2% CE**) is smaller than the real balance-sheet drawdowns New Zealand asset holders routinely absorb during once-a-decade macroeconomic shocks (such as the 2022–2024 monetary tightening cycle, which reduced real Auckland and Wellington house prices by 22% to 27%). In exchange for that measured contribution, high-net-worth families secure a solvent sovereign bond market, a thriving domestic enterprise workforce, and a high-cohesion New Zealand where their own children and grandchildren can build their lives.
+
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
+---
 
 | Survey Benchmark & Description | Empirical `Income + Net Worth` *(HES / Rashbrooke / IRD / NBR)* | Total Tax & Cooling Incidence (`House + Wealth + Estate`) | Total Economic & Cohesion Gain (`ECE/Rent + PAYE + Firm + Cohesion`) | Net Welfare Impact: **Tier Average** (CE %) | **Active Entrepreneur** ($z_h$) vs. **Passive Land Hoarder** ($z_{\ell}$) | Post-Reform Retained Net Worth (`Net Worth` & `% Retained`) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |

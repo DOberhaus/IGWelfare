@@ -114,14 +114,14 @@ Just as Emirates Team New Zealand could only get *Aotearoa* flying on foils when
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
+
+---
 
 ## 6. Flying, Not Floundering: Why I Know This Works
 

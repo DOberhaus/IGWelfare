@@ -41,8 +41,6 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 | **4. Actuarial Valuation** *(ACC-Style Continuation Value)* | `Plot_ActuarialContinuationValuation.m` ($`\mathcal{V}_{k,t_0}^{(L)}, r_{\mathrm{disc}} = 0.02`$) | Cash breakeven takes **18.8 yrs** (46.4 yrs direct savings) | **Yr 5: NZD 35.25B Fiscal (3.84x) / NZD 85.40B GDP** (1.16x cost avoidance alone) | **60-Yr Cash: NZD 702.3B Fiscal / NZD 1,510.7B GDP (6.86x)** | `Table16_Actuarial_*`, `Fig_Actuarial_*` |
 | **5. The $SS2$ Dividend Harvest** *(2050 50/50 Debt & Infra + Super U-Curve)* | `FertilityBargaining_Module.m`, `Plot_Counterfactuals_And_MirrorInvestments.m` ($`\Omega_{\mathrm{debt}}, \Omega_{\mathrm{infra}}`$) | 1.66 TFR; **23.60%–28.20% PAYE req.**; 22.0% actual PAYE | 1.85–1.93 TFR; **20.84% PAYE req.** (at 22.0% actual → Sinks Debt) | **Super Age 64 (+24.24% CE Peak, 18.85% PAYE) or Age 65 (18.57% PAYE Min)**; NZD 21.85B Debt + 14.90B Infra/Wave | `Table7`, `Table8`, `Table8B`, `Table19`, `Table20`, `FigFert_*` |
 
----
-
 ```text
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
@@ -54,6 +52,8 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
+
+---
 
 ## 2. Part I & Part II Cross-Reference: The Five Audiences & Three Coupled Lifecycle Aspects
 

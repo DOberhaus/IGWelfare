@@ -129,9 +129,7 @@ Stepping back from coalition mechanics, what does this coupled transition mean i
 
 ```
 +-----------------------------------------------------------------------------------+
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
 
