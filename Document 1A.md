@@ -293,7 +293,7 @@ Every ribbon in a Sankey diagram is, in truth, a biography in motion—sixty tho
 ### 2. The 6-Gate Lifecycle Fiscal Sankey & Reconciling Private Parental Commitment
 Our 6-Gate Dollar-Weighted Fiscal Sankey traces annual per-child resource flows (in real 2025 NZD thousands per year per cohort birth) across two true-scale regimes separated by a vertical scale-break wave at the **Age-20 Adult Skill Launch Gate**:
 
-<img src="./Output_NZ_4Region_Intergen/Fig_ChildFiscal_5Stage_2Panel_National_Dunedin_22.png" alt="National 6-Gate Lifecycle Fiscal Ledger Sankey" width="100%" style="display: block; width: 100%; margin: 1.2rem auto; break-inside: avoid; page-break-inside: avoid;" />
+<img src="./Output_NZ_4Region_Intergen/Fig_ChildFiscal_6Gate_2Panel_National_Dunedin_22.png" alt="National 6-Gate Lifecycle Fiscal Ledger Sankey" width="100%" style="display: block; width: 100%; margin: 1.2rem auto; break-inside: avoid; page-break-inside: avoid;" />
 
 **1. Left Regime — Childhood Resource Flows (Gates 1–3, Ages 0–17):** Physically separates *Reactive Hardship & Remediation Outlays* (bottom red blocks), *Public Developmental Investments* in universal ECE, schooling, and Montessori / *Tuakana–Teina* mentoring (middle blue and teal blocks), and *Private Parental Commitment* in out-of-pocket cash and parental time (top warm-gold lane).
 
