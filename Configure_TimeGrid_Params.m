@@ -12,6 +12,9 @@ if nargin < 2 || isempty(dt)
 end
 Params.dt  = dt;
 scale_dt   = dt / 5; % Ratio relative to the 5-year calibration benchmark
+if ~isfield(Params, 'n_z_pts') || isempty(Params.n_z_pts)
+    Params.n_z_pts = 7; % 7-point Rouwenhorst regional productivity grid
+end
 
 %% 1. LIFE-CYCLE HORIZON (AGES 20-99) & RETIREMENT BOUNDARY (AGE 65)
 Params.J    = round(80 / dt);           % 16 (dt=5), 27 (dt=3), 40 (dt=2)

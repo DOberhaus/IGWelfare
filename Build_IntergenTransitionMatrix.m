@@ -47,11 +47,9 @@ if ~isfield(Params, 'sigma_hc_ig'), Params.sigma_hc_ig = 0.24; end
 % Extract Regional Extended Family / Whanau Network Intensity K_whanau(k) in [0, 1]
 % and Stage-2 Tuakana-Teina / Montessori Mentoring Intensity M_mentor in [0, 1]:
 K_base_vec = [0.42, 0.38, 0.32, 0.28]; % Calibrated SS0 baseline [Rural, Small, Large, Auckland]
-if isfield(Params, 'K_whanau_base') && isstruct(Params.K_whanau_base)
-    for r_i = 1:N_reg
-        f_b = ['HH_', Regions{r_i}];
-        if isfield(Params.K_whanau_base, f_b), K_base_vec(r_i) = Params.K_whanau_base.(f_b); end
-    end
+for r_i = 1:N_reg
+    f_b = ['HH_', Regions{r_i}];
+    if isfield(Params.K_whanau_base, f_b), K_base_vec(r_i) = Params.K_whanau_base.(f_b); end
 end
 K_reg_vec  = K_base_vec;
 if isfield(Params, 'K_whanau')
@@ -89,11 +87,7 @@ else
     log_h_dst = reshape(log(h_vec), [1, 1, 1, 1, n_h]);
 end
 
-if isfield(Params, 'j_s1_start') && isfield(Params, 'j_s2_end')
-    fertile_j = Params.j_s1_start : Params.j_s2_end;
-else
-    fertile_j = [3, 4];
-end
+fertile_j = Params.j_s1_start : Params.j_s2_end;
 retire_j = round(Params.Jr) : Params.J;
 mort_vec = reshape(1 - double(gather(Params.sj(retire_j))), [1, 1, 1, length(retire_j)]);
 if use_gpu, mort_vec = gpuArray(mort_vec); end

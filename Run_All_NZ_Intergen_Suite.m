@@ -57,7 +57,7 @@ end
 %% STEP 1: SOLVE BASELINE 4-REGION STEADY STATE (SS0) & LIFECYCLE EXPERIENCE ASSET
 fprintf('>>> [STEP 1/7] Solving Baseline 4-Region Steady State (NZ_4Region_Master.m)...\n');
 step1_timer = tic;
-Cache_Step1 = fullfile(CacheDir, sprintf('Cache_Step1_Baseline5D_dt%d.mat', Params.dt));
+Cache_Step1 = fullfile(CacheDir, sprintf('Cache_Step1_Baseline5D_dt%d_nz%d.mat', Params.dt, Params.n_z_pts));
 
 if Use_Saved_Cache && ~Force_Recompute_All && exist(Cache_Step1, 'file')
     fprintf('    [CACHE HIT] Loading Step 1 Baseline 5D Steady State from %s...\n', Cache_Step1);
@@ -264,7 +264,7 @@ if ~exist('Params_SS0', 'var') && exist('Params', 'var')
 elseif ~exist('Params_SS0', 'var')
     Params_SS0 = struct('Calibration_Anchor', 'Dunedin_22');
 end
-Out_WealthBrackets = Plot_WealthBracket_PainAndCelebration(Params_SS0);
+Out_WealthBrackets = Plot_WealthBracket_GiveAndGain(Params_SS0);
 
 % Plot Pre-Employment opportunity index
 % Decomposes the pre-employment youth cohort across 4 Regions (Status Quo SS0 vs Reform SS1) into:

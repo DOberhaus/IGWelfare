@@ -98,15 +98,24 @@ for r_idx = 1:N_reg
     n_z.(firm_type) = 2;  pi_z.(firm_type)   = [0.85, 0.15; 0.15, 0.85];
 end
 
-% 4-Region Income Process Calibration (Tauchen_q = 3.0 standard deviations)
-Tauchen_q = 3.0;
-[z_grid.HH_Rural,    pi_z.HH_Rural]    = discretizeAR1_Tauchen(-0.06, 0.85, 0.11, 5, Tauchen_q);
-[z_grid.HH_Small,    pi_z.HH_Small]    = discretizeAR1_Tauchen(-0.01, 0.85, 0.14, 5, Tauchen_q);
-[z_grid.HH_Large,    pi_z.HH_Large]    = discretizeAR1_Tauchen( 0.06, 0.85, 0.18, 5, Tauchen_q);
-[z_grid.HH_Auckland, pi_z.HH_Auckland] = discretizeAR1_Tauchen( 0.15, 0.85, 0.24, 5, Tauchen_q);
-for r_idx = 1:N_reg
+%% 7-POINT ROUWENHORST REGIONAL LABOR PRODUCTIVITY GRIDS (Kopecky & Suen, 2010)
+n_z_pts = 7;
+for r_idx = 1:length(Regions)
     hh_type = ['HH_', Regions{r_idx}];
-    z_grid.(hh_type) = exp(z_grid.(hh_type));
+    n_z.(hh_type) = n_z_pts;
+end
+
+% Discretize regional log-productivity AR(1) via Rouwenhorst (mew, rho, sigma, znum)
+% Note: In VFI Toolkit, mew = mu * (1 - rho) so unconditional mean of log(z) is mu_reg
+rho_z = 0.85;
+[z_grid_log.HH_Rural,    pi_z.HH_Rural]    = discretizeAR1_Rouwenhorst(-0.06*(1-rho_z), rho_z, 0.11, n_z_pts);
+[z_grid_log.HH_Small,    pi_z.HH_Small]    = discretizeAR1_Rouwenhorst(-0.01*(1-rho_z), rho_z, 0.14, n_z_pts);
+[z_grid_log.HH_Large,    pi_z.HH_Large]    = discretizeAR1_Rouwenhorst( 0.06*(1-rho_z), rho_z, 0.18, n_z_pts);
+[z_grid_log.HH_Auckland, pi_z.HH_Auckland] = discretizeAR1_Rouwenhorst( 0.15*(1-rho_z), rho_z, 0.24, n_z_pts);
+
+for r_idx = 1:length(Regions)
+    hh_type = ['HH_', Regions{r_idx}];
+    z_grid.(hh_type) = exp(z_grid_log.(hh_type));
 end
 
 % 4-Region Firm Productivity Ceilings (z_l vs z_h)
@@ -160,18 +169,6 @@ Params.K_whanau_base.HH_Small    = 0.38;
 Params.K_whanau_base.HH_Large    = 0.32;
 Params.K_whanau_base.HH_Auckland = 0.28;
 Params.K_whanau                  = Params.K_whanau_base; % Active regime value (equals _base in SS0)
-
-% Regional Wages w(k)
-Params.w_reg.HH_Rural    = 0.85; Params.w_reg.Firm_Rural    = 0.85;
-Params.w_reg.HH_Small    = 0.93; Params.w_reg.Firm_Small    = 0.93;
-Params.w_reg.HH_Large    = 1.05; Params.w_reg.Firm_Large    = 1.05;
-Params.w_reg.HH_Auckland = 1.18; Params.w_reg.Firm_Auckland = 1.18;
-
-% Mandatory Transport/Fuel & Energy Subsistence e_bar(k)
-Params.ebar_energy.HH_Rural    = 0.048;
-Params.ebar_energy.HH_Small    = 0.036;
-Params.ebar_energy.HH_Large    = 0.022;
-Params.ebar_energy.HH_Auckland = 0.016;
 
 % Two-Stage Child Skill (Cunha et al.), Ben-Porath, Housing Tenure, & Tax Parameters
 Params.gamma1_self = 0.53; Params.gamma1_inv = 0.24; Params.gamma1_par = 0.23; Params.phi1_ces = 0.35;

@@ -72,7 +72,7 @@ Replacing distortionary capital income taxation ($\tau_k$) with a book-value wea
 In the compact 4D GPU specification (`ReturnFn_SpatialHH_Compact4D.m`, 40 arguments), a household in region $k$ at age bracket $j \in \lbrace 1, \dots, J \rbrace$ has state vector $\left(a, h, z, j\right)$ and chooses decision vector $d = \left(\ell, I_h, i_c\right)$ and next-period states $\left(a^{\prime}, h^{\prime}\right)$:
 * `d_grid`: $\ell \in \lbrack 0.2, 1.0\rbrack$ ($n_{d1} = 5$, labor supply), $I_h \in \lbrack 0, 0.35\rbrack$ ($n_{d2} = 4$, adult Ben-Porath training time), $i_c \in \lbrack 0, 0.45\rbrack$ ($n_{d3} = 5$, private early/school child investment).
 * `a_grid`: $a \in \lbrack 0.001, 15.0\rbrack$ ($n_{a1} = 25$, household net worth) and $h \in \lbrack 0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80\rbrack$ ($n_{a2} = 7$, adult human capital tiers $h_1 \dots h_7$).
-* `z_grid`: $z \in \mathcal{Z}_{hh}$ ($n_z = 5$, Rouwenhorst idiosyncratic earnings shock, where $i_z = 1$ denotes unemployment/severe distress).
+* `z_grid`: $z \in \mathcal{Z}_{hh}$ ($n_z = 7$, 7-point Rouwenhorst idiosyncratic earnings shock (Kopecky & Suen, 2010), where $z < 0.80$ $`(i_z \in \lbrace{1,2}\rbrace`$, bottom 10.94\% stationary binomial mass) denotes unemployment/severe distress).
 
 *(In the full two-stage CES experience-asset specification with Emigration Abroad, `ReturnFn_SpatialHH.m` and `HumanCapital_Lifecycle_aprimeFn.m`, `a_grid` also tracks the 5-point child skill experience asset $`\theta_c \in \mathcal{G}_{\theta}`$ across childhood stages $`\mathcal{J}_{c,1}`$ and $`\mathcal{J}_{c,2}`$.)*
 
@@ -113,7 +113,7 @@ $$
 \Psi_{J=5}\left(z_p, a_p, M_{\mathrm{mentor}}\right) = -\psi_{\mathrm{unemp}}\mathbb{I}\left(z_p \in \mathcal{Z}_{\mathrm{distress}}\right)\left(1 - \zeta_{\mathrm{buf}} M_{\mathrm{mentor}}\right) + \kappa_{\mathrm{up}} M_{\mathrm{mentor}}
 $$
 
-In the compact 4D projection (`Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_2Panel_SSankey.m`), this induces the unified anchored log-skill transition mean across the 7-point adult human capital grid $h_{\mathrm{child}} \in \mathcal{H}$:
+In the compact 4D projection (`Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_SSankey.m`), this induces the unified anchored log-skill transition mean across the 7-point adult human capital grid $h_{\mathrm{child}} \in \mathcal{H}$:
 
 $$
 \mu_{\ln h}\left(h_p, i_c, z_p, a_p; k\right) = \rho_{hc}\ln\left(h_p\right) + \gamma_{ic}\ln\left(\frac{i_c + G_{\mathrm{ECE},1}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}}{\bar{i}_c + G_{\mathrm{ECE},\mathrm{base}} + \bar{g}_{\mathrm{ECE}}}\right) - \psi_{\mathrm{crowd}}\ln\left(\max\left(1, Q_k\right)\right)\mathbb{I}\left(a_p < 0.08 Q_k\right) + \Psi_{J=5}\left(z_p, a_p, M_{\mathrm{mentor}}\right) + \alpha_{\mathrm{grid}}
@@ -175,9 +175,9 @@ $$P_{\mathrm{emig},t}\left(k \to \mathrm{Abroad} \;\middle|\; a_1, h_1, z_1\righ
 
 ## 5. Post-Hoc Lifecycle Operators: The 6-Gate Fiscal Ledger, Statutory Fiscal Rules, Fertility Bargaining, & 10-Tier Wealth Incidence
 
-## 5.1 The 6-Gate (26-Node) Lifecycle Fiscal Ledger Operator (`Plot_ChildFiscal_2Panel_SSankey.m`)
+## 5.1 The 6-Gate (26-Node) Lifecycle Fiscal Ledger Operator (`Plot_ChildFiscal_SSankey.m`)
 
-To map all private parental commitments and public fiscal flows from Birth ($J = 1$) to Retirement ($J = 16$) without expanding the VFI state space, `Plot_ChildFiscal_2Panel_SSankey.m` defines linear integral operators over the solved stationary distribution $`\mu_k\left(a, h, z, j\right)`$ and policy functions `Policy`:
+To map all private parental commitments and public fiscal flows from Birth ($J = 1$) to Retirement ($J = 16$) without expanding the VFI state space, `Plot_ChildFiscal_SSankey.m` defines linear integral operators over the solved stationary distribution $`\mu_k\left(a, h, z, j\right)`$ and policy functions `Policy`:
 
 * **Cohort-Weighted Ribbon Width Identity:** Every node $i \in \{1, \dots, 26\}$ at Gate $g \in \{1, \dots, 6\}$ has ribbon thickness strictly equal to its cohort-weighted annual monetary flow (in real 2025 NZD thousands per year per cohort birth):
 
@@ -307,7 +307,7 @@ To discipline the structural parameter vector $\theta$ against the 15 empirical 
 $$\mathcal{L}_{\mathrm{SMM}}\left(\theta\right) = \sum_{m=1}^{M} W_m \left( \frac{\hat{M}_m\left(\theta\right) - M_m^{\mathrm{data}}}{\max\left(0.02,\, \left\vert{}M_m^{\mathrm{data}}\right\vert{}\right)} \right)^2$$
 
 2. **Stage 2 — Bound-Constrained Local Nelder-Mead / Quasi-Newton Refinement:** Starting from the best Sobol candidate $`\theta_{\mathrm{sobol}}^{*}`$, we apply a logistic sigmoid transformation $`\theta\left(\mathbf{x}\right) = \underline{\theta} + \left(\overline{\theta} - \underline{\theta}\right) \oslash \left(\mathbf{1} + \exp\left(-\mathbf{x}\right)\right)`$ and refine $`\mathbf{x}^{*}`$ to convergence via `fminsearch`.
-3. **Dual Empirical Calibration Anchor Switch (`'Dunedin_22'` vs. `'MetroSqueeze_GUiNZ'`):** In `Plot_ChildFates_2Panel_SSankey.m`, `Plot_ChildFiscal_2Panel_SSankey.m`, and `Plot_ActuarialContinuationValuation.m`, the parameter `Params.Calibration_Anchor` toggles between two empirically validated New Zealand hardship anchors:
+3. **Dual Empirical Calibration Anchor Switch (`'Dunedin_22'` vs. `'MetroSqueeze_GUiNZ'`):** In `Plot_ChildFates_SSankey.m`, `Plot_ChildFiscal_SSankey.m`, and `Plot_ActuarialContinuationValuation.m`, the parameter `Params.Calibration_Anchor` toggles between two empirically validated New Zealand hardship anchors:
    * **`'Dunedin_22'` (Default Conservative Anchor):** Calibrates the baseline struggling launch tier ($`h_1\text{--}h_2`$) to the **22.0%** high-cost cohort segment identified at age 3 in the Dunedin Multidisciplinary Health and Development Study (Caspi et al., 2016, where 22% of the cohort drives 57%–81% of adult Exits 1, 2, and 4; model fit = **74.1%**), using housing-crowding penalty $`\psi_{\mathrm{crowd}} = 0.14`$ and grid anchor `+0.265`.
    * **`'MetroSqueeze_GUiNZ'` (After-Housing-Cost Metropolitan Squeeze Sensitivity):** Incorporates the full metropolitan housing-cost and dampness/crowding penalty documented in *Growing Up in New Zealand* (Morton et al., 2020: 37% damp/mould exposure) and Child Poverty Related Indicators (29.9% AHC60 child poverty; 34%–37% of children in households spending >30% of income on housing), using $`\psi_{\mathrm{crowd}} = 0.18`$ and grid anchor `+0.105` (expanding Auckland's baseline vulnerable trajectory to 34.0%–36.6%).
 4. **Welfare-Based In-Kind ECE Imputation Weights ($\omega_i$, Ferriere et al., 2025, Eq. 3):** Because early childhood education and preventative health exhibit a Stone-Geary luxury threshold ($`\bar{g}_{\mathrm{ECE}} = 0.032 > 0`$, macro income elasticity $`\theta \in [1.15, 1.38] > 1`$), liquidity-constrained parents at the private corner solution ($i_c = 0$, share $`S = \Pr\left(i_c = 0\right) \approx 0.258`$) have a high marginal utility of liquid cash ($`\partial u_i / \partial y_i`$) to cover immediate rent ($Q_k$) and transport ($`\bar{e}_k`$). Standard static benefit-incidence studies that value public in-kind spending $`G_{\mathrm{ECE}}`$ at 1-for-1 cash equivalence overstate static redistributive compression by up to 50%. `Calibrate_NZ_Moments.m` computes Ferriere et al.'s exact marginal-rate-of-substitution imputation weight across income quintiles:
@@ -449,8 +449,8 @@ Because the vertical thickness at every horizontal station $\tau \in \left\lbrac
 | **12** | `Counterfactuals_LeeSeshadri_4Region.m` | Multi-stage counterfactual suite (`BM`, `P0_Early`, `P1P2_Late`, `BN_FrontLoad`, `P0_Plus_GrantE`) exporting Tables 4–6 & 12A–C |
 | **13** | `FertilityBargaining_Module.m` | Cooperative childcare bargaining, hyperbolic fertility ($\beta_{\mathrm{hyp}} = 0.72$), and NZ Super solvency tax module (Tables 7–8) |
 | **14** | `TransPath_4Region_Master.m` | 60-year multiphase shooting algorithm with dynamic `PTypeWeights_path`, credibility blending $\lambda_{\mathrm{cred}}\left(t\right)$, and Figs 1–3 |
-| **15** | `Plot_ChildFates_2Panel_SSankey.m` | $N$-panel GPU 5-Stage (17-Node) Population Cohort Fates Sankey & `Table15_ChildFates_5Stage_Decomp_<Region>.csv` |
-| **16** | `Plot_ChildFiscal_2Panel_SSankey.m` | $N$-panel GPU 6-Gate (26-Node) Lifecycle Fiscal Sankey, 4-lane split (`Table14`), and 2050 Debt-Sinking Protocol |
+| **15** | `Plot_ChildFates_SSankey.m` | $N$-panel GPU 5-Stage (17-Node) Population Cohort Fates Sankey & `Table15_ChildFates_5Stage_Decomp_<Region>.csv` |
+| **16** | `Plot_ChildFiscal_SSankey.m` | $N$-panel GPU 6-Gate (26-Node) Lifecycle Fiscal Sankey, 4-lane split (`Table14`), and 2050 Debt-Sinking Protocol |
 | **17** | `Plot_CumulativeTransitionPayoffs.m` & `Plot_ActuarialContinuationValuation.m` | Integrates 60-year transition payoffs and ACC-style 25-year Actuarial Continuation Valuation ($\mathcal{V}_{k,t_0}^{\left(L\right)}$ at 2% & 8% real) with sibling PNG exports |
 | **18** | `Plot_Fertility_SuperSolvency_2Panel.m` | Generates the 2-panel Fertility Recovery & NZ Super Solvency comparison (`Keep Age 65` vs. `Raise Age to 67 or 70`, modeling the 38%–45% disability/hardship fiscal substitution leak; Doepke et al. 2022, Cao & Li 2022, Fan, Seshadri, & Taber 2022, and NZ Treasury 2024) |
 | **19** | `Plot_Counterfactuals_And_MirrorInvestments.m` | Constructive 11-Layer Supermodular Synergy Attribution (7 Isolated Factors + 4 Synergy Wedges, `Table 19`, `Fig_Counterfactual_8Scenarios_*`) & Mirror-Image Annual Investment Ledger (`Table 20`, `Fig_7Segment_Welfare_And_MirrorInvestments_*`) |
