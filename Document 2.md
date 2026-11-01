@@ -87,9 +87,7 @@ Following Kiyotaki, Michaelides, and Nikolov (2024), households with net worth b
 
 ```
 +-----------------------------------------------------------------------------------+
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
 

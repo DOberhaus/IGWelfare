@@ -162,8 +162,11 @@ No single sector can enact this transformation alone, and no sector needs to wai
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
+|                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
+
+---
 
 ## Part II: The Three Coupled Aspects of the Intergenerational Lifecycle
 

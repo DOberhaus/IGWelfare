@@ -111,6 +111,18 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
     * ***Manaakitanga*, *Whanaungatanga*, & *Rangatiratanga*:** Uplifting the *mana* of peers through care (*manaakitanga*), school kinship belonging (*whanaungatanga*), and youth creative agency (*rangatiratanga*).
   * *Empirical Breakdown of the 17.3% Baseline (`SS0`) Scaling to 57.3% (`SS1`) and 65.0% (`SS2`):*
 
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
+---
+
 | Aotearoa Delivery Pathway at Gate 3 ($`J = 5`$, Ages 12–14 / Years 8–10) | Representative New Zealand Programs & Institutions | Status Quo (`SS0`) | Phase 1 (`SS1`) | Phase 2 (`SS2`) | Primary Mechanism in `Build_IntergenTransitionMatrix.m` |
 | :--- | :--- | :---: | :---: | :---: | :--- |
 | **1. Structured School Peer-Mentoring Charities** | **Graeme Dingle Foundation** (*Stars / Te Kāhui Whetū* Year 12–13 *tuakana* mentoring Year 9 *teina*; *Project K* wilderness & community mentoring), *I Have a Dream NZ* | 10.0% | 28.5% | 32.0% | Insulates at-risk Year 8–10 students against `z1` family unemployment stress; cuts truancy and Exit 1/Exit 4 entry |

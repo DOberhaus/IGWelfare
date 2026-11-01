@@ -168,25 +168,7 @@ In reality—and in our state-contingent VFI engine (`Trajectory 3b`)—human ca
 
 *The Core Insight of Table 4.1:* While a 1-term (3-year On / 3-year Off) cycle already loses **72.9%** of the prize (`+6.58% CE`), a two-term (6-year On / 6-year Off) political cycle is even more destructive—eroding **84.2% of the entire generational prize (`+24.24% CE` drops to `+3.84% CE`)** because a six-year interruption inflicts two consecutive 3-year periods of adolescent skill fade-out ($`39.2\%`$) and prevents the ledger from ever crossing Year 18.8 Cash Breakeven. Human capability is highly perishable while in the 0–19 developmental pipeline, yet becomes permanently durable once banked at Age 20.
 
-```
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
+---
 
 ## Part V: The Grand Coalition Compact — Phasing $SS1$ Foundation & Incubation Before $SS2$ Debt & Tax-Relief Harvest
 
