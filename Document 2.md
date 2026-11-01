@@ -33,7 +33,7 @@ We formulate a quantitative general-equilibrium Spatial Overlapping Generations 
 ### 1.2 Exact $\Delta t$-Scaling Laws (`Configure_TimeGrid_Params.m`)
 Let $\Delta t \in \lbrace 5, 3, 2, 1 \rbrace$ denote the model period length in years (with $\Delta t = 3$ as the high-resolution developmental default and $\Delta t = 5$ as the fast benchmark). `Configure_TimeGrid_Params(Params, dt)` maps all annual flow rates, stocks, and lifecycle age indices so steady-state and transition magnitudes remain invariant across $\Delta t$:
 * **Lifecycle Horizon & Age Brackets:** Adult biological ages span 20 to 99 ($80$ years), yielding $J = \mathrm{round}\left(80 / \Delta t\right)$ model periods (`J = 16` at $\Delta t = 5$; `J = 27` at $\Delta t = 3$). Retirement begins at age 65: $J_r = \mathrm{round}\left(45 / \Delta t\right) + 1$ (`Jr = 10` at $\Delta t = 5$; `Jr = 16` at $\Delta t = 3$).
-* **Childhood Developmental Sub-Stages ($\mathcal{J}_{c,1}$ and $\mathcal{J}_{c,2}$):** Children are born when parents are age 26 ($j_{\mathrm{birth}} = \mathrm{round}\left(6 / \Delta t\right) + 1$).
+* **Childhood Developmental Sub-Stages ($`\mathcal{J}_{c,1}$ and $\mathcal{J}_{c,2}`$):** Children are born when parents are age 26 ($j_{\mathrm{birth}} = \mathrm{round}\left(6 / \Delta t\right) + 1$).
   * **Stage 1 (First 2000 Days, Child Ages 0–5):** Spans $n_{s1} = \mathrm{round}\left(6 / \Delta t\right)$ parental periods $\mathcal{J}_{c,1} = \lbrace j_{s1,\mathrm{start}}, \dots, j_{s1,\mathrm{end}} \rbrace$ ($j_p = 3$ at $\Delta t = 5$; $j_p \in \lbrace 3, 4 \rbrace$ at $\Delta t = 3$).
   * **Stage 2 (Primary/Secondary Schooling & Adolescent Gate, Child Ages 6–17):** Spans $n_{s2} = \mathrm{round}\left(12 / \Delta t\right)$ parental periods $\mathcal{J}_{c,2} = \lbrace j_{s2,\mathrm{start}}, \dots, j_{s2,\mathrm{end}} \rbrace$ ($j_p \in \lbrace 4, 5 \rbrace$ at $\Delta t = 5$; $j_p \in \lbrace 5, 6, 7, 8 \rbrace$ at $\Delta t = 3$).
 * **Compound Discounting & Flow Scaling ($\mathrm{dt\_scale} = \Delta t / 5$):**
@@ -48,7 +48,7 @@ while stock endowments (`YouthGrant` $E$) and proportional tax rates ($\tau_l, \
 
 ## 2. Infinite-Horizon Entrepreneurial Firms & Capital Reallocation (Lens 3)
 
-Following Guvenen, Kambourov, Kuruscu, Ocampo, and Chen (2023), each region $k$ contains a unit measure of infinite-horizon entrepreneurial firms (`Firm_Rural`, `Firm_Small`, `Firm_Large`, `Firm_Auckland`) with state vector $\left(a_f, z_f\right) \in \mathcal{A}_f \times \mathcal{Z}_{f,k}$, where $a_f$ is firm book equity and $z_f \in \lbrace z_{\ell,k}, z_{h,k} \rbrace$ is idiosyncratic entrepreneurial productivity evolving via Markov matrix $\Pi_{f,k}$.
+Following Guvenen, Kambourov, Kuruscu, Ocampo, and Chen (2023), each region $k$ contains a unit measure of infinite-horizon entrepreneurial firms (`Firm_Rural`, `Firm_Small`, `Firm_Large`, `Firm_Auckland`) with state vector $`\left(a_f, z_f\right) \in \mathcal{A}_f \times \mathcal{Z}_{f,k}`$, where $a_f$ is firm book equity and $z_f \in \lbrace z_{\ell,k}, z_{h,k} \rbrace$ is idiosyncratic entrepreneurial productivity evolving via Markov matrix $\Pi_{f,k}$.
 
 ### 2.1 Collateral-Constrained Profit Maximization & "Use-It-Or-Lose-It" Return
 Firms rent capital $k_f \le \lambda_{\mathrm{col}} a_f$ (with collateral multiplier $\lambda_{\mathrm{col}} = 2.50$) and hire regional effective labor $\ell_f$ at wage $w_k$ to produce output $y_f = z_f \left(k_f^{\alpha_k} \ell_f^{1 - \alpha_k}\right)^{1 - \nu_{\mathrm{span}}}$. Integrating out static factor demands yields the gross-of-equity-tax rate of return on firm equity $R_k\left(z_f; \Delta t\right)$ (`ReturnFn_Firm.m`):
@@ -74,7 +74,7 @@ In the compact 4D GPU specification (`ReturnFn_SpatialHH_Compact4D.m`, 40 argume
 * `a_grid`: $a \in \lbrack 0.001, 15.0\rbrack$ ($n_{a1} = 25$, household net worth) and $h \in \lbrack 0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80\rbrack$ ($n_{a2} = 7$, adult human capital tiers $h_1 \dots h_7$).
 * `z_grid`: $z \in \mathcal{Z}_{hh}$ ($n_z = 5$, Rouwenhorst idiosyncratic earnings shock, where $i_z = 1$ denotes unemployment/severe distress).
 
-*(In the full two-stage CES experience-asset specification with Emigration Abroad, `ReturnFn_SpatialHH.m` and `HumanCapital_Lifecycle_aprimeFn.m`, `a_grid` also tracks the 5-point child skill experience asset $\theta_c \in \mathcal{G}_{\theta}$ across childhood stages $\mathcal{J}_{c,1}$ and $\mathcal{J}_{c,2}$.)*
+*(In the full two-stage CES experience-asset specification with Emigration Abroad, `ReturnFn_SpatialHH.m` and `HumanCapital_Lifecycle_aprimeFn.m`, `a_grid` also tracks the 5-point child skill experience asset $`\theta_c \in \mathcal{G}_{\theta}`$ across childhood stages $\mathcal{J}_{c,1}$ and $\mathcal{J}_{c,2}$.)*
 
 ### 3.2 Budget Constraint, Stone-Geary Subsistence, & Housing Tenure Cutoff
 Effective labor supply during working life ($j < J_r$) is $\ell_{\mathrm{eff}} = \max\left(0, \, \ell - I_h\right)$, generating gross labor income $y_{\mathrm{lab}} = w_k z h \ell_{\mathrm{eff}}$. In retirement ($j \ge J_r$), households receive universal New Zealand Superannuation $p_{\mathrm{super}}$ plus means-tested consumption floor support $\underline{c}$. Total disposable cash-on-hand available for composite expenditure $e_{\mathrm{tot}}$ is:
@@ -99,7 +99,7 @@ $$
 
 Because Stage 2 exhibits strong dynamic complementarity ($\sigma_2 = \frac{1}{1 - \varphi_2} = 0.51 < 1$) and unbanked gain depreciation $\delta_{\theta,\mathrm{fade}} > 0$, early skill gains $\theta_c$ erode during middle childhood and early adolescence ($J = 5$, child ages 12–14) if Stage-2 investment or socio-emotional stability collapses. We formalize two countervailing mechanisms operating at this gate:
 
-1. **Observable Family Unemployment & Housing Distress Shock ($\psi_{\mathrm{unemp}}$):** Following the empirical job-displacement and *Family Stress Model* literature (Conger et al., 1992; Rege, Telle, & Votruba, 2011; Coelli, 2011; *Growing Up in New Zealand* "Now We Are 12", Morton et al., 2024), when a parent in region $k$ experiences an adverse labor-market productivity or unemployment realization $z_p \in \mathcal{Z}_{\mathrm{distress}}$ (specifically $z_p = z_1$, or $z_p = z_2$ combined with housing hardship $a_p < 0.08 Q_k$) during the child's adolescent window, household psychological stress and reduced parental bandwidth impose a non-cognitive skill penalty $-\psi_{\mathrm{unemp}} < 0$.
+1. **Observable Family Unemployment & Housing Distress Shock ($\psi_{\mathrm{unemp}}$):** Following the empirical job-displacement and *Family Stress Model* literature (Conger et al., 1992; Rege, Telle, & Votruba, 2011; Coelli, 2011; *Growing Up in New Zealand* "Now We Are 12", Morton et al., 2024), when a parent in region $k$ experiences an adverse labor-market productivity or unemployment realization $`z_p \in \mathcal{Z}_{\mathrm{distress}}`$ (specifically $z_p = z_1$, or $z_p = z_2$ combined with housing hardship $a_p < 0.08 Q_k$) during the child's adolescent window, household psychological stress and reduced parental bandwidth impose a non-cognitive skill penalty $-\psi_{\mathrm{unemp}} < 0$.
 2. **Bidirectional Montessori / *Tuakana–Teina* Cross-Age Mentoring ($M_{\mathrm{mentor}} \in [0, 1]$):** While Stage 2 cognitive investment productivity is low ($\gamma_{2,C,3} = 0.044$), non-cognitive malleability remains more than twice as high ($\gamma_{2,N,3} = 0.104$, Cunha et al., 2010). Synthesizing indigenous *Tuakana–Teina* and *Ako* reciprocal whānau in *Kura Kaupapa Māori* and bilingual units, the Graeme Dingle Foundation's *Stars / Te Kāhui Whetū* and *Project K* peer-mentoring programs, high-agency vertical-*whānau* state schools, and Montessori's multi-age *Erdkinder* pedagogy (Lillard & Else-Quest, 2006; Agostinelli, Saharkhiz, & Wiswall, 2024; Resnjanskij et al., 2024), structured cross-age mentoring where adolescents at $J = 5$ mentor younger children at $J = 2\text{--}3$ generates a **two-way intra-generational spillover** without adding an endogenous state variable:
    * *Downward Scaffolding Multiplier on Stage 1 ($\kappa_{\mathrm{down}} > 0$):* Near-peer tutoring and role-modeling by the *tuakana* adolescent cohort (with mean skill $\bar{\theta}_{J=5}$) augment the effective productivity of public early childhood and primary investments for younger *teina*:
 
@@ -146,7 +146,7 @@ Empirically, $S_t$ is anchored to New Zealand's sovereign **Transparency Interna
 To eliminate CPU nested loops, `Build_IntergenTransitionMatrix.m` executes all three intergenerational operators via 4D/5D GPU tensor broadcasting and `accumarray` projection, mapping the stationary distribution $\mu_k\left(a, h, z, j\right)$ and policy arrays `Policy` into the newborn adult distribution `jequaloneDist` ($\mu_{1,k}\left(a_1, h_1, z_1\right)$).
 
 ### 4.1 Stage 1 Operator ($\mathbf{Q}_h$): Two-Stage Childhood Skill & Montessori / *Tuakana–Teina* Gate
-For fertile parental cohorts $j_p \in \mathcal{J}_{c,1} \cup \mathcal{J}_{c,2}$, expected log pre-labor-market skill $\ln\left(\hat{h}_{\mathrm{child}}\right)$ integrates Stage-1 private/public investment $\left(i_{c,1}, G_{\mathrm{ECE},1}\right)$, housing crowding penalties, and the **Gate 3 ($J = 5$, Ages 12–14) Montessori / *Tuakana–Teina* & Graeme Dingle Foundation Mentoring Operator**:
+For fertile parental cohorts $`j_p \in \mathcal{J}_{c,1} \cup \mathcal{J}_{c,2}`$, expected log pre-labor-market skill $`\ln\left(\hat{h}_{\mathrm{child}}\right)`$ integrates Stage-1 private/public investment $`\left(i_{c,1}, G_{\mathrm{ECE},1}\right)`$, housing crowding penalties, and the **Gate 3 ($J = 5$, Ages 12–14) Montessori / *Tuakana–Teina* & Graeme Dingle Foundation Mentoring Operator**:
 
 $$\ln\left(\hat{h}_{\mathrm{child}}\right) = \rho_{hc} \ln\left(h_p\right) + \gamma_{ic} \ln\left(1 + i_{c,\mathrm{eff}} + G_{\mathrm{ECE,eff}}\right) - \psi_{\mathrm{crowd}} \ln\left(Q_k\right) \mathbb{I}_{\mathrm{hard}} + \Delta_{\mathrm{Adol}}\left(z_p, \mathcal{M}_{\mathrm{Tuakana}}\right) + \eta_h$$
 
@@ -412,7 +412,7 @@ Because the vertical thickness at every horizontal station $\tau \in \left\lbrac
 
 ---
 
-## 8. Consolidated 21-File VFI Toolkit Codebase Manifest
+## 8. Consolidated 22-File VFI Toolkit Codebase Manifest
 
 | File # | MATLAB Script / Function Name | Primary Role in the 4-Region + Abroad Multiphase Suite |
 | :---: | :--- | :--- |
