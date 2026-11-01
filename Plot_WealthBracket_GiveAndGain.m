@@ -281,9 +281,9 @@ ax2.YColor = [0.10 0.10 0.10];
 yyaxis(ax2, 'right'); hold(ax2, 'on');
 bar_retained = bar(ax2, x_idx, PostReform_NetWorth_MNZD, 'BarWidth', 0.36, ...
     'FaceColor', [0.17 0.51 0.73], 'FaceAlpha', 0.25, 'EdgeColor', [0.17 0.51 0.73], ...
-    'LineWidth', 0.9, 'DisplayName', 'Absolute Post-Reform Net Worth Net Worth Resilience (NZD Millions, Right Axis)');
+    'LineWidth', 0.9, 'DisplayName', 'Absolute Post-Reform Net Worth Resilience (NZD Millions, Right Axis)');
 set(ax2, 'YScale', 'log');
-ylabel(ax2, 'Absolute Post-Reform Net Worth Net Worth Resilience (NZD Millions, Log Scale)', 'FontSize', 9.8, 'FontWeight', 'bold');
+ylabel(ax2, 'Absolute Post-Reform Net Worth Resilience (NZD Millions, Log Scale)', 'FontSize', 9.8, 'FontWeight', 'bold');
 ylim(ax2, [0.02, 350]);
 ax2.YColor = [0.17 0.51 0.73];
 
