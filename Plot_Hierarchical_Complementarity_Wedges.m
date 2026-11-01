@@ -118,10 +118,10 @@ for r = 1:7
     for c = 1:7
         val = H_Comp(r, c);
         if r == c
-            lbl = sprintf('Base\n+%.2f%%', val);
+            lbl = sprintf('Base\n%+.2f%%', val);
             fcol = [1 1 1];
         elseif val > 0
-            lbl = sprintf('Wedge\n+%.2f%%', val);
+            lbl = sprintf('Wedge\n%+.2f%%', val);
             fcol = [0.05 0.15 0.05] * (val < 1.0) + [1 1 1] * (val >= 1.0);
         else
             lbl = 'Linear\n(0.00%)';
@@ -179,7 +179,7 @@ for k = 1:12
         plot(axB, [k+0.36, k+0.64], [y_top, y_top], 'k:', 'LineWidth', 1.1, 'HandleVisibility', 'off');
     end
     
-    lbl_step = sprintf('+%.2f%%', SS2_Layer_CE(k));
+    lbl_step = sprintf('%+.2f%%', SS2_Layer_CE(k));
     if is_wedge(k)
         lbl_step = ['\bf\Delta ', lbl_step];
     end
@@ -281,7 +281,7 @@ b_pos12 = bar(axM, Yr_Grid, Pos_12Layers_CE, 'stacked', 'BarWidth', 0.82, ...
 for k = 1:12
     b_pos12(k).FaceColor   = layer_colors(k, :);
     b_pos12(k).FaceAlpha   = 0.90;
-    b_pos12(k).DisplayName = sprintf('%s (+%.2f%% SS2)', Layer_ShortLabels{k}, SS2_Layer_CE(k));
+    b_pos12(k).DisplayName = sprintf('%s (%+.2f%% SS2)', Layer_ShortLabels{k}, SS2_Layer_CE(k));
     if is_wedge(k)
         b_pos12(k).EdgeColor = [0.50 0.10 0.00];
         b_pos12(k).LineWidth = 1.05;

@@ -11,27 +11,6 @@ if ~exist('Params', 'var') || ~isfield(Params, 'dt')
     Params = Configure_TimeGrid_Params(Params, 5);
 end
 
-% Ensure all named retirement, senescence, and whanau parameters are populated on Params:
-if ~isfield(Params, 'super_age_base'),           Params.super_age_base           = 65.0;  end
-if ~isfield(Params, 'super_age_SS2'),            Params.super_age_SS2            = 64.0;  end
-if ~isfield(Params, 'eta_elder_whanau'),         Params.eta_elder_whanau         = 0.090; end
-if ~isfield(Params, 'kappa_kuia_max'),           Params.kappa_kuia_max           = 0.160; end
-if ~isfield(Params, 'tau_kuia_sat'),             Params.tau_kuia_sat             = 1.800; end
-if ~isfield(Params, 'theta_healthy_wrk_65'),     Params.theta_healthy_wrk_65     = 0.480; end
-if ~isfield(Params, 'lambda_health_decay_65'),   Params.lambda_health_decay_65   = 0.180; end
-if ~isfield(Params, 'phi_geriatric_leak_base'),  Params.phi_geriatric_leak_base  = 1.150; end
-if ~isfield(Params, 'phi_geriatric_leak_slope'), Params.phi_geriatric_leak_slope = 0.085; end
-if ~isfield(Params, 'psi_sandwich_wrk_drag'),    Params.psi_sandwich_wrk_drag    = 0.350; end
-if ~isfield(Params, 'omega_acc_offset_under65'), Params.omega_acc_offset_under65 = 0.280; end
-if ~isfield(Params, 'lambda_offset_decay_u65'),  Params.lambda_offset_decay_u65  = 0.850; end
-if ~isfield(Params, 'nu_peak_earn_u65'),         Params.nu_peak_earn_u65         = 1.050; end
-if ~isfield(Params, 'nu_peak_earn_slope_u65'),   Params.nu_peak_earn_slope_u65   = 0.040; end
-if ~isfield(Params, 'dep_ratio_2026_anchor'),    Params.dep_ratio_2026_anchor    = 24.50; end
-if ~isfield(Params, 'beta_aging_tax_drift'),     Params.beta_aging_tax_drift     = 0.220; end
-if ~isfield(Params, 'beta_exits_skill_div'),     Params.beta_exits_skill_div     = 0.145; end
-if ~isfield(Params, 'ss2_harvest_div_base'),     Params.ss2_harvest_div_base     = 2.070; end
-if ~isfield(Params, 'psi_austerity_tax_drag'),   Params.psi_austerity_tax_drag   = 0.220; end
-
 super_age_ss2_target = Params.super_age_SS2;
 A_base               = Params.super_age_base;
 
@@ -57,28 +36,9 @@ n_th  = n_a_5D.HH_Rural(3);
 n_z1  = n_z.HH_Rural;
 h_vec = a_grid_5D.HH_Rural(n_a1+1 : n_a1+n_h);
 
-if isfield(Params, 'K_whanau_base_vec')
-    K_base_vec = Params.K_whanau_base_vec;
-else
-    K_base_vec = [0.42, 0.38, 0.32, 0.28];
-end
-if isfield(Params, 'K_whanau_base') && isstruct(Params.K_whanau_base)
-    for r_i = 1:N_reg
-        f_n = ['HH_', Regions{r_i}];
-        if isfield(Params.K_whanau_base, f_n), K_base_vec(r_i) = Params.K_whanau_base.(f_n); end
-    end
-end
-if isfield(Params, 'base_struggle_vec')
-    base_struggle_vec = Params.base_struggle_vec;
-else
-    base_struggle_vec = [19.8, 18.2, 15.6, 14.3];
-end
-if isfield(Params, 'sj_5yr_ref')
-    sj_ref = Params.sj_5yr_ref;
-else
-    sj_ref = [0.995, 0.994, 0.993, 0.991, 0.988, 0.983, 0.975, 0.962, ...
-        0.942, 0.910, 0.860, 0.780, 0.660, 0.500, 0.300, 0.000];
-end
+K_base_vec = Params.K_whanau_base_vec;
+base_struggle_vec = Params.base_struggle_vec;
+sj_ref = Params.sj_5yr_ref;
 
 j_fert_vec = 1 : Params.j_s2_end;
 
@@ -201,16 +161,18 @@ for u_i = 1:n_ug
     Tax_UCurve_SS0(u_i) = tax_ss0_u;
 end
 
-% Anchor CE_UCurve_SS2 so Age 65 = +23.38% and Age 64 = +23.63% (or live T1 National SS2 total):
-ce_anchor_64 = 23.63;
+% Anchor CE_UCurve_SS2 so Age 64 matches T1 National SS2 (+24.24% CE) and Age 65 = +24.07% CE:
+ce_anchor_64 = 24.243125; % Default n_z = 7 Rouwenhorst SS2 National CE%
 if evalin('base', 'exist(''T1'', ''var'')')
     T1_ws = evalin('base', 'T1');
     if istable(T1_ws) && height(T1_ws) >= 6 && abs(super_age_ss2_target - 64.0) < 0.5
         ce_anchor_64 = sum(table2array(T1_ws(6, 1:4)) .* Reg_HH_Shares(:)');
     end
 end
+idx_64_u      = find(SuperAge_Grid == 64, 1);
 tax_65_ss2    = Tax_UCurve_SS2(SuperAge_Grid == 65);
-CE_UCurve_SS2 = (ce_anchor_64 - 0.25) + CE_UCurve_SS2 - 1.45 * (Tax_UCurve_SS2 - tax_65_ss2);
+raw_curve_ss2 = CE_UCurve_SS2 - 1.45 * (Tax_UCurve_SS2 - tax_65_ss2);
+CE_UCurve_SS2 = ce_anchor_64 + (raw_curve_ss2 - raw_curve_ss2(idx_64_u));
 
 T_UCurve = table(SuperAge_Grid, Tax_UCurve_SS2, Dep_UCurve_SS2, TFR_UCurve_SS2, Stn_UCurve_SS2, CE_UCurve_SS2, Tax_UCurve_SS0, ...
     'VariableNames', {'NZ_Super_Age', 'SS2_Required_PAYE_Pct', 'SS2_Effective_DepRatio_Pct', ...
@@ -236,7 +198,7 @@ ylim(ax1, [0, 2.85]);
 xtickangle(ax1, 20);
 ylabel(ax1, 'Total Fertility Rate (TFR)', 'FontWeight', 'bold');
 if super_age_ss2_target < 65
-    title(ax1, sprintf('A. 4-Region Total Fertility Rate (TFR: SS2 Age %.0f Hits Replacement!)', super_age_ss2_target), 'FontWeight', 'bold');
+    title(ax1, sprintf('A. 4-Region Total Fertility Rate (TFR: SS2 Age %.0f Reaches Replacement)', super_age_ss2_target), 'FontWeight', 'bold');
 else
     title(ax1, 'A. 4-Region Total Fertility Rate (TFR)', 'FontWeight', 'bold');
 end
@@ -311,14 +273,14 @@ ax4.YColor = [0.75 0.10 0.10];
 yyaxis(ax4, 'right');
 p_w_ss2 = plot(ax4, SuperAge_Grid, CE_UCurve_SS2, '-p', 'Color', [0.00 0.50 0.22], ...
     'MarkerFaceColor', [0.10 0.80 0.35], 'MarkerIndices', [1, 4, 5, 6, 8, 11, 16], 'LineWidth', 2.6, 'MarkerSize', 8.0, ...
-    'DisplayName', 'Phase 2 (SS2) National Welfare Gain CE% [Inverted-U Peak at Age 64!]');
+    'DisplayName', 'Phase 2 (SS2) National Welfare Gain CE% [Inverted-U Peak at Age 64]');
 
 idx_64 = find(SuperAge_Grid == 64, 1);
 idx_65 = find(SuperAge_Grid == 65, 1);
 % Place Welfare Peak callout just to the right of Age 65 (x = 68.2, y = 23.6) in open space below the legend:
 text(ax4, 68.3, CE_UCurve_SS2(idx_64) + 0.4, ...
-    sprintf('★ Welfare Peak (Age 64): +%.2f%% CE (18.85%% Tax)\n   Age 65 Tax Min: +%.2f%% CE (18.57%% Tax)', ...
-    CE_UCurve_SS2(idx_64), CE_UCurve_SS2(idx_65)), ...
+    sprintf('★ Welfare Peak (Age 64): %+.2f%% CE (%.2f%% Tax)\n   Age 65 Tax Min: %+.2f%% CE (%.2f%% Tax)', ...
+    CE_UCurve_SS2(idx_64), Tax_UCurve_SS2(idx_64), CE_UCurve_SS2(idx_65), Tax_UCurve_SS2(idx_65)), ...
     'HorizontalAlignment', 'center', 'FontSize', 7.5, 'FontWeight', 'bold', ...
     'Color', [0.00 0.38 0.15], 'BackgroundColor', [0.94 1.00 0.95], 'EdgeColor', [0.00 0.45 0.20], 'Margin', 2);
 

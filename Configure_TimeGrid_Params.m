@@ -1,4 +1,4 @@
-function Params = Configure_TimeGrid_Params(Params, dt)
+function Params = Configure_TimeGrid_Params(Params, dt, n_z_pts)
 %% CONFIGURE_TIMEGRID_PARAMS
 % Single Source of Truth for Time-Grid, Demographic, Spatial, Whanau, and
 % Intergenerational Calibration Parameters across all 5D and 4D scripts.
@@ -10,11 +10,16 @@ if nargin < 2 || isempty(dt)
         dt = 5;
     end
 end
-Params.dt  = dt;
-scale_dt   = dt / 5; % Ratio relative to the 5-year calibration benchmark
-if ~isfield(Params, 'n_z_pts') || isempty(Params.n_z_pts)
-    Params.n_z_pts = 7; % 7-point Rouwenhorst regional productivity grid
+if nargin < 3 || isempty(n_z_pts)
+    if isfield(Params, 'n_z_pts') && ~isempty(Params.n_z_pts)
+        n_z_pts = Params.n_z_pts;
+    else
+        n_z_pts = 7;
+    end
 end
+Params.dt      = dt;
+scale_dt       = dt / 5;  % Ratio relative to the 5-year calibration benchmark
+Params.n_z_pts = n_z_pts; % N-point Rouwenhorst regional productivity grid
 
 %% 1. LIFE-CYCLE HORIZON (AGES 20-99) & RETIREMENT BOUNDARY (AGE 65)
 Params.J    = round(80 / dt);           % 16 (dt=5), 27 (dt=3), 40 (dt=2)

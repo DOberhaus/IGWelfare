@@ -11,9 +11,11 @@
 
 if ~exist('Params', 'var') || ~isfield(Params, 'dt')
     Params = struct();
-    Params = Configure_TimeGrid_Params(Params, 5);
+    % Default period length is 5 years
+    % Default z-grid length is 7 divisions using Rouwenhorst
+    Params = Configure_TimeGrid_Params(Params, 5, 7);
 else
-    Params = Configure_TimeGrid_Params(Params, Params.dt);
+    Params = Configure_TimeGrid_Params(Params, Params.dt, Params.n_z_pts);
 end
 
 %% 1. DEFINE 8 PERMANENT TYPES (4 REGIONS x 2 SECTORS)
@@ -74,7 +76,8 @@ for r_idx = 1:N_reg
     a_grid_thetac    = linspace(0.45, 1.85, n_a.(hh_type)(3))';
     a_grid.(hh_type) = [a_grid_assets; a_grid_hc; a_grid_thetac];
 
-    n_z.(hh_type) = 5;
+    %% N-POINT ROUWENHORST REGIONAL LABOR PRODUCTIVITY GRIDS (Kopecky & Suen, 2010)
+    n_z.(hh_type) = Params.n_z_pts;
 
     % VFI Toolkit experienceasset=1 requires: @(d_exp, a_exp, Params...)
     % 1st arg = ic (last decision), 2nd arg = theta_c (last endogenous state), 3rd+ args = Params fields
@@ -98,20 +101,13 @@ for r_idx = 1:N_reg
     n_z.(firm_type) = 2;  pi_z.(firm_type)   = [0.85, 0.15; 0.15, 0.85];
 end
 
-%% 7-POINT ROUWENHORST REGIONAL LABOR PRODUCTIVITY GRIDS (Kopecky & Suen, 2010)
-n_z_pts = 7;
-for r_idx = 1:length(Regions)
-    hh_type = ['HH_', Regions{r_idx}];
-    n_z.(hh_type) = n_z_pts;
-end
-
 % Discretize regional log-productivity AR(1) via Rouwenhorst (mew, rho, sigma, znum)
 % Note: In VFI Toolkit, mew = mu * (1 - rho) so unconditional mean of log(z) is mu_reg
 rho_z = 0.85;
-[z_grid_log.HH_Rural,    pi_z.HH_Rural]    = discretizeAR1_Rouwenhorst(-0.06*(1-rho_z), rho_z, 0.11, n_z_pts);
-[z_grid_log.HH_Small,    pi_z.HH_Small]    = discretizeAR1_Rouwenhorst(-0.01*(1-rho_z), rho_z, 0.14, n_z_pts);
-[z_grid_log.HH_Large,    pi_z.HH_Large]    = discretizeAR1_Rouwenhorst( 0.06*(1-rho_z), rho_z, 0.18, n_z_pts);
-[z_grid_log.HH_Auckland, pi_z.HH_Auckland] = discretizeAR1_Rouwenhorst( 0.15*(1-rho_z), rho_z, 0.24, n_z_pts);
+[z_grid_log.HH_Rural,    pi_z.HH_Rural]    = discretizeAR1_Rouwenhorst(-0.06*(1-rho_z), rho_z, 0.11, Params.n_z_pts);
+[z_grid_log.HH_Small,    pi_z.HH_Small]    = discretizeAR1_Rouwenhorst(-0.01*(1-rho_z), rho_z, 0.14, Params.n_z_pts);
+[z_grid_log.HH_Large,    pi_z.HH_Large]    = discretizeAR1_Rouwenhorst( 0.06*(1-rho_z), rho_z, 0.18, Params.n_z_pts);
+[z_grid_log.HH_Auckland, pi_z.HH_Auckland] = discretizeAR1_Rouwenhorst( 0.15*(1-rho_z), rho_z, 0.24, Params.n_z_pts);
 
 for r_idx = 1:length(Regions)
     hh_type = ['HH_', Regions{r_idx}];

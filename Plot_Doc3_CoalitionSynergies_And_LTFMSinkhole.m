@@ -34,8 +34,8 @@ if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
 % 1. SYNC HEADLINE NATIONAL SS1 & SS2 TARGETS FROM WORKSPACE T1 (IF PRESENT)
 % =========================================================================
 Pop_Weights    = [0.160, 0.240, 0.259, 0.341]; % [Rural, Small, Large, Auckland]
-SS1_Target_Reg = [8.712, 11.743, 14.131, 18.494];
-SS2_Target_Reg = [15.650, 20.630, 23.590, 29.530]; % Matches +23.63% National (Super Age 64)
+SS1_Target_Reg = [9.479, 12.184, 14.384, 17.728];  % Matches +14.21% National (n_z = 7)
+SS2_Target_Reg = [18.213, 21.750, 24.414, 28.697]; % Matches +24.24% National (n_z = 7)
 
 if evalin('base', 'exist(''T1'', ''var'')')
     T1_ws = evalin('base', 'T1');
@@ -52,7 +52,7 @@ SS2_Nat = sum(SS2_Target_Reg .* Pop_Weights); % ~23.63%
 %   L4: Iso TaxRebal (+2.57%), L5: Iso YouthGrant (+1.30%), L6: Iso GeoTrans (+1.06%), L7: Wedge 2 LVR/Whanau (+2.23%) -> Tier 2 = +7.16%
 %   L8: Wedge 3 Cross-Stack Stack1 x Stack2 (+3.87%)
 %   L9: Iso Debt-Sinking (+0.97%), L10: Iso PAYE Cut & Super 64 (+1.17%), L11: Wedge 4 Fiscal/TFR/2ndGen Closure (+1.74%) -> Tier 4 = +3.88%
-Raw_Nat_11 = [3.47; 2.07; 3.18; 2.57; 1.30; 1.06; 2.23; 3.87; 0.97; 1.17; 1.74];
+Raw_Nat_11 = [3.57; 2.13; 3.26; 2.63; 1.33; 1.10; 2.28; 3.95; 0.82; 1.20; 1.97];
 Nat_11     = Raw_Nat_11 * (SS2_Nat / sum(Raw_Nat_11));
 
 % =========================================================================
@@ -232,13 +232,13 @@ p3_aus = plot3(ax1, Debt_Aust_First, Tax_Aust_First, CE_Aust_First + 0.8, '-.s',
 
 p3_uni = plot3(ax1, Debt_Unified, Tax_Unified, CE_Unified + 0.8, '-p', ...
     'Color', [0.00 0.50 0.22], 'MarkerFaceColor', [0.10 0.85 0.35], 'MarkerIndices', [6, 25, 31, 66], ...
-    'LineWidth', 3.4, 'MarkerSize', 9, 'DisplayName', sprintf('4. Unified Coalition (SS1 -> SS2: Debt 22%%, PAYE 18.9%%, +%.2f%% CE)', SS2_Nat));
+    'LineWidth', 3.4, 'MarkerSize', 9, 'DisplayName', sprintf('4. Unified Coalition (SS1 -> SS2: Debt 22%%, PAYE 18.9%%, %+.2f%% CE)', SS2_Nat));
 
 % 3D Endpoint Callout Labels Placed Cleanly ABOVE the Surface Mesh
 text(ax1, 52, 23.6, 5.2, '2026 Start (42% Debt, 22% Tax)', 'FontSize', 8.0, 'FontWeight', 'bold', ...
     'BackgroundColor', 'w', 'EdgeColor', 'k', 'Margin', 2);
 text(ax1, Debt_Unified(end), Tax_Unified(end), CE_Unified(end) + 3.5, ...
-    sprintf('2086 SS2 Convergence:\n+%.2f%% CE\n(Debt 22%%, Tax 18.9%%)', SS2_Nat), ...
+    sprintf('2086 SS2 Convergence:\n%+.2f%% CE\n(Debt 22%%, Tax 18.9%%)', SS2_Nat), ...
     'FontSize', 8.0, 'FontWeight', 'bold', 'Color', [0.00 0.38 0.15], ...
     'BackgroundColor', [0.94 1.00 0.95], 'EdgeColor', [0.00 0.45 0.20], 'Margin', 2);
 text(ax1, Debt_SS0_LTFM(end)-18, Tax_SS0_LTFM(end)-0.8, CE_SS0_LTFM(end) + 5.8, ...
@@ -268,17 +268,17 @@ fill(ax2, [Yr_Vec; flipud(Yr_Vec)], [CE_SS0_LTFM; flipud(CE_SS0_Def)], [0.92 0.8
     'FaceAlpha', 0.45, 'EdgeColor', 'none', 'DisplayName', 'Incremental -5.48% CE Fiscal Drag from Unfunded 3.0% GDP (+$8.0B/yr) Defense Commitment');
 
 h_u1 = plot(ax2, Yr_Vec, CE_Unified, '-', 'Color', [0.00 0.52 0.22], 'LineWidth', 3.2, ...
-    'DisplayName', sprintf('1. Unified 4-Coalition Plan (SS1 \\rightarrow SS2 at Super Age 64: +%.2f%% CE)', SS2_Nat));
+    'DisplayName', sprintf('1. Unified 4-Coalition Plan (SS1 \\rightarrow SS2 at Super Age 64: %+.2f%% CE)', SS2_Nat));
 h_u2 = plot(ax2, Yr_Vec, CE_Unified_With_Defense, '--', 'Color', [0.05 0.68 0.45], 'LineWidth', 2.4, ...
-    'DisplayName', sprintf('2. Unified Plan + 3.0%% GDP Defense (Sustains +$8.0B/yr Outlay at +%.2f%% CE)', CE_Unified_With_Defense(end)));
+    'DisplayName', sprintf('2. Unified Plan + 3.0%% GDP Defense (Sustains +$8.0B/yr Outlay at %+.2f%% CE)', CE_Unified_With_Defense(end)));
 
 h_sg_thin = plot(ax2, Yr_Vec, CE_StopGo_Thin, ':', 'Color', [0.20 0.45 0.75], 'LineWidth', 2.0, ...
-    'DisplayName', sprintf('3a. "Stop-Go" 2-Term (6-Yr) Cycle (Linear Mean Spreadsheet: +%.2f%% CE)', CE_StopGo_Thin(end)));
+    'DisplayName', sprintf('3a. "Stop-Go" 2-Term (6-Yr) Cycle (Linear Mean Spreadsheet: %+.2f%% CE)', CE_StopGo_Thin(end)));
 h_sg_thk  = plot(ax2, Yr_Vec, CE_StopGo_Thick, '-', 'Color', [0.12 0.35 0.72], 'LineWidth', 2.4, ...
-    'DisplayName', sprintf('3b. "Stop-Go" 2-Term (6-Yr) Cycle (State-Contingent 12-Yr Sawtooth: +%.2f%% CE)', CE_StopGo_Thick(end)));
+    'DisplayName', sprintf('3b. "Stop-Go" 2-Term (6-Yr) Cycle (State-Contingent 12-Yr Sawtooth: %+.2f%% CE)', CE_StopGo_Thick(end)));
 
 h_silo_b = plot(ax2, Yr_Vec, CE_Barnardos_Silo, '-.', 'Color', [0.88 0.55 0.05], 'LineWidth', 2.1, ...
-    'DisplayName', sprintf('4. Barnardos/Youth Silo Alone vs. LTFM Drift (Net +%.2f%% CE: 98%% Offset by Drift)', CE_Barnardos_Silo(end)));
+    'DisplayName', sprintf('4. Barnardos/Youth Silo Alone vs. LTFM Drift (Net %+.2f%% CE: >100%% Offset by Drift)', CE_Barnardos_Silo(end)));
 h_silo_w = plot(ax2, Yr_Vec, CE_WellBeing_Silo, '-.', 'Color', [0.55 0.35 0.70], 'LineWidth', 2.0, ...
     'DisplayName', sprintf('5. WellBeing/Housing Silo Alone vs. LTFM Drift (Net %.2f%% CE)', CE_WellBeing_Silo(end)));
 h_aus = plot(ax2, Yr_Vec, CE_Aust_First, '--', 'Color', [0.85 0.32 0.08], 'LineWidth', 2.2, ...
@@ -302,7 +302,7 @@ text(ax2, 47.0, 0.5*(CE_StopGo_Thick(Yr_Vec==48) + CE_StopGo_Thin(Yr_Vec==48)) +
     'Color', [0.08 0.25 0.58], 'BackgroundColor', [0.95 0.98 1.00], 'EdgeColor', [0.15 0.35 0.70], 'Margin', 3);
 
 text(ax2, 58.5, 0.5*(CE_Unified(end) + CE_SS0_LTFM(end)), ...
-    sprintf('Net Welfare Swing vs.\nLTFM Baseline Drift:\n+%.2f pp CE', SS2_Nat - CE_SS0_LTFM(end)), ...
+    sprintf('Net Welfare Swing vs.\nLTFM Baseline Drift:\n%+.2f pp CE', SS2_Nat - CE_SS0_LTFM(end)), ...
     'HorizontalAlignment', 'right', 'FontSize', 8.0, 'FontWeight', 'bold', ...
     'Color', [0.00 0.38 0.15], 'BackgroundColor', [0.94 1.00 0.95], 'EdgeColor', [0.00 0.45 0.20], 'Margin', 3);
 
@@ -402,12 +402,12 @@ for r = 1:4
         if r == c
             rectangle(axA, 'Position', [c-0.48, r-0.48, 0.96, 0.96], ...
                 'EdgeColor', [0.10 0.25 0.45], 'LineWidth', 2.4, 'FaceColor', [0.86 0.92 0.98]);
-            hdr_str = sprintf('[OWN SILO %d]\n+%.2f%% CE', r, val_rc);
+            hdr_str = sprintf('[OWN SILO %d]\n%+.2f%% CE', r, val_rc);
             hdr_col = [0.08 0.20 0.42];
         else
             rectangle(axA, 'Position', [c-0.48, r-0.48, 0.96, 0.96], ...
                 'EdgeColor', [0.75 0.42 0.05], 'LineWidth', 1.8, 'FaceColor', [1.00 0.95 0.82]);
-            hdr_str = sprintf('★ WEDGE (%d \\times %d)\n+%.2f%% CE', min(r,c), max(r,c), val_rc);
+            hdr_str = sprintf('★ WEDGE (%d \\times %d)\n%+.2f%% CE', min(r,c), max(r,c), val_rc);
             hdr_col = [0.65 0.12 0.05];
         end
         text(axA, c, r - 0.16, hdr_str, 'HorizontalAlignment', 'center', ...
@@ -425,7 +425,7 @@ xlim(axA, [0.45, 4.55]); ylim(axA, [0.45, 4.95]);
 diag_sum = trace(Mat_4x4);
 wedg_sum = sum(triu(Mat_4x4, 1), 'all');
 text(axA, 2.5, 4.72, ...
-    sprintf('4 Diagonal Own-Silos Sum = +%.2f%% CE (%.1f%%)  +  6 Bilateral Synergy Wedges (★) = +%.2f%% CE (%.1f%%)   \\Rightarrow   Unified SS2 = +%.2f%% CE', ...
+    sprintf('4 Diagonal Own-Silos Sum = %+.2f%% CE (%.1f%%)  +  6 Bilateral Synergy Wedges (★) = %+.2f%% CE (%.1f%%)   \\Rightarrow   Unified SS2 = %+.2f%% CE', ...
     diag_sum, 100*diag_sum/SS2_Nat, wedg_sum, 100*wedg_sum/SS2_Nat, SS2_Nat), ...
     'HorizontalAlignment', 'center', 'FontSize', 8.1, 'FontWeight', 'bold', ...
     'Color', [0.00 0.35 0.15], 'BackgroundColor', [0.92 0.99 0.94], 'EdgeColor', [0.00 0.45 0.20], 'Margin', 4);
@@ -461,13 +461,8 @@ for k = 1:4
     y_pts = b_fate(k).YEndPoints;
     for c_i = 1:4
         val_v = y_pts(c_i);
-        if val_v >= 0
-            y_pos = val_v + 0.55;
-            v_str = sprintf('+%.1f%%', val_v);
-        else
-            y_pos = val_v - 0.85;
-            v_str = sprintf('%.1f%%', val_v);
-        end
+        y_pos = val_v + (val_v >= 0) * 0.55 - (val_v < 0) * 0.85;
+        v_str = sprintf('%+.1f%%', val_v);
         text(axB, x_pts(c_i), y_pos, v_str, 'HorizontalAlignment', 'center', ...
             'FontSize', 7.6, 'FontWeight', 'bold', 'Color', fate_colors(k, :) * 0.75);
     end
@@ -479,7 +474,7 @@ yline(axB, 0, 'k-', 'LineWidth', 1.5, 'HandleVisibility', 'off');
 msg_mba = sprintf(['Why Balance-Sheet Stewardship Requires Cross-Portfolio Coupling:\n', ...
     '• Attempting to reduce debt first in SS1 via early cuts or Age-70 Super\n', ...
     '  lowers welfare to -10.6%% CE as benefit substitution & whanau care loss mount.\n', ...
-    '• Joining the Unified Compact unlocks +%.2f%% CE in connected fiscal,\n', ...
+    '• Joining the Unified Compact unlocks %+.2f%% CE in connected fiscal,\n', ...
     '  demographic & enterprise wedges—retiring debt & cutting PAYE to 18.9%%.'], Full_Coalit_4(4));
 text(axB, 2.52, 10.8, msg_mba, 'FontSize', 7.7, 'FontWeight', 'bold', 'Color', [0.05 0.28 0.12], ...
     'BackgroundColor', [0.94 0.99 0.95], 'EdgeColor', [0.05 0.45 0.20], 'Margin', 4);

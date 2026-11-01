@@ -176,7 +176,7 @@ end
 if super_age_ss2_target < 65.0 && paye_delta_pp < 0.0
     % Sweet-Spot Early Retirement Harvest (e.g., Super Age 64, 63, 62)
     bullet_2 = sprintf(['• Phase 1 KEEPS Age 65 Super (%.2f%% req. tax), while Phase 2 (SS2)\n', ...
-        '  LOWERS Super to Age %.0f (K_{whanau} +%.1f%% Kuia caregiving boost)\n', ...
+        '  LOWERS Super to Age %.0f (K_{whanau} %+.1f%% Kuia caregiving boost)\n', ...
         '  AND cuts required PAYE to %.2f%% (%.2f pp below 22.0%%)!'], ...
         tax_ss1_pct, super_age_ss2_target, whanau_ss2_pct, tax_ss2_pct, paye_delta_pp);
     box_fg = [0.00 0.27 0.11]; box_bg = [0.94 0.98 0.95]; box_ec = [0.00 0.43 0.17];
@@ -199,7 +199,7 @@ else
         tax_str = sprintf('eroding the PAYE cut down to %.2f%% (%.2f%% tax)', paye_delta_pp, tax_ss2_pct);
         box_fg = [0.45 0.22 0.00]; box_bg = [1.00 0.97 0.92]; box_ec = [0.75 0.40 0.05];
     else
-        tax_str = sprintf('forcing a +%.2f pp PAYE HIKE to %.2f%%', paye_delta_pp, tax_ss2_pct);
+        tax_str = sprintf('forcing a %+.2f pp PAYE HIKE to %.2f%%', paye_delta_pp, tax_ss2_pct);
         box_fg = [0.55 0.06 0.08]; box_bg = [1.00 0.95 0.95]; box_ec = [0.75 0.15 0.18];
     end
     bullet_2 = sprintf(['• Stress-Test Warning: Raising SS2 Super to Age %.0f strips K_{whanau}\n', ...

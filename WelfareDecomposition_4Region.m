@@ -321,3 +321,14 @@ CE_Ten   = CE_Ten_m;
 
 Active_Phases = [{'SS0'}, {Reform_Phase_Specs.Code}];
 Phases        = Build_Phase_Registry(Active_Phases);
+
+% Auto-export Table 1, Table 2, and Table 3 directly from WelfareDecomposition_4Region.m
+if ~exist('OutputDir', 'var') || isempty(OutputDir)
+    OutputDir = 'Output_NZ_4Region_Intergen';
+end
+if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
+writetable(T1, fullfile(OutputDir, 'Table1_WelfareDecomposition_4Region.csv'), 'WriteRowNames', true);
+writetable(T2, fullfile(OutputDir, 'Table2_QuintileWelfare_4Region.csv'),      'WriteRowNames', true);
+writetable(T3, fullfile(OutputDir, 'Table3_HousingTenure_4Region.csv'),        'WriteRowNames', true);
+disp('=== TABLE 1: MULTIPHASE 4-REGION WELFARE DECOMPOSITION (CE %) ===');
+disp(T1);

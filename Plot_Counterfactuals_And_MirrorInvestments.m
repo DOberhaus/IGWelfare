@@ -67,8 +67,8 @@ if sa_ss2 < 65
         l10_label   = sprintf('10. [Isolated] PAYE Cut (%.2f pp to %.1f%%) & Super Age-%.0f Kuia Dividend Alone', tax_chg_pp, req_tax_pct, sa_ss2);
         box25_label = sprintf('Yr 25: Phase 2 (SS2)\n%.2fpp PAYE Cut + Super Age %.0f', tax_chg_pp, sa_ss2);
     else
-        l10_label   = sprintf('10. [Isolated] PAYE Hike (+%.2f pp to %.1f%%) to Fund Super Age-%.0f Alone', abs(tax_chg_pp), req_tax_pct, sa_ss2);
-        box25_label = sprintf('Yr 25: Phase 2 (SS2)\n+%.2fpp PAYE Hike for Super Age %.0f', abs(tax_chg_pp), sa_ss2);
+        l10_label   = sprintf('10. [Isolated] PAYE Hike (%+.2f pp to %.1f%%) to Fund Super Age-%.0f Alone', abs(tax_chg_pp), req_tax_pct, sa_ss2);
+        box25_label = sprintf('Yr 25: Phase 2 (SS2)\n%+.2fpp PAYE Hike for Super Age %.0f', abs(tax_chg_pp), sa_ss2);
     end
     tier4_hdr = sprintf('Tier 4: Fiscal/Super-%.0f/TFR', sa_ss2);
 elseif sa_ss2 == 65
@@ -80,7 +80,7 @@ else
         l10_label   = sprintf('10. [Isolated] Reduced PAYE Cut (%.2f pp to %.1f%%) & Age-%.0f Super Squeeze', tax_chg_pp, req_tax_pct, sa_ss2);
         box25_label = sprintf('Yr 25: Phase 2 (SS2)\n%.2fpp PAYE Cut + Age %.0f Squeeze', tax_chg_pp, sa_ss2);
     else
-        l10_label   = sprintf('10. [Isolated] Age-%.0f Super Austerity & +%.2f pp PAYE Hike (to %.1f%%)', sa_ss2, tax_chg_pp, req_tax_pct);
+        l10_label   = sprintf('10. [Isolated] Age-%.0f Super Austerity & %+.2f pp PAYE Hike (to %.1f%%)', sa_ss2, tax_chg_pp, req_tax_pct);
         box25_label = sprintf('Yr 25: Phase 2 (SS2) Austerity\nAge %.0f Super + %.2fpp PAYE Hike', sa_ss2, tax_chg_pp);
     end
     tier4_hdr = sprintf('Tier 4: Age-%.0f Squeeze/TFR', sa_ss2);
@@ -276,9 +276,9 @@ end
 
 % Plot Total Integrated Trajectory vs. Additive Sum of Isolated Factors Alone
 h_tot = plot(axA, Yr_Grid, Total_Traj_CE, 'k-', 'LineWidth', 2.8, ...
-    'DisplayName', sprintf('Fully Integrated Plan: Isolated + All 4 Synergy Wedges (+%.2f%% in SS2)', SS2_Nat_Total));
+    'DisplayName', sprintf('Fully Integrated Plan: Isolated + All 4 Synergy Wedges (%+.2f%% in SS2)', SS2_Nat_Total));
 h_iso = plot(axA, Yr_Grid, Iso_Only_Traj_CE, '--', 'Color', [0.15 0.15 0.15], 'LineWidth', 2.2, ...
-    'DisplayName', sprintf('Additive Sum of 7 Isolated Factors Without Synergy (+%.2f%% in SS2)', sum(SS2_Nat_11(~Is_Wedge))));
+    'DisplayName', sprintf('Additive Sum of 7 Isolated Factors Without Synergy (%+.2f%% in SS2)', sum(SS2_Nat_11(~Is_Wedge))));
 
 xline(axA, 0,    'k--', 'LineWidth', 1.3, 'HandleVisibility', 'off');
 xline(axA, 18.8, ':',   'Color', [0.40 0.15 0.60], 'LineWidth', 1.6, 'HandleVisibility', 'off');
@@ -290,7 +290,7 @@ y_tot_52 = interp1(Yr_Grid, Total_Traj_CE, 52);
 syn_pct_share = 100 * sum(SS2_Nat_11(Is_Wedge)) / max(1e-6, sum(SS2_Nat_11));
 plot(axA, [52, 52], [y_iso_52, y_tot_52], 'r-', 'LineWidth', 2.2, 'HandleVisibility', 'off');
 text(axA, 50.5, 0.5*(y_iso_52 + y_tot_52), ...
-    sprintf('Total Supermodular\nSynergy Wedges:\n+%.2f%% CE\n(%.1f%% of Total!)', sum(SS2_Nat_11(Is_Wedge)), syn_pct_share), ...
+    sprintf('Total Supermodular\nSynergy Wedges:\n%+.2f%% CE\n(%.1f%% of Total!)', sum(SS2_Nat_11(Is_Wedge)), syn_pct_share), ...
     'HorizontalAlignment', 'right', 'FontSize', 8.2, 'FontWeight', 'bold', ...
     'Color', [0.65 0.05 0.10], 'BackgroundColor', [1.0 0.96 0.94], 'EdgeColor', [0.75 0.15 0.20], 'Margin', 4);
 
@@ -331,11 +331,11 @@ for c = 1:5
             y_mid = cum_bot + 0.5 * val_kc;
             pct_sh = round(100 * val_kc / max(1e-6, Reg_Totals_5(c)));
             if Is_Wedge(k)
-                lbl_str = sprintf('★+%.2f%%\n(%d%%)', val_kc, pct_sh);
+                lbl_str = sprintf('★%+.2f%%\n(%d%%)', val_kc, pct_sh);
                 txt_col = [0.10 0.05 0.00];
                 if k == 8 || k == 11, txt_col = [1 1 1]; end
             else
-                lbl_str = sprintf('+%.2f%%\n(%d%%)', val_kc, pct_sh);
+                lbl_str = sprintf('%+.2f%%\n(%d%%)', val_kc, pct_sh);
                 txt_col = [1 1 1];
                 if k == 5 || k == 6 || k == 10, txt_col = [0.12 0.12 0.12]; end
             end
@@ -347,7 +347,7 @@ for c = 1:5
     iso_sum_c = sum(SS2_11x5(~Is_Wedge, c));
     wed_sum_c = sum(SS2_11x5(Is_Wedge, c));
     text(axB, c, Reg_Totals_5(c) + 0.85, ...
-        sprintf('Total: +%.2f%%\n(Iso +%.1f%% | ★Syn +%.1f%%)', Reg_Totals_5(c), iso_sum_c, wed_sum_c), ...
+        sprintf('Total: %+.2f%%\n(Iso %+.1f%% | ★Syn %+.1f%%)', Reg_Totals_5(c), iso_sum_c, wed_sum_c), ...
         'HorizontalAlignment', 'center', 'FontSize', 7.5, 'FontWeight', 'bold', 'Color', [0.05 0.15 0.05]);
 end
 
@@ -356,10 +356,10 @@ c_nat_cum = cumsum(SS2_Nat_11);
 tier_tops = [c_nat_cum(3), c_nat_cum(7), c_nat_cum(8), c_nat_cum(11)];
 tier_bots = [0,            c_nat_cum(3), c_nat_cum(7), c_nat_cum(8)];
 tier_lbls = { ...
-    sprintf('Tier 1: Dual-Gate HC\n(+%.2f%%: +%.1f%% Iso, ★+%.1f%% Wedge)', tier_tops(1) - tier_bots(1), SS2_Nat_11(1)+SS2_Nat_11(2), SS2_Nat_11(3)), ...
-    sprintf('Tier 2: Spatial/LVR Stack\n(+%.2f%%: +%.1f%% Iso, ★+%.1f%% Wedge)', tier_tops(2) - tier_bots(2), sum(SS2_Nat_11(4:6)), SS2_Nat_11(7)), ...
-    sprintf('★ Wedge 3: Stack 1 \\times Stack 2\n(+%.2f%% Cross-Stack Synergy)', tier_tops(3) - tier_bots(3)), ...
-    sprintf('%s\n(+%.2f%%: +%.1f%% Iso, ★+%.1f%% Wedge)', tier4_hdr, tier_tops(4) - tier_bots(4), SS2_Nat_11(9)+SS2_Nat_11(10), SS2_Nat_11(11))};
+    sprintf('Tier 1: Dual-Gate HC\n(%+.2f%%: %+.1f%% Iso, ★%+.1f%% Wedge)', tier_tops(1) - tier_bots(1), SS2_Nat_11(1)+SS2_Nat_11(2), SS2_Nat_11(3)), ...
+    sprintf('Tier 2: Spatial/LVR Stack\n(%+.2f%%: %+.1f%% Iso, ★%+.1f%% Wedge)', tier_tops(2) - tier_bots(2), sum(SS2_Nat_11(4:6)), SS2_Nat_11(7)), ...
+    sprintf('★ Wedge 3: Stack 1 \\times Stack 2\n(%+.2f%% Cross-Stack Synergy)', tier_tops(3) - tier_bots(3)), ...
+    sprintf('%s\n(%+.2f%%: %+.1f%% Iso, ★%+.1f%% Wedge)', tier4_hdr, tier_tops(4) - tier_bots(4), SS2_Nat_11(9)+SS2_Nat_11(10), SS2_Nat_11(11))};
 for t_i = 1:4
     ym = 0.5 * (tier_bots(t_i) + tier_tops(t_i));
     plot(axB, [5.32, 5.38, 5.38, 5.32], [tier_bots(t_i)+0.15, tier_bots(t_i)+0.15, tier_tops(t_i)-0.15, tier_tops(t_i)-0.15], ...
@@ -368,11 +368,11 @@ for t_i = 1:4
 end
 
 x_lbls_5 = { ...
-    sprintf('Rural (+%.2f%%)', Reg_Totals_5(1)), ...
-    sprintf('Small (+%.2f%%)', Reg_Totals_5(2)), ...
-    sprintf('Large (+%.2f%%)', Reg_Totals_5(3)), ...
-    sprintf('Auckland (+%.2f%%)', Reg_Totals_5(4)), ...
-    sprintf('National (+%.2f%%)', Reg_Totals_5(5))};
+    sprintf('Rural (%+.2f%%)', Reg_Totals_5(1)), ...
+    sprintf('Small (%+.2f%%)', Reg_Totals_5(2)), ...
+    sprintf('Large (%+.2f%%)', Reg_Totals_5(3)), ...
+    sprintf('Auckland (%+.2f%%)', Reg_Totals_5(4)), ...
+    sprintf('National (%+.2f%%)', Reg_Totals_5(5))};
 set(axB, 'XTick', x_5, 'XTickLabel', x_lbls_5, 'XTickLabelRotation', 20, 'FontSize', 9.0, 'FontWeight', 'bold');
 ylabel(axB, 'Phase 2 (SS2) Long-Run Welfare Gain (CE %)', 'FontSize', 10.2, 'FontWeight', 'bold');
 title(axB, 'B. Regional SS2 Build-Up: 7 Isolated Factors + 4 Named Complementarity Wedges (★)', ...
@@ -453,7 +453,7 @@ for k = 1:4
 end
 
 plot(axM, Yr_Mir, Total_Mir_CE, '-o', 'Color', [0.00 0.32 0.12], 'MarkerFaceColor', [0.00 0.58 0.24], ...
-    'LineWidth', 2.6, 'MarkerSize', 4.8, 'DisplayName', sprintf('Total Integrated Welfare Trajectory (+%.2f%% SS1 \\rightarrow +%.2f%% SS2)', SS1_Nat_Total, SS2_Nat_Total));
+    'LineWidth', 2.6, 'MarkerSize', 4.8, 'DisplayName', sprintf('Total Integrated Welfare Trajectory (%+.2f%% SS1 \\rightarrow %+.2f%% SS2)', SS1_Nat_Total, SS2_Nat_Total));
 plot(axM, Yr_Mir, Net_Fiscal_Outlay_Mirror_CE, '--d', 'Color', [0.95 0.82 0.15], 'MarkerFaceColor', [0.95 0.82 0.15], ...
     'LineWidth', 2.4, 'MarkerSize', 4.8, 'DisplayName', 'Net Unrecovered Public Cost (Hits 0 at Yr 18.8 Cash Breakeven!)');
 
