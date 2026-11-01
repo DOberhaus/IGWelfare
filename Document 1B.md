@@ -560,26 +560,8 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 
 ![4-Region Fertility Bargaining, Whanau Networks & The NZ Super Retirement-Age U-Curve](Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png)
 
-### Table 4.7A: Six Benchmark Fertility, Differential Fertility, Struggling Launch Share, & PAYE Solvency Regimes (`Tables 7 & 8`)
-
-| Scenario Row (`T_Fert1` & `T_Fert2`) | TFR (`Rural` / `Small` / `Large` / `Auckland`) | Diff. Fertility Gap (`Large` / `Auckland`) | Struggling Cohort Share (`Rural` / `Small` / `Large` / `Auckland`) | Effective Fiscal Dep. Ratio (%) | Required Working-Age PAYE Tax $\tau_l$ (%) |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **1. Baseline Status Quo (Age 65)** | `1.90` / `1.85` / `1.60` / `1.47` *(Nat: 1.66)* | `0.28` / `0.27` | `19.8%` / `18.2%` / `15.6%` / `14.3%` *(Mean: 17.0%)* | `31.78%` | **`23.60%`** *(+1.60 pp drift vs 22.0%)* |
-| **2. Hyperbolic Delay ($\beta=0.72$, No ECE)** | `1.51` / `1.47` / `1.28` / `1.17` *(Nat: 1.32)* | `0.24` / `0.23` | `21.4%` / `20.0%` / `17.6%` / `16.4%` *(Mean: 18.8%)* | `41.44%` | **`25.99%`** *(+3.99 pp hike)* |
-| **3. Barnardos ECE Bargaining Relief** | `1.94` / `1.92` / `1.66` / `1.53` *(Nat: 1.72)* | `0.17` / `0.16` | `6.3%` / `3.1%` / `2.2%` / `2.2%` *(Mean: 3.4%)* | `30.52%` | **`21.37%`** *(-0.63 pp cut)* |
-| **4. Phase 1 ($SS1$) Full Package (Age 65)** | `2.06` / `2.03` / `1.78` / `1.64` *(Nat: 1.84)* | `0.18` / `0.17` | `5.8%` / `2.5%` / `2.2%` / `2.2%` *(Mean: 3.2%)* | `28.33%` | **`20.84%`** *(-1.16 pp surplus sinks debt!)* |
-| **5. Status Quo Austerity (Raise Super to 70)** | `1.86` / `1.82` / `1.58` / `1.45` *(Nat: 1.64)* | `0.30` / `0.28` | **`25.4%` / `23.2%` / `19.9%` / `18.0%`** *(Spikes!)* | `35.15%` | **`25.00%`** *(+3.00 pp hike; backfires!)* |
-| **6. ★ Phase 2 ($SS2$) Harvest (Lower Super to 64)** | **`2.09` / `2.06` / `1.81` / `1.67`** *(Nat: 1.87)* | **`0.16` / `0.16`** | **`3.0%` / `2.2%` / `2.2%` / `2.2%`** *(Mean: 2.4%)* | **`29.66%`** | **`18.85%` (-3.15 pp PAYE Cut!)** |
-
-*(For the complete year-by-year continuous Retirement-Age U-Curve from **Age 60 to Age 75** plotted in Panel D above, see **Section 3.4.7 / Table 8B**.)*
-
 ```text
 +-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
@@ -599,13 +581,21 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
+
+### Table 4.7A: Six Benchmark Fertility, Differential Fertility, Struggling Launch Share, & PAYE Solvency Regimes (`Tables 7 & 8`)
+
+| Scenario Row (`T_Fert1` & `T_Fert2`) | TFR (`Rural` / `Small` / `Large` / `Auckland`) | Diff. Fertility Gap (`Large` / `Auckland`) | Struggling Cohort Share (`Rural` / `Small` / `Large` / `Auckland`) | Effective Fiscal Dep. Ratio (%) | Required Working-Age PAYE Tax $\tau_l$ (%) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **1. Baseline Status Quo (Age 65)** | `1.90` / `1.85` / `1.60` / `1.47` *(Nat: 1.66)* | `0.28` / `0.27` | `19.8%` / `18.2%` / `15.6%` / `14.3%` *(Mean: 17.0%)* | `31.78%` | **`23.60%`** *(+1.60 pp drift vs 22.0%)* |
+| **2. Hyperbolic Delay ($\beta=0.72$, No ECE)** | `1.51` / `1.47` / `1.28` / `1.17` *(Nat: 1.32)* | `0.24` / `0.23` | `21.4%` / `20.0%` / `17.6%` / `16.4%` *(Mean: 18.8%)* | `41.44%` | **`25.99%`** *(+3.99 pp hike)* |
+| **3. Barnardos ECE Bargaining Relief** | `1.94` / `1.92` / `1.66` / `1.53` *(Nat: 1.72)* | `0.17` / `0.16` | `6.3%` / `3.1%` / `2.2%` / `2.2%` *(Mean: 3.4%)* | `30.52%` | **`21.37%`** *(-0.63 pp cut)* |
+| **4. Phase 1 ($SS1$) Full Package (Age 65)** | `2.06` / `2.03` / `1.78` / `1.64` *(Nat: 1.84)* | `0.18` / `0.17` | `5.8%` / `2.5%` / `2.2%` / `2.2%` *(Mean: 3.2%)* | `28.33%` | **`20.84%`** *(-1.16 pp surplus sinks debt!)* |
+| **5. Status Quo Austerity (Raise Super to 70)** | `1.86` / `1.82` / `1.58` / `1.45` *(Nat: 1.64)* | `0.30` / `0.28` | **`25.4%` / `23.2%` / `19.9%` / `18.0%`** *(Spikes!)* | `35.15%` | **`25.00%`** *(+3.00 pp hike; backfires!)* |
+| **6. ★ Phase 2 ($SS2$) Harvest (Lower Super to 64)** | **`2.09` / `2.06` / `1.81` / `1.67`** *(Nat: 1.87)* | **`0.16` / `0.16`** | **`3.0%` / `2.2%` / `2.2%` / `2.2%`** *(Mean: 2.4%)* | **`29.66%`** | **`18.85%` (-3.15 pp PAYE Cut!)** |
+
+*(For the complete year-by-year continuous Retirement-Age U-Curve from **Age 60 to Age 75** plotted in Panel D above, see **Section 3.4.7 / Table 8B**.)*
 
 ---
 
