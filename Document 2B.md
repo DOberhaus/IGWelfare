@@ -27,7 +27,7 @@ Whenever the structural law of motion $f(\cdot)$ is strongly concave, features k
 
 $$\mathbb{E}_{\mu_k}\left[f\left(a, h, \theta_c, z\right)\right] \ll f\left(\mathbb{E}[a],\, \mathbb{E}[h],\, \mathbb{E}[\theta_c],\, \mathbb{E}[z]\right)$$
 
-In a deterministic spreadsheet, an average child with average family income $\bar{z} = 1.0$, average public wraparound $`G_{\mathrm{ece},2} = 0.065`$, and average extended *whānau* support $`\bar{K}_{\mathrm{wh\bar{a}nau}} = 0.35`$ smoothly clears the Stage-2 adolescent skill gate with zero stunting. In the real world—and in our VFI distribution—stunting, state-care entry (Exit 1), acute hospitalisation (Exit 2), and trans-Tasman brain drain are driven by **interacting tail states** (such as a household in $z_1$ unemployment simultaneously hitting the $a = 0$ rental-stress boundary and the $i_c = 0$ child-investment corner).
+In a deterministic spreadsheet, an average child with average family income $\bar{z} = 1.0$, average public wraparound $`G_{\mathrm{ece},2} = 0.065`$, and average extended *whānau* support $`\bar{K}_{\mathrm{wh\bar{a}nau}} = 0.35`$ smoothly clears the Stage-2 adolescent skill gate with zero skill erosion. In the real world—and in our VFI distribution—early skill erosion into the struggling launch tier ($h_1\text{--}h_2$), state-care entry (Exit 1), acute hospitalisation (Exit 2), and trans-Tasman brain drain are driven by **interacting tail states** (such as a household in $z_1$ unemployment simultaneously hitting the $a = 0$ rental-stress boundary and the $i_c = 0$ child-investment corner).
 
 ---
 
@@ -126,7 +126,7 @@ $$
 1 - s_j^{\mathrm{eff}}\left(h, j\right) = \min\left(0.99,\; \left(1 - s_j\right)\exp\left(0.18\left(1.00 - h\right)\right)\right)
 $$
 
-When a policy simulation raises the NZ Superannuation eligibility age (`Jr`) above 65, manual, rural, and lower-skilled workers (`h_1 = 0.45` and `h_2 = 0.65`, where Māori and Pasifika workers are disproportionately represented due to historical childhood stunting) face a 22% to 35% higher physical disutility of working past age 65 (`psi_wear > 1`) comonotonically coupled with a higher late-life mortality hazard `1 - sj_eff(h, j)`. Consequently, evaluating the Bellman expectation over the stationary distribution `mu_k(a, h, theta_c, z, j)` endogenously reproduces both the **38% to 52% disability/hardship benefit substitution leak** and the **regressive life-expectancy penalty** that make raising the pension age fiscally and socially inferior to front-loaded human-capital investment.
+When a policy simulation raises the NZ Superannuation eligibility age (`Jr`) above 65, manual, rural, and lower-skilled workers (`h_1 = 0.45` and `h_2 = 0.65`, where Māori and Pasifika workers are disproportionately represented due to historical childhood material hardship) face a 22% to 35% higher physical disutility of working past age 65 (`psi_wear > 1`) comonotonically coupled with a higher late-life mortality hazard `1 - sj_eff(h, j)`. Consequently, evaluating the Bellman expectation over the stationary distribution `mu_k(a, h, theta_c, z, j)` endogenously reproduces both the **38% to 52% disability/hardship benefit substitution leak** and the **regressive life-expectancy penalty** that make raising the pension age fiscally and socially inferior to front-loaded human-capital investment.
 
 ---
 
