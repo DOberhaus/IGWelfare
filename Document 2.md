@@ -302,6 +302,14 @@ Because Guvenen et al. (2023) capital reallocation raises the after-tax return o
 | Present-Bias Fertility | $\beta_{\mathrm{hyp}}$ | `0.720` | Cao & Li (2022, *J. Pop. Econ.*, Prop. 5) / Stats NZ realized vs. intended TFR ($1.66$ vs. $2.15$) | `1.66` |
 | Female Childcare Share | $\theta_{\tau}$ | `0.680` | Doepke et al. (2022) / Stats NZ Time Use Survey maternal share of childcare | `68.0%` |
 
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
 ---
 
 ## 6.2 Two-Stage Sobol + Nelder-Mead SMM Optimization & Welfare-Based In-Kind Imputation (`Calibrate_NZ_Moments.m`)

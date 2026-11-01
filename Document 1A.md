@@ -490,14 +490,22 @@ A natural question arises from the Year 5 audit: if the reform already generates
   3. **Deepening *Whānau* Wraparound, Montessori / *Tuakana–Teina* Mentoring, and Infrastructure:** Using the 50% Public Reinvestment Pool to expand Iwi, *Whānau Ora*, Pasifika, Barnardos, and **Graeme Dingle Foundation (*Stars* / *Project K*)** partnerships alongside universal **Montessori / *Tuakana–Teina* adolescent mentoring** and a higher age-20 Youth Capital Grant, reducing the struggling launch share down to **1.5%** in the second generation.
   4. **Early Credibility Acceleration:** Because young workers (ages 20–35) see the audited Year 5 actuarial surplus and know the Phase 2 PAYE tax cut is actuarially locked in, skilled youth emigration to Australia drops early—well before Year 25 arrives.
 
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
+---
+
 ## 4. Synthesis of Parts IV and V: The Mirror Investment Ledger & 11-Layer Constructive Synergy Attribution (+24.24% CE)
 
 With both the lifecycle human-capital channels (*Part IV*) and the 2050 Debt-Sinking and Actuarial Continuation Valuation mechanisms (*Part V, Sections 1–3*) in place, we can answer the two bottom-line questions asked by Cabinet Ministers, Treasury Vote analysts, and family-trust advisors:
 
 1. **How do the annual public dollar outlays compare year-by-year against the annual household welfare gains—and when does the net unrecovered public cost hit zero?**
 2. **How much of the +24.24% CE national long-run welfare gain comes from individual policy levers in isolation versus the non-linear Dynamic Complementarity Wedges between them?**
-
----
 
 ### 4.1 The Mirror Investment Ledger: Annual Public Outlays (-Below 0) vs. Compounding 11-Layer Welfare Gains (+Above 0)
 

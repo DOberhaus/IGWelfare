@@ -247,43 +247,12 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 
 ```
 +-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
+
+---
+
 ## Table A.3: Quantitative Comparison of the Eight 60-Year Macro & Coalition Trajectories (`Table 21`)
 
 | **Trajectory & Policy Regime (`Table 21`)** | **Year 0 (2026) Debt / PAYE** | **Year 25 (2050) Debt / PAYE / CE%** | **Year 60 (2086) Net Debt (% GDP)** | **Year 60 Required PAYE $\tau_l$ (%)** | **Year 60 Household Welfare (CE%)** | **Net Swing vs. Sinking $SS0$ LTFM Floor** |
