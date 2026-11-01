@@ -514,14 +514,14 @@ The Mirror Investment chart below (`Fig_7Segment_Welfare_And_MirrorInvestments_D
 
 ![Mirror-Image 11-Layer Welfare Gains vs Annual Public Investments](Output_NZ_4Region_Intergen/Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png)
 
-* **Below the Zero Line — The Four Annual Public Investment Pillars (`-3.30% CE` = `-NZD 7.86B/yr` in** $SS1$ **; `-4.24% CE` = `-NZD 10.10B/yr` in** $SS2$ **):**
+* **Below the Zero Line — The Four Annual Public Investment Pillars (`-3.30% CE` = `-NZD 7.85B/yr` in** $SS1$ **; `-4.24% CE` = `-NZD 10.09B/yr` in** $SS2$ **):**
   1. *-Inv 1: Universal First-2,000-Days Wraparound* ($\Delta G_{\mathrm{ece},1}$): **-NZD 3.45B/yr** in $SS1$ (`-1.45% CE`), deepening to **-NZD 4.09B/yr** in $SS2$ (`-1.72% CE`).
   2. *-Inv 2: Tuakana–Teina / Graeme Dingle / Montessori Adolescent Mentoring* ($\Delta G_{\mathrm{ece},2}$): **-NZD 1.24B/yr** in $SS1$ (`-0.52% CE`), expanding to **-NZD 1.86B/yr** in $SS2$ (`-0.78% CE`).
   3. *-Inv 3: Universal Age-20 Youth Capital Grant* ($\Delta E$): **-NZD 1.62B/yr** in $SS1$ (`-0.68% CE`), rising to **-NZD 2.19B/yr** in $SS2$ (`-0.92% CE`).
   4. *-Inv 4: Income* $\times$ *Geography Household Transfers* ($\Delta T_k$): **-NZD 1.55B/yr** in $SS1$ (`-0.65% CE`), rising to **-NZD 1.95B/yr** in $SS2$ (`-0.82% CE`).
 * **The Yellow Dashed Trajectory — Net Unrecovered Public Cost Hits Zero at Year 18.8 (Cash Breakeven):**
   As early cohorts exit childhood hardship and acute remediation outlays across Oranga Tamariki care, hospitals, and youth/adult justice (Exits 1, 2, 4) fall by over 75%, direct fiscal savings and expanded tax receipts steadily offset the gross investment bars—driving the **Net Unrecovered Public Cost (yellow diamond trajectory) to strictly zero at Year 18.8**, even before counting the Year-5 ACC Actuarial Continuation surplus!
-* **Above the Zero Line — A 5.57x Steady-State Welfare-to-Outlay Payoff:**
+* **Above the Zero Line — A 5.68x–5.72x Steady-State Welfare-to-Outlay Payoff:**
   Against the gross steady-state public investment of **NZD 10.09B/yr** (`-4.24% CE`), the coupled reform generates **+NZD 33.82B/yr (+14.21% CE) by the end of $SS1$** and **+NZD 57.28B-57.70B/yr (+24.07%-+24.24% CE) in $SS2$**—a **5.68x-5.72x annual welfare-to-outlay payoff**.
 
 ---
