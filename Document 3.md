@@ -28,9 +28,7 @@ Just as our spatial migration model captures how households naturally prefer to 
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
