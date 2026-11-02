@@ -47,9 +47,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
 |                                                                                   |
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 |                                                                                   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
