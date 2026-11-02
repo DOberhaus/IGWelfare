@@ -154,33 +154,6 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 * **Document 1A Claim (Part II Synthesis):** New Zealand's slide on Transparency International's Corruption Perceptions Index (CPI) from **#1 globally** (peaking at **96/100** in 2004 and still **88/100** as #1-equal in 2021) down to a 30-year low of **81/100** (**#4 equal** in the 2025/2026 index, behind **#1 Denmark at 89, #2 Finland at 88, and #3 Singapore at 84**) reflects the institutional and civic cost of child material deprivation, high replacement-migration turnover (`Churn_Rate`), and opaque property-wealth shelters.
 - **Code & Literature Mapping:** In `WelfareDecomposition_4Region.m`, `TransPath_4Region_Master.m`, and `Plot_Counterfactuals_And_MirrorInvestments.m`, the macro Social Cohesion Index $S_t$ enters relational utility $u_{\text{rel}}(S_t, \text{RetainedYouth}_t)$ as a decreasing function of the struggling cohort share ($h_1\text{–}h_2$) and skilled demographic churn (`Churn_Rate`).
 
-
-```text
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
 ---
 
 ## 3. Part III Cross-Reference: Population & Fiscal Sankey Ledgers and Interactive Web Explorer
@@ -190,7 +163,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 
 <img src="./Output_NZ_4Region_Intergen/Fig_ChildFates_5Stage_2Panel_National_Dunedin_22.png" alt="National 5-Stage Population Cohort Fates Sankey" width="100%" style="display: block; width: 100%; margin: 1.0rem auto; break-inside: avoid; page-break-inside: avoid;" />
 
-Each node's ribbon width in the Population Fates Sankey represents the exact percentage of the birth cohort (`Pop_17Nodes_Pct`) passing through that developmental state:
+Each node's ribbon width represents the exact percentage of the birth cohort (`Pop_17Nodes_Pct`) passing through that developmental state:
 
 | Stage (Child $`J`$ Axis) | Node ID & Canonical Label | National `SS0` (%) | National `SS1` (%) | National `SS2` (%) | Auckland `SS0` (%) | Auckland `SS1` (%) | Structural Definition in `Plot_ChildFates_SSankey.m` |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
