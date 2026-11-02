@@ -450,6 +450,14 @@ Evaluating the unified government budget identity and household welfare decompos
 | **`2_Young_Leveraged_Owners`** | +4.2% | +5.1% | +6.0% | +6.9% | $`Q_{\mathrm{Small}}: 1.40 \to 1.36 \to 1.34`$; Young ownership: `49.0%` $\rightarrow$ `57.2%` |
 | **`3_Older_Retirees_Landlords_65plus`** | -1.1% | -1.8% | -2.5% | -3.4% | $`Q_{\mathrm{Large}}: 2.05 \to 1.95 \to 1.90`$; $`Q_{\mathrm{Akl}}: 3.10 \to 2.87 \to 2.77`$ (Young own: `28.0%` $\rightarrow$ `41.2%`) |
 
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
 ---
 
 ### 4.4 Tables 4, 5, & 6 (and 12A–12C): Lee & Seshadri (2019) Multi-Stage Counterfactuals
@@ -527,26 +535,22 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 | **Year 36 ($`t = 12`$)** | 14.58% | 22.74% | 26.46% | 36.22% | 18.61% | 15.21% (`5.58%` net) | 8.72% | 119.5 |
 | **Year 57 ($`t = 19`$)** | **14.39%** | **22.56%** | **26.54%** | **36.51%** | **18.26%** | **14.92% (`5.47%` net)** | **8.56%** (`7.60%` `SS2`) | **126.0 (`SS2`)** |
 
+
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
 ---
+
 ## 4.7 Tables 7, 8, & 8B: Cooperative Childcare Bargaining, Extended *Whānau* Scaffolding, & The NZ Superannuation Retirement-Age U-Curve (Ages 60 to 75)
 
 *Source Files:* [`Table7_4Region_Fertility_Bargaining_TFR.csv`](Output_NZ_4Region_Intergen/Table7_4Region_Fertility_Bargaining_TFR.csv), [`Table8_4Region_Fertility_Struggling_NZSuperTax.csv`](Output_NZ_4Region_Intergen/Table8_4Region_Fertility_Struggling_NZSuperTax.csv), and `Table8B_SuperAge_UCurve_60to75.csv` *(Script: [`FertilityBargaining_Module.m`](FertilityBargaining_Module.m); Figure: [`FigFert_4Region_Bargaining_Solvency.png`](Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png))*
 
 ![4-Region Fertility Bargaining, Whanau Networks & The NZ Super Retirement-Age U-Curve](Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png)
-
-```text
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
 
 ---
 
