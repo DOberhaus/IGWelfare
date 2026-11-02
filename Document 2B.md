@@ -64,7 +64,7 @@ Evaluating the model simultaneously through a **Long-Horizon Sovereign Turnaroun
 
 ### 4.1 State-Contingent Extended Whānau Care ($`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{net}}`$): Comonotonic Sandwich-Generation Reversal & Trust-Gated Mentoring
 
-In a scalar parameterization, extended *whānau* support (grandmothers, *kuia*, aunties, and *kaumātua* aged 55–72) is represented as a static regional constant $`K_{\mathrm{whanau,base},k} \in [0.42, 0.38, 0.32, 0.28]`$ (Rural, Small, Large, Auckland). Under that deterministic scalar view, raising the New Zealand Superannuation eligibility age from 65 to 67 or 70 simply trims the regional constant by 36.2% as elders are forced back into market labor.
+In a scalar parameterization, extended *whānau* support (grandmothers, *kuia*, aunties, and *kaumātua* aged 55–72) is represented as a static regional constant $`K_{\mathrm{whanau,base},k} \in [0.42, 0.38, 0.32, 0.28]`$ (Rural, Small, Large, Auckland). Under that deterministic scalar view, raising the New Zealand Superannuation eligibility age from 65 to 67 or 70 simply trims the regional constant by 36.2% to $[0.27, 0.24, 0.20, 0.18]$ as elders are forced back into market labor.
 
 Under our **state-contingent parameterization** inside `HumanCapital_Lifecycle_aprimeFn.m` and `ReturnFn_SpatialHH.m`, net extended *whānau* support $`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{net}}(i_c, z, a, J_r, k)`$ is conditioned directly on the household's endogenous investment and balance-sheet sub-manifold:
 
