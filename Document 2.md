@@ -87,15 +87,9 @@ $$e_{\mathrm{tot}} = \frac{y_{\mathrm{disp}} - \bar{e}_k - \mathbb{I}_{\left\lbr
 
 Following Kiyotaki, Michaelides, and Nikolov (2024), households with net worth below the regional down-payment threshold ($a < \xi_k Q_k$, where $\xi_k = 0.20$) are **Renters** facing rental user cost $r_{h,k}^{\mathrm{rent}} = \left(1 + \mu_{\mathrm{maint}} - G_k / R\right) Q_k$, while households with $a \ge \xi_k Q_k$ are **Homeowners** facing user cost $r_{h,k}^{\mathrm{own}} = \left(1 + \mu_{\mathrm{maint}} - G_k / R - \psi_{\mathrm{own}}\right) Q_k$. Optimal non-durable consumption $c_{nd} = \phi_{nd} e_{\mathrm{tot}}$ and housing services $c_H = \left(1 - \phi_{nd}\right) e_{\mathrm{tot}} / r_{h,k}$ combine in the Cobb-Douglas bundle $c_{\mathrm{comp}} = c_{nd}^{\phi_{nd}} c_H^{1 - \phi_{nd}}$.
 
-```
-+-----------------------------------------------------------------------------------+
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-+-----------------------------------------------------------------------------------+
-```
-
 ---
 
-### 3.3 Adolescent Family Unemployment Stress, Unbanked Skill Fade-Out, and Bidirectional Montessori / Tuakana–Teina Mentoring ($M_{\mathrm{mentor}}$)
+### 3.3 Adolescent Family Unemployment Stress, Unbanked Skill Fade-Out, and Bidirectional Montessori / Tuakana–Teina Mentoring ($M_{\mathrm{mentor}}$), and the importance of Whānau
 
 In the two-stage Cunha–Heckman–Schennach skill technology (`HumanCapital_Lifecycle_aprimeFn.m`), childhood skill $\theta_c$ evolves across Stage 1 (${\mathcal{J}_{c,1}}$, ages 0–5, where $\varphi_1 = 0.35 > 0$) and Stage 2 (${\mathcal{J}_{c,2}}$, ages 6–17, where $\varphi_2 = -0.95 < 0$).
 
@@ -127,13 +121,21 @@ $$
 \mu_{\ln h}\left(h_p, i_c, z_p, a_p; k\right) = \rho_{hc}\ln\left(h_p\right) + \gamma_{ic}\ln\left(\frac{i_c + G_{\mathrm{ECE},1}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}}{\bar{i}_c + G_{\mathrm{ECE},\mathrm{base}} + \bar{g}_{\mathrm{ECE}}}\right) - \psi_{\mathrm{crowd}}\ln\left(\max\left(1, Q_k\right)\right)\mathbb{I}\left(a_p < 0.08 Q_k\right) + \Psi_{J=5}\left(z_p, a_p, M_{\mathrm{mentor}}\right) + \alpha_{\mathrm{grid}}
 $$
 
-3. **De Nardi (2004) Luxury Warm-Glow Bequest Motive:**
+3. **The Endogenous Pension–Whānau Coupling Operator:** ($K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)$)
+
+To make New Zealand Superannuation parameters ($A_{\mathrm{super}}, p_{\mathrm{super}}$) and regional housing user costs ($Q_k$) endogenously legible to the younger parenting generation without expanding the 4D GPU state vector $(a, h, z, j)$, `HumanCapital_Lifecycle_aprimeFn.m`, `ReturnFn_SpatialHH_Compact4D.m`, and `Build_IntergenTransitionMatrix.m` evaluate effective regional *whānau* capacity $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k) = K_{\mathrm{wh\bar{a}nau},0}(k) \cdot \Phi_{\mathrm{super}}(k)$ from baseline proximity $K_{\mathrm{wh\bar{a}nau},0} = [0.65, 0.50, 0.30, 0.20]$ (`[Rural, Small, Large, Auckland]`) and the *Elder Time & Housing Stability Factor* $\Phi_{\mathrm{super}}(k) \in [0.35, 1.15]$:
+
+$$\Phi_{\mathrm{super}}(k) = \underbrace{\Phi_{\mathrm{time}}(A_{\mathrm{super}})}_{\text{Kuia / Aunty time availability}} \times \underbrace{\min\!\left(1.15,\; \max\!\left(0.50,\; \frac{p_{\mathrm{super}}}{0.18} \cdot \left(\frac{Q_{k,0}}{Q_k}\right)^{0.35}\right)\right)}_{\text{Ability of aunties / kaumātua to stay in their own homes}}$$
+
+where $\Phi_{\mathrm{time}}(A_{\mathrm{super}}) = \exp\!\big(-\eta_{\mathrm{elder}}(A_{\mathrm{super}} - 65)\big)$ for $A_{\mathrm{super}} \ge 65$ ($\eta_{\mathrm{elder}} = \lambda_{Jr} = 0.09\text{ yr}^{-1}$, yielding a $-36.2\%$ loss at Age 70: $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}} \to [0.41, 0.32, 0.19, 0.13]$) and $\Phi_{\mathrm{time}}(A_{\mathrm{super}}) = 1 + 0.16\tanh\!\big((65 - A_{\mathrm{super}})/1.80\big)$ for $A_{\mathrm{super}} < 65$ ($+8.1\%$ boost at Age 64). In turn, $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)$ feeds directly into (i) Stage-1 informal kin care $g_{\mathrm{kin},1}$ and pooled *whānau* human capital $\bar{h}_p$, (ii) Stage-2 fade-out retention $\delta_{\theta,\mathrm{fade}}$ (`fade_residual`) and adolescent crisis buffering $\Psi_{J=5}$ (`psi_unemp_step`), and (iii) domestic youth retention (`whanau_stay_pull`) in $\Pi_{\mathrm{mig}}$.
+
+4. **De Nardi (2004) Luxury Warm-Glow Bequest Motive:**
 
 $$
 u_{\mathrm{beq}}\left(a^{\prime}; \tau_b\right) = b_1 \frac{\left(1 + \frac{\left(1 - \tau_b\right)a^{\prime}}{b_2}\right)^{1 - \eta_c} - 1}{1 - \eta_c}
 $$
 
-4. **Relational Altruism, Social Cohesion Utility ($u_{\mathrm{rel}}$), & Transparency International CPI Calibration:** Captures the utility gain experienced by citizens and aging parents when the struggling launch share (`Frac_struggling`) is compressed and domestic social cohesion ($S_t$, `S_cohesion`) rises as educated youth remain in New Zealand:
+5. **Relational Altruism, Social Cohesion Utility ($u_{\mathrm{rel}}$), & Transparency International CPI Calibration:** Captures the utility gain experienced by citizens and aging parents when the struggling launch share (`Frac_struggling`) is compressed and domestic social cohesion ($S_t$, `S_cohesion`) rises as educated youth remain in New Zealand:
 
 $$
 u_{\mathrm{rel}}\left(\mathrm{Frac}_{\mathrm{struggling}}, S_t\right) = \chi_{\mathrm{rel}}\left[\left(0.285 - \mathrm{Frac}_{\mathrm{struggling}}\right) + 0.015\left(S_t - 100\right)\right]
