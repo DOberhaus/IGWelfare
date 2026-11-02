@@ -79,6 +79,8 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 
 ---
 
+---
+
 5. **Audience 5 — Creatives, Storytellers, & Artists: Building the Future as a Creative Act (Doc 1A Part I.5):**
    * *Parametric & Economic Channels Empowering the Creative Sector:*
      * **1. Narrative & Civic Credibility ($`\lambda_{\mathrm{cred}}(t)`$ in `TransPath_4Region_Master.m`):** Translating the 17 nodes of the Population Sankey and 26 nodes of the Fiscal Sankey into living *pūrākau* accelerates public and youth belief convergence ($`\lambda_{\mathrm{cred}}(t) \to 1`$), pulling forward brain-drain reversal (`Regime B/C`).
