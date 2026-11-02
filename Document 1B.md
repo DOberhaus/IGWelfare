@@ -547,9 +547,7 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
