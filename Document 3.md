@@ -164,12 +164,6 @@ Stepping back from coalition mechanics, what does this coupled transition mean i
 * **For Young Adults and Working Families (Ages 20–63):** At Age 20, every young Kiwi receives a universal Youth Capital Grant that—combined with a 7.5% to 10.5% cooling in metropolitan house price-to-income ratios and +6.8% to +9.6% higher real wages from expanding local firms—makes buying a first home, starting a venture, or building a creative career achievable in New Zealand rather than requiring a one-way ticket to Australia. Once the first generation of supported children enters the workforce and slashes reactive remediation costs, working families receive a permanent **-3.12 to -3.43 percentage-point PAYE income tax cut**.
 * **For Older Workers, Grandparents (*Kuia & Koroua*), and Retirees (Ages 64+):** Instead of facing austerity proposals to push the retirement age out to 67 or 70—which disproportionately penalize manual, rural, Māori, and Pasifika workers whose physical health depreciates earlier—the productivity and fiscal dividends of Phase 2 allow New Zealand to **lower the universal Superannuation age to 64**. That extra year of healthy retirement dignifies decades of hard work while giving grandparents the time and financial security to help anchor the next generation of *mokopuna*.
 
-```
-+-----------------------------------------------------------------------------------+
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-+-----------------------------------------------------------------------------------+
-```
-
 ---
 
 ## Part IV: Perishability, Two-Term "Stop-Go" Pendulums, and Why "Thick" Operators Beat "Thin" Spreadsheets
@@ -205,6 +199,16 @@ In reality—and in our state-contingent VFI engine (`Trajectory 3b`)—human ca
 
 *The Core Insight of Table 4.1:* While a 1-term (3-year On / 3-year Off) cycle already loses **72.9%** of the prize (`+6.58% CE`), a two-term (6-year On / 6-year Off) political cycle is even more destructive—eroding **84.2% of the entire generational prize (`+24.24% CE` drops to `+3.84% CE`)** because a six-year interruption inflicts two consecutive 3-year periods of adolescent skill fade-out ($`39.2\%`$) and prevents the ledger from ever crossing Year 18.8 Cash Breakeven. Human capability is highly perishable while in the 0–19 developmental pipeline, yet becomes permanently durable once banked at Age 20.
 
+```
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
 ---
 
 ## Part V: The Grand Coalition Compact — Phasing $SS1$ Foundation & Incubation Before $SS2$ Debt & Tax-Relief Harvest
@@ -237,6 +241,16 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 * **Constructive 11-Layer Synergy & Mirror Investment Engine:** [`Plot_Counterfactuals_And_MirrorInvestments.m`](Plot_Counterfactuals_And_MirrorInvestments.m) $\to$ `Table 19`, `Table 20`, [`Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png), and [`Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png).
 * **3D LTFM Sinkhole, 3%-GDP Defense Shock, Two-Term Pendulum, & $4 \times 4$ Coalition Matrix Engine:** [`Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m`](Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m) $\to$ `Table 21`, `Table 22`, [`Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png), and [`Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png).
 * **Parametric NZ Super Age U-Curve & Kuia/Whānau Solvency Engine:** [`FertilityBargaining_Module.m`](FertilityBargaining_Module.m) and [`WelfareDecomposition_4Region.m`](WelfareDecomposition_4Region.m) $\to$ `Table 7`, `Table 8`, `Table 8B`, and [`FigFert_4Region_Bargaining_Solvency.png`](Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png).
+
+```
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
 
 ---
 
