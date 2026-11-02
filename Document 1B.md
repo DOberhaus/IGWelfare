@@ -113,13 +113,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
     * ***Manaakitanga*, *Whanaungatanga*, & *Rangatiratanga*:** Uplifting the *mana* of peers through care (*manaakitanga*), school kinship belonging (*whanaungatanga*), and youth creative agency (*rangatiratanga*).
   * *Empirical Breakdown of the 17.3% Baseline (`SS0`) Scaling to 57.3% (`SS1`) and 65.0% (`SS2`):*
 
-```text
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
+---
 
 ---
 
