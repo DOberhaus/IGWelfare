@@ -77,8 +77,6 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
    * *Empirical & Theoretical Convergence:* Over the past five decades, developmental scientists and quantitative macroeconomists have built all of the required empirical and mathematical machinery in separate literatures: New Zealand's 50-year *Dunedin Study* and *Growing Up in New Zealand* longitudinal cohorts, Cunha and Heckman's multi-stage skill operators, Guvenen et al.'s heterogeneous-agent wealth-tax proofs, spatial housing and migration sorting operators, and eleven international natural experiments. Assembling and calibrating these established tools onto a single GPU ledger allows New Zealand to replace reactive cash-flow austerity with a verified, self-financing generational transition inside a single 3-to-5-year parliamentary cycle.
    * *Four Methodological Pillars in VFI Toolkit:* (I) Mixed Finite/Infinite-Horizon 8-PType GPU synthesis ($J = 27$ three-year periods or $J = 16$ five-year periods for households alongside $N_j = \infty$ collateral-constrained firms); (II) Multi-stage CES + *Tuakana–Teina* + Ben-Porath + Stone-Geary laws of motion; (III) Dimension-free spatial housing bubbles (Hirano & Toda, 2025; Kiyotaki et al., 2024) + $4 \times 5$ Gumbel migration sorting (Labrousse & Perdereau, 2025); and (IV) Tractable dynastic transition closure $`\mathbf{T}_{\mathrm{IG}}: \mathbf{Q}_h \times \mathbf{Q}_a \times \Pi_{\mathrm{mig}}`$ paired with ACC-style actuarial valuation $`\mathcal{V}_{k,t_0}^{(L)}`$.
 
-                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     
-
 ---
 
 5. **Audience 5 — Creatives, Storytellers, & Artists: Building the Future as a Creative Act (Doc 1A Part I.5):**
