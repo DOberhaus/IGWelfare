@@ -23,6 +23,23 @@ That single-lane habit rests on three hidden assumptions. Our quantitative overl
 
 Just as our spatial migration model captures how households naturally prefer to stay in their home region (`Rural <-> Small <-> Large <-> Auckland`) unless cross-regional pressures force them to move, this document maps a **2D Complementarity & Dependency Matrix** across New Zealand's four primary policy constituencies. We show why each constituency stalls when fighting alone against the Long-Term Fiscal Model (LTFM) sinkhole, why trying to "solve debt first" via Phase-1 austerity backfires on the Crown's own books, and how uniting the four lanes gets Aotearoa up on hydrofoils—building an economy strong enough to retire sovereign debt, cut working-age PAYE taxes, and lower the New Zealand Superannuation eligibility age to **64** in Phase 2 ($SS2$).
 
+
+```
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
 ---
 
 ## Part I: The 2D Coalition Matrix — Why Every Siloed Constituency Needs Its Neighbors
@@ -254,13 +271,6 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 | **Tier 4 Subtotal (The Fiscal, Super-64 & Demographic Harvest Stack)** | **Coalition 4 + Full Loop (Iso +2.02% + Wedge +1.97%)** | **+2.79%** | **+3.68%** | **+3.99%** | **+4.77%** | **+3.99%** | **16.5%** |
 | **GRAND TOTAL (`SS2_3` Fully Integrated Policy)** | **7 Isolated (+12.79%, 52.7%) + 4 Wedges (+11.46%, 47.3%)** | **+18.21%** | **+21.75%** | **+24.41%** | **+28.70%** | **+24.24%** | **100.0%** |
 
-```
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
 ## Table A.2: The $4 \times 4$ Coalition Dependency Matrix (`Table 22`)
 
 | **Policy Constituency (Row $i$)** | **1. Barnardos & Youth** *(ECE + Tuakana)* | **2. WellBeing Alliance** *(Housing + Grant + Whānau)* | **3. GrowthNZ & Venture** *(Firm Capital + Jobs)* | **4. Fiscal Stewards & MBAs** *(Debt-Sinking + PAYE Cut)* | **Total Value Connected to Constituency $i$** *(Own Base + 3 Neighbor Wedges)* |
