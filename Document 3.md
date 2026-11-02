@@ -35,8 +35,6 @@ Just as our spatial migration model captures how households naturally prefer to 
 +-----------------------------------------------------------------------------------+
 ```
 
----
-
 ## Part I: The 2D Coalition Matrix — Why Every Siloed Constituency Needs Its Neighbors
 
 ### 1.1 Four Policy Constituencies, One Coupled Lifecycle
