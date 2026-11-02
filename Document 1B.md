@@ -453,7 +453,13 @@ Evaluating the unified government budget identity and household welfare decompos
 ```text
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
@@ -539,7 +545,13 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 ```text
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
