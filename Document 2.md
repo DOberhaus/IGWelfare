@@ -444,7 +444,9 @@ Because the vertical thickness at every horizontal station $\tau \in \left\lbrac
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
 |                                                                                   |
+|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
 |                                                                                   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
