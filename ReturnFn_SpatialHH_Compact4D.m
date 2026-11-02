@@ -73,7 +73,7 @@ else
     elder_time_mult = 1.0 + 0.16 * tanh(yrs_below_65 / 1.8);
 end
 
-K_whanau_net  = (K_whanau * elder_time_mult) - 0.035 * yrs_above_65 * (0.4 + is_distress_z);
+K_whanau_net = K_whanau - 0.035 * yrs_above_65 * (0.4 + is_distress_z);
 sandwich_drag = max(0.0, -K_whanau_net) * 0.035 + 0.0012 * (yrs_above_65 ^ 1.20) * double(~is_post_65);
 
 M_mentor      = min(1.0, max(0.0, 0.173 + 12.0 * (G_ece - 0.045)));
