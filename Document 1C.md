@@ -4,6 +4,9 @@
 
 *Author:* Michael Tiemann (mdtiemann@gmail.com)  
 *Date:* November 2026 | *Code & Replication Repository:* [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)  
+
+**Disclaimer:** No people nor organizations mentioned herein have endorsed this work unless stated otherwise.  This is the work of the author, and all errors and omissions are his alone.
+
 *A shared foundation for Philanthropists, Iwi & Community Leaders, Venture & Growth Investors, Policy-Makers, Economists, Creatives & Storytellers, and Everyday Whānau*
 
 *"We have found our new gold. We are standing in the river. We need only lift it up to become rich beyond imagination."*

@@ -5,6 +5,8 @@
 *Date:* November 2026 | *Code & Replication Repository:* [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)  
 *Companion to [Document 1A](Document%201A.md) (Strategic Monograph), [Document 1B](Document%201B.md) (Strategy & Policy Answer Key), [Document 1C](Document%201C.md) (Executive Brief), [Document 2](Document%202.md) (Technical Specification Guide), and [Document 2B](Document%202B.md) ("Thick" vs. "Thin" Numbers Tutorial)*
 
+**Disclaimer:** No people nor organizations mentioned herein have endorsed this work unless stated otherwise.  This is the work of the author, and all errors and omissions are his alone.
+
 ---
 
 ## Executive Overview: Why Single-Lane Advocacy Loses Against a Rising Fiscal Tide
