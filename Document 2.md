@@ -307,14 +307,6 @@ Because Guvenen et al. (2023) capital reallocation raises the after-tax return o
 | Present-Bias Fertility | $\beta_{\mathrm{hyp}}$ | `0.720` | Cao & Li (2022, *J. Pop. Econ.*, Prop. 5) / Stats NZ realized vs. intended TFR ($1.66$ vs. $2.15$) | `1.66` |
 | Female Childcare Share | $\theta_{\tau}$ | `0.680` | Doepke et al. (2022) / Stats NZ Time Use Survey maternal share of childcare | `68.0%` |
 
-```text
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
 ---
 
 ## 6.2 Two-Stage Sobol + Nelder-Mead SMM Optimization & Welfare-Based In-Kind Imputation (`Calibrate_NZ_Moments.m`)
@@ -447,6 +439,14 @@ When MATLAB's `SSankey.m` renders gradient ribbons on an axes where `set(ax, 'YD
 $$y_{\mathrm{top}}\left(\tau\right) = y_{L,\mathrm{top}} + s\left(\tau\right)\left(y_{R,\mathrm{top}} - y_{L,\mathrm{top}}\right), \qquad y_{\mathrm{bot}}\left(\tau\right) = y_{L,\mathrm{bot}} + s\left(\tau\right)\left(y_{R,\mathrm{bot}} - y_{L,\mathrm{bot}}\right)$$
 
 Because the vertical thickness at every horizontal station $\tau \in \left\lbrack 0, 1 \right\rbrack$ satisfies $y_{\mathrm{top}}\left(\tau\right) - y_{\mathrm{bot}}\left(\tau\right) = \left(1 - s\left(\tau\right)\right) H_L + s\left(\tau\right) H_R > 0$, every web SVG `<path>` is strictly non-self-intersecting, smooth, and 10x smaller in file size, while supporting interactive click inspection, collision-avoiding narrative callout placement, and 2-level (`Gate -> Block`) keyboard arrow-key traversal.
+
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
 
 ---
 
