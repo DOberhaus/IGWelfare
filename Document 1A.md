@@ -394,9 +394,7 @@ Retaining 3,550 young adults every year is not merely a labor-supply statistic. 
 ```text
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
