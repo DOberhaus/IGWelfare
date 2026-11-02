@@ -390,6 +390,17 @@ Retaining 3,550 young adults every year is not merely a labor-supply statistic. 
 
 <br clear="all" />
 
+
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
 ## 5. Cooperative Childcare Bargaining, Extended *Whānau* Scaffolding, & The NZ Superannuation U-Curve (Ages 60 to 75)
 
 Conventional fiscal commentary treats New Zealand Superannuation as an isolated accounting ledger: if an aging population increases pension expenditure, the standard prescription is to raise the age of eligibility from 65 to 67 or 70. That static accounting view ignores how real New Zealand families—and extended *whānau*—function across three generations at once.
@@ -433,6 +444,16 @@ Sweeping the statutory eligibility age reveals a striking **U-curve in required 
 | **7. ★ Phase 2 ($SS2$) Welfare Peak: Lower to Age 64** | **Lower to Age 64** | **1 yr early retirement + +8.1% *Kuia / Whānau* time dividend** | **3.0%** $\to$ **2.2% (2.4% avg)** | **29.68%** | **18.85% (-3.15 pp Cut)** | **+24.24% (PEAK)** |
 
 *Cross-Generational Dynamic Complementarity & Coalition Synthesis ([Document 3, Section 2.3](Document%203.md) & [Document 2, Section 3.3](Document%202.md)):* In [Document 2 (Section 3.3)](Document%202.md) and [Document 2B (Section 4.1)](Document%202B.md), we formalize this three-generation interaction via the *Endogenous Pension–Whānau Coupling Operator* $`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k) = K_{\mathrm{wh\bar{a}nau},0}(k) \cdot \Phi_{\mathrm{super}}(k)`$, which multiplies *kuia* and aunty time availability $\Phi_{\mathrm{time}}(A_{\mathrm{super}})$ by the elder housing-stability factor $`\min(1.15, \max(0.50, (p_{\mathrm{super}}/0.18)(Q_{k,0}/Q_k)^{0.35}))`$. As we demonstrate in the four-constituency coalition analysis of [Document 3 (Section 2.3 and Part III)](Document%203.md), this coupling proves why early childhood capability (*The Barnardos, Iwi & Youth Development Lane*), metropolitan housing affordability (*The WellBeing & Housing Lane*), enterprise productivity (*The GrowthNZ & Venture Lane*), and pension solvency (*The Fiscal Stewardship Lane*) are inseparable: cooling urban housing costs and protecting universal Super at Age 64–65 keep *kuia*, *koroua*, and aunties anchored in their own homes and available to scaffold *tamariki* and *rangatahi*—unlocking the cross-lane dynamic complementarity wedges that deliver **47.3% (+11.46% CE)** of the nation's **+24.24% CE** welfare gain.
+
+```text
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
 
 ---
 
