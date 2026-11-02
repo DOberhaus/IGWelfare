@@ -64,7 +64,7 @@ Evaluating the model simultaneously through a **Long-Horizon Sovereign Turnaroun
 
 ### 4.1 State-Contingent Extended Whānau Care ($`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{net}}`$): Comonotonic Sandwich-Generation Reversal & Trust-Gated Mentoring
 
-In a scalar parameterization, extended *whānau* support (grandmothers, *kuia*, aunties, and *kaumātua* aged 55–72) is represented as a static regional constant $`K_{\mathrm{whanau,base},k} \in [0.28, 0.42]`$. Under that deterministic scalar view, raising the New Zealand Superannuation eligibility age from 65 to 67 or 70 simply trims the regional constant by 36.2% as elders are forced back into market labor.
+In a scalar parameterization, extended *whānau* support (grandmothers, *kuia*, aunties, and *kaumātua* aged 55–72) is represented as a static regional constant $`K_{\mathrm{whanau,base},k} \in [0.42, 0.38, 0.32, 0.28]`$ (Rural, Small, Large, Auckland). Under that deterministic scalar view, raising the New Zealand Superannuation eligibility age from 65 to 67 or 70 simply trims the regional constant by 36.2% as elders are forced back into market labor.
 
 Under our **state-contingent parameterization** inside `HumanCapital_Lifecycle_aprimeFn.m` and `ReturnFn_SpatialHH.m`, net extended *whānau* support $`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{net}}(i_c, z, a, J_r, k)`$ is conditioned directly on the household's endogenous investment and balance-sheet sub-manifold:
 
@@ -89,7 +89,7 @@ Notice the mathematical consequence of evaluating this **comonotonically coupled
 
 ---
 
-### 4.2 Price-Manifold Conditioned Public Wraparound (`G_ece_eff`): The Kaiako Housing-Affordability Supply Deflator
+### 4.2 Price-Manifold Conditioned Public Wraparound ($`G_{\mathrm{ece}}^{\mathrm{eff}}`$): The Kaiako Housing-Affordability Supply Deflator
 
 In public administration, scaling nominal early-childhood expenditure `G_ece_stage1` and adolescent wraparound `G_ece_stage2` encounters a severe spatial labor-supply friction: when metropolitan house prices `Q_k` (`Params.Q_reg`) in Auckland (3.10) and Large regional cities (2.05) are inflated by speculative land hoarding, qualified early-childhood *Kaiako*, Montessori guides, and speech-language therapists are priced out of the high-deprivation suburbs where disadvantaged children live.
 
@@ -101,9 +101,9 @@ This functional conditioning generates an endogenous **Cross-Cohort Dynamic Comp
 
 ---
 
-### 4.3 Sub-Manifold Conditioned Housing User Costs (`p_H`): The 61-Point Asset-Grid LVR Hurdle & Comonotonic Eviction Tail
+### 4.3 Sub-Manifold Conditioned Housing User Costs ($`p_H`$): The 61-Point Asset-Grid LVR Hurdle & Comonotonic Eviction Tail
 
-In Kiyotaki, Michaelides, and Nikolov (2024), the baseline regional ownership share $\xi_{\mathrm{reg},k} = \min\lbrace 1, (rr_k - rh_k)/\bar{\chi}\rbrace$ is a single regional scalar. If applied uniformly across all households in region *k*, an asset-poor family at `a = 0` and a wealthy household at `a = 15` face the exact same blended housing price `p_H`.
+In Kiyotaki, Michaelides, and Nikolov (2024), the baseline regional ownership share $\xi_{\mathrm{reg},k} = \min\lbrace 1, (rr_k - rh_k)/\bar{\chi}\rbrace$ is a single regional scalar. If applied uniformly across all households in region *k*, an asset-poor family at `a = 0` and a wealthy household at `a = 15` face the exact same blended housing price $p_H$.
 
 Because household net worth `a` in `[0, 25]` is already tracked on our 61-point cubic asset grid `a_grid_assets`, we apply **dimension-free sub-manifold conditioning** across both endogenous wealth `a` and the 7-point income shock `z` inside `ReturnFn_SpatialHH.m`:
 
@@ -111,14 +111,14 @@ $$\xi_{\mathrm{hh}}\left(a, Q_k\right) = \xi_{\mathrm{reg},k} \cdot \left(0.25 +
 
 $$p_H\left(a, z, Q_k, j\right) = \left(\xi_{\mathrm{hh}}\left(a, Q_k\right) rh_k + \left(1 - \xi_{\mathrm{hh}}\left(a, Q_k\right)\right) \frac{rr_k}{0.5 \bar{\chi}}\right)\left(1 + 0.12\, \mathbb{I}\left(a < 0.08 Q_k \land z < 0.85\right)\right)$$
 
-Projecting `p_H` onto the `(a, z)` sub-manifold expands housing user costs from 1 scalar per region into `61 x 7 = 427` state-contingent values per region:
-1. **The 20% LVR Deposit Gate (`a < 0.20 * Q_k`):** Young households without sufficient equity to clear the `0.20 * Q_k` deposit hurdle face the unblended rental user cost—explaining why the Age-20 Youth Capital Grant (`E`) and metropolitan house-price cooling (`Q_k` down) interact multiplicatively to lift young-adult homeownership in Auckland from 28.0% to 41.2%.
-2. **Comonotonic Tail Coupling of Eviction & Transience Risk (`a < 0.08 * Q_k` and `z < 0.85`):** Renters with near-zero liquid buffers who simultaneously experience an adverse Rouwenhorst earnings shock face a 12% effective housing cost and transience wedge (forced moves, emergency accommodation, and school disruption).
-3. **Retiree Renter Vulnerability (`j >= Jr` and `a < 0.20 * Q_k`):** Elderly households who reach age 65 (`agej >= Jr`) without home equity remain exposed to rental user costs `rr_k` during retirement.
+Projecting $p_H$ onto the $(a, z)$ sub-manifold expands housing user costs from 1 scalar per region into $`61 \times 7 = 427`$ state-contingent values per region:
+1. **The 20% LVR Deposit Gate ($`a < 0.20 * Q_k`$):** Young households without sufficient equity to clear the `0.20 * Q_k` deposit hurdle face the unblended rental user cost—explaining why the Age-20 Youth Capital Grant ($E$) and metropolitan house-price cooling ($Q_k$ down) interact multiplicatively to lift young-adult homeownership in Auckland from 28.0% to 41.2%.
+2. **Comonotonic Tail Coupling of Eviction & Transience Risk ($`a < 0.08 * Q_k`$ and $`z < 0.85`$):** Renters with near-zero liquid buffers who simultaneously experience an adverse Rouwenhorst earnings shock face a 12% effective housing cost and transience wedge (forced moves, emergency accommodation, and school disruption).
+3. **Retiree Renter Vulnerability ($j >= Jr$ and $`a < 0.20 * Q_k`$):** Elderly households who reach age 65 ($agej >= Jr$) without home equity remain exposed to rental user costs $`rr_k`$ during retirement.
 
 ---
 
-### 4.4 Skill-Manifold Conditioned Survival and Late-Life Labor Disutility (`sj_eff`): Capturing Actuarial Regressivity
+### 4.4 Skill-Manifold Conditioned Survival and Late-Life Labor Disutility ($`sj_eff`$): Capturing Actuarial Regressivity
 
 Finally, to capture the MPP's warning regarding **differential mortality and physical wear-and-tear**, we condition late-life labor disutility and mortality hazard on the household's 7-point adult human-capital / occupational sub-manifold `h` in `[0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80]`:
 
@@ -130,7 +130,7 @@ $$
 1 - s_j^{\mathrm{eff}}\left(h, j\right) = \min\left(0.99,\; \left(1 - s_j\right)\exp\left(0.18\left(1.00 - h\right)\right)\right)
 $$
 
-When a policy simulation raises the NZ Superannuation eligibility age (`Jr`) above 65, manual, rural, and lower-skilled workers (`h_1 = 0.45` and `h_2 = 0.65`, where Māori and Pasifika workers are disproportionately represented due to historical childhood material hardship) face a 22% to 35% higher physical disutility of working past age 65 (`psi_wear > 1`) comonotonically coupled with a higher late-life mortality hazard `1 - sj_eff(h, j)`. Consequently, evaluating the Bellman expectation over the stationary distribution `mu_k(a, h, theta_c, z, j)` endogenously reproduces both the **38% to 52% disability/hardship benefit substitution leak** and the **regressive life-expectancy penalty** that make raising the pension age fiscally and socially inferior to front-loaded human-capital investment.
+When a policy simulation raises the NZ Superannuation eligibility age (`Jr`) above 65, manual, rural, and lower-skilled workers (`h_1 = 0.45` and `h_2 = 0.65`, where Māori and Pasifika workers are disproportionately represented due to historical childhood material hardship) face a 22% to 35% higher physical disutility of working past age 65 (`psi_wear > 1`) comonotonically coupled with a higher late-life mortality hazard $`1 - sj_eff(h, j)`$. Consequently, evaluating the Bellman expectation over the stationary distribution $`\mu_k(a, h, \theta_c, z, j)`$ endogenously reproduces both the **38% to 52% disability/hardship benefit substitution leak** and the **regressive life-expectancy penalty** that make raising the pension age fiscally and socially inferior to front-loaded human-capital investment.
 
 ---
 
