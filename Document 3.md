@@ -242,12 +242,6 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 * **3D LTFM Sinkhole, 3%-GDP Defense Shock, Two-Term Pendulum, & $4 \times 4$ Coalition Matrix Engine:** [`Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m`](Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m) $\to$ `Table 21`, `Table 22`, [`Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png), and [`Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png).
 * **Parametric NZ Super Age U-Curve & Kuia/Whānau Solvency Engine:** [`FertilityBargaining_Module.m`](FertilityBargaining_Module.m) and [`WelfareDecomposition_4Region.m`](WelfareDecomposition_4Region.m) $\to$ `Table 7`, `Table 8`, `Table 8B`, and [`FigFert_4Region_Bargaining_Solvency.png`](Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png).
 
-```
-+-----------------------------------------------------------------------------------+
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-+-----------------------------------------------------------------------------------+
-```
-
 ---
 
 ## Appendix A: Leave-Behind Reference Tables (Tables A.1, A.2, and A.3)
@@ -284,24 +278,6 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 | **4. Fiscal Stewards & MBAs** | **★ WEDGE (1 $\times$ 4)** **+1.49% CE** *(+16.8k/Birth Surplus & TFR 2.03 Solves Super)* | **★ WEDGE (2 $\times$ 4)** **+0.67% CE** *(Peak Estate Wave $\tau_b$ Self-Funds $SS1$ Outlay)* | **★ WEDGE (3 $\times$ 4)** **+0.67% CE** *(+8.8% Wage & Firm Growth Expands Tax Base +14.5%)* | **[OWN SILO 4]** **+0.97% CE** *(Static Debt/Tax Target—Unachievable Alone)* | **+3.80% CE** *(74.3% from Neighbor Lanes)* |
 
 *Exact Matrix Identity:* The sum of the 4 Diagonal Own-Lane Silos (`7.72% + 5.19% + 2.15% + 0.97% = +16.04% CE`, which includes intra-silo pairings) plus the 6 unique Off-Diagonal Inter-Coalition Wedges (`2.21% + 2.00% + 1.49% + 1.18% + 0.67% + 0.67% = +8.21% CE`) equals **`+24.24% CE`**—reconciling with the national $SS2$ welfare total in Table A.1.
-
-```
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
 
 ---
 
