@@ -23,16 +23,13 @@ That single-lane habit rests on three hidden assumptions. Our quantitative overl
 
 Just as our spatial migration model captures how households naturally prefer to stay in their home region (`Rural <-> Small <-> Large <-> Auckland`) unless cross-regional pressures force them to move, this document maps a **2D Complementarity & Dependency Matrix** across New Zealand's four primary policy constituencies. We show why each constituency stalls when fighting alone against the Long-Term Fiscal Model (LTFM) sinkhole, why trying to "solve debt first" via Phase-1 austerity backfires on the Crown's own books, and how uniting the four lanes gets Aotearoa up on hydrofoils—building an economy strong enough to retire sovereign debt, cut working-age PAYE taxes, and lower the New Zealand Superannuation eligibility age to **64** in Phase 2 ($SS2$).
 
-
 ```
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 |                                                                                   |
 |                                                                                   |
 |                                                                                   |
