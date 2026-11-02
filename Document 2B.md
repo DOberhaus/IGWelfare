@@ -27,7 +27,9 @@ $$Y_{\mathrm{VFI}} = \mathbb{E}_{\mu_k}\left[f\left(a, h, \theta_c, z\right)\rig
 
 Whenever the structural law of motion $f(\cdot)$ is strongly concave, features kinked corner constraints ($i_c = 0$, $a^{\prime} \ge 0$), or exhibits harmonic-mean bottlenecks ($\varphi_2 = -0.95 < 0$), **Jensen's Inequality** guarantees a massive divergence between the function of the average and the average of the function:
 
-$$\mathbb{E}_{\mu_k}\left[f\left(a, h, \theta_c, z\right)\right] \ll f\left(\mathbb{E}[a],\, \mathbb{E}[h],\, \mathbb{E}[\theta_c],\, \mathbb{E}[z]\right)$$
+$$
+\mathbb{E}_{\mu_k}\left\lbrack f\left(a, h, \theta_c, z\right) \right\rbrack \ll f\left(\mathbb{E}\lbrack a \rbrack, \mathbb{E}\lbrack h \rbrack, \mathbb{E}\lbrack \theta_c \rbrack, \mathbb{E}\lbrack z \rbrack\right)
+$$
 
 In a deterministic spreadsheet, an average child with average family income $\bar{z} = 1.0$, average public wraparound $`G_{\mathrm{ece},2} = 0.065`$, and average extended *whānau* support $`\bar{K}_{\mathrm{wh\bar{a}nau}} = 0.35`$ smoothly clears the Stage-2 adolescent skill gate with zero skill erosion. In the real world—and in our VFI distribution—early skill erosion into the struggling launch tier ($h_1\text{--}h_2$), state-care entry (Exit 1), acute hospitalisation (Exit 2), and trans-Tasman brain drain are driven by **interacting tail states** (such as a household in $z_1$ unemployment simultaneously hitting the $a = 0$ rental-stress boundary and the $i_c = 0$ child-investment corner).
 
