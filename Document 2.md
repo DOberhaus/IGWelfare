@@ -73,7 +73,7 @@ Replacing distortionary capital income taxation ($\tau_k$) with a book-value wea
 ### 3.1 State Vector, Decision Grids, & Return Function Signature
 In the compact 4D GPU specification (`ReturnFn_SpatialHH_Compact4D.m`, 40 arguments), a household in region $k$ at age bracket $j \in \lbrace 1, \dots, J \rbrace$ has state vector $\left(a, h, z, j\right)$ and chooses decision vector $d = \left(\ell, I_h, i_c\right)$ and next-period states $\left(a^{\prime}, h^{\prime}\right)$:
 * `d_grid`: $\ell \in \lbrack 0.2, 1.0\rbrack$ ($n_{d1} = 5$, labor supply), $I_h \in \lbrack 0, 0.35\rbrack$ ($n_{d2} = 4$, adult Ben-Porath training time), $i_c \in \lbrack 0, 0.45\rbrack$ ($n_{d3} = 5$, private early/school child investment).
-* `a_grid`: $a \in \lbrack 0.001, 15.0\rbrack$ ($n_{a1} = 25$, household net worth) and $h \in \lbrack 0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80\rbrack$ ($n_{a2} = 7$, adult human capital tiers $h_1 \dots h_7$).
+* `a_grid`: $a \in \lbrack 0, 25\rbrack$ ($n_{a1} = 61$, household net worth) and $h \in \lbrack 0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80\rbrack$ ($n_{a2} = 7$, adult human capital tiers $h_1 \dots h_7$).
 * `z_grid`: $z \in \mathcal{Z}_{hh}$ ($n_z = 7$, 7-point Rouwenhorst idiosyncratic earnings shock (Kopecky & Suen, 2010), where $z < 0.80$ $`(i_z \in \lbrace{1,2}\rbrace`$, bottom 10.94\% stationary binomial mass) denotes unemployment/severe distress).
 
 *(In the full two-stage CES experience-asset specification with Emigration Abroad, `ReturnFn_SpatialHH.m` and `HumanCapital_Lifecycle_aprimeFn.m`, `a_grid` also tracks the 5-point child skill experience asset $`\theta_c \in \mathcal{G}_{\theta}`$ across childhood stages $`\mathcal{J}_{c,1}`$ and $`\mathcal{J}_{c,2}`$.)*
