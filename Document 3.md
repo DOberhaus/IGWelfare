@@ -244,9 +244,7 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 
 ```
 +-----------------------------------------------------------------------------------+
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
 
@@ -291,7 +289,15 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
 |                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
+|                                                                                   |
 |                                                                                   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
