@@ -443,7 +443,9 @@ Because the vertical thickness at every horizontal station $\tau \in \left\lbrac
 ```text
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
+|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
