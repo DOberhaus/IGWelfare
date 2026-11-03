@@ -16,7 +16,7 @@ Evaluating policy levers in isolation misses nearly half the macroeconomic story
 
 ## 🔍 Explore the Lifecycle Ledgers: Population Fates & Fiscal Flows
 
-Every ribbon in our lifecycle Sankey diagrams traces 60,000 newborn lives—and every private and public dollar—from Birth (Age 0) through Retirement across the Status Quo ($SS0$), Phase 1 Incubation ($SS1$), and Phase 2 Harvest ($SS2$). 
+Every ribbon in our lifecycle Sankey diagrams traces 60,000 newborn lives—and every private and public dollar—from Birth (Age 0) through Retirement across the Status Quo (*SS0*), Phase 1 Incubation (*SS1*), and Phase 2 Harvest (*SS2*). 
 
 Click the preview charts below to view the high-resolution comparisons, or open the **Interactive HTML5 + SVG Sankey Explorers** in [`Output_NZ_4Region_Intergen/`](Output_NZ_4Region_Intergen/) to click on any node or ribbon and inspect the underlying equations, empirical data, and literature:
 
@@ -40,7 +40,7 @@ Before running the code, consult the six companion documents in the repository r
 
 ### 2. *What Mathematical Tools Do We Use?* (Technical Specification & Methodology)
 * **[Document 2.md](Document%202.md) (*Technical Documentation & Model Specification Guide*):** Complete 8-PType Mixed Finite/Infinite-Horizon Bellman equations, exact $\Delta t$-scaling laws (`Configure_TimeGrid_Params.m` for trading off high-resolution `dt=3` vs. fast `dt=5` execution), Simulated Method of Moments (SMM) calibration matrices, and the 22-file codebase manifest.
-* **[Document 2B.md](Document%202B.md) (*"Thick" vs. "Thin" Numbers in Quantitative Public Policy*):** Standalone technical tutorial on dimension-free state-contingent conditioning—showing how comonotonic tail risks (sandwich-generation care reversal, *Kaiako* rent crowd-out, the 20% LVR deposit cliff, and differential mortality) are solved on the 26,901-point GPU state manifold at zero additional grid-dimension cost.
+* **[Document 2B.md](Document%202T.md) (*"Thick" vs. "Thin" Numbers in Quantitative Public Policy*):** Standalone technical tutorial on dimension-free state-contingent conditioning—showing how comonotonic tail risks (sandwich-generation care reversal, *Kaiako* rent crowd-out, the 20% LVR deposit cliff, and differential mortality) are solved on the 26,901-point GPU state manifold at zero additional grid-dimension cost.
 
 ### 3. *What Do Our Calculations Mean for Working Together?* (Coalition & Public Synthesis)
 * **[Document 3.md](Document%203.md) (*Leaving Our Silos, Lifting All Boats*):** Maps the 11-layer constructive synergy stack onto New Zealand's four policy constituencies (*Barnardos/Youth*, *WellBeing/Housing*, *GrowthNZ/Venture*, and *Fiscal Stewards*), contrasting standalone silos and 6-year "Stop-Go" political cycles against the Treasury LTFM sinkhole and a 3%-of-GDP defense commitment.
@@ -79,7 +79,7 @@ You do not need to run individual helper or return functions (`ReturnFn_*.m`) ma
   * `Plot_CumulativeTransitionPayoffs.m` & `Plot_ActuarialContinuationValuation.m` — Compute 60-year transition integrals and the Year-5 ACC-style Actuarial Continuation Audit (`Table 16`).
   * `Plot_WealthBracket_GiveAndGain.m` — Evaluates Fiscal Give vs. Economic Gain and balance-sheet resilience across 10 survey-anchored Earn + Own tiers (`Table 17`).
   * `Plot_Counterfactuals_And_MirrorInvestments.m` — Generates the 11-Layer Constructive Synergy Attribution (`Table 19`) and Mirror Investment Ledger (`Table 20`).
-  * `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m` — Renders the 3D LTFM Fiscal Sinkhole & Defense Shock surface, Stop-Go perishability paths (`Table 21`), and the $4 \times 4$ Coalition Matrix (`Table 22`).
+  * `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m` — Renders the 3D LTFM Fiscal Sinkhole & Defense Shock surface, Stop-Go perishability paths (`Table 21`), and the 4 × 4 Coalition Matrix (`Table 22`).
 
 ---
 
