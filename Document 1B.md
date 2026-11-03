@@ -65,7 +65,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
    * *Productive Capital Reallocation:* Replaces distortionary capital-income taxation ($`\tau_k`$) with a **1.5% book-value land/wealth levy** ($`\tau_a = 1.5\%`$) on dormant equity and a **25% peak estate levy** ($`\tau_b = 25\%`$, stepping down to `0.18` in `SS2`) on the **NZD 1.6T intergenerational property transfer wave** (Guvenen et al., 2023, *QJE* 138(2)).
    * *Talent Retention:* Roughly **19.5%** of educated young adults in metropolitan hubs (`19.29%` in Auckland, `23.41%` in Large regional cities) emigrate at ages 20–35 in `SS0`. Recycling estate revenues into a universal **Youth Capital Grant** at age 20 ($`E = 0.065`$ in `SS1`, $`0.080`$ in `SS2`) and a **-3.5 pp working-age PAYE cut** (`22.0% -> 18.5%`) in `SS2` expands the thriving domestic talent pool ($`h_6`$–$`h_7`$) from **23.2%–23.5% to 57.3%–61.0%+ in `SS1` and 65.0% in `SS2`**.
    * *Occupational Talent Allocation & The Rent-Seeking Extraction Wedge (Murphy, Shleifer, & Vishny, 1991, *QJE* 106(2): 503–530):* **Document 1A & 1C Claim:** Pairing the Guvenen et al. (2023) property-to-enterprise tax rebalance ($`\tau_a = 1.5\%`$, $`\tau_b = 25\% \rightarrow 18\%`$) with the universal Youth Capital Grant ($`E = 0.065 \rightarrow 0.080`$) and front-loaded human capability ($`G_{\text{ECE},1}, G_{\text{ECE},2}`$) reverses both external youth emigration (`Nat_Emig_Abroad_Pct`: $`10.93\% \rightarrow 7.60\%`$) and internal talent misallocation into unproductive property speculation ($`z_\ell`$).
-   * **Theoretical & Empirical Mapping:** In Murphy, Shleifer, and Vishny's (1991, Sec. I–III) Lucas-style superstar model, productive entrepreneurs with ability $`A > A^*`$ earn $`\pi_{\text{ent}}(A) = (1 - T)[s \cdot A \cdot F(H) - wH]`$, while rent-seekers extract a share $`T \cdot Y`$ of existing wealth and output via $`R_{\text{rent}}(A) = \frac{A \cdot G(H) \cdot T \cdot Y}{\int A G(H) f(A) dA} - wH`$. In an economy with a large existing wealth stock (\text{NZD 1.6T} residential land) and slow baseline productivity growth ($`0.9\%/\text{yr}`$ in Treasury *AN 26/01*), $`R_{\text{rent}}(A)`$ dominates $`\pi_{\text{ent}}(A)`$ at the top of the ability distribution $a$, drawing potential innovators into zero-sum wealth redistribution and permanently lowering endogenous TFP growth $`g_s = s(t)/s(t-1) - 1`$. Lowering the effective rent-seeking wedge $T$ on productive firms (via corporate tax relief, $`-60\text{ bps}`$ credit crowding-in, and the $`\tau_a = 1.5\%`$ land/wealth levy on $`z_\ell`$) shifts the marginal and top-tail ability thresholds back into productive entrepreneurship—Validated empirically by MSV (1991, Tables III–VI, $N=55$), where engineering share raises real per-capita growth ($`\beta_{\text{eng}} = +0.054\text{ direct}, +0.125\text{ total}`$) and strongly co-moves with primary human-capital investment ($`+1.02, \text{SE } 0.408`$) and physical investment ($`+0.432, \text{SE } 0.119`$), whereas rent-seeking law concentration directly depresses growth ($`\beta_{\text{law}} = -0.078, \text{SE } 0.040`$).
+   * **Theoretical & Empirical Mapping:** In Murphy, Shleifer, and Vishny's (1991, Sec. I–III) Lucas-style superstar model, productive entrepreneurs with ability $`A > A^*`$ earn $`\pi_{\text{ent}}(A) = (1 - T)[s \cdot A \cdot F(H) - wH]`$, while rent-seekers extract a share $`T \cdot Y`$ of existing wealth and output via $`R_{\text{rent}}(A) = \frac{A \cdot G(H) \cdot T \cdot Y}{\int A G(H) f(A) dA} - wH`$. In an economy with a large existing wealth stock (NZD 1.6T residential land) and slow baseline productivity growth ($`0.9\%/\text{yr}`$ in Treasury *AN 26/01*), $`R_{\text{rent}}(A)`$ dominates $`\pi_{\text{ent}}(A)`$ at the top of the ability distribution $a$, drawing potential innovators into zero-sum wealth redistribution and permanently lowering endogenous TFP growth $`g_s = s(t)/s(t-1) - 1`$. Lowering the effective rent-seeking wedge $T$ on productive firms (via corporate tax relief, $`-60\text{ bps}`$ credit crowding-in, and the $`\tau_a = 1.5\%`$ land/wealth levy on $`z_\ell`$) shifts the marginal and top-tail ability thresholds back into productive entrepreneurship—Validated empirically by MSV (1991, Tables III–VI, $N=55$), where engineering share raises real per-capita growth ($`\beta_{\text{eng}} = +0.054\text{ direct}, +0.125\text{ total}`$) and strongly co-moves with primary human-capital investment ($`+1.02, \text{SE } 0.408`$) and physical investment ($`+0.432, \text{SE } 0.119`$), whereas rent-seeking law concentration directly depresses growth ($`\beta_{\text{law}} = -0.078, \text{SE } 0.040`$).
 
 3. **Audience 3 — Policy-Makers, Cabinet Ministers, & Treasury Officials (Doc 1A Part I.3):**
    * *Closing the Micro-to-Macro Modelling Gap (Treasury OIA Response 20250878, Feb 2026):* In *OIA 20250878* (pp. 6–11), the New Zealand Treasury documented that its macro models (`FSM`, `LTFM`, and the 2025 `OLG` model) operate at the aggregate level and *"contain no data at the micro level, including at the cohort level,"* whereas frontline agencies evaluate individual budget bids in micro silos (`CBAx`, `TAWA`, and Stats NZ `IDI`). Our coupled `8-PType` OLG + 6-Gate Lifecycle Sankey engine welds these three institutional layers together:
@@ -168,11 +168,15 @@ $$
 #### 2.4.2 Akerlof–Kranton Adolescent Identity Utility and Topkis Coalition Supermodularity
 At Gate 2 (ages 12–14), adolescent educational effort $`e_2^\star`$ maximizes the identity-augmented utility function:
 
-$$U_j^i(c, \ell, e_2) = u(c, \ell) + \lambda_{\text{id}} \mathcal{I}_{\mathrm{p\bar{u}r\bar{a}kau}}(e_2, M_{\text{tuakana}}, \text{Cohesion}_t), \qquad \frac{\partial e_2^\star}{\partial \mathcal{I}_{\mathrm{p\bar{u}r\bar{a}kau}}} > 0$$
+$$
+U_j^i(c, \ell, e_2) = u(c, \ell) + \lambda_{\text{id}} \mathcal{I}_{\mathrm{p\bar{u}r\bar{a}kau}}(e_2, M_{\text{tuakana}}, \text{Cohesion}_t), \qquad \frac{\partial e_2^\star}{\partial \mathcal{I}_{\mathrm{p\bar{u}r\bar{a}kau}}} > 0
+$$
 
 Finally, let $`\mathcal{A}_1`$ denote the actuarial and tax-rebalancing policy vector and $`\mathcal{A}_2`$ denote the polycentric community and cultural-stewardship vector. By Topkis's (1998) Supermodularity Theorem, the social welfare functional $`\mathcal{W}(\mathcal{A}_1, \mathcal{A}_2)`$ exhibits strictly positive complementarity across the two institutional architectures:
 
-$$\mathcal{W}(\mathcal{A}_1 \cup \mathcal{A}_2) - \left[ \mathcal{W}(\mathcal{A}_1) + \mathcal{W}(\mathcal{A}_2) \right] = \Delta_{\mathrm{k\bar{\imath}ato}} > 0$$
+$$
+\mathcal{W}(\mathcal{A}_1 \cup \mathcal{A}_2) - \left[ \mathcal{W}(\mathcal{A}_1) + \mathcal{W}(\mathcal{A}_2) \right] = \Delta_{\mathrm{k\bar{\imath}ato}} > 0
+$$
 
 #### 2.4.3 Calibrating the Social Cohesion Index ($`S_t: 100.0 \to 112.0\text{–}118.4 \to 126.0`$) to Transparency International's CPI ("Social Credit Rating")
 
@@ -559,20 +563,28 @@ Arguments for and against tax reform are often shallow, because they depend on "
 ### 4.5.1 Three-Elasticity Decomposition of Top Marginal Tax Rates
 Following Piketty, Saez, and Stantcheva (2014), the total observed taxable income elasticity $`e_{\mathrm{total}}`$ with respect to the net-of-tax rate $`(1 - \tau_{\mathrm{top}})`$ decomposes into real productive supply ($`e_1`$), tax-base sheltering ($`e_2`$), and zero-sum compensation bargaining ($`e_3`$):
 
-$$e_{\mathrm{total}} = e_1 + e_2 + e_3$$
+$$
+e_{\mathrm{total}} = e_1 + e_2 + e_3
+$$
 
 When capital-gain and land shelters remain open ($`\tau_a = 0`$), reductions in $`\tau_{\mathrm{top}}`$ primarily stimulate rent-seeking bargaining ($`e_3 > 0`$) while the real productive elasticity remains small ($`e_1 \approx 0.15\text{–}0.25`$). The net fiscal revenue derivative is therefore strictly negative:
 
-$$\frac{d\mathcal{R}}{d(1 - \tau_{\mathrm{top}})} = Y_{\mathrm{top}} \left( e_1 - \frac{1 - \tau_{\mathrm{top}}}{\tau_{\mathrm{top}}} \right) < 0 \quad \text{for } e_1 \ll \frac{1 - \tau_{\mathrm{top}}}{\tau_{\mathrm{top}}}$$
+$$
+\frac{d\mathcal{R}}{d(1 - \tau_{\mathrm{top}})} = Y_{\mathrm{top}} \left( e_1 - \frac{1 - \tau_{\mathrm{top}}}{\tau_{\mathrm{top}}} \right) < 0 \quad \text{for } e_1 \ll \frac{1 - \tau_{\mathrm{top}}}{\tau_{\mathrm{top}}}
+$$
 
 ### 4.5.2 Return Heterogeneity Under Wealth-Stock vs. Capital-Income Taxation
 In the 8-PType occupational-choice block (Guvenen et al., 2023; Murphy, Shleifer, & Vishny, 1991), agents possess heterogeneous entrepreneurial productivity $`z_h`$ versus passive land-holding return $`z_\ell (\dot{P}_L / P_L)`$. Introducing a book-value wealth/land tax $`\tau_a = 1.5\%`$ paired with lower taxes on active earnings ($`\Delta \tau_k < 0, \Delta \tau_l < 0`$) yields the after-tax return schedule:
 
-$$r_{\mathrm{net}}(z, \tau_a, \tau_k) = (1 - \tau_k) z_h k^{\alpha - 1} + z_\ell \left( \frac{\dot{P}_L}{P_L} \right) - \tau_a$$
+$$
+r_{\mathrm{net}}(z, \tau_a, \tau_k) = (1 - \tau_k) z_h k^{\alpha - 1} + z_\ell \left( \frac{\dot{P}_L}{P_L} \right) - \tau_a
+$$
 
 Differentiating the stationary asset cutoff $`A^\star(\tau_a)`$ confirms that wealth-stock taxation compresses speculative land hoarding ($`\partial A^\star(z_\ell) / \partial \tau_a < 0`$) and expands the stationary measure of high-productivity builders ($`\Delta \mu^\star(z_h) > 0`$), reducing equilibrium metropolitan housing prices $`Q_k`$ by $`10.5\%`$ and curtailing outbound graduate migration to the `Abroad` state ($k = 5$):
 
-$$V_{20,k}^{\mathrm{Domestic}}(a_{20} + E, h_3) \ge V_{20,5}^{\mathrm{Abroad}}(a_{20}, h_3) - \kappa_{\mathrm{mig}} \quad \forall k \in \{1, 2, 3, 4\}$$
+$$
+V_{20,k}^{\mathrm{Domestic}}(a_{20} + E, h_3) \ge V_{20,5}^{\mathrm{Abroad}}(a_{20}, h_3) - \kappa_{\mathrm{mig}} \quad \forall k \in \{1, 2, 3, 4\}
+$$
 
 ## 4.5.3 Parental Developmental Time Crowd-Out Under High Abatement
 
