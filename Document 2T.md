@@ -136,6 +136,6 @@ When a policy simulation raises the NZ Superannuation eligibility age (`Jr`) abo
 
 ## 5. Companion Codebase & Suite Navigation
 
-* **For the Full 8-PType Mixed-Horizon Bellman Specification, SMM Identification Matrix, & 22-File Codebase Manifest:** See **[Document 2: Technical Documentation & Model Specification Guide](Document%202.md)**.
+* **For the Full 8-PType Mixed-Horizon Bellman Specification, SMM Identification Matrix, & 22-File Codebase Manifest:** See **[Document 2A](Document%202A.md) and [Document 2B](Document%202B.md) (*Technical Documentation & Model Specification Guides*)**.
 * **For the Policy & Coalition Implications of "Thick" vs. "Thin" Operators (Perishability, Two-Term "Stop-Go" Pendulums, & The $`4 \times 4`$ Coalition Matrix):** See **[Document 3: Leaving Our Silos, Lifting All Boats](Document%203.md)** (*Part IV* and *Table 4.1*).
 * **For the Strategic Monograph, Line-Item Answer Key, & Executive Brief:** See **[Document 1A](Document%201A.md)**, **[Document 1B](Document%201B.md)**, and **[Document 1C](Document%201C.md)**.

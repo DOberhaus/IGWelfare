@@ -3,7 +3,7 @@
 
 *Author:* Michael Tiemann (mdtiemann@gmail.com)  
 *Date:* November 2026 | *Code & Replication Repository:* [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)  
-*Companion to [Document 1A](Document%201A.md) (Strategic Monograph), [Document 1B](Document%201B.md) (Strategy & Policy Answer Key), [Document 1C](Document%201C.md) (Executive Brief), [Document 2B](Document%202B.md) (Technical Specification Guide), and [Document 2T](Document%202T.md) ("Thick" vs. "Thin" Numbers Tutorial)*
+*Companion to [Document 1A](Document%201A.md) (Strategic Monograph), [Document 1B](Document%201B.md) (Strategy & Policy Answer Key), [Document 1C](Document%201C.md) (Executive Brief), [Document 2A](Document%202A.md) & [Document 2B](Document%202B.md) (Technical Specification Guides), and [Document 2T](Document%202T.md) ("Thick" vs. "Thin" Numbers Tutorial)*
 
 **Disclaimer:** No people nor organizations mentioned herein have endorsed this work unless stated otherwise.  This is the work of the author, and all errors and omissions are his alone.
 
