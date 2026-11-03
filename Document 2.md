@@ -89,105 +89,76 @@ Following Kiyotaki, Michaelides, and Nikolov (2024), households with net worth b
 
 ---
 
-### 3.3 Adolescent Family Unemployment Stress, Unbanked Skill Fade-Out, and Bidirectional Montessori / Tuakana–Teina Mentoring ($M_{\mathrm{mentor}}$), and the importance of Whānau
+### 3.3 Adolescent Family Unemployment Stress, Unbanked Skill Fade-Out, and Bidirectional Montessori / Tuakana–Teina Mentoring ($M\sb{\mathrm{mentor}}$), and the importance of Whānau
 
-In the two-stage Cunha–Heckman–Schennach skill technology (`HumanCapital_Lifecycle_aprimeFn.m`), childhood skill $\theta_c$ evolves across Stage 1 ($\mathcal{J}_{c,1}$, ages 0–5, where $\varphi_1 = 0.35 > 0$) and Stage 2 ($\mathcal{J}_{c,2}$, ages 6–17, where $\varphi_2 = -0.95 < 0$).
-
-$$
-\theta_{c,\mathrm{ret}} = \theta_c - \delta_{\theta,\mathrm{fade}}(1 - M_{\mathrm{mentor}})\max(0, \theta_c - \theta_{\mathrm{base}})
-$$
+In the two-stage Cunha–Heckman–Schennach skill technology (`HumanCapital_Lifecycle_aprimeFn.m`), childhood skill $\theta\sb{c}$ evolves across Stage 1 ($\mathcal{J}\sb{c,1}$, ages 0–5, where $\varphi\sb{1} = 0.35 > 0$) and Stage 2 ($\mathcal{J}\sb{c,2}$, ages 6–17, where $\varphi\sb{2} = -0.95 < 0$).
 
 $$
-\Theta_s(\tilde{\theta}_c) = \left[ \gamma_{s,\mathrm{self}}\tilde{\theta}_c^{\varphi_s} + \gamma_{s,\mathrm{inv}}\left(i_c + G_{\mathrm{ECE},s}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}\right)^{\varphi_s} + \gamma_{s,\mathrm{par}}\bar{h}_p^{\varphi_s} \right]^{1/\varphi_s}, \quad s \in \lbrace 1, 2 \rbrace
+\theta\sb{c,\mathrm{ret}} = \theta\sb{c} - \delta\sb{\theta,\mathrm{fade}}(1 - M\sb{\mathrm{mentor}})\max(0, \theta\sb{c} - \theta\sb{\mathrm{base}})
 $$
 
 $$
-\theta'_c = \begin{cases}
-(1 - \omega_{s1})\theta_c + \omega_{s1}\Theta_1(\theta_c) & \text{if } j \in \mathcal{J}_{c,1} \\
-(1 - \omega_{s2})\theta_{c,\mathrm{ret}} + \omega_{s2}\Theta_2(\theta_{c,\mathrm{ret}})\exp\left(\Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}})\right) & \text{if } j \in \mathcal{J}_{c,2} \\
-\theta_c & \text{otherwise}
+\Theta\sb{s}(\tilde{\theta}\sb{c}) = \left[ \gamma\sb{s,\mathrm{self}}\tilde{\theta}\sb{c}^{\varphi\sb{s}} + \gamma\sb{s,\mathrm{inv}}\left(i\sb{c} + G\sb{\mathrm{ECE},s}^{\mathrm{eff}} + \bar{g}\sb{\mathrm{ECE}}\right)^{\varphi\sb{s}} + \gamma\sb{s,\mathrm{par}}\bar{h}\sb{p}^{\varphi\sb{s}} \right]^{1/\varphi\sb{s}}, \quad s \in \lbrace 1, 2 \rbrace
+$$
+
+$$
+\theta'\sb{c} = \begin{cases}
+(1 - \omega\sb{s1})\theta\sb{c} + \omega\sb{s1}\Theta\sb{1}(\theta\sb{c}) & \text{if } j \in \mathcal{J}\sb{c,1} \\
+(1 - \omega\sb{s2})\theta\sb{c,\mathrm{ret}} + \omega\sb{s2}\Theta\sb{2}(\theta\sb{c,\mathrm{ret}})\exp\left(\Psi\sb{J=5}(z\sb{p}, a\sb{p}, M\sb{\mathrm{mentor}})\right) & \text{if } j \in \mathcal{J}\sb{c,2} \\
+\theta\sb{c} & \text{otherwise}
 \end{cases}
 $$
 
-Because Stage 2 exhibits strong dynamic complementarity ($\sigma_2 = \frac{1}{1 - \varphi_2} = 0.51 < 1$) and unbanked gain depreciation $\delta_{\theta,\mathrm{fade}} > 0$ (Bailey et al., 2017; Rea & Burton, 2019; Lillard, 2005), early skill gains $\theta_c$ erode during middle childhood and early adolescence ($J = 5$, child ages 12–14) if children transition into passive factory-model schooling or if Stage-2 socio-emotional stability collapses. We formalize two countervailing mechanisms operating at this gate:
+Because Stage 2 exhibits strong dynamic complementarity ($\sigma\sb{2} = \frac{1}{1 - \varphi\sb{2}} = 0.51 < 1$) and unbanked gain depreciation $\delta\sb{\theta,\mathrm{fade}} > 0$ (Bailey et al., 2017; Rea & Burton, 2019; Lillard, 2005), early skill gains $\theta\sb{c}$ erode during middle childhood and early adolescence ($J = 5$, child ages 12–14) if children transition into passive factory-model schooling or if Stage-2 socio-emotional stability collapses. We formalize two countervailing mechanisms operating at this gate:
 
-1. **Observable Family Unemployment & Housing Distress Shock ($\psi_{\mathrm{unemp}}$):** Following the empirical job-displacement and *Family Stress Model* literature (Conger et al., 1992; Rege, Telle, & Votruba, 2011; Coelli, 2011; *Growing Up in New Zealand* "Now We Are 12", Morton et al., 2024), when a parent in region $k$ experiences an adverse labor-market productivity or unemployment realization $z_p \in \mathcal{Z}_{\mathrm{distress}}$ (specifically $z_p = z_1$, or $z_p = z_2$ combined with housing hardship $a_p < 0.08 Q_k$) during the child's adolescent window, household psychological stress and reduced parental bandwidth impose a non-cognitive skill penalty $-\psi_{\mathrm{unemp}} < 0$.
+1. **Observable Family Unemployment & Housing Distress Shock ($\psi\sb{\mathrm{unemp}}$):** Following the empirical job-displacement and *Family Stress Model* literature (Conger et al., 1992; Rege, Telle, & Votruba, 2011; Coelli, 2011; *Growing Up in New Zealand* "Now We Are 12", Morton et al., 2024), when a parent in region $k$ experiences an adverse labor-market productivity or unemployment realization $z\sb{p} \in \mathcal{Z}\sb{\mathrm{distress}}$ (specifically $z\sb{p} = z\sb{1}$, or $z\sb{p} = z\sb{2}$ combined with housing hardship $a\sb{p} < 0.08 Q\sb{k}$) during the child's adolescent window, household psychological stress and reduced parental bandwidth impose a non-cognitive skill penalty $-\psi\sb{\mathrm{unemp}} < 0$.
 
-2. **Bidirectional Montessori / *Tuakana–Teina* Cross-Age Mentoring ($M_{\mathrm{mentor}} \in [0, 1]$):** While Stage 2 cognitive investment productivity is low ($\gamma_{2,C,3} = 0.044$), non-cognitive malleability remains more than twice as high ($\gamma_{2,N,3} = 0.104$, Cunha et al., 2010). Synthesizing indigenous *Tuakana–Teina* and *Ako* reciprocal whānau in *Kura Kaupapa Māori* and bilingual units, the Graeme Dingle Foundation's *Stars / Te Kāhui Whetū* and *Project K* peer-mentoring programs, high-agency vertical-*whānau* state schools, and Montessori's multi-age *Erdkinder* pedagogy (Lillard, 2005; Lillard & Else-Quest, 2006; Agostinelli, Saharkhiz, & Wiswall, 2024; Resnjanskij et al., 2024), structured cross-age mentoring where adolescents at $J = 5$ mentor younger children at $J = 2\text{--}3$ generates a **two-way intra-generational spillover** without adding an endogenous state variable:
-   - *Downward Scaffolding Multiplier on Stage 1 ($\kappa_{\mathrm{down}} > 0$):* Near-peer tutoring and role-modeling by the *tuakana* adolescent cohort (with mean skill $\bar{\theta}_{J=5}$) augment the effective productivity of public early childhood and primary investments for younger *teina*:
-
-     $$
-     G_{\mathrm{ECE},1}^{\mathrm{eff}} =
-     G_{\mathrm{ECE},1}
-     \left(1 + \kappa_{\mathrm{down}}
-     M_{\mathrm{mentor}}
-     \bar{\theta}_{J=5}\right)
-     $$
-
-   - *Upward "Protégé Effect", Zero Fade-Out, & Stress Buffer on Stage 2 ($\kappa_{\mathrm{up}} > 0$):* Serving as a high-agency *tuakana* mentor builds adolescent executive function, self-regulation, and *mana*, eliminating unbanked Stage-1 skill fade-out ($(1 - M_{\mathrm{mentor}})\delta_{\theta,\mathrm{fade}} \to 0$) and directly buffering the family unemployment shock via the adolescent net shift $\Psi_{J=5}$:
+2. **Bidirectional Montessori / *Tuakana–Teina* Cross-Age Mentoring ($M\sb{\mathrm{mentor}} \in [0, 1]$):** While Stage 2 cognitive investment productivity is low ($\gamma\sb{2,C,3} = 0.044$), non-cognitive malleability remains more than twice as high ($\gamma\sb{2,N,3} = 0.104$, Cunha et al., 2010). Synthesizing indigenous *Tuakana–Teina* and *Ako* reciprocal whānau in *Kura Kaupapa Māori* and bilingual units, the Graeme Dingle Foundation's *Stars / Te Kāhui Whetū* and *Project K* peer-mentoring programs, high-agency vertical-*whānau* state schools, and Montessori's multi-age *Erdkinder* pedagogy (Lillard, 2005; Lillard & Else-Quest, 2006; Agostinelli, Saharkhiz, & Wiswall, 2024; Resnjanskij et al., 2024), structured cross-age mentoring where adolescents at $J = 5$ mentor younger children at $J = 2\text{--}3$ generates a **two-way intra-generational spillover** without adding an endogenous state variable:
+   - *Downward Scaffolding Multiplier on Stage 1 ($\kappa\sb{\mathrm{down}} > 0$):* Near-peer tutoring and role-modeling by the *tuakana* adolescent cohort (with mean skill $\bar{\theta}\sb{J=5}$) augment the effective productivity of public early childhood and primary investments for younger *teina*:
 
      $$
-     \Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}}) =
-     -\psi_{\mathrm{unemp}}
-     \mathbb{I}(z_p \in \mathcal{Z}_{\mathrm{distress}})
-     (1 - \zeta_{\mathrm{buf}} M_{\mathrm{mentor}}) +
-     \kappa_{\mathrm{up}} M_{\mathrm{mentor}}
+     G\sb{\mathrm{ECE},1}^{\mathrm{eff}} = G\sb{\mathrm{ECE},1} \left(1 + \kappa\sb{\mathrm{down}} M\sb{\mathrm{mentor}} \bar{\theta}\sb{J=5}\right)
      $$
 
-   In the compact 4D projection (`Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_SSankey.m`), this induces the unified anchored log-skill transition mean across the 7-point adult human capital grid $h_{\mathrm{child}} \in \mathcal{H}$:
+   - *Upward "Protégé Effect", Zero Fade-Out, & Stress Buffer on Stage 2 ($\kappa\sb{\mathrm{up}} > 0$):* Serving as a high-agency *tuakana* mentor builds adolescent executive function, self-regulation, and *mana*, eliminating unbanked Stage-1 skill fade-out ($(1 - M\sb{\mathrm{mentor}})\delta\sb{\theta,\mathrm{fade}} \to 0$) and directly buffering the family unemployment shock via the adolescent net shift $\Psi\sb{J=5}$:
+
+     $$
+     \Psi\sb{J=5}(z\sb{p}, a\sb{p}, M\sb{\mathrm{mentor}}) = -\psi\sb{\mathrm{unemp}} \mathbb{I}(z\sb{p} \in \mathcal{Z}\sb{\mathrm{distress}}) (1 - \zeta\sb{\mathrm{buf}} M\sb{\mathrm{mentor}}) + \kappa\sb{\mathrm{up}} M\sb{\mathrm{mentor}}
+     $$
+
+   In the compact 4D projection (`Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_SSankey.m`), this induces the unified anchored log-skill transition mean across the 7-point adult human capital grid $h\sb{\mathrm{child}} \in \mathcal{H}$:
 
    $$
-   \mu_{\ln h}(h_p, i_c, z_p, a_p; k) =
-   \rho_{hc} \ln(h_p) +
-   \gamma_{ic} \ln\left(
-   \frac{i_c + G_{\mathrm{ECE},1}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}}
-   {\bar{i}_c + G_{\mathrm{ECE,base}} + \bar{g}_{\mathrm{ECE}}}
-   \right) -
-   \psi_{\mathrm{crowd}} \ln(\max(1, Q_k)) \mathbb{I}(a_p < 0.08 Q_k) +
-   \Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}}) +
-   \alpha_{\mathrm{grid}}
+   \mu\sb{\ln h}(h\sb{p}, i\sb{c}, z\sb{p}, a\sb{p}; k) = \rho\sb{hc} \ln(h\sb{p}) + \gamma\sb{ic} \ln\left(\frac{i\sb{c} + G\sb{\mathrm{ECE},1}^{\mathrm{eff}} + \bar{g}\sb{\mathrm{ECE}}}{\bar{i}\sb{c} + G\sb{\mathrm{ECE,base}} + \bar{g}\sb{\mathrm{ECE}}}\right) - \psi\sb{\mathrm{crowd}} \ln(\max(1, Q\sb{k})) \mathbb{I}(a\sb{p} < 0.08 Q\sb{k}) + \Psi\sb{J=5}(z\sb{p}, a\sb{p}, M\sb{\mathrm{mentor}}) + \alpha\sb{\mathrm{grid}}
    $$
 
-3. **The Endogenous Pension–*Whānau* Coupling Operator ($K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)$):** To make New Zealand Superannuation parameters ($A_{\mathrm{super}}, p_{\mathrm{super}}$) and regional housing user costs ($Q_k$) endogenously legible to the younger parenting generation without expanding the 4D GPU state vector $(a, h, z, j)$, `HumanCapital_Lifecycle_aprimeFn.m`, `ReturnFn_SpatialHH_Compact4D.m`, and `Build_IntergenTransitionMatrix.m` evaluate effective regional *whānau* capacity $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k) = K_{\mathrm{wh\bar{a}nau},0}(k) \cdot \Phi_{\mathrm{super}}(k)$ from baseline proximity $K_{\mathrm{wh\bar{a}nau},0} = [0.42, 0.38, 0.32, 0.28]$ (`[Rural, Small, Large, Auckland]`) and the **Elder Time & Housing Stability Factor** $\Phi_{\mathrm{super}}(k) \in [0.45, 1.25]$:
+3. **The Endogenous Pension–*Whānau* Coupling Operator ($K\sb{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)$):** To make New Zealand Superannuation parameters ($A\sb{\mathrm{super}}, p\sb{\mathrm{super}}$) and regional housing user costs ($Q\sb{k}$) endogenously legible to the younger parenting generation without expanding the 4D GPU state vector $(a, h, z, j)$, `HumanCapital_Lifecycle_aprimeFn.m`, `ReturnFn_SpatialHH_Compact4D.m`, and `Build_IntergenTransitionMatrix.m` evaluate effective regional *whānau* capacity $K\sb{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k) = K\sb{\mathrm{wh\bar{a}nau},0}(k) \cdot \Phi\sb{\mathrm{super}}(k)$ from baseline proximity $K\sb{\mathrm{wh\bar{a}nau},0} = [0.42, 0.38, 0.32, 0.28]$ (`[Rural, Small, Large, Auckland]`) and the **Elder Time & Housing Stability Factor** $\Phi\sb{\mathrm{super}}(k) \in [0.45, 1.25]$:
 
    $$
-   \Phi_{\mathrm{super}}(k) =
-   \underbrace{\Phi_{\mathrm{time}}(A_{\mathrm{super}})}_{\text{Kuia / Aunty time availability}} \times
-   \underbrace{\min\left(1.15, \max\left(0.50,
-   \frac{p_{\mathrm{super}}}{0.18} \cdot
-   \left(\frac{Q_{k,0}}{Q_k}\right)^{0.35}
-   \right)\right)}_{\text{Ability of aunties / kaumātua to stay in their own homes}}
+   \Phi\sb{\mathrm{super}}(k) = \underbrace{\Phi\sb{\mathrm{time}}(A\sb{\mathrm{super}})}\sb{\text{Kuia / Aunty time availability}} \times \underbrace{\min\left(1.15, \max\left(0.50, \frac{p\sb{\mathrm{super}}}{0.18} \cdot \left(\frac{Q\sb{k,0}}{Q\sb{k}}\right)^{0.35}\right)\right)}\sb{\text{Ability of aunties / kaumātua to stay in their own homes}}
    $$
 
-   where $\Phi_{\mathrm{time}}(A_{\mathrm{super}}) = \exp(-\eta_{\mathrm{elder}}(A_{\mathrm{super}} - 65))$ for $A_{\mathrm{super}} \ge 65$ ($\eta_{\mathrm{elder}} = \lambda_{J_r} = 0.09\text{ yr}^{-1}$, yielding a $-36.2\%$ loss at Age 70: $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}} \to [0.27, 0.24, 0.20, 0.18]$) and $\Phi_{\mathrm{time}}(A_{\mathrm{super}}) = 1 + 0.16 \tanh((65 - A_{\mathrm{super}})/1.80)$ for $A_{\mathrm{super}} < 65$ ($+8.1\%$ boost at Age 64). In turn, $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)$ feeds directly into (i) Stage-1 informal *whānau* care and pooled *whānau* human capital $\bar{h}_p$, (ii) Stage-2 fade-out retention (`fade_residual`) and adolescent crisis buffering $\Psi_{J=5}$ (`psi_unemp_step`), and (iii) domestic youth retention (`whanau_stay_pull`) in $\Pi_{\mathrm{mig}}$.
+   where $\Phi\sb{\mathrm{time}}(A\sb{\mathrm{super}}) = \exp(-\eta\sb{\mathrm{elder}}(A\sb{\mathrm{super}} - 65))$ for $A\sb{\mathrm{super}} \ge 65$ ($\eta\sb{\mathrm{elder}} = \lambda\sb{J\sb{r}} = 0.09\text{ yr}^{-1}$, yielding a $-36.2\%$ loss at Age 70: $K\sb{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}} \to [0.27, 0.24, 0.20, 0.18]$) and $\Phi\sb{\mathrm{time}}(A\sb{\mathrm{super}}) = 1 + 0.16 \tanh((65 - A\sb{\mathrm{super}})/1.80)$ for $A\sb{\mathrm{super}} < 65$ ($+8.1\%$ boost at Age 64). In turn, $K\sb{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)$ feeds directly into (i) Stage-1 informal *whānau* care and pooled *whānau* human capital $\bar{h}\sb{p}$, (ii) Stage-2 fade-out retention (`fade_residual`) and adolescent crisis buffering $\Psi\sb{J=5}$ (`psi_unemp_step`), and (iii) domestic youth retention (`whanau_stay_pull`) in $\Pi\sb{\mathrm{mig}}$.
 
 4. **De Nardi (2004) Luxury Warm-Glow Bequest Motive:**
 
    $$
-   u_{\mathrm{beq}}(a'; \tau_b) =
-   b_1 \frac{\left(1 + \frac{(1 - \tau_b)a'}{b_2}\right)^{1 - \eta_c} - 1}{1 - \eta_c}
+   u\sb{\mathrm{beq}}(a'; \tau\sb{b}) = b\sb{1} \frac{\left(1 + \frac{(1 - \tau\sb{b})a'}{b\sb{2}}\right)^{1 - \eta\sb{c}} - 1}{1 - \eta\sb{c}}
    $$
 
-5. **Relational Altruism, Social Cohesion Utility ($u_{\mathrm{rel}}$), & Transparency International CPI Calibration:** Captures the utility gain experienced by citizens and aging parents when the struggling launch share ($\mathrm{Frac}_{\mathrm{struggling}}$) is compressed and domestic social cohesion ($S_t$, `S_cohesion`) rises as educated youth remain in New Zealand:
+5. **Relational Altruism, Social Cohesion Utility ($u\sb{\mathrm{rel}}$), & Transparency International CPI Calibration:** Captures the utility gain experienced by citizens and aging parents when the struggling launch share ($\mathrm{Frac}\sb{\mathrm{struggling}}$) is compressed and domestic social cohesion ($S\sb{t}$, `S_cohesion`) rises as educated youth remain in New Zealand:
 
    $$
-   u_{\mathrm{rel}}(\mathrm{Frac}_{\mathrm{struggling}}, S_t) =
-   \chi_{\mathrm{rel}} \left[
-   (0.285 - \mathrm{Frac}_{\mathrm{struggling}}) +
-   0.015 (S_t - 100)
-   \right]
+   u\sb{\mathrm{rel}}(\mathrm{Frac}\sb{\mathrm{struggling}}, S\sb{t}) = \chi\sb{\mathrm{rel}} \left[ (0.285 - \mathrm{Frac}\sb{\mathrm{struggling}}) + 0.015 (S\sb{t} - 100) \right]
    $$
 
-   Along the transition path, the macro **Social Cohesion Index** $S_t$ evolves endogenously as a linear functional of struggling-launch compression, youth brain-drain closure (`Nat_Emig_Abroad_Pct`), and moderated replacement-migration turnover (`Churn_Rate`):
+   Along the transition path, the macro **Social Cohesion Index** $S\sb{t}$ evolves endogenously as a linear functional of struggling-launch compression, youth brain-drain closure (`Nat_Emig_Abroad_Pct`), and moderated replacement-migration turnover (`Churn_Rate`):
 
    $$
-   S_t = 100.0 +
-   \zeta_{\mathrm{hardship}} (0.220 - \mathrm{Frac}_{\mathrm{struggling},t}) +
-   \zeta_{\mathrm{ret}} (0.1093 - \mathrm{Emig}_{\mathrm{Nat},t}) -
-   \zeta_{\mathrm{churn}} \max(0, \mathrm{Churn}_t - \overline{\mathrm{Churn}})
+   S\sb{t} = 100.0 + \zeta\sb{\mathrm{hardship}} (0.220 - \mathrm{Frac}\sb{\mathrm{struggling},t}) + \zeta\sb{\mathrm{ret}} (0.1093 - \mathrm{Emig}\sb{\mathrm{Nat},t}) - \zeta\sb{\mathrm{churn}} \max(0, \mathrm{Churn}\sb{t} - \overline{\mathrm{Churn}})
    $$
 
-   Empirically, $S_t$ is anchored to New Zealand's sovereign **Transparency International Corruption Perceptions Index (CPI)** ("Social Credit Rating"), which declined from **96/100** (2004 peak) and **88/100** (#1 equal globally in 2021) to a 30-year low of **81/100** (#4 equal in the 2025/2026 release, behind **#1 Denmark at 89, #2 Finland at 88, and #3 Singapore at 84**; Office of the Controller and Auditor-General, *New Zealand's Integrity Inheritance*, 2026; TI-NZ *National Integrity System Gap Analysis*, 2026). Compressing $\mathrm{Frac}_{\mathrm{struggling}}$ from $0.220$ to $0.015$ and cutting $\mathrm{Emig}_{\mathrm{Nat}}$ from $10.93\%$ to $7.60\%$ lifts $S_t$ from $100.0$ ($SS0$) to $118.4$ ($SS1$) and $126.0$ ($SS2$).
+   Empirically, $S\sb{t}$ is anchored to New Zealand's sovereign **Transparency International Corruption Perceptions Index (CPI)** ("Social Credit Rating"), which declined from **96/100** (2004 peak) and **88/100** (#1 equal globally in 2021) to a 30-year low of **81/100** (#4 equal in the 2025/2026 release, behind **#1 Denmark at 89, #2 Finland at 88, and #3 Singapore at 84**; Office of the Controller and Auditor-General, *New Zealand's Integrity Inheritance*, 2026; TI-NZ *National Integrity System Gap Analysis*, 2026). Compressing $\mathrm{Frac}\sb{\mathrm{struggling}}$ from $0.220$ to $0.015$ and cutting $\mathrm{Emig}\sb{\mathrm{Nat}}$ from $10.93\%$ to $7.60\%$ lifts $S\sb{t}$ from $100.0$ ($SS0$) to $118.4$ ($SS1$) and $126.0$ ($SS2$).
 
 ---
 
@@ -197,7 +168,7 @@ To eliminate CPU nested loops, `Build_IntergenTransitionMatrix.m` executes all t
 
 ### 4.1 Stage 1 Operator ($Q_h$): Two-Stage Childhood Skill & Montessori / Tuakana–Teina Gate
 
-For fertile parental cohorts $j_p \in \mathcal{J}_{c,1} \cup \mathcal{J}_{c,2}$, expected log pre-labor-market skill $\ln(\hat{h}_{\mathrm{child}})$ integrates Stage-1 private/public investment $(i_{c,1}, G_{\mathrm{ECE},1})$, housing crowding penalties, and the **Gate 3 ($J = 5$, Ages 12–14) Montessori / *Tuakana–Teina* & Graeme Dingle Foundation Mentoring Operator**:
+For fertile parental cohorts $j\sb{p} \in \mathcal{J}\sb{c,1} \cup \mathcal{J}\sb{c,2}$, expected log pre-labor-market skill $\ln(\hat{h}\sb{\mathrm{child}})$ integrates Stage-1 private/public investment $(i\sb{c,1}, G\sb{\mathrm{ECE},1})$, housing crowding penalties, and the **Gate 3 ($J = 5$, Ages 12–14) Montessori / *Tuakana–Teina* & Graeme Dingle Foundation Mentoring Operator**:
 
 $$
 \ln(\hat{h}_{\mathrm{child}}) = \rho_{hc} \ln(h_p) + \gamma_{ic} \ln\left(1 + i_{c,\mathrm{eff}} + G_{\mathrm{ECE,eff}}\right) - \psi_{\mathrm{crowd}} \ln(Q_k) \mathbb{I}_{\mathrm{hard}} + \Delta_{\mathrm{Adol}}(z_p, M_{\mathrm{Tuakana}}) + \eta_h
@@ -291,7 +262,7 @@ $$
 
 3. **Interaction with Credit Constraints ($i_c = 0$) and Spousal Bargaining (Doepke & Tertilt, 2018; Cao & Li, 2022, Sec. 4):** Cao and Li (2022, Proposition 4) show that in a frictionless credit market, present-biased parents substitute child quality for quantity ($n^t < n^c \implies e^t > e^c$), and note that unmodeled hyperbolic discounting confounds estimates of spousal fertility bargaining (Doepke & Tertilt, 2018). In our spatial OLG framework, unconstrained urban couples exhibit Cao and Li's quantity-to-quality shift, whereas rent-squeezed low-income households ($a' \ge 0, i_c = 0$) are prevented by the borrowing constraint from increasing $i_c$ until universal First-2000-Days wraparound ($G_{\mathrm{ECE},1}$) and the Youth Grant ($E$) relax their Period-2 budget constraint.
 
-4. **Why We Couple `vfoptions.experienceasset = 1` with Analytical Period-2 $\beta_{\mathrm{hyp}}$ Evaluation Rather Than Global `vfoptions.exoticpreferences = 'QuasiHyperbolic'`:** While VFI Toolkit natively supports pairing `experienceasset = 1` (for the child's skill stock $\theta_c$) with `vfoptions.exoticpreferences = 'QuasiHyperbolic'`, enabling global quasi-hyperbolic discounting applies $\beta_{\mathrm{hyp}} = 0.72$ to every continuous choice $(a', i_c, \ell, I_h)$ across all $J = 27$ ages. Doing so would (i) misattribute the early-childhood $i_c = 0$ investment corner to parental myopia rather than binding credit and housing-subsistence constraints ($\bar{g}_{\mathrm{ECE}} > 0$), (ii) counterfactually depress mortgage and KiwiSaver wealth accumulation ($a'$) that are anchored by institutional commitment devices in New Zealand, and (iii) require tracking dual value functions $(V_j, W_j)$ under non-monotone Markov-perfect policy gaming across the 60-year transition path. Evaluating $W_f(n_f) = u_f(n_f) + \beta_{\mathrm{hyp}} \delta V'_{f}(n_f)$ directly on the uncommitted fertility margin inside `FertilityBargaining_Module.m` (paired with our `experienceasset = 1` child skill law of motion and $\mathcal{T}_{\mathrm{IG}}$ dynastic closure) achieves exact mathematical equivalence on the Cao and Li (2022) fertility wedge while keeping the $i_c = 0$ hardship corner purely credit- and rent-driven.
+4. **Why We Couple `vfoptions.experienceasset = 1` with Analytical Period-2 $\beta\sb{\mathrm{hyp}}$ Evaluation Rather Than Global `vfoptions.exoticpreferences = 'QuasiHyperbolic'`:** While VFI Toolkit natively supports pairing `experienceasset = 1` (for the child's skill stock $\theta\sb{c}$) with `vfoptions.exoticpreferences = 'QuasiHyperbolic'`, enabling global quasi-hyperbolic discounting applies $\beta\sb{\mathrm{hyp}} = 0.72$ to every continuous choice $(a', i\sb{c}, \ell, I\sb{h})$ across all $J = 27$ ages. Doing so would (i) misattribute the early-childhood $i\sb{c} = 0$ investment corner to parental myopia rather than binding credit and housing-subsistence constraints ($\bar{g}\sb{\mathrm{ECE}} > 0$), (ii) counterfactually depress mortgage and KiwiSaver wealth accumulation ($a'$) that are anchored by institutional commitment devices in New Zealand, and (iii) require tracking dual value functions $(V\sb{j}, W\sb{j})$ under non-monotone Markov-perfect policy gaming across the 60-year transition path. Evaluating $W\sb{f}(n\sb{f}) = u\sb{f}(n\sb{f}) + \beta\sb{\mathrm{hyp}} \delta V'\sb{f}(n\sb{f})$ directly on the uncommitted fertility margin inside `FertilityBargaining_Module.m` (paired with our `experienceasset = 1` child skill law of motion and $\mathcal{T}\sb{\mathrm{IG}}$ dynastic closure) achieves exact mathematical equivalence on the Cao and Li (2022) fertility wedge while keeping the $i\sb{c} = 0$ hardship corner purely credit- and rent-driven.
 
 ### 5.4 Endogenous NZ Superannuation Solvency & The Retirement-Age U-Curve ($`A_{\mathrm{super}} \in [60, 75]`$ in `FertilityBargaining_Module.m`)
 
@@ -358,32 +329,25 @@ Because Guvenen et al. (2023) capital reallocation raises the after-tax return o
 
 To discipline the structural parameter vector $\theta$ against the 15 empirical New Zealand moments in Table 6.1 without getting trapped in local minima on the multi-region general-equilibrium surface, `Calibrate_NZ_Moments.m` executes a two-stage Simulated Method of Moments (SMM) procedure:
 
-1. **Stage 1 — Sobol Quasi-Random Global Hypercube Pre-Screening:** Following Daruich (2018, Appendix C, Fig. C1), we draw $N_{\mathrm{sobol}}$ low-discrepancy Sobol sequence points across the bounded parameter hypercube $[\underline{\theta}, \overline{\theta}]$ and evaluate the weighted percentage-squared SMM objective function:
+1. **Stage 1 — Sobol Quasi-Random Global Hypercube Pre-Screening:** Following Daruich (2018, Appendix C, Fig. C1), we draw $N\sb{\mathrm{sobol}}$ low-discrepancy Sobol sequence points across the bounded parameter hypercube $[\underline{\theta}, \overline{\theta}]$ and evaluate the weighted percentage-squared SMM objective function:
 
    $$
-   \mathcal{L}_{\mathrm{SMM}}(\theta) =
-   \sum_{m=1}^{M} W_m \left(
-   \frac{\hat{M}_m(\theta) - M_m^{\mathrm{data}}}
-   {\max(0.02, |M_m^{\mathrm{data}}|)}
-   \right)^2
+   \mathcal{L}\sb{\mathrm{SMM}}(\theta) = \sum\sb{m=1}^{M} W\sb{m} \left( \frac{\hat{M}\sb{m}(\theta) - M\sb{m}^{\mathrm{data}}}{\max(0.02, |M\sb{m}^{\mathrm{data}}|)} \right)^2
    $$
 
-2. **Stage 2 — Bound-Constrained Local Nelder-Mead / Quasi-Newton Refinement:** Starting from the best Sobol candidate $\theta_{\mathrm{sobol}}^{\star}$, we apply a logistic sigmoid transformation $\theta(x) = \underline{\theta} + (\overline{\theta} - \underline{\theta}) \oslash (1 + \exp(-x))$ and refine $x^{\star}$ to convergence via `fminsearch`.
+2. **Stage 2 — Bound-Constrained Local Nelder-Mead / Quasi-Newton Refinement:** Starting from the best Sobol candidate $\theta\sb{\mathrm{sobol}}^{\star}$, we apply a logistic sigmoid transformation $\theta(x) = \underline{\theta} + (\overline{\theta} - \underline{\theta}) \oslash (1 + \exp(-x))$ and refine $x^{\star}$ to convergence via `fminsearch`.
 
 3. **Dual Empirical Calibration Anchor Switch (`'Dunedin_22'` vs. `'MetroSqueeze_GUiNZ'`):** In `Plot_ChildFates_SSankey.m`, `Plot_ChildFiscal_SSankey.m`, and `Plot_ActuarialContinuationValuation.m`, the parameter `Params.Calibration_Anchor` toggles between two empirically validated New Zealand hardship anchors:
-   - `'Dunedin_22'` *(Default Conservative Anchor):* Calibrates the baseline struggling launch tier ($h_1\text{--}h_2$) to the **22.0%** high-cost cohort segment identified at age 3 in the Dunedin Multidisciplinary Health and Development Study (Caspi et al., 2016, where 22% of the cohort drives 57%–81% of adult Exits 1, 2, and 4; model fit = **74.1%**), using housing-crowding penalty $\psi_{\mathrm{crowd}} = 0.14$ and grid anchor `+0.265`.
-   - `'MetroSqueeze_GUiNZ'` *(After-Housing-Cost Metropolitan Squeeze Sensitivity):* Incorporates the full metropolitan housing-cost and dampness/crowding penalty documented in *Growing Up in New Zealand* (Morton et al., 2020: 37% damp/mould exposure) and Child Poverty Related Indicators (29.9% AHC60 child poverty; 34%–37% of children in households spending >30% of income on housing), using $\psi_{\mathrm{crowd}} = 0.18$ and grid anchor `+0.105` (expanding Auckland's baseline vulnerable trajectory to 34.0%–36.6%).
+   - `'Dunedin_22'` *(Default Conservative Anchor):* Calibrates the baseline struggling launch tier ($h\sb{1}\text{--}h\sb{2}$) to the **22.0%** high-cost cohort segment identified at age 3 in the Dunedin Multidisciplinary Health and Development Study (Caspi et al., 2016, where 22% of the cohort drives 57%–81% of adult Exits 1, 2, and 4; model fit = **74.1%**), using housing-crowding penalty $\psi\sb{\mathrm{crowd}} = 0.14$ and grid anchor `+0.265`.
+   - `'MetroSqueeze_GUiNZ'` *(After-Housing-Cost Metropolitan Squeeze Sensitivity):* Incorporates the full metropolitan housing-cost and dampness/crowding penalty documented in *Growing Up in New Zealand* (Morton et al., 2020: 37% damp/mould exposure) and Child Poverty Related Indicators (29.9% AHC60 child poverty; 34%–37% of children in households spending >30% of income on housing), using $\psi\sb{\mathrm{crowd}} = 0.18$ and grid anchor `+0.105` (expanding Auckland's baseline vulnerable trajectory to 34.0%–36.6%).
 
-4. **Welfare-Based In-Kind ECE Imputation Weights ($\omega_i$, Ferriere et al., 2025, Eq. 3):** Because early childhood education and preventative health exhibit a Stone-Geary luxury threshold ($\bar{g}_{\mathrm{ECE}} = 0.032 > 0$, macro income elasticity $\theta \in [1.15, 1.38] > 1$), liquidity-constrained parents at the private corner solution ($i_c = 0$, share $S = \Pr(i_c = 0) \approx 0.258$) have a high marginal utility of liquid cash ($\partial u_i / \partial y_i$) to cover immediate rent ($Q_k$) and transport ($\bar{e}_{k}$). Standard static benefit-incidence studies that value public in-kind spending $G_{\mathrm{ECE}}$ at 1-for-1 cash equivalence overstate static redistributive compression by up to 50%. `Calibrate_NZ_Moments.m` computes Ferriere et al.'s exact marginal-rate-of-substitution imputation weight across income quintiles:
+4. **Welfare-Based In-Kind ECE Imputation Weights ($\omega\sb{i}$, Ferriere et al., 2025, Eq. 3):** Because early childhood education and preventative health exhibit a Stone-Geary luxury threshold ($\bar{g}\sb{\mathrm{ECE}} = 0.032 > 0$, macro income elasticity $\theta \in [1.15, 1.38] > 1$), liquidity-constrained parents at the private corner solution ($i\sb{c} = 0$, share $S = \Pr(i\sb{c} = 0) \approx 0.258$) have a high marginal utility of liquid cash ($\partial u\sb{i} / \partial y\sb{i}$) to cover immediate rent ($Q\sb{k}$) and transport ($\bar{e}\sb{k}$). Standard static benefit-incidence studies that value public in-kind spending $G\sb{\mathrm{ECE}}$ at 1-for-1 cash equivalence overstate static redistributive compression by up to 50%. `Calibrate_NZ_Moments.m` computes Ferriere et al.'s exact marginal-rate-of-substitution imputation weight across income quintiles:
 
    $$
-   \omega_i =
-   \frac{\partial u_i / \partial G_{\mathrm{ECE}}}
-   {\partial u_i / \partial y_i} =
-   \min\left\lbrace \frac{y_i / \bar{y}}{F^{-1}(S)}, 1 \right\rbrace
+   \omega\sb{i} = \frac{\partial u\sb{i} / \partial G\sb{\mathrm{ECE}}}{\partial u\sb{i} / \partial y\sb{i}} = \min\left\lbrace \frac{y\sb{i} / \bar{y}}{F^{-1}(S)}, 1 \right\rbrace
    $$
 
-   Even after strictly discounting direct static utility for cash-poor households ($\omega_i < 1$ in $Q_1\text{--}Q_2$), universal wraparound provision $G_{\mathrm{ECE}}$ generates large net positive Consumption-Equivalent welfare gains ($\mathrm{CE}$) through two dynamic general-equilibrium channels omitted by static incidence studies: (i) the concave pro-equality societal externality $X_t$ and fiscal cost avoidance across Exits 1, 2, and 4, and (ii) the intergenerational human-capital transition operator $Q_h$.
+   Even after strictly discounting direct static utility for cash-poor households ($\omega\sb{i} < 1$ in $Q\sb{1}\text{--}Q\sb{2}$), universal wraparound provision $G\sb{\mathrm{ECE}}$ generates large net positive Consumption-Equivalent welfare gains ($\mathrm{CE}$) through two dynamic general-equilibrium channels omitted by static incidence studies: (i) the concave pro-equality societal externality $X\sb{t}$ and fiscal cost avoidance across Exits 1, 2, and 4, and (ii) the intergenerational human-capital transition operator $Q\sb{h}$.
 
 ---
 
@@ -554,7 +518,7 @@ To ensure full replicability across the theoretical operators, VFI Toolkit scrip
 3. **Hirano, T., & Toda, A. A. (2025):** *"Unbalanced Growth and Land Overvaluation"* (and *"Bubble Necessity Theorem"*) — *Public PDF & Replication Code:* *Journal of Political Economy Macroeconomics* / *PNAS* / Alexis Akira Toda's GitHub (`alexisakira.github.io/files/code_unbalanced_growth.zip`). *(Anchors regional land overvaluation $Q_k$ under unbalanced sectoral productivity growth $G_k$ and the Part VI Tokyo Land Bubble Coda.)*
 4. **Kiyotaki, N., Michaelides, A., & Nikolov, K. (2024):** *"Housing, Distribution, and Welfare"* — *Public PDF:* *Journal of Money, Credit and Banking* 56(5), 987–1020 (Wiley Open Access). *(Anchors the young renter vs. leveraged homeowner vs. retiree landlord tenure cleavage $\xi_k$ and small-open-economy interest rate crowding-in channel $\Delta r$.)*
 5. **De Nardi, M. (2004):** *"Wealth Inequality and Intergenerational Links"* — *Public PDF:* *Review of Economic Studies* 71(3), 743–768 / NBER Working Paper w9768. *(Anchors the warm-glow luxury bequest motive $b_1, b_2$ and the Sweden vs. US idiosyncratic earnings variance compression benchmark.)*
-6. **Piketty, T., & Saez, E. (2013) & Piketty, T., Saez, E., & Stantcheva, S. (2014):** *"A Theory of Optimal Inheritance Taxation"* (*Econometrica* 81(5), 1851–1886 / NBER w17989) and *"Optimal Taxation of Top Labor Incomes: A Tale of Three Elasticities"* (*American Economic Journal: Economic Policy* 6(1), 230–271 / NBER w17616). *(Anchors the optimal estate levy $\tau_b = 25\%$ on New Zealand's NZD 1.6T intergenerational property transfer funding the universal Youth Capital Grant $E$, and the three-elasticity decomposition $e_{\mathrm{total}} = e_1 + e_2 + e_3$ in Document 1B Section 4.5.1.)*
+6. **Piketty, T., & Saez, E. (2013) & Piketty, T., Saez, E., & Stantcheva, S. (2014):** *"A Theory of Optimal Inheritance Taxation"* (*Econometrica* 81(5), 1851–1886 / NBER w17989) and *"Optimal Taxation of Top Labor Incomes: A Tale of Three Elasticities"* (*American Economic Journal: Economic Policy* 6(1), 230–271 / NBER w17616). *(Anchors the optimal estate levy $`\tau_b = 25\%`$ on New Zealand's NZD 1.6T intergenerational property transfer funding the universal Youth Capital Grant $E$, and the three-elasticity decomposition $e_{\mathrm{total}} = e_1 + e_2 + e_3$ in Document 1B Section 4.5.1.)*
 7. **Murphy, K. M., Shleifer, A., & Vishny, R. W. (1991):** *"The Allocation of Talent: Implications for Growth"* — *Public PDF:* *Quarterly Journal of Economics* 106(2), 503–530 / NBER Working Paper w3530. *(Anchors the occupational talent cutoff $A^{\star}$ between rent-seeking property speculation and productive entrepreneurship in Document 1A Part I.2 and `WelfareDecomposition_4Region.m`.)*
 8. **Straub, L., & Werning, I. (2020) & Hope, D., & Limberg, J. (2022):** *"Positive Long-Run Capital Taxation: Chamley-Judd Revisited"* (*American Economic Review* 110(1), 86–119) and *"The Economic Consequences of Major Tax Cuts for the Rich"* (*Socio-Economic Review* 20(2), 539–559). *(Proves that optimal long-run capital/wealth taxation $\tau_a > 0$ is strictly positive under binding household liquidity constraints and finite intertemporal elasticity $\sigma = 2.2$, and validates empirically across 18 OECD economies over 50 years why top-rate reductions without capital-base broadening fail to lift real GDP growth in Table 6B Case 12.)*
 
@@ -565,7 +529,7 @@ To ensure full replicability across the theoretical operators, VFI Toolkit scrip
 12. **Daruich, D. (2018 / 2022):** *"The Macroeconomic Consequences of Early Childhood Development Policies"* — **Public PDF:** SSRN / St. Louis Fed Working Paper. *(Anchors the 3-step PE/GE/Intergenerational welfare decomposition `T1`, Jump 1 vs. Jump 2 cohort welfare transition trajectories, and two-stage Sobol + Nelder-Mead SMM calibration.)*
 13. **Bailey, D. H., Duncan, G. J., Odgers, C. L., & Yu, W. (2017):** *"Persistence and Fadeout in the Impacts of Child and Adolescent Interventions"* — **Public PDF:** *Journal of Research on Educational Effectiveness* 10(1), 7–39 / Life Course Centre Working Paper 2015-27. *(Anchors the "sustaining environments" and unbanked skill-gain fade-out parameter `delta_theta_fade = 0.22` in `HumanCapital_Lifecycle_aprimeFn.m` and the 39.2% two-term Stop-Go perishability wedge in Document 3 Table 4.1.)*
 14. **Caspi, A., Houts, R. M., Belsky, D. W., Harrington, H., Hogan, S., Ramrakha, S., Poulton, R., & Moffitt, T. E. (2016):** *"Childhood forecasting of a small segment of the population with large economic burden"* — **Public PDF:** *Nature Human Behaviour* 1, 0005 (PMC Open Access). *(The landmark Dunedin Multidisciplinary Health and Development Study paper proving that the most disadvantaged 22% of a cohort at age 3 accounts for 57%–81% of adult hospital nights, welfare receipt, and criminal convictions.)*
-15. **Morton, S. M. B., et al. (2020 / 2023 / 2025):** *"Growing Up in New Zealand: Now We Are Eight / Now We Are Twelve / Now We Are Fifteen — Longitudinal Reports on Material Hardship, Residential Mobility, and Youth Wellbeing"* — *Public PDF:* University of Auckland / Ministry of Social Development (`growingup.co.nz`). *(Anchors the `'MetroSqueeze_GUiNZ'` housing crowding and dampness penalty $\psi_{\mathrm{crowd}}$, the $>45\%$ private-rental transience rate prior to age 5 eroding early self-productivity in Document 1B Section 3.4.8, and the Ages 12–15 adolescent vulnerability window.)*
+15. **Morton, S. M. B., et al. (2020 / 2023 / 2025):** *"Growing Up in New Zealand: Now We Are Eight / Now We Are Twelve / Now We Are Fifteen — Longitudinal Reports on Material Hardship, Residential Mobility, and Youth Wellbeing"* — *Public PDF:* University of Auckland / Ministry of Social Development (`growingup.co.nz`). *(Anchors the `'MetroSqueeze_GUiNZ'` housing crowding and dampness penalty $\psi_{\mathrm{crowd}}$, the $`>45\%`$ private-rental transience rate prior to age 5 eroding early self-productivity in Document 1B Section 3.4.8, and the Ages 12–15 adolescent vulnerability window.)*
 16. **Gluckman, P. (2011), Berryman, M., & Eley, E. (2019), & Graeme Dingle Foundation (2023/2025):** *"Improving the Transition: Reducing Social and Psychological Morbidity During Adolescence"* (Office of the Prime Minister's Chief Science Advisor, 2011), *"Tuakana–Teina and Ka Hikitia: Accelerating Māori Student Success"* (*New Zealand Journal of Educational Studies*), and **Graeme Dingle Foundation** *Social Return on Investment (SROI) Reports on Stars / Te Kāhui Whetū & Project K*. *(Anchors the Gate 3 $J = 5$ Montessori / *Tuakana–Teina* and Graeme Dingle adolescent mentoring boost $\Delta_{\mathrm{Tuakana}} = +0.11$.)*
 
 ### Folder 3: `03_Fertility_Bargaining_and_Brain_Drain_Migration` (7 Papers)
