@@ -149,7 +149,27 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
     3. **2008–2009 Global Financial Crisis (GFC):** Global equities fell **~40%**, over 60 New Zealand finance companies failed, and real REINZ/RBNZ house prices fell **~12%**.
     4. **2022–2024 RBNZ Interest-Rate Tightening Cycle:** Following the November 2021 peak, real inflation-adjusted REINZ/CoreLogic House Price Indices fell **~18% to 22% nationally** and **~22% to 27% in Auckland and Wellington**—more than double our model's entire 60-year land-value cooling (`Q_mult_GE(4) = 0.925` in `SS1` and `0.895` in `SS2`).
 
-### 2.4 Part II Synthesis — Calibrating the Social Cohesion Index ($`S_t: 100.0 \to 112.0\text{–}118.4 \to 126.0`$) to Transparency International's CPI ("Social Credit Rating")
+### 2.4 Part II Synthesis — Social Cohesion, Institutional Friction, Identity Utility, and Coalition Supermodularity as a function of Social Credit Ratings
+
+#### 2.4.1 Coase–North Commissioning Efficiency and Williamson Actuarial Alignment
+Let $\tau_{\text{friction}}(\mathcal{G}) \in [0, 1)$ denote the share of nominal public social expenditure $G_{\text{nominal},1}$ dissipated in inter-agency contracting and compliance overhead under governance structure $\mathcal{G}$:
+
+$$G_{\text{effective},1}(\mathcal{G}) = (1 - \tau_{\text{friction}}(\mathcal{G})) G_{\text{nominal},1}, \qquad \tau_{\text{friction}}(\mathcal{G}_{\text{siloed}}) = 0.32 \longrightarrow \tau_{\text{friction}}(\mathcal{G}_{\text{Wh\bar{a}nauOra}}) \le 0.08$$
+
+Aligning the governance accounting horizon $T_{\text{horizon}} = 81$ years with the physical asset life of human capability via the Social Rate of Time Preference ($r_{\text{SRTP}} = 0.02$) yields the Year-5 ACC actuarial present-value release:
+
+$$\text{NPV}_{\text{ACC}}(t = 5) = \sum_{s=1}^{81} \frac{\Delta \mathbb{E}\left[ \tau_y w_s h_s - \sum_{x \in \{1,2,4\}} C_x \mathbb{I}(\text{Exit}_x) \right]}{(1 + r_{\text{SRTP}})^s} = \text{NZD } 35.25\text{B}\text{ to }40.86\text{B}$$
+
+#### 2.4.2 Akerlof–Kranton Adolescent Identity Utility and Topkis Coalition Supermodularity
+At Gate 2 (ages 12–14), adolescent educational effort $e_2^\star$ maximizes the identity-augmented utility function:
+
+$$U_j^i(c, \ell, e_2) = u(c, \ell) + \lambda_{\text{id}} \mathcal{I}_{\mathrm{p\bar{u}r\bar{a}kau}}(e_2, M_{\text{tuakana}}, \text{Cohesion}_t), \qquad \frac{\partial e_2^\star}{\partial \mathcal{I}_{\mathrm{p\bar{u}r\bar{a}kau}}} > 0$$
+
+Finally, let $\mathcal{A}_1$ denote the actuarial and tax-rebalancing policy vector and $\mathcal{A}_2$ denote the polycentric community and cultural-stewardship vector. By Topkis's (1998) Supermodularity Theorem, the social welfare functional $\mathcal{W}(\mathcal{A}_1, \mathcal{A}_2)$ exhibits strictly positive complementarity across the two institutional architectures:
+
+$$\mathcal{W}(\mathcal{A}_1 \cup \mathcal{A}_2) - \left[ \mathcal{W}(\mathcal{A}_1) + \mathcal{W}(\mathcal{A}_2) \right] = \Delta_{\mathrm{k\bar{\imath}ato}} > 0$$
+
+#### 2.4.3 Calibrating the Social Cohesion Index ($`S_t: 100.0 \to 112.0\text{–}118.4 \to 126.0`$) to Transparency International's CPI ("Social Credit Rating")
 
 * **Document 1A Claim (Part II Synthesis):** New Zealand's slide on Transparency International's Corruption Perceptions Index (CPI) from **#1 globally** (peaking at **96/100** in 2004 and still **88/100** as #1-equal in 2021) down to a 30-year low of **81/100** (**#4 equal** in the 2025/2026 index, behind **#1 Denmark at 89, #2 Finland at 88, and #3 Singapore at 84**) reflects the institutional and civic cost of child material deprivation, high replacement-migration turnover (`Churn_Rate`), and opaque property-wealth shelters.
 - **Code & Literature Mapping:** In `WelfareDecomposition_4Region.m`, `TransPath_4Region_Master.m`, and `Plot_Counterfactuals_And_MirrorInvestments.m`, the macro Social Cohesion Index $S_t$ enters relational utility $u_{\text{rel}}(S_t, \text{RetainedYouth}_t)$ as a decreasing function of the struggling cohort share ($h_1\text{–}h_2$) and skilled demographic churn (`Churn_Rate`).
@@ -403,6 +423,32 @@ Evaluating the unified government budget identity and household welfare decompos
 
 ---
 
+#### 3.4.8 Cohort Distribution Drift and Transience Haircuts in the 4-Region + Abroad Framework
+
+Let $s_1 = (a_1, h_1, pv_1, z, r)$ denote the initial state vector at Gate 1 (ages 0–5) across the four domestic regions $r \in \{1, 2, 3, 4\}$ (`Rural`, `Small Urban`, `Large Urban`, `Auckland`), with dimension $r = 5$ denoting `Abroad`. Under Stone–Geary non-homothetic preferences with regional housing subsistence requirement $p_{h,r}^r(t)\bar{h}$ and stochastic energy expenditure $p_e(z_2, t)$, private parental cash investment $i_c^\star(s_1, t)$ satisfies the Kuhn–Tucker condition:
+
+$$i_c^\star(s_1, t) = \max\left\{ 0, \theta_c \left[ y_{1,r}(s_1) + T_{\text{cash}}(t) - p_{h,r}^r(t)\bar{h} - p_e(z_2, t) - \bar{c}_0 \right] \right\}$$
+
+Define the critical disposable-income boundary $\tilde{y}_{1,r}(t) \equiv \bar{c}_0 + p_{h,r}^r(t)\bar{h} + p_e(z_2, t) - T_{\text{cash}}(t)$. Between the 1972–1973 Dunedin baseline ($t = 1972$) and the 2009–2010 `GUiNZ` baseline ($t = 2010$), the reduction in real unconditional family transfers ($\Delta T_{\text{cash}} < 0$) and the appreciation of untaxed urban land ($\frac{p_{h,4}^r(2010)\bar{h}}{\bar{y}_1} = 3.10\times$ versus $1.20\times$ in 1972) shifted $\tilde{y}_{1,r}(t)$ upward from the 22nd to the 30th percentile of the birth distribution:
+
+$$\Pr_{1972}^{\text{Dunedin}}(i_c^\star(s_1) = 0) = \sum_{r=1}^{4} \omega_r \int_{y_{1,r} \le \tilde{y}_{1,r}(1972)} d\mu_{1972}(s_1 \mid r) = 0.220$$
+
+$$\Pr_{2010}^{\text{GUiNZ}}(i_c^\star(s_1) = 0) = \sum_{r=1}^{4} \omega_r \int_{y_{1,r} \le \tilde{y}_{1,r}(2010)} d\mu_{2010}(s_1 \mid r) = 0.300$$
+
+Let $\nu_r(a_1, p_{h,r}^r) \in [0, 1]$ denote the forced residential relocation rate prior to age 5 in private rental tenure. Residential churn erodes early skill self-productivity $\gamma_1$ by the factor $(1 - \zeta \nu_r)$ inside the Cunha–Heckman–Schennach (2010) CES production function:
+
+$$h_2(s_1) = A_1 \left[ \gamma_1 (1 - \zeta \nu_r(a_1, p_{h,r}^r)) h_1^{\phi_1} + (1 - \gamma_1) \left( G_{\text{ECE},1}^{\text{in-kind}} + \kappa_1 i_c^\star(s_1) + \omega_1 \tau_c w_1 h_1 \right)^{\phi_1} \right]^{\frac{\rho_1}{\phi_1}}$$
+
+Because early inputs are strong complements ($\phi_1 = -0.50 < 0 \implies \sigma_1 = \frac{1}{1 - \phi_1} = 0.67 < 1$), the cross-partial derivatives of expected Gate 2 readiness $\mathbb{E}[h_2]$ with respect to universal in-kind early childhood provision $G_{\text{ECE},1}^{\text{in-kind}}$ and the subsistence-corner mass $\Pr(i_c^\star = 0)$ as well as tenure stabilization ($-\nu_r$) are strictly positive:
+
+$$\frac{\partial^2 \mathbb{E}[h_2]}{\partial G_{\text{ECE},1}^{\text{in-kind}} \partial \Pr(i_c^\star = 0)} > 0 \quad \text{and} \quad \frac{\partial^2 \mathbb{E}[h_2]}{\partial G_{\text{ECE},1}^{\text{in-kind}} \partial (-\nu_r)} > 0$$
+
+Consequently, evaluating the unbuffered `SS0` fiscal remediation functional across health, state-care, and justice exits $x \in \{1, 2, 4\}$ under the 2010 `GUiNZ` stationary measure yields an additional $+\text{NZD } 10.8\text{B/yr}$ in structural drag while increasing the Year-5 ACC actuarial return multiple of the integrated reform package from $3.84\times$ to $4.45\times$:
+
+$$\Delta \mathcal{D}_{\text{GUiNZ}} = \sum_{r=1}^{4} \sum_{x \in \{1,2,4\}} \int_{\mathcal{S}} C_x(s) d\left(\mu_{2010}^{\text{GUiNZ}}(s \mid r) - \mu_{1972}^{\text{Dunedin}}(s \mid r)\right) = +\text{NZD } 10.8\text{B/yr}$$
+
+---
+
 ## 4. Part IV Cross-Reference: Core Model Output Tables (Tables 1 to 17)
 
 ## 4.1 Table 1: Multiphase 4-Region Daruich (2018) & Lee-Seshadri (2019) Welfare Decomposition ($SS0 \to SS1 \to SS2$)
@@ -487,6 +533,33 @@ Evaluating the unified government budget identity and household welfare decompos
 ## 4.5 Table 17: Distributional Incidence Across 10 Survey-Anchored Earn + Own Tiers — Productive vs. Passive Asset Bifurcation and Balance-Sheet Resilience (`Plot_WealthBracket_GiveAndGain.m`)
 
 *Source Script:* `Plot_WealthBracket_GiveAndGain.m`; *Output CSV:* `Table17_Survey10Tier_EarnOwn_Welfare_Dunedin_22.csv`; *Figures:* `Fig_WealthBrackets_2Panel_GiveAndGain_Dunedin_22.png`, `Fig_WealthBrackets_PanelA_GiveVsGain_Dunedin_22.png`, and `Fig_WealthBrackets_PanelB_WealthResilience_Dunedin_22.png`
+
+Arguments for and against tax reform are often shallow, because they depend on "thin" numbers: a tax rate here or a percentage of capital flight there.  Our theoretical foundation admits a more substantial analysis that respects both the topography of the wealth terrain, and the willingness of its inhabitants to endure the exercise as both a worthy challenge and a worthwhile reward.  From these three papers we map the practical routes calibrated to New Zealand data.
+
+### 4.2.1 Three-Elasticity Decomposition of Top Marginal Tax Rates
+Following Piketty, Saez, and Stantcheva (2014), the total observed taxable income elasticity $e_{\text{total}}$ with respect to the net-of-tax rate $(1 - \tau_{\text{top}})$ decomposes into real productive supply ($e_1$), tax-base sheltering ($e_2$), and zero-sum compensation bargaining ($e_3$):
+
+$$e_{\text{total}} = e_1 + e_2 + e_3$$
+
+When capital-gain and land shelters remain open ($\tau_a = 0$), reductions in $\tau_{\text{top}}$ primarily stimulate rent-seeking bargaining ($e_3 > 0$) while the real productive elasticity remains small ($e_1 \approx 0.15\text{–}0.25$). The net fiscal revenue derivative is therefore strictly negative:
+
+$$\frac{d\mathcal{R}}{d(1 - \tau_{\text{top}})} = Y_{\text{top}} \left( e_1 - \frac{1 - \tau_{\text{top}}}{\tau_{\text{top}}} \right) < 0 \quad \text{for } e_1 \ll \frac{1 - \tau_{\text{top}}}{\tau_{\text{top}}}$$
+
+### 4.2.2 Return Heterogeneity Under Wealth-Stock vs. Capital-Income Taxation
+In the 8-PType occupational-choice block (Guvenen et al., 2023; Murphy, Shleifer, & Vishny, 1991), agents possess heterogeneous entrepreneurial productivity $z_h$ versus passive land-holding return $z_\ell (\dot{P}_L / P_L)$. Introducing a book-value wealth/land tax $\tau_a = 1.5\%$ paired with lower taxes on active earnings ($\Delta \tau_k < 0, \Delta \tau_y < 0$) yields the after-tax return schedule:
+
+$$r_{\text{net}}(z, \tau_a, \tau_k) = (1 - \tau_k) z_h k^{\alpha - 1} + z_\ell \left( \frac{\dot{P}_L}{P_L} \right) - \tau_a$$
+
+Differentiating the stationary asset cutoff $A^\star(\tau_a)$ confirms that wealth-stock taxation compresses speculative land hoarding ($\partial A^\star(z_\ell) / \partial \tau_a < 0$) and expands the stationary measure of high-productivity builders ($\Delta \mu^\star(z_h) > 0$), reducing equilibrium metropolitan housing rents $p_{h,r}^r$ by $10.5\%$ and curtailing outbound graduate migration to the `Abroad` state ($r = 5$):
+
+$$V_{20,r}^{\text{Domestic}}(a_{20} + B_{\text{youth}}, h_3) \ge V_{20,5}^{\text{Abroad}}(a_{20}, h_3) - c_{\text{mig}} \quad \forall r \in \{1, 2, 3, 4\}$$
+
+### 4.2.3 Parental Developmental Time Crowd-Out Under High Abatement
+Consider a liquidity-constrained Gate 1 household subject to benefit abatement rate $\tau_{\text{abate}} \in [0.70, 0.90]$ that increases low-wage labor supply by $\Delta \ell_{\text{coerced}} > 0$, inducing a one-for-one reduction in parental developmental time $\Delta \tau_c = -\Delta \ell_{\text{coerced}} < 0$. Differentiating $h_2(s_1)$ with respect to $\ell_{\text{coerced}}$ yields:
+
+$$\frac{d h_2}{d \ell_{\text{coerced}}} = \frac{\partial h_2}{\partial I_1} \left[ \kappa_1 \mathbb{I}(i_c^\star > 0) w_{\min}(1 - \tau_{\text{abate}}) - \omega_1 w_1 h_1 \right] < 0$$
+
+At or near the Stone–Geary corner ($\mathbb{I}(i_c^\star > 0) = 0$), the marginal cash term vanishes while the loss of parental time $-\omega_1 w_1 h_1$ strictly degrades early skill formation $h_2$.
 
 To evaluate the distributional incidence of `SS0 -> SS1 -> SS2` without arbitrary brackets, `Plot_WealthBracket_GiveAndGain.m` maps **10 official survey-anchored `Earn + Own` (*Annual Household Income + Net Worth*) benchmarks** drawn directly from:
 1. **Statistics New Zealand Household Economic Survey (*HES* June 2024/2025):** Median household income = **NZD 119k** (`Tier 3: 120k + 340k`); median household net worth = **NZD 529k** (`Tier 4: 135k + 530k`), alongside `Q1` Hardship Renters (`Tier 1: 45k + 12k`, P12) and `Q2` Young Savers (`Tier 2: 85k + 115k`, P35).
