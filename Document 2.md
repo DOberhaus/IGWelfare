@@ -514,7 +514,7 @@ $$
 \Phi(t) = \Phi_1 + \frac{\Phi_2 - \Phi_1}{1 + \exp\left(-\xi_{\mathrm{ramp}}\left(t - T_1\right)\right)}
 $$
 
-## 7.4 Constructive 11-Layer Supermodular Attribution, End-to-End Wedge Mechanics, & 3D LTFM Sinkhole Surface (`Plot_Counterfactuals_And_MirrorInvestments.m` & `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m`)
+### 7.4 Constructive 11-Layer Supermodular Attribution, End-to-End Wedge Mechanics, & 3D LTFM Sinkhole Surface (`Plot_Counterfactuals_And_MirrorInvestments.m` & `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m`)
 
 To decompose the multiphase Consumption-Equivalent welfare trajectory $\text{CE}_{k,t}^{\text{tot}}$ (`T1` rows `SS1_1..3` and `SS2_1..3`) into its underlying isolated policy levers and non-linear dynamic complementarity wedges across cohort entry years $c \in [-10, +60]$ and regions $k \in \{\text{Rural}, \text{Small}, \text{Large}, \text{Auckland}, \text{National}\}$, `Plot_Counterfactuals_And_MirrorInvestments.m` evaluates a sequential Topkis (1998) supermodular policy lattice over the structural parameter vector $\Phi = (\Phi_{\text{HC}}, \Phi_{\text{Spatial}}, \Phi_{\text{Fiscal}})$.
 
