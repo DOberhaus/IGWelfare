@@ -970,10 +970,6 @@ h' = \bigl(1 - \delta_{hc}(\Delta t)\bigr) h + \left(\frac{\Delta t}{5}\right) \
 
 * **5. Macro Public Residual ($`\Omega_{\mathrm{fiscal}}`$) & The 2050 50/50 Dynamic Surplus Split (`Plot_ChildFiscal_SSankey.m`):** At Gate 5 ($`J = 10`$, Age 30) and Gate 6 ($`J = 11\text{–}16`$, Career to Retirement), the net cohort fiscal balance $`\Omega_{\mathrm{fiscal}}`$ and positive fiscal surplus allocation are defined as:
 
-```math
-\Omega_{\mathrm{fiscal}} = \bigl(\mathrm{Tax}_{\mathrm{PAYE}} + \mathrm{Tax}_{\mathrm{GST}} + \mathrm{Tax}_{\mathrm{Cap}} + \mathrm{Tax}_{\mathrm{Estate}}\bigr) - \bigl(\mathrm{Cost}_{\mathrm{Exits},1,2,4} + \mathrm{Cost}_{\mathrm{Infra,Health,Super}}\bigr)
-```
+$$\Omega_{\mathrm{fiscal}} = \left(\mathrm{Tax}_{\mathrm{PAYE}} + \mathrm{Tax}_{\mathrm{GST}} + \mathrm{Tax}_{\mathrm{Cap}} + \mathrm{Tax}_{\mathrm{Estate}}\right) - \left(\mathrm{Cost}_{\mathrm{Exits,1,2,4}} + \mathrm{Cost}_{\mathrm{Infra,Health,Super}}\right)$$
 
-```math
-\Omega_{\mathrm{surplus}}^{\mathrm{SS1}} = \max(0, \Omega_{\mathrm{fiscal}}^{\mathrm{SS1}}) = \underbrace{0.50  \Omega_{\mathrm{surplus}}^{\mathrm{SS1}}}_{\Omega_{\mathrm{debt}}\text{ (Debt Sinking)}} + \underbrace{0.50  \Omega_{\mathrm{surplus}}^{\mathrm{SS1}}}_{\Omega_{\mathrm{reinv}}\text{ (Reinvestment Pool)}}
-```
+$$\Omega_{\mathrm{surplus}}^{SS1} = \max\left(0, \Omega_{\mathrm{fiscal}}^{SS1}\right) = \underbrace{0.50 \cdot \Omega_{\mathrm{surplus}}^{SS1}}_{\text{Debt Sinking } (\Omega_{\mathrm{debt}})} + \underbrace{0.50 \cdot \Omega_{\mathrm{surplus}}^{SS1}}_{\text{Reinvestment Pool } (\Omega_{\mathrm{reinv}})}$$
