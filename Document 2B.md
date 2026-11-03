@@ -113,24 +113,24 @@ $$p_H\left(a, z, Q_k, j\right) = \left(\xi_{\mathrm{hh}}\left(a, Q_k\right) rh_k
 
 Projecting $p_H$ onto the $(a, z)$ sub-manifold expands housing user costs from 1 scalar per region into $`61 \times 7 = 427`$ state-contingent values per region:
 1. **The 20% LVR Deposit Gate ($`a \lt 0.20 * Q_k`$):** Young households without sufficient equity to clear the `0.20 * Q_k` deposit hurdle face the unblended rental user cost—explaining why the Age-20 Youth Capital Grant ($E$) and metropolitan house-price cooling ($Q_k$ down) interact multiplicatively to lift young-adult homeownership in Auckland from 28.0% to 41.2%.
-2. **Comonotonic Tail Coupling of Eviction & Transience Risk ($`a lt 0.08 * Q_k`$ and $`z \lt 0.85`$):** Renters with near-zero liquid buffers who simultaneously experience an adverse Rouwenhorst earnings shock face a 12% effective housing cost and transience wedge (forced moves, emergency accommodation, and school disruption).
+2. **Comonotonic Tail Coupling of Eviction & Transience Risk ($`a \lt 0.08 * Q_k`$ and $`z \lt 0.85`$):** Renters with near-zero liquid buffers who simultaneously experience an adverse Rouwenhorst earnings shock face a 12% effective housing cost and transience wedge (forced moves, emergency accommodation, and school disruption).
 3. **Retiree Renter Vulnerability ($j \ge J_r$ and $`a \lt 0.20 * Q_k`$):** Elderly households who reach age 65 ($`age_j \ge J_r`$) without home equity remain exposed to rental user costs $`rr_k`$ during retirement.
 
 ---
 
-### 4.4 Skill-Manifold Conditioned Survival and Late-Life Labor Disutility ($`sj_{eff}`$): Capturing Actuarial Regressivity
+### 4.4 Skill-Manifold Conditioned Survival and Late-Life Labor Disutility ($`sj_{\text{eff}}`$): Capturing Actuarial Regressivity
 
 Finally, to capture the MPP's warning regarding **differential mortality and physical wear-and-tear**, we condition late-life labor disutility and mortality hazard on the household's 7-point adult human-capital / occupational sub-manifold `h` in `[0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80]`:
 
 $$
-\psi_{\mathrm{wear}}\left(h, j\right) = 1.0 + 0.35 \mathbb{I}\left(\mathrm{Age}_j \ge 65\right)\max\left(0, \frac{1.00 - h}{0.55}\right)
+\psi_{\mathrm{wear}}\left(h, j\right) = 1.0 + 0.35 \mathbb{I}\left(\mathrm{age}_j \ge 65\right)\max\left(0, \frac{1.00 - h}{0.55}\right)
 $$
 
 $$
 1 - s_j^{\mathrm{eff}}\left(h, j\right) = \min\left(0.99, \left(1 - s_j\right)\exp\left(0.18\left(1.00 - h\right)\right)\right)
 $$
 
-When a policy simulation raises the NZ Superannuation eligibility age (`Jr`) above 65, manual, rural, and lower-skilled workers (`h_1 = 0.45` and `h_2 = 0.65`, where Māori and Pasifika workers are disproportionately represented due to historical childhood material hardship) face a 22% to 35% higher physical disutility of working past age 65 (`psi_wear > 1`) comonotonically coupled with a higher late-life mortality hazard $`1 - sj_{eff}(h, j)`$. Consequently, evaluating the Bellman expectation over the stationary distribution $`\mu_k(a, h, \theta_c, z, j)`$ endogenously reproduces both the **38% to 52% disability/hardship benefit substitution leak** and the **regressive life-expectancy penalty** that make raising the pension age fiscally and socially inferior to front-loaded human-capital investment.
+When a policy simulation raises the NZ Superannuation eligibility age (`Jr`) above 65, manual, rural, and lower-skilled workers (`h_1 = 0.45` and `h_2 = 0.65`, where Māori and Pasifika workers are disproportionately represented due to historical childhood material hardship) face a 22% to 35% higher physical disutility of working past age 65 (`psi_wear > 1`) comonotonically coupled with a higher late-life mortality hazard $`1 - sj_{\text{eff}}(h, j)`$. Consequently, evaluating the Bellman expectation over the stationary distribution $`\mu_k(a, h, \theta_c, z, j)`$ endogenously reproduces both the **38% to 52% disability/hardship benefit substitution leak** and the **regressive life-expectancy penalty** that make raising the pension age fiscally and socially inferior to front-loaded human-capital investment.
 
 ---
 
