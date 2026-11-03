@@ -153,15 +153,17 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 
 ### 2.4.1 Coase–North Commissioning Efficiency and Williamson Actuarial Alignment
 
-Let $\tau\sb{\mathrm{friction}}(\mathcal{G}) \in [0, 1)$ denote the share of nominal public social expenditure $G\sb{\mathrm{nominal},1}$ dissipated in inter-agency contracting and compliance overhead under governance structure $\mathcal{G}$:
+Let $\tau_{\mathrm{friction}}(\mathcal{G}) \in [0, 1)$ denote the share of nominal public social expenditure $G_{\mathrm{nominal},1}$ dissipated in inter-agency contracting and compliance overhead under governance structure $\mathcal{G}$:
 
 $$
-G\sb{\mathrm{effective},1}(\mathcal{G}) = (1 - \tau\sb{\mathrm{friction}}(\mathcal{G})) G\sb{\mathrm{nominal},1}, \qquad \tau\sb{\mathrm{friction}}(\mathcal{G}\sb{\mathrm{siloed}}) = 0.32 \longrightarrow \tau\sb{\mathrm{friction}}(\mathcal{G}\sb{\mathrm{Wh\bar{a}nauOra}}) \le 0.08
+G_{\mathrm{effective},1}(\mathcal{G}) = (1 - \tau_{\mathrm{friction}}(\mathcal{G})) G_{\mathrm{nominal},1}, \qquad \tau_{\mathrm{friction}}(\mathcal{G}_{\mathrm{siloed}}) = 0.32 \longrightarrow \tau_{\mathrm{friction}}(\mathcal{G}_{\mathrm{Wh\bar{a}nauOra}}) \le 0.08
 $$
 
-Aligning the governance accounting horizon $T_{\text{horizon}} = 81$ years with the physical asset life of human capability via the Social Rate of Time Preference ($r_{\text{SRTP}} = 0.02$) yields the Year-5 ACC actuarial present-value release:
+Aligning the governance accounting horizon $T_{\mathrm{horizon}} = 81$ years with the physical asset life of human capability via the Social Rate of Time Preference ($r_{\mathrm{SRTP}} = 0.02$) yields the Year-5 ACC actuarial present-value release:
 
-$$\text{NPV}_{\text{ACC}}(t = 5) = \sum_{s=1}^{81} \frac{\Delta \mathbb{E}\left[ \tau_y w_s h_s - \sum_{x \in \{1,2,4\}} C_x \mathbb{I}(\text{Exit}_x) \right]}{(1 + r_{\text{SRTP}})^s} = \text{NZD } 35.25\text{B}\text{ to }40.86\text{B}$$
+$$
+\mathrm{NPV}_{\mathrm{ACC}}(t = 5) = \sum_{s=1}^{81} \frac{\Delta \mathbb{E}\left[ \tau_y w_s h_s - \sum_{x \in \lbrace 1,2,4 \rbrace} C_x \mathbb{I}(\mathrm{Exit}_x) \right]}{(1 + r_{\mathrm{SRTP}})^s} = \text{NZD } 35.25\text{B to } 40.86\text{B}
+$$
 
 #### 2.4.2 Akerlof–Kranton Adolescent Identity Utility and Topkis Coalition Supermodularity
 At Gate 2 (ages 12–14), adolescent educational effort $e_2^\star$ maximizes the identity-augmented utility function:
@@ -255,26 +257,19 @@ $$
 
 The two endogenous multipliers are defined as follows:
 
-1. **Asymmetric Grandparent and Aunty Time Multiplier Across the Retirement-Age U-Curve ($\Phi\sb{\mathrm{time}}$):** Let $A\sb{\mathrm{super}} = 20 + (J\sb{r} - 1)\Delta t$ denote the statutory NZ Superannuation eligibility age relative to the statutory baseline $A\sb{\mathrm{base}} = 65.0$:
-   - *Above Age 65 (Austerity Squeeze, $A\sb{\mathrm{super}} \ge 65$):* Raising $A\sb{\mathrm{super}}$ above 65 forces older *whānau* aged 65 to $A\sb{\mathrm{super}}$ to remain in market employment ($\ell > 0$) to satisfy the pre-retirement budget constraint, withdrawing alloparental caregiving time exponentially at rate $\eta\sb{\mathrm{elder}} = 0.09\text{ yr}^{-1}$.
-   - *Below Age 65 (Early Retirement Kuia/Koroua Dividend, $A\sb{\mathrm{super}} < 65$):* Lowering $A\sb{\mathrm{super}}$ below 65 releases healthy 60-to-64-year-old *kuia*, *koroua*, and aunties into voluntary alloparental support with concave hyperbolic-tangent saturation ($\kappa\sb{\mathrm{kuia}}^{\max} = 0.16$, saturation scale $\tau\sb{\mathrm{kuia}} = 1.80\text{ yrs}$):
+1. **Asymmetric Grandparent and Aunty Time Multiplier Across the Retirement-Age U-Curve ($\Phi_{\mathrm{time}}$):** Let $A_{\mathrm{super}} = 20 + (J_r - 1)\Delta t$ denote the statutory NZ Superannuation eligibility age relative to the statutory baseline $A_{\mathrm{base}} = 65.0$:
+   - *Above Age 65 (Austerity Squeeze, $A_{\mathrm{super}} \ge 65$):* Raising $A_{\mathrm{super}}$ above 65 forces older *whānau* aged 65 to $A_{\mathrm{super}}$ to remain in market employment ($\ell > 0$) to satisfy the pre-retirement budget constraint, withdrawing alloparental caregiving time exponentially at rate $\eta_{\mathrm{elder}} = 0.09\text{ yr}^{-1}$.
+   - *Below Age 65 (Early Retirement Kuia/Koroua Dividend, $A_{\mathrm{super}} < 65$):* Lowering $A_{\mathrm{super}}$ below 65 releases healthy 60-to-64-year-old *kuia*, *koroua*, and aunties into voluntary alloparental support with concave hyperbolic-tangent saturation ($\kappa_{\mathrm{kuia}}^{\max} = 0.16$, saturation scale $\tau_{\mathrm{kuia}} = 1.80\text{ yrs}$):
 
-   $$
-   \Phi\sb{\mathrm{time}}\left(A\sb{\mathrm{super}}\right) = \begin{cases}
-   \exp\left(-\eta\sb{\mathrm{elder}}\left(A\sb{\mathrm{super}} - 65.0\right)\right) & \text{if } A\sb{\mathrm{super}} \ge 65.0 \\
-   1.0 + \kappa\sb{\mathrm{kuia}}^{\max} \tanh\left(\dfrac{65.0 - A\sb{\mathrm{super}}}{\tau\sb{\mathrm{kuia}}}\right) & \text{if } A\sb{\mathrm{super}} < 65.0
-   \end{cases}
-   $$
+   <p align="center">$\displaystyle \Phi_{\mathrm{time}}\left(A_{\mathrm{super}}\right) = \begin{cases} \exp\left(-\eta_{\mathrm{elder}}\left(A_{\mathrm{super}} - 65.0\right)\right) & \text{if } A_{\mathrm{super}} \ge 65.0 \\ 1.0 + \kappa_{\mathrm{kuia}}^{\max} \tanh\left(\dfrac{65.0 - A_{\mathrm{super}}}{\tau_{\mathrm{kuia}}}\right) & \text{if } A_{\mathrm{super}} < 65.0 \end{cases}$</p>
 
-   Evaluated across statutory retirement ages, this yields $\Phi\sb{\mathrm{time}}(64) = 1.081$ (**+8.1% *Kuia* time boost**), $\Phi\sb{\mathrm{time}}(63) = 1.129$ (**+12.9% boost**), $\Phi\sb{\mathrm{time}}(65) = 1.000$ (baseline), $\Phi\sb{\mathrm{time}}(67) = 0.835$ (**-16.5% time loss**), and $\Phi\sb{\mathrm{time}}(70) = 0.638$ (**-36.2% time loss**).
+   Evaluated across statutory retirement ages, this yields $\Phi_{\mathrm{time}}(64) = 1.081$ (**+8.1% *Kuia* time boost**), $\Phi_{\mathrm{time}}(63) = 1.129$ (**+12.9% boost**), $\Phi_{\mathrm{time}}(65) = 1.000$ (baseline), $\Phi_{\mathrm{time}}(67) = 0.835$ (**-16.5% time loss**), and $\Phi_{\mathrm{time}}(70) = 0.638$ (**-36.2% time loss**).
 
-2. **Elder Housing Tenure Stability and Staying in Their Own Homes ($\Phi\sb{\mathrm{home}}$):** For retired or semi-retired grandmothers and aunties to provide a physical sanctuary in region $k$, their pension income $p\sb{\mathrm{super}}$ must cover the regional housing maintenance and energy user cost relative to the baseline house price $Q\sb{k,0}$:
+2. **Elder Housing Tenure Stability and Staying in Their Own Homes ($\Phi_{\mathrm{home}}$):** For retired or semi-retired grandmothers and aunties to provide a physical sanctuary in region $k$, their pension income $p_{\mathrm{super}}$ must cover the regional housing maintenance and energy user cost relative to the baseline house price $Q_{k,0}$:
 
-   $$
-   \Phi\sb{\mathrm{home}}\left(p\sb{\mathrm{super}}, Q\sb{k}\right) = \min\left(1.20, \max\left(0.50, \left(\frac{p\sb{\mathrm{super}}}{0.180}\right)\left(\frac{Q\sb{k,0}}{Q\sb{k}}\right)^{0.35}\right)\right)
-   $$
+   <p align="center">$\displaystyle \Phi_{\mathrm{home}}\left(p_{\mathrm{super}}, Q_k\right) = \min\left(1.20, \max\left(0.50, \left(\frac{p_{\mathrm{super}}}{0.180}\right)\left(\frac{Q_{k,0}}{Q_k}\right)^{0.35}\right)\right)$</p>
 
-   Under Status Quo ($SS0$) at Age 65 ($p\sb{\mathrm{super}} = 0.180$ and $Q\sb{k} = Q\sb{k,0}$), both multipliers evaluate to unity ($\Phi\sb{\mathrm{time}} = \Phi\sb{\mathrm{home}} = 1.0$). Under our Generational Plan ($SS1 \to SS2$), land-tax and housing-supply reforms cool metropolitan house prices ($Q\sb{k} < Q\sb{k,0}$) while lowering $A\sb{\mathrm{super}}$ to **64** in $SS2$, raising both $\Phi\sb{\mathrm{home}} > 1$ and $\Phi\sb{\mathrm{time}} = 1.081$.
+   Under Status Quo ($SS0$) at Age 65 ($p_{\mathrm{super}} = 0.180$ and $Q_k = Q_{k,0}$), both multipliers evaluate to unity ($\Phi_{\mathrm{time}} = \Phi_{\mathrm{home}} = 1.0$). Under our Generational Plan ($SS1 \to SS2$), land-tax and housing-supply reforms cool metropolitan house prices ($Q_k < Q_{k,0}$) while lowering $A_{\mathrm{super}}$ to **64** in $SS2$, raising both $\Phi_{\mathrm{home}} > 1$ and $\Phi_{\mathrm{time}} = 1.081$.
 
 ---
 
@@ -437,7 +432,13 @@ $$
 i_c^\star(s_1, t) = \max\left\lbrace 0, \theta_c \left[ y_{\mathrm{disp},k}(s_1) + T_k(t) - p_{H,k}(t)\bar{h} - \bar{e}_{k}(t) - \bar{g}_{\mathrm{ECE}} \right] \right\rbrace
 $$
 
-Define the critical disposable-income boundary $\tilde{y}\sb{1,k}(t) \equiv \bar{g}\sb{\mathrm{ECE}} + p\sb{H,k}(t)\bar{h} + \bar{e}\sb{k}(t) - T\sb{k}(t)$. Between the 1972–1973 Dunedin baseline ($t = 1972$, `Dunedin_22`) and the 2009–2010 *Growing Up in New Zealand* baseline ($t = 2010$, `MetroSqueeze_GUiNZ`), the reduction in unconditional family transfers and the appreciation of untaxed metropolitan land ($Q\sb{\mathrm{Auckland}} = 3.10\times$ versus $1.20\times$ in 1972) shifted $\tilde{y}\sb{1,k}(t)$ upward, expanding the struggling launch trajectory ($h\sb{1}\text{--}h\sb{2}$) from 22.0% to 28.5% nationally (and 34.0%–36.6% in Auckland):
+Define the critical disposable-income boundary:
+
+$$
+\tilde{y}_{1,k}(t) \equiv \bar{g}_{\mathrm{ECE}} + p_{H,k}(t)\bar{h} + \bar{e}_k(t) - T_k(t)
+$$
+
+Between the 1972–1973 Dunedin baseline ($t = 1972$, `Dunedin_22`) and the 2009–2010 *Growing Up in New Zealand* baseline ($t = 2010$, `MetroSqueeze_GUiNZ`), the reduction in unconditional family transfers and the appreciation of untaxed metropolitan land ($Q_{\mathrm{Auckland}} = 3.10\times$ versus $1.20\times$ in 1972) shifted $\tilde{y}_{1,k}(t)$ upward, expanding the struggling launch trajectory ($h_1\text{--}h_2$) from 22.0% to 28.5% nationally (and 34.0%–36.6% in Auckland):
 
 $$
 \Pr_{1972}^{\mathrm{Dunedin}}\left(h_{\mathrm{launch}} \in \lbrace h_1, h_2 \rbrace\right) = \sum_{k=1}^{4} \omega_k \int_{y_{1,k} \le \tilde{y}_{1,k}(1972)} d\mu_{1972}(s_1 \mid k) = 0.220
@@ -567,8 +568,7 @@ Differentiating the stationary asset cutoff $A^\star(\tau_a)$ confirms that weal
 $$V_{20,k}^{\mathrm{Domestic}}(a_{20} + E, h_3) \ge V_{20,5}^{\mathrm{Abroad}}(a_{20}, h_3) - \kappa_{\mathrm{mig}} \quad \forall k \in \{1, 2, 3, 4\}$$
 
 ### 4.5.3 Parental Developmental Time Crowd-Out Under High Abatement
-Consider a liquidity-constrained Gate 1 household subject to benefit abatement rate $\tau_{\mathrm{abate}} \in [0.70, 0.90]$ that increases low-wage labor supply by $\Delta \ell_{\mathrm{coerced}} > 0$, inducing a one-for-one reduction in parental developmental time $\Delta \ell_{\mathrm{child}} = -\Delta \ell_{\mathrm{coerced}} < 0$. Differentiating Stage-1 skill $\theta'\sb{c}(s\sb{1})$ with respect to $\ell\sb{\mathrm{coerced}}$ yields:
-
+Consider a liquidity-constrained Gate 1 household subject to benefit abatement rate $\tau_{\mathrm{abate}} \in [0.70, 0.90]$ that increases low-wage labor supply by $\Delta \ell_{\mathrm{coerced}} > 0$, inducing a one-for-one reduction in parental developmental time $\Delta \ell_{\mathrm{child}} = -\Delta \ell_{\mathrm{coerced}} < 0$. Differentiating Stage-1 skill $\theta'_c$ with respect to coerced labor hours yields:
 $$\frac{d \theta'_c}{d \ell_{\mathrm{coerced}}} = \frac{\partial \theta'_c}{\partial I_{\mathrm{tot},1}} \left[ \mathbb{I}(i_c^\star > 0) w_{\min}(1 - \tau_{\mathrm{abate}}) - \gamma_{1,\mathrm{par}} w_k h_p \right] < 0$$
 
 At or near the Stone–Geary corner ($\mathbb{I}(i_c^\star > 0) = 0$), the marginal cash term vanishes while the loss of parental care time $-\gamma_{1,\mathrm{par}} w_k h_p$ strictly degrades early skill formation $\theta'_c$.
