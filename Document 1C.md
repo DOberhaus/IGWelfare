@@ -41,6 +41,16 @@ Inside this unified lifecycle engine, we evaluate a **Two-Phase Generational Ref
 4. **ACC-Style Actuarial Continuation Valuation (Bending the Accounting Curve Inside the Rules):** Solves the political time-inconsistency trap that causes governments to underinvest in children and preventative infrastructure. Just as Team New Zealand bent the daggerboard inside the existing measurement box, we apply the exact forward-liability discipline already established on the Crown balance sheet by New Zealand's **Accident Compensation Corporation (ACC)** and Treasury Cost-Benefit Analysis (`CBAx`): as each cohort passes its early childhood and adolescent gates with verified reductions in developmental hardship, the Crown books the conservatively discounted 25-year present value of future fiscal savings and output gains—demonstrating **3.84x fiscal breakeven inside a single parliamentary term (by Year 5)**.
 5. **Sovereign Debt Reduction, Sustainably Funded Infrastructure, PAYE Tax Relief, & Super Age 64 (The Rear T-Foil Stabilizer & Phase 2 $SS2$ Solvency Harvest):** Our **2050 50/50 Debt-Sinking & Public Reinvestment Protocol** stabilizes the flight path: once the reform crosses hard cash breakeven at Year 18.8, **50% of all net fiscal surpluses are legally locked into a Sovereign Debt Reduction Sinking Fund** and **50% into a ring-fenced Public Infrastructure & Core Health Reinvestment Pool**—simultaneously retiring national debt down to 22% of GDP, funding resilient infrastructure, cutting working-age PAYE income taxes by **-3.12 to -3.43 percentage points (down to 18.85%–18.57%)**, and **lowering the New Zealand Superannuation eligibility age from 65 to 64** (releasing a **+8.1% *Kuia / Koroua* caregiving boost** for young *whānau*).
 
+```
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
 ---
 
 ## 3. Headline Quantitative Findings: A Self-Financing Generational Transformation
@@ -62,16 +72,6 @@ When Aotearoa pairs **Phase 1 ($SS1$: Revenue-Neutral Foundation & Incubation)**
 | **Working-Age PAYE Tax Rate & Net Crown Debt** | 22.0% → **28.2% PAYE / 185% Debt** | **22.0% PAYE** *(20.84% req. → Sinks Debt)* | **18.85% PAYE (-3.15 pp Cut) / 22% Debt** | Retires **NZD 17.8B–21.9B** debt/wave (-60 bps credit); sustains a **3% GDP Defense commitment at +20.72% CE** |
 | **Year 5 Audited Actuarial Return (at 2% Real)** | NZD 0B *(Cash breakeven takes 18.8 yrs)* | **NZD 35.25B Fiscal / NZD 85.40B GDP** | **NZD 1,510.7B 60-Yr Realized Cash GDP** | Achieves **3.84x fiscal breakeven by Year 5** (1.16x from direct cost avoidance alone) |
 | **Long-Run Household Welfare Gain (CE %)** | **-16.21% CE** *(LTFM Sinkhole)* | **+9.5% (*Rural*) to +17.7% (*Auckland*)** | **+18.2% (*Rural*) to +28.7% (*Auckland*)** | **+24.24% National gain (+40.45 pp net swing vs. LTFM)**; **47.3% from dynamic complementarity** |
-
-```
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                                                                   |
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
 
 ---
 
