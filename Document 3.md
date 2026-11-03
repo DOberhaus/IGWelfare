@@ -23,6 +23,16 @@ That single-lane habit rests on three hidden assumptions. Our quantitative overl
 
 Just as our spatial migration model captures how households naturally prefer to stay in their home region (`Rural <-> Small <-> Large <-> Auckland`) unless cross-regional pressures force them to move, this document maps a **2D Complementarity & Dependency Matrix** across New Zealand's four primary policy constituencies. We show why each constituency stalls when fighting alone against the Long-Term Fiscal Model (LTFM) sinkhole, why trying to "solve debt first" via Phase-1 austerity backfires on the Crown's own books, and how uniting the four lanes gets Aotearoa up on hydrofoils—building an economy strong enough to retire sovereign debt, cut working-age PAYE taxes, and lower the New Zealand Superannuation eligibility age to **64** in Phase 2 ($SS2$).
 
+```
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
 ---
 
 ## Part I: The 2D Coalition Matrix — Why Every Siloed Constituency Needs Its Neighbors
@@ -83,7 +93,7 @@ Tracing the eight 60-year paths in Panel B of the figure above (tabulated in *Ap
 5. **WellBeing Silo Alone vs. LTFM Drift (*Housing + Youth Grant Without ECE or Jobs* $\to$ `-2.40% CE`, *Pulled Underwater*):** Cooling land prices and granting Age-20 seed capital without early childhood capability or job creation sees its early gains steadily overwhelmed by demographic debt drift, ending underwater at **-2.40% CE**.
 6. **Barnardos/Youth Silo Alone vs. LTFM Drift (*ECE + Mentoring Without Housing or Jobs* $\to$ `-0.06% CE`, *>100% of Gain Eroded*):** Even our most powerful standalone engine—First-2,000-Days wraparound and adolescent mentoring—loses **>100% of its long-run value** as newly thriving youth emigrate to escape uncooled urban rents and rising LTFM taxes, ending slightly underwater at **-0.06% CE**.
 7. **Unified 4-Coalition Plan + 3.0% GDP Defense Commitment (*Sustains +NZD 8.0B/yr Outlay* $\to$ `+20.72% CE`):** Once all four coalitions unite to expand domestic capability and enterprise productivity, the economy sustains a 3.0%-of-GDP defense commitment while still retiring public debt (to 31.5% of GDP), cutting PAYE taxes (to 20.65%), and delivering **+20.72% CE** in net household welfare—a **+42.41 percentage-point advantage** over facing the same defense requirement under the status quo.
-8. **★ Unified 4-Coalition Plan ($SS1 \to SS2$) (*Super Age 64 + PAYE Cut + Debt Sunk* $\to$ `+24.24% CE`, a `+40.45 pp` Total Welfare Swing):** Without the external defense shock, uniting all four lanes crosses Cash Breakeven at Year 18.8, retires sovereign debt to **22.0% of GDP**, cuts working-age PAYE taxes to **18.88%**, lowers the NZ Super eligibility age to **64**, and lifts national welfare to **+24.24% CE**.
+8. **★ Unified 4-Coalition Plan ($SS1 \to SS2$) (*Super Age 64 + PAYE Cut + Debt Sunk* $\to$ `+24.24% CE`, a `+40.45 pp` Total Welfare Swing):** Without the external defense shock, uniting all four lanes crosses Cash Breakeven at Year 18.8, retires sovereign debt to **22.0% of GDP**, cuts working-age PAYE taxes to **18.85%**, lowers the NZ Super eligibility age to **64**, and lifts national welfare to **+24.24% CE**.
 
 ### 2.3 Why Trajectory 3 Backfires and Trajectory 8 Soars: The Cross-Generational Coupling of Whānau, Housing, and NZ Superannuation
 
@@ -130,8 +140,8 @@ Policy coalitions rarely stall because their values are wrong; they stall becaus
 ### 3.4 To the Fiscal Stewards, Bond Markets & Balance-Sheet Guardians (*The Solvency & Tax-Relief Lane*)
 
 * **Your Core Contribution:** Compounding sovereign debt and rising marginal tax rates are a genuine threat to New Zealand's long-run prosperity and resilience.
-* **Why "Solving Debt First" Fails (Why Balance-Sheet Discipline Needs Public-Policy Innovation):** Because a sovereign nation cannot fire its citizens, attempting to cut debt in Phase 1 (`SS1`) by starving early childhood capability or raising the Superannuation age to 70 backfires across three channels: (i) nearly half of displaced older manual workers shift onto disability and hardship support; (ii) forcing 65-to-69-year-old *kuia* and aunties to work withdraws **-36.2%** of extended-*whānau* care from young families and imposes an upward sandwich-generation elder-care drag on working-age children; and (iii) the resulting rise in struggling youth swells hospital, care, and justice bills while shrinking the future tax base. Only by protecting the human-capital and enterprise engines in Phase 1 do you generate the structural surplus that sinks debt to **22.0% of GDP** and cuts PAYE taxes to **18.88%** in Phase 2.
-* **The MBA vs. MPP Convergence: What Happens When YouActually Run the Sovereign Balance Sheet Like a Long-Horizon Enterprise?** Put a corporate-turnaround **MBA** and a **Master of Public Policy (MPP)** in a room with a static three-year cash spreadsheet, and they will go to war. The naive three-year turnaround MBA views universal NZ Superannuation at 65 as an unfunded legacy overhead and prescribes a classic SG&A cost-cutting play: push eligibility to 70, trim five years of pension payouts, and boost working-age headcount. Yet when that same MBA runs our 60-year general-equilibrium ledger, three balance-sheet realities shock them into siding with the MPP:
+* **Why "Solving Debt First" Fails (Why Balance-Sheet Discipline Needs Public-Policy Innovation):** Because a sovereign nation cannot fire its citizens, attempting to cut debt in Phase 1 (`SS1`) by starving early childhood capability or raising the Superannuation age to 70 backfires across three channels: (i) nearly half of displaced older manual workers shift onto disability and hardship support; (ii) forcing 65-to-69-year-old *kuia* and aunties to work withdraws **-36.2%** of extended-*whānau* care from young families and imposes an upward sandwich-generation elder-care drag on working-age children; and (iii) the resulting rise in struggling youth swells hospital, care, and justice bills while shrinking the future tax base. Only by protecting the human-capital and enterprise engines in Phase 1 do you generate the structural surplus that sinks debt to **22.0% of GDP** and cuts PAYE taxes to **18.85%** in Phase 2.
+* **The MBA vs. MPP Convergence: What Happens When You Actually Run the Sovereign Balance Sheet Like a Long-Horizon Enterprise?** Put a corporate-turnaround **MBA** and a **Master of Public Policy (MPP)** in a room with a static three-year cash spreadsheet, and they will go to war. The naive three-year turnaround MBA views universal NZ Superannuation at 65 as an unfunded legacy overhead and prescribes a classic SG&A cost-cutting play: push eligibility to 70, trim five years of pension payouts, and boost working-age headcount. Yet when that same MBA runs our 60-year general-equilibrium ledger, three balance-sheet realities shock them into siding with the MPP:
   1. **Liquidating an Off-Balance-Sheet Quality-Assurance Asset (`K_whanau`):** In corporate turnarounds, firing the senior staff aged 65–69 looks great in Q1—until management discovers those seniors were running unbilled quality assurance, onboarding, and crisis mitigation for the entire R&D pipeline. Universal NZ Super at 64–65 is not a passive handout; it is the retainer fee for New Zealand's largest decentralized childcare and adolescent risk-mitigation network. Forcing 65-to-69-year-old grandmothers and aunties into survival employment destroys an off-balance-sheet asset worth far more than the wage tax those elders pay.
   2. **The Theory of Constraints Bottleneck (`phi_2 = -0.95`):** Every operations MBA knows Eliyahu Goldratt's *Theory of Constraints*: the throughput of a tightly coupled production line is governed by its tightest bottleneck. Because adolescent skill retention operates as a harmonic-mean bottleneck, stripping away extended-*whānau* buffering during a parental job-loss shock does not cause a linear 5% dip in output—it triggers **batch spoilage** (the struggling launch share jumping by +2.5 to +5.5 percentage points).
   3. **Unrecovered R&D Capex Walkout Across the Tasman (`whanau_stay_pull`):** From a corporate-finance perspective, raising and educating a child from birth to Age 20 is a 20-year R&D capital expenditure. When frayed *whānau* anchors and 3.10x metropolitan housing costs push skilled 20-year-old graduates to emigrate, New Zealand absorbs 100% of the upfront R&D capex and hands the 40-year EBITDA stream (adult PAYE taxes) to Australia for free.
@@ -151,14 +161,8 @@ Policy coalitions rarely stall because their values are wrong; they stall becaus
 Stepping back from coalition mechanics, what does this coupled transition mean in the lived biography of a New Zealand household across the three stages of life?
 
 * **For Parents and Children (Ages 0–19):** Every newborn and young family has access to universal, culturally grounded First-2,000-Days wraparound care and relief from extreme housing and transport stress, followed at ages 12–14 by structured *Tuakana–Teina*, Graeme Dingle, or Montessori peer mentoring. Instead of 22% of our children launching into adulthood struggling ($h_1\text{--}h_2$), **over 98% launch with the foundational skills to participate fully in society**, and nearly two-thirds launch in the thriving skill tiers ($h_6\text{--}h_7$).
-* **For Young Adults and Working Families (Ages 20–63):** At Age 20, every young Kiwi receives a universal Youth Capital Grant that—combined with a 7.5% to 10.5% cooling in metropolitan house price-to-income ratios and +6.8% to +9.6% higher real wages from expanding local firms—makes buying a first home, starting a venture, or building a creative career achievable in New Zealand rather than requiring a one-way ticket to Australia. Once the first generation of supported children enters the workforce and slashes reactive remediation costs, working families receive a permanent **-3.12 to -3.43 percentage-point PAYE income tax cut**.
+* **For Young Adults and Working Families (Ages 20–63):** At Age 20, every young Kiwi receives a universal Youth Capital Grant that—combined with a 7.5% to 10.5% cooling in metropolitan house price-to-income ratios and +6.8% to +9.6% higher real wages from expanding local firms—makes buying a first home, starting a venture, or building a creative career achievable in New Zealand rather than requiring a one-way ticket to Australia. Once the first generation of supported children enters the workforce and slashes reactive remediation costs, working families receive a permanent **-3.15 percentage-point PAYE income tax cut**.
 * **For Older Workers, Grandparents (*Kuia & Koroua*), and Retirees (Ages 64+):** Instead of facing austerity proposals to push the retirement age out to 67 or 70—which disproportionately penalize manual, rural, Māori, and Pasifika workers whose physical health depreciates earlier—the productivity and fiscal dividends of Phase 2 allow New Zealand to **lower the universal Superannuation age to 64**. That extra year of healthy retirement dignifies decades of hard work while giving grandparents the time and financial security to help anchor the next generation of *mokopuna*.
-
-```
-+-----------------------------------------------------------------------------------+
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-+-----------------------------------------------------------------------------------+
-```
 
 ---
 
@@ -195,6 +199,16 @@ In reality—and in our state-contingent VFI engine (`Trajectory 3b`)—human ca
 
 *The Core Insight of Table 4.1:* While a 1-term (3-year On / 3-year Off) cycle already loses **72.9%** of the prize (`+6.58% CE`), a two-term (6-year On / 6-year Off) political cycle is even more destructive—eroding **84.2% of the entire generational prize (`+24.24% CE` drops to `+3.84% CE`)** because a six-year interruption inflicts two consecutive 3-year periods of adolescent skill fade-out ($`39.2\%`$) and prevents the ledger from ever crossing Year 18.8 Cash Breakeven. Human capability is highly perishable while in the 0–19 developmental pipeline, yet becomes permanently durable once banked at Age 20.
 
+```
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
+
 ---
 
 ## Part V: The Grand Coalition Compact — Phasing $SS1$ Foundation & Incubation Before $SS2$ Debt & Tax-Relief Harvest
@@ -206,7 +220,7 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 * **Phase 1 ($SS1$, Years 0–18.8 — Building the Human & Enterprise Foundation at a Strictly Revenue-Neutral 22.0% PAYE):**
   **Coalition 1** gets Universal First-2,000-Days wraparound and *Tuakana-Teina* / Montessori mentoring funded to scale and legally protected by **Year-5 ACC Actuarial Continuation Valuation (3.84x audited fiscal return)**. **Coalition 2** gets metropolitan housing cooling, regional transfers, universal Age-20 Youth Capital Grants, and NZ Super protected at Age 65. **Coalition 3** gets "use-it-or-lose-it" tax rebalancing that rotates capital and talent out of dormant land and into operating enterprises. **Coalition 4** gets ironclad cash neutrality (PAYE held at 22.0%) while reducing the struggling launch share slashes reactive remediation costs by over 75%—driving the Crown ledger to hard **Cash Breakeven at Year 18.8**.
 * **Phase 2 ($SS2$, Year 25 / 2050 Protocol — Harvesting the Debt, Infrastructure, PAYE Cut, & Super Age-64 Dividend):**
-  Once hard Cash Breakeven is crossed, the statutory **50/50 Dynamic Surplus Allocation Rule** locks **50% of all net fiscal surpluses into the Sovereign Debt Sinking Fund** (retiring debt down to **22.0% of GDP**, lowering interest rates by **-60 bps**, and unlocking a **-3.12 pp PAYE tax cut to 18.88%**) and **50% into the Public Infrastructure & Core Health Reinvestment Pool** (lifting regional wages, deepening early-years and mentoring reach, lifting fertility to replacement, and **lowering the NZ Super eligibility age to 64**).
+  Once hard Cash Breakeven is crossed, the statutory **50/50 Dynamic Surplus Allocation Rule** locks **50% of all net fiscal surpluses into the Sovereign Debt Sinking Fund** (retiring debt down to **22.0% of GDP**, lowering interest rates by **-60 bps**, and unlocking a **-3.15 pp PAYE tax cut to 18.85%**) and **50% into the Public Infrastructure & Core Health Reinvestment Pool** (lifting regional wages, deepening early-years and mentoring reach, lifting fertility to replacement, and **lowering the NZ Super eligibility age to 64**).
 
 ---
 
@@ -217,7 +231,7 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 | **1. Barnardos, Iwi & Youth** *(Human Potential)* | **-0.06% CE** *(>100% eroded by LTFM & brain drain)* | **+1.85% CE** *(39.2% 2-term fade-out)* | **+13.41% CE** *(+8.96% Tier 1 + Neighbor Wedges)* | Struggling launch share cut **22.0% to 1.5%**; mentoring scaled **17.3% to 65.0%**; protected by **3.84x Year-5 ACC Actuarial Valuation**. |
 | **2. WellBeing & Housing** *(Fair Start & Whānau)* | **-2.40% CE** *(Pulled underwater by struggling launch & debt)* | **+1.24% CE** *(Youth miss 20% LVR cliff)* | **+9.24% CE** *(+7.35% Tier 2 + Neighbor Wedges)* | Urban housing cooled **-7.5% to -10.5%**; Auckland young ownership **28.0% to 41.2%**; **NZ Super Age lowered to 64 (+8.1% Kuia boost)**. |
 | **3. GrowthNZ & Venture** *(Enterprise & Jobs)* | **-9.12% CE** *(Starved of domestic talent & credit)* | **+0.52% CE** *(Migration credibility collapses)* | **+6.00% CE** *(64.1% from Neighbor Wedges)* | **NZD 1.6T** land-to-firm rotation; **1.65x** infrastructure pool; **-60 bps** credit; **+6.8% to +9.6%** wages; **3,550/yr** youth retained. |
-| **4. Fiscal Stewards** *(Debt & Tax Relief)* | **-6.80% to -10.55% CE** *("Debt-First" consolidation trap)* | **+0.23% CE** *(Never reaches Yr 18.8 breakeven)* | **+3.80% CE** *(74.3% from Neighbor Wedges)* | Net Crown debt sunk from **185% LTFM projection down to 22% of GDP**; working-age **PAYE cut -3.12 pp to 18.88%**; sustains **3% GDP Defense** at **+20.72% CE**. |
+| **4. Fiscal Stewards** *(Debt & Tax Relief)* | **-6.80% to -10.55% CE** *("Debt-First" consolidation trap)* | **+0.23% CE** *(Never reaches Yr 18.8 breakeven)* | **+3.80% CE** *(74.3% from Neighbor Wedges)* | Net Crown debt sunk from **185% LTFM projection down to 22% of GDP**; working-age **PAYE cut -3.15 pp to 18.85%**; sustains **3% GDP Defense** at **+20.72% CE**. |
 | **Whole of Aotearoa New Zealand** | **-16.21% CE** *(or **-21.69% CE** w/ 3% Defense)* | **+3.84% CE** *(-84.2% lost to 2-term cycle)* | **+24.24% CE National** *(+18.21% Rural to +28.70% Akl)* | **+40.45 pp net welfare swing vs. LTFM (+42.41 pp under 3% Defense); Social Cohesion Index lifted from 100.0 to 126.0.** |
 
 ---
@@ -240,7 +254,7 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **1. [Isolated] First-2,000-Days Universal ECE Alone** ($G_{\mathrm{ece},1}$) | **Coalition 1** *(Barnardos / Early Years)* | +2.91% | +3.29% | +3.60% | +4.05% | **+3.57%** | 14.7% |
 | **2. [Isolated] *Tuakana-Teina* / Montessori Mentoring Alone** ($G_{\mathrm{ece},2}$) | **Coalition 1** *(Youth / Educators)* | +1.75% | +1.96% | +2.14% | +2.42% | **+2.13%** | 8.8% |
-| **3. ★ WEDGE 1: Dual-Gate Human Capital Synergy** ($\mathrm{ECE}_1 \times \mathrm{Tuakana}_2$) | **Intra-Coalition 1 Synergy** *(Halts $\delta_\theta = 0.22$ Fade-Out)* | **+2.44%** | **+2.91%** | **+3.29%** | **+3.86%** | **+3.26%** | **13.4%** |
+| **3. ★ WEDGE 1: Dual-Gate Human Capital Synergy** ($\mathrm{ECE}_1 \times \mathrm{Tuakana}_2$) | **Intra-Coalition 1 Synergy** *(Halts* $\delta_\theta = 0.22$ *Fade-Out)* | **+2.44%** | **+2.91%** | **+3.29%** | **+3.86%** | **+3.26%** | **13.4%** |
 | **Tier 1 Subtotal (The Dual-Gate Human Capital Stack)** | **Coalition 1 Total (Iso +5.70% + Wedge +3.26%)** | **+7.10%** | **+8.16%** | **+9.04%** | **+10.33%** | **+8.96%** | **37.0%** |
 | **4. [Isolated] Estate & Property Tax Rebalance Alone** ($\tau_b, \tau_a \to \mathrm{Firm}$) | **Coalitions 2 & 3** *(Housing + GrowthNZ)* | +1.86% | +2.28% | +2.66% | +3.21% | **+2.63%** | 10.9% |
 | **5. [Isolated] Age-20 Youth Capital Grant Alone** ($E$) | **Coalition 2** *(WellBeing / Youth Start)* | +1.05% | +1.22% | +1.36% | +1.53% | **+1.33%** | 5.5% |
@@ -249,34 +263,21 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 | **Tier 2 Subtotal (The Spatial, LVR & Enterprise Stack)** | **Coalitions 2 & 3 (Iso +5.07% + Wedge +2.28%)** | **+5.82%** | **+6.62%** | **+7.37%** | **+8.55%** | **+7.35%** | **30.3%** |
 | **8. ★ WEDGE 3: Cross-Stack Synergy** ($\mathrm{Stack\ 1} \times \mathrm{Stack\ 2}$) | **Coalitions 1 $\times$ 2 $\times$ 3** *(Brain-Drain Reversal + Kaiako Supply + Firm Skill Match)* | **+2.50%** | **+3.29%** | **+4.02%** | **+5.04%** | **+3.95%** | **16.3%** |
 | **9. [Isolated] Sovereign Debt-Sinking & Interest Relief Alone** ($\Delta r = -60\text{ bps}$) | **Coalition 4** *(Fiscal Stewards / MBAs)* | +0.64% | +0.74% | +0.84% | +0.94% | **+0.82%** | 3.4% |
-| **10. [Isolated] PAYE Cut (-3.12 pp to 18.9%) & Super Age-64 *Kuia* Dividend Alone** | **Coalition 4 $\times$ 2** *(Taxpayers & Retirees)* | +1.05% | +1.11% | +1.20% | +1.33% | **+1.20%** | 5.0% |
+| **10. [Isolated] PAYE Cut (-3.15 pp to 18.85%) & Super Age-64 *Kuia* Dividend Alone** | **Coalition 4 $\times$ 2** *(Taxpayers & Retirees)* | +1.05% | +1.11% | +1.20% | +1.33% | **+1.20%** | 5.0% |
 | **11. ★ WEDGE 4: Actuarial Solvency, Replacement TFR & 2nd-Gen Closure** | **All 4 Coalitions** *(Self-Financing Fiscal & Dynastic Loop)* | **+1.10%** | **+1.82%** | **+1.95%** | **+2.50%** | **+1.97%** | **8.1%** |
 | **Tier 4 Subtotal (The Fiscal, Super-64 & Demographic Harvest Stack)** | **Coalition 4 + Full Loop (Iso +2.02% + Wedge +1.97%)** | **+2.79%** | **+3.68%** | **+3.99%** | **+4.77%** | **+3.99%** | **16.5%** |
 | **GRAND TOTAL (`SS2_3` Fully Integrated Policy)** | **7 Isolated (+12.79%, 52.7%) + 4 Wedges (+11.46%, 47.3%)** | **+18.21%** | **+21.75%** | **+24.41%** | **+28.70%** | **+24.24%** | **100.0%** |
 
-```
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
 ## Table A.2: The $4 \times 4$ Coalition Dependency Matrix (`Table 22`)
 
 | **Policy Constituency (Row $i$)** | **1. Barnardos & Youth** *(ECE + Tuakana)* | **2. WellBeing Alliance** *(Housing + Grant + Whānau)* | **3. GrowthNZ & Venture** *(Firm Capital + Jobs)* | **4. Fiscal Stewards & MBAs** *(Debt-Sinking + PAYE Cut)* | **Total Value Connected to Constituency $i$** *(Own Base + 3 Neighbor Wedges)* |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **1. Barnardos & Youth** | **[OWN SILO 1]** **+7.72% CE** *(ECE$_1$ + Tuakana$_2$ Base)* | **★ WEDGE (1 $\times$ 2)** **+2.21% CE** *(Kaiako Rent Relief + $h_6\text{--}h_7$ Youth Use Grant $E$)* | **★ WEDGE (1 $\times$ 3)** **+2.00% CE** *(High-$z_h$ Jobs Retain $h_6\text{--}h_7$ Youth in NZ)* | **★ WEDGE (1 $\times$ 4)** **+1.49% CE** *(ACC Actuarial Shield + Exits Drop Funds Super 64)* | **+13.41% CE** *(42.5% from Neighbor Lanes)* |
-| **2. WellBeing Alliance** | **★ WEDGE (1 $\times$ 2)** **+2.21% CE** *(Whānau Stay-Pull + Grant $E$ Needs $h_6\text{--}h_7$ Skill)* | **[OWN SILO 2]** **+5.19% CE** *(Cool $Q_k$ + Grant $E$ + Geo Floor + LVR Base)* | **★ WEDGE (2 $\times$ 3)** **+1.18% CE** *(NZD 1.6T Land Rotates to $z_h$ Operating Firms)* | **★ WEDGE (2 $\times$ 4)** **+0.67% CE** *(-60 bps Debt-Sinking Cuts Young Mortgage $r_h$)* | **+9.24% CE** *(43.8% from Neighbor Lanes)* |
+| **1. Barnardos & Youth** | **[OWN SILO 1]** **+7.72% CE** *(*$\textit{ECE}_1$ *+* $\textit{Tuakana}_2$ *Base)* | **★ WEDGE (1 $\times$ 2)** **+2.21% CE** *(Kaiako Rent Relief* + $h_6\text{--}h_7$ *Youth Use Grant* $E$*)* | **★ WEDGE (1 $\times$ 3)** **+2.00% CE** *(High-*$z_h$ *Jobs Retain* $h_6\text{--}h_7$ *Youth in NZ)* | **★ WEDGE (1 $\times$ 4)** **+1.49% CE** *(ACC Actuarial Shield + Exits Drop Funds Super 64)* | **+13.41% CE** *(42.5% from Neighbor Lanes)* |
+| **2. WellBeing Alliance** | **★ WEDGE (1 $\times$ 2)** **+2.21% CE** *(Whānau Stay-Pull + Grant* $E$ *Needs* $h_6\text{--}h_7$ *Skill)* | **[OWN SILO 2]** **+5.19% CE** *(Cool* $Q_k$ + *Grant* $E$ + *Geo Floor* + *LVR Base)* | **★ WEDGE (2 $\times$ 3)** **+1.18% CE** *(NZD 1.6T Land Rotates to* $z_h$ *Operating Firms)* | **★ WEDGE (2 $\times$ 4)** **+0.67% CE** *(-60 bps Debt-Sinking Cuts Young Mortgage* $r_h$*)* | **+9.24% CE** *(43.8% from Neighbor Lanes)* |
 | **3. GrowthNZ & Venture** | **★ WEDGE (1 $\times$ 3)** **+2.00% CE** *(Domestic 65% Thriving Talent Pool Feeds Firms)* | **★ WEDGE (2 $\times$ 3)** **+1.18% CE** *(De-Hoarding Land Frees SME Credit Collateral)* | **[OWN SILO 3]** **+2.15% CE** *(Firm Tax Shift + 1.65x Infra Base Alone)* | **★ WEDGE (3 $\times$ 4)** **+0.67% CE** *(-60 bps Credit + -3.1pp PAYE Retains Founders)* | **+6.00% CE** *(64.1% from Neighbor Lanes)* |
-| **4. Fiscal Stewards & MBAs** | **★ WEDGE (1 $\times$ 4)** **+1.49% CE** *(+16.8k/Birth Surplus & TFR 2.03 Solves Super)* | **★ WEDGE (2 $\times$ 4)** **+0.67% CE** *(Peak Estate Wave $\tau_b$ Self-Funds $SS1$ Outlay)* | **★ WEDGE (3 $\times$ 4)** **+0.67% CE** *(+8.8% Wage & Firm Growth Expands Tax Base +14.5%)* | **[OWN SILO 4]** **+0.97% CE** *(Static Debt/Tax Target—Unachievable Alone)* | **+3.80% CE** *(74.3% from Neighbor Lanes)* |
+| **4. Fiscal Stewards & MBAs** | **★ WEDGE (1 $\times$ 4)** **+1.49% CE** *(+16.8k/Birth Surplus & TFR 2.03 Solves Super)* | **★ WEDGE (2 $\times$ 4)** **+0.67% CE** *(Peak Estate Wave* $\tau_b$ *Self-Funds* $SS_1$ *Outlay)* | **★ WEDGE (3 $\times$ 4)** **+0.67% CE** *(+8.8% Wage & Firm Growth Expands Tax Base +14.5%)* | **[OWN SILO 4]** **+0.97% CE** *(Static Debt/Tax Target—Unachievable Alone)* | **+3.80% CE** *(74.3% from Neighbor Lanes)* |
 
 *Exact Matrix Identity:* The sum of the 4 Diagonal Own-Lane Silos (`7.72% + 5.19% + 2.15% + 0.97% = +16.04% CE`, which includes intra-silo pairings) plus the 6 unique Off-Diagonal Inter-Coalition Wedges (`2.21% + 2.00% + 1.49% + 1.18% + 0.67% + 0.67% = +8.21% CE`) equals **`+24.24% CE`**—reconciling with the national $SS2$ welfare total in Table A.1.
-
-```
-+-----------------------------------------------------------------------------------+
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-+-----------------------------------------------------------------------------------+
-```
 
 ---
 
@@ -286,9 +287,9 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **1. Status Quo $SS0$ under Treasury LTFM Drift** *(Aging + Unmitigated 22% Hardship)* | 42.0% / 22.0% | 82.2% / 24.2% / -4.0% | **185.0%** | **28.20%** | **-16.21%** | 0.00 pp *(Reference Baseline)* |
 | **2. Status Quo $SS0$ + 3.0% GDP Defense Commitment** *(+8.0B/yr Unfunded Outlay)* | 42.0% / 22.0% | 95.2% / 26.6% / -8.3% | **200.0%** | **30.68%** | **-21.69%** | **-5.48 pp** *(Incremental Drag)* |
-| **3. "Solve Debt First in $SS1$"** *(Early Consolidation: Cuts ECE + Super Age 70 at Yr 0)* | 42.0% / 22.0% | 52.7% / 25.5% / -3.7% | **112.0%** | **27.45%** | **-6.80%** | +9.41 pp *(Still Negative)* |
+| **3. Solve Debt First in $SS1$** *(Early Consolidation: Cuts ECE + Super Age 70 at Yr 0)* | 42.0% / 22.0% | 52.7% / 25.5% / -3.7% | **112.0%** | **27.45%** | **-6.80%** | +9.41 pp *(Still Negative)* |
 | **4. GrowthNZ Silo Alone vs. LTFM Drift** *(Firm Tax Cut Without Skill or Housing)* | 42.0% / 22.0% | 76.0% / 23.8% / -0.1% | **168.0%** | **27.10%** | **-9.12%** | +7.09 pp *(Offset by LTFM)* |
-| **5. WellBeing Silo Alone vs. LTFM Drift** *(Housing + Grant $E$ Without ECE/Jobs)* | 42.0% / 22.0% | 72.5% / 23.5% / +4.4% | **154.0%** | **26.40%** | **-2.40%** | +13.81 pp *(Pulled Underwater)* |
+| **5. WellBeing Silo Alone vs. LTFM Drift** *(Housing + Grant* $E$ *Without ECE/Jobs)* | 42.0% / 22.0% | 72.5% / 23.5% / +4.4% | **154.0%** | **26.40%** | **-2.40%** | +13.81 pp *(Pulled Underwater)* |
 | **6. Barnardos/Youth Silo Alone vs. LTFM Drift** *(ECE + Mentoring Without Housing/Jobs)* | 42.0% / 22.0% | 68.0% / 23.1% / +5.8% | **138.0%** | **25.50%** | **-0.06%** | +16.15 pp *(>100% Eroded by Drift)* |
 | **7. Unified 4-Coalition Plan + 3% GDP Defense** *(Sustains +8.0B/yr Defense Outlay)* | 42.0% / 22.0% | 45.3% / 21.5% / +10.7% | **31.5%** | **20.65%** | **+20.72%** | **+36.93 pp** *(+42.41 pp vs Row 2)* |
-| **8. ★ Unified 4-Coalition Plan ($SS1 \to SS2$)** *(Super Age 64 + -3.12pp PAYE Cut + Debt Sunk)* | 42.0% / 22.0% | 38.0% / 21.0% / **+13.5%** | **22.0%** | **18.88%** | **+24.24%** | **+40.45 pp Total Welfare Swing** |
+| **8. ★ Unified 4-Coalition Plan ($`SS1 \to SS2`$)** *(Super Age 64 + -3.15pp PAYE Cut + Debt Sunk)* | 42.0% / 22.0% | 38.0% / 21.0% / **+13.5%** | **22.0%** | **18.85%** | **+24.24%** | **+40.45 pp Total Welfare Swing** |
