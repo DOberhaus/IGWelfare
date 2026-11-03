@@ -411,7 +411,7 @@ Evaluating the unified government budget identity and household welfare decompos
 <img src="./Output_NZ_4Region_Intergen/Fig1_Daruich_Cohort_Welfare_4Region.png" alt="Cohort Welfare Transition Path Across 4 Regions" width="68%" style="display: block; width: 68%; margin: 1.2rem auto; break-inside: avoid; page-break-inside: avoid;" />
 
 * **Jump 1 ($c = 0$, Phase 1 $SS1$ Launch):** Immediate surge in incoming cohort welfare driven by universal First-2,000-Days wraparound ($G_{\mathrm{ece},1} = 0.110$), Montessori / *Tuakana–Teina* & Graeme Dingle adolescent mentoring ($G_{\mathrm{ece},2} = 0.085$), the age-20 Youth Capital Grant ($E = 0.065$), and Guvenen et al. firm capital reallocation.
-* **Jump 2 ($c = +25$, Phase 2 $SS2$ Harvest):** Second structural leap 20–25 years into the transition when the children of the first reformed cohort enter parenthood with thriving human capital ($\mu_1^{SS2}$) and the Crown activates the **2050 50/50 Debt-Sinking and Infrastructure Protocol** alongside **lowering universal NZ Superannuation to Age 64** (+8.1% *Kuia / Whānau* boost) and the **-3.12 to -3.43 percentage-point working-age PAYE tax cut** (22.00% down to 18.88%–18.57%).
+* **Jump 2 ($c = +25$, Phase 2 $SS2$ Harvest):** Second structural leap 20–25 years into the transition when the children of the first reformed cohort enter parenthood with thriving human capital ($\mu_1^{SS2}$) and the Crown activates the **2050 50/50 Debt-Sinking and Infrastructure Protocol** alongside **lowering universal NZ Superannuation to Age 64** (+8.1% *Kuia / Whānau* boost) and the **-3.15 percentage-point working-age PAYE tax cut** (22.00% down to 18.85%).
 
 | **Row Label (`T1`)** | **`Rural_CE_Pct`** | **`Small_CE_Pct`** | **`Large_CE_Pct`** | **`Auckland_CE_Pct`** | **`National_CE_Pct`** | **Share of Phase Gain from Endogenous Intergenerational Matrix** |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
@@ -571,9 +571,9 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 | **1. Baseline Status Quo (Age 65)** | `1.90` / `1.85` / `1.60` / `1.47` *(Nat: 1.66)* | `0.28` / `0.27` | `19.8%` / `18.2%` / `15.6%` / `14.3%` *(Mean: 17.0%)* | `31.78%` | **`23.60%`** *(+1.60 pp drift vs 22.0%)* |
 | **2. Hyperbolic Delay ($\beta=0.72$, No ECE)** | `1.51` / `1.47` / `1.28` / `1.17` *(Nat: 1.32)* | `0.24` / `0.23` | `21.4%` / `20.0%` / `17.6%` / `16.4%` *(Mean: 18.8%)* | `41.44%` | **`25.99%`** *(+3.99 pp hike)* |
 | **3. Barnardos ECE Bargaining Relief** | `1.94` / `1.92` / `1.66` / `1.53` *(Nat: 1.72)* | `0.17` / `0.16` | `6.3%` / `3.1%` / `2.2%` / `2.2%` *(Mean: 3.4%)* | `30.52%` | **`21.37%`** *(-0.63 pp cut)* |
-| **4. Phase 1 ($SS1$) Full Package (Age 65)** | `2.06` / `2.03` / `1.78` / `1.64` *(Nat: 1.84)* | `0.18` / `0.17` | `5.8%` / `2.5%` / `2.2%` / `2.2%` *(Mean: 3.2%)* | `28.33%` | **`20.84%`** *(-1.16 pp surplus sinks debt!)* |
-| **5. Status Quo Austerity (Raise Super to 70)** | `1.86` / `1.82` / `1.58` / `1.45` *(Nat: 1.64)* | `0.30` / `0.28` | **`25.4%` / `23.2%` / `19.9%` / `18.0%`** *(Spikes!)* | `35.15%` | **`25.00%`** *(+3.00 pp hike; backfires!)* |
-| **6. ★ Phase 2 ($SS2$) Harvest (Lower Super to 64)** | **`2.09` / `2.06` / `1.81` / `1.67`** *(Nat: 1.87)* | **`0.16` / `0.16`** | **`3.0%` / `2.2%` / `2.2%` / `2.2%`** *(Mean: 2.4%)* | **`29.66%`** | **`18.85%` (-3.15 pp PAYE Cut!)** |
+| **4. Phase 1 ($SS1$) Full Package (Age 65)** | `2.06` / `2.03` / `1.78` / `1.64` *(Nat: 1.84)* | `0.18` / `0.17` | `5.8%` / `2.5%` / `2.2%` / `2.2%` *(Mean: 3.2%)* | `28.33%` | **`20.84%`** *(-1.16 pp surplus sinks debt)* |
+| **5. Status Quo Austerity (Raise Super to 70)** | `1.86` / `1.82` / `1.58` / `1.45` *(Nat: 1.64)* | `0.30` / `0.28` | **`25.4%` / `23.2%` / `19.9%` / `18.0%`** *(Rises!)* | `35.15%` | **`25.00%`** *(+3.00 pp hike; backfires!)* |
+| **6. ★ Phase 2 ($SS2$) Harvest (Lower Super to 64)** | **`2.09` / `2.06` / `1.81` / `1.67`** *(Nat: 1.87)* | **`0.16` / `0.16`** | **`3.0%` / `2.2%` / `2.2%` / `2.2%`** *(Mean: 2.4%)* | **`29.66%`** | **`18.85%` (-3.15 pp PAYE Cut)** |
 
 *(For the complete year-by-year continuous Retirement-Age U-Curve from **Age 60 to Age 75** plotted in Panel D above, see **Section 3.4.7 / Table 8B**.)*
 
