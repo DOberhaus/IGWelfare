@@ -74,14 +74,14 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
      * **Layer 3 (Treasury Macro `LTFM`/`OLG` Teams, *Te Waihanga*, & Cabinet):** Feed verified cohort capability and fiscal surpluses into the **2050 50/50 Sovereign Debt-Sinking and Infrastructure Protocol**.
 
 4. **Audience 4 — Academic & Policy Economists: Synthesizing Five Decades of Longitudinal Evidence and Operator Theory (Doc 1A Part I.4):**
-   * *Empirical & Theoretical Convergence:* Over the past five decades, developmental scientists and quantitative macroeconomists have built all of the required empirical and mathematical machinery in separate literatures: New Zealand's 50-year *Dunedin Study* and *Growing Up in New Zealand* longitudinal cohorts, Cunha and Heckman's multi-stage skill operators, Guvenen et al.'s heterogeneous-agent wealth-tax proofs, spatial housing and migration sorting operators, and eleven international natural experiments. Assembling and calibrating these established tools onto a single GPU ledger allows New Zealand to replace reactive cash-flow austerity with a verified, self-financing generational transition inside a single 3-to-5-year parliamentary cycle.
+   * *Empirical & Theoretical Convergence:* Over the past five decades, developmental scientists and quantitative macroeconomists have built all of the required empirical and mathematical machinery in separate literatures: New Zealand's 50-year *Dunedin Study* and *Growing Up in New Zealand* longitudinal cohorts, Cunha and Heckman's multi-stage skill operators, Guvenen et al.'s heterogeneous-agent wealth-tax proofs, spatial housing and migration sorting operators, and twelve international natural experiments. Assembling and calibrating these established tools onto a single GPU ledger allows New Zealand to replace reactive cash-flow austerity with a verified, self-financing generational transition inside a single 3-to-5-year parliamentary cycle.
    * *Four Methodological Pillars in VFI Toolkit:* (I) Mixed Finite/Infinite-Horizon 8-PType GPU synthesis ($J = 27$ three-year periods or $J = 16$ five-year periods for households alongside $N_j = \infty$ collateral-constrained firms); (II) Multi-stage CES + *Tuakana–Teina* + Ben-Porath + Stone-Geary laws of motion; (III) Dimension-free spatial housing bubbles (Hirano & Toda, 2025; Kiyotaki et al., 2024) + $4 \times 5$ Gumbel migration sorting (Labrousse & Perdereau, 2025); and (IV) Tractable dynastic transition closure $`\mathbf{T}_{\mathrm{IG}}: \mathbf{Q}_h \times \mathbf{Q}_a \times \Pi_{\mathrm{mig}}`$ paired with ACC-style actuarial valuation $`\mathcal{V}_{k,t_0}^{(L)}`$.
 
 [ This space left intentionally blank ]
 
 ---
 
-5. **Audience 5 — Creatives, Storytellers, & Artists: Building the Future as a Creative Act (Doc 1A Part I.5):**
+5\. **Audience 5 — Creatives, Storytellers, & Artists: Building the Future as a Creative Act (Doc 1A Part I.5):**
    * *Parametric & Economic Channels Empowering the Creative Sector:*
      * **1. Narrative & Civic Credibility ($`\lambda_{\mathrm{cred}}(t)`$ in `TransPath_4Region_Master.m`):** Translating the 17 nodes of the Population Sankey and 26 nodes of the Fiscal Sankey into living *pūrākau* accelerates public and youth belief convergence ($`\lambda_{\mathrm{cred}}(t) \to 1`$), pulling forward brain-drain reversal (`Regime B/C`).
      * **2. Creative Agency at Gate 2 ($`\Delta_{\mathrm{Tuakana}} = +0.11 \to +0.14`$ in `Build_IntergenTransitionMatrix.m`):** Music, storytelling, *kapa haka*, design, and maker micro-economies are the active non-cognitive inputs inside *Montessori / Tuakana–Teina* and *Stars / Project K* adolescent communities at ages 12–14.
@@ -253,20 +253,20 @@ $$
 The two endogenous multipliers are defined as follows:
 
 1. **Asymmetric Grandparent and Aunty Time Multiplier Across the Retirement-Age U-Curve ($\Phi_{\mathrm{time}}$):** Let $A_{\mathrm{super}} = 20 + (J_r - 1)\Delta t$ denote the statutory NZ Superannuation eligibility age relative to the statutory baseline $A_{\mathrm{base}} = 65.0$:
-   * *Above Age 65 (Austerity Squeeze, $`A_{\mathrm{super}} \ge 65`$):* Raising $A_{\mathrm{super}}$ above 65 forces older *whānau* aged 65 to $A_{\mathrm{super}}$ to remain in market employment ($\ell > 0$) to satisfy the pre-retirement budget constraint, withdrawing alloparental caregiving time exponentially at rate $\eta_{\mathrm{elder}} = 0.09\text{ yr}^{-1}$.
-   * *Below Age 65 (Early Retirement Kuia/Koroua Dividend, $`A_{\mathrm{super}} < 65`$):* Lowering $A_{\mathrm{super}}$ below 65 releases healthy 60-to-64-year-old *kuia*, *koroua*, and aunties into voluntary alloparental support with concave hyperbolic-tangent saturation ($\kappa_{\mathrm{kuia}}^{\max} = 0.16$, saturation scale $\tau_{\mathrm{kuia}} = 1.80\text{ yrs}$):
+   - *Above Age 65 (Austerity Squeeze, $A_{\mathrm{super}} \ge 65$):* Raising $A_{\mathrm{super}}$ above 65 forces older *whānau* aged 65 to $A_{\mathrm{super}}$ to remain in market employment ($\ell > 0$) to satisfy the pre-retirement budget constraint, withdrawing alloparental caregiving time exponentially at rate $\eta_{\mathrm{elder}} = 0.09\text{ yr}^{-1}$.
+   - *Below Age 65 (Early Retirement Kuia/Koroua Dividend, $A_{\mathrm{super}} < 65$):* Lowering $A_{\mathrm{super}}$ below 65 releases healthy 60-to-64-year-old *kuia*, *koroua*, and aunties into voluntary alloparental support with concave hyperbolic-tangent saturation ($\kappa_{\mathrm{kuia}}^{\max} = 0.16$, saturation scale $\tau_{\mathrm{kuia}} = 1.80\text{ yrs}$):
 
-$$
-\Phi_{\mathrm{time}}\left(A_{\mathrm{super}}\right) = \begin{cases} \exp\left(-\eta_{\mathrm{elder}}\left(A_{\mathrm{super}} - 65.0\right)\right) & \text{if } A_{\mathrm{super}} \ge 65.0 \\ 1.0 + \kappa_{\mathrm{kuia}}^{\max} \tanh\left(\dfrac{65.0 - A_{\mathrm{super}}}{\tau_{\mathrm{kuia}}}\right) & \text{if } A_{\mathrm{super}} < 65.0 \end{cases}
-$$
+   $$
+   \Phi_{\mathrm{time}}\left(A_{\mathrm{super}}\right) = \begin{cases} \exp\left(-\eta_{\mathrm{elder}}\left(A_{\mathrm{super}} - 65.0\right)\right) & \text{if } A_{\mathrm{super}} \ge 65.0 \\ 1.0 + \kappa_{\mathrm{kuia}}^{\max} \tanh\left(\dfrac{65.0 - A_{\mathrm{super}}}{\tau_{\mathrm{kuia}}}\right) & \text{if } A_{\mathrm{super}} < 65.0 \end{cases}
+   $$
 
    Evaluated across statutory retirement ages, this yields $\Phi_{\mathrm{time}}(64) = 1.081$ (**+8.1% *Kuia* time boost**), $\Phi_{\mathrm{time}}(63) = 1.129$ (**+12.9% boost**), $\Phi_{\mathrm{time}}(65) = 1.000$ (baseline), $\Phi_{\mathrm{time}}(67) = 0.835$ (**-16.5% time loss**), and $\Phi_{\mathrm{time}}(70) = 0.638$ (**-36.2% time loss**).
 
 2. **Elder Housing Tenure Stability and Staying in Their Own Homes ($\Phi_{\mathrm{home}}$):** For retired or semi-retired grandmothers and aunties to provide a physical sanctuary in region $k$, their pension income $p_{\mathrm{super}}$ must cover the regional housing maintenance and energy user cost relative to the baseline house price $Q_{k,0}$:
 
-$$
-\Phi_{\mathrm{home}}\left(p_{\mathrm{super}}, Q_k\right) = \min\left(1.20, \max\left(0.50, \left(\frac{p_{\mathrm{super}}}{0.180}\right)\left(\frac{Q_{k,0}}{Q_k}\right)^{0.35}\right)\right)
-$$
+   $$
+   \Phi_{\mathrm{home}}\left(p_{\mathrm{super}}, Q_k\right) = \min\left(1.20, \max\left(0.50, \left(\frac{p_{\mathrm{super}}}{0.180}\right)\left(\frac{Q_{k,0}}{Q_k}\right)^{0.35}\right)\right)
+   $$
 
    Under Status Quo ($SS0$) at Age 65 ($p_{\mathrm{super}} = 0.180$ and $Q_k = Q_{k,0}$), both multipliers evaluate to unity ($\Phi_{\mathrm{time}} = \Phi_{\mathrm{home}} = 1.0$). Under our Generational Plan ($SS1 \to SS2$), land-tax and housing-supply reforms cool metropolitan house prices ($Q_k < Q_{k,0}$) while lowering $A_{\mathrm{super}}$ to **64** in $SS2$, raising both $\Phi_{\mathrm{home}} > 1$ and $\Phi_{\mathrm{time}} = 1.081$.
 
@@ -425,23 +425,33 @@ Evaluating the unified government budget identity and household welfare decompos
 
 #### 3.4.8 Cohort Distribution Drift and Transience Haircuts Across the 4-Region + Abroad Framework (`Dunedin_22` vs. `MetroSqueeze_GUiNZ`)
 
-Let $s_1 = (a_1, h_1, \theta_c, z, k)$ denote the initial household state vector at Gate 1 (ages 0–5) across the four domestic regions $k \in \{1, 2, 3, 4\}$ (`Rural`, `Small`, `Large`, `Auckland`), with dimension $k = 5$ denoting `Abroad`. Under Stone–Geary non-homothetic preferences with regional housing subsistence requirement $p_{H,k}(j)\bar{h}$ and mandatory transport/energy floor $\bar{e}_k$, private parental cash enrichment $i_c^\star(s_1, t)$ satisfies the Kuhn–Tucker condition:
+Let $s_1 = (a_1, h_1, \theta_c, z, k)$ denote the initial household state vector at Gate 1 (ages 0–5) across the four domestic regions $k \in \lbrace 1, 2, 3, 4 \rbrace$ (`Rural`, `Small`, `Large`, `Auckland`), with dimension $k = 5$ denoting `Abroad`. Under Stone–Geary non-homothetic preferences with regional housing subsistence requirement $p_{H,k}(j)\bar{h}$ and mandatory transport/energy floor $\bar{e}_k$, private parental cash enrichment $i_c^\star(s_1, t)$ satisfies the Kuhn–Tucker condition:
 
-$$i_c^\star(s_1, t) = \max\left\{ 0, \theta_c \left[ y_{\mathrm{disp},k}(s_1) + T_k(t) - p_{H,k}(t)\bar{h} - \bar{e}_k(t) - \bar{g}_{\mathrm{ECE}} \right] \right\}$$
+$$
+i_c^\star(s_1, t) = \max\left\lbrace 0, \theta_c \left[ y_{\mathrm{disp},k}(s_1) + T_k(t) - p_{H,k}(t)\bar{h} - \bar{e}_{k}(t) - \bar{g}_{\mathrm{ECE}} \right] \right\rbrace
+$$
 
-Define the critical disposable-income boundary $\tilde{y}_{1,k}(t) \equiv \bar{g}_{\mathrm{ECE}} + p_{H,k}(t)\bar{h} + \bar{e}_k(t) - T_k(t)$. Between the 1972–1973 Dunedin baseline ($t = 1972$, `Dunedin_22`) and the 2009–2010 *Growing Up in New Zealand* baseline ($t = 2010$, `MetroSqueeze_GUiNZ`), the reduction in unconditional family transfers and the appreciation of untaxed metropolitan land ($Q_{\mathrm{Auckland}} = 3.10\times$ versus $1.20\times$ in 1972) shifted $\tilde{y}_{1,k}(t)$ upward, expanding the struggling launch trajectory ($h_1\text{–}h_2$) from $22.0\%$ to $28.5\%$ nationally (and $34.0\%\text{–}36.6\%$ in Auckland):
+Define the critical disposable-income boundary $\tilde{y}_{1,k}(t) \equiv \bar{g}_{\mathrm{ECE}} + p_{H,k}(t)\bar{h} + \bar{e}_{k}(t) - T_k(t)$. Between the 1972–1973 Dunedin baseline ($t = 1972$, `Dunedin_22`) and the 2009–2010 *Growing Up in New Zealand* baseline ($t = 2010$, `MetroSqueeze_GUiNZ`), the reduction in unconditional family transfers and the appreciation of untaxed metropolitan land ($Q_{\mathrm{Auckland}} = 3.10\times$ versus $1.20\times$ in 1972) shifted $\tilde{y}_{1,k}(t)$ upward, expanding the struggling launch trajectory ($h_1\text{--}h_2$) from 22.0% to 28.5% nationally (and 34.0%–36.6% in Auckland):
 
-$$\Pr_{1972}^{\mathrm{Dunedin}}(h_{\mathrm{launch}} \in \{h_1, h_2\}) = \sum_{k=1}^{4} \omega_k \int_{y_{1,k} \le \tilde{y}_{1,k}(1972)} d\mu_{1972}(s_1 \mid k) = 0.220$$
+$$
+\Pr_{1972}^{\mathrm{Dunedin}}\left(h_{\mathrm{launch}} \in \lbrace h_1, h_2 \rbrace\right) = \sum_{k=1}^{4} \omega_k \int_{y_{1,k} \le \tilde{y}_{1,k}(1972)} d\mu_{1972}(s_1 \mid k) = 0.220
+$$
 
-$$\Pr_{2010}^{\mathrm{GUiNZ}}(h_{\mathrm{launch}} \in \{h_1, h_2\}) = \sum_{k=1}^{4} \omega_k \int_{y_{1,k} \le \tilde{y}_{1,k}(2010)} d\mu_{2010}(s_1 \mid k) = 0.285$$
+$$
+\Pr_{2010}^{\mathrm{GUiNZ}}\left(h_{\mathrm{launch}} \in \lbrace h_1, h_2 \rbrace\right) = \sum_{k=1}^{4} \omega_k \int_{y_{1,k} \le \tilde{y}_{1,k}(2010)} d\mu_{2010}(s_1 \mid k) = 0.285
+$$
 
 Let $\nu_k(a_1, Q_k) \in [0, 1]$ denote the forced residential relocation rate prior to age 5 in private rental tenure ($>45\%$ in `GUiNZ`). Residential churn erodes early skill retention by $(1 - \zeta \nu_k)$ entering the Stage-2 school-age CES technology ($\varphi_2 = -0.95 < 0$). Because Stage-2 inputs exhibit strong Cunha–Heckman dynamic complementarity ($\sigma_2 = \frac{1}{1 - \varphi_2} = 0.51 < 1$), the cross-partial derivatives of expected adult skill readiness with respect to universal in-kind wraparound $G_{\mathrm{ECE},1}$ and the struggling corner share $\Pr(i_c^\star = 0)$ as well as tenure stabilization ($-\nu_k$) are strictly positive:
 
-$$\frac{\partial^2 \mathbb{E}[\theta'_c]}{\partial G_{\mathrm{ECE},1} \partial \Pr(i_c^\star = 0)} > 0 \quad \text{and} \quad \frac{\partial^2 \mathbb{E}[\theta'_c]}{\partial G_{\mathrm{ECE},1} \partial (-\nu_k)} > 0$$
+$$
+\frac{\partial^2 \mathbb{E}[\theta'_c]}{\partial G_{\mathrm{ECE},1} \partial \Pr(i_c^\star = 0)} > 0 \quad \text{and} \quad \frac{\partial^2 \mathbb{E}[\theta'_c]}{\partial G_{\mathrm{ECE},1} \partial (-\nu_k)} > 0
+$$
 
 Consequently, evaluating the unbuffered $SS0$ fiscal remediation functional across Exits 1, 2, and 4 under the `MetroSqueeze_GUiNZ` stationary measure yields an additional $+\text{NZD } 10.8\text{B/yr}$ in projected 2050 structural drag ($\text{NZD } 17.7\text{B/yr} \to \text{NZD } 28.5\text{B/yr}$), while increasing the Year-5 ACC actuarial return multiple of the integrated reform package in `Table 16` from $3.84\times$ ($\text{NZD } 35.25\text{B}$) to $4.26\times$ ($\text{NZD } 39.14\text{B}$, or $4.45\times$ including full transience recovery):
 
-$$\Delta \mathcal{D}_{\mathrm{GUiNZ}} = \sum_{k=1}^{4} \sum_{x \in \{1,2,4\}} \int_{\mathcal{S}} C_x(s) d\left(\mu_{2010}^{\mathrm{GUiNZ}}(s \mid k) - \mu_{1972}^{\mathrm{Dunedin}}(s \mid k)\right) = +\text{NZD } 10.8\text{B/yr}$$
+$$
+\Delta \mathcal{D}_{\mathrm{GUiNZ}} = \sum_{k=1}^{4} \sum_{x \in \lbrace 1,2,4 \rbrace} \int_{\mathcal{S}} C_x(s) d\left(\mu_{2010}^{\mathrm{GUiNZ}}(s \mid k) - \mu_{1972}^{\mathrm{Dunedin}}(s \mid k)\right) = +\text{NZD } 10.8\text{B/yr}
+$$
 
 ---
 
@@ -805,7 +815,7 @@ Anchored to the national household consumption base (`NZD_Billion_Per_CE_Pct = N
 
 ---
 
-## 6. Part VI Cross-Reference: Eleven International Benchmarks (Tables 6A & 6B) & The Deming-to-Tokyo Coda
+## 6. Part VI Cross-Reference: Twelve International Benchmarks (Tables 6A & 6B) & The Deming-to-Tokyo Coda
 
 ### 6.1 Symbolic Cross-Country Matrices & Empirical Citations (Matching Doc 1A Tables 6A and 6B)
 
