@@ -53,16 +53,6 @@ When Aotearoa pairs **Phase 1 ($SS1$: Revenue-Neutral Foundation & Incubation)**
 4. **Achieving 3.84x Audited Breakeven Inside One Parliamentary Term (Actuarial Valuation):** Whereas traditional cash-flow accounting takes **18.8 years** to cross cash breakeven, **ACC-style Actuarial Continuation Valuation** demonstrates that by **Year 5 (against NZD 9.19B invested)**, the Crown already locks in **3.84x fiscal breakeven (NZD 35.25B)** at Treasury's 2% discount rate—and achieves **1.16x breakeven (NZD 10.68B) on direct fiscal cost avoidance alone**, before counting a single dollar of future tax increases.
 5. **The Retirement-Age U-Curve Sweet Spot — Lowering NZ Super to Age 64 & Cutting PAYE Taxes to 18.85% (Phase 2 $SS2$ Solvency Harvest):** Sweeping the statutory retirement age across Ages 60 to 75 demonstrates that raising NZ Super to 70 backfires (triggering a 45% disability leak and stripping -36.2% of grandmother/aunty childcare time), while our $SS2$ harvest unlocks the **Age 64–65 fiscal and welfare sweet spot**: New Zealand can **lower the universal NZ Super age to 64** (or hold 65), retire **NZD 17.8B–21.9B** of sovereign debt per cohort wave (cutting interest rates by **-60 bps**), and cut working-age PAYE taxes from **22.00% down to 18.85%** at Age 64 (or **18.57%** at Age 65).
 
-```
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                                                                   |
-|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
 | Strategic Dimension | Status Quo Baseline ($SS0$ / LTFM Drift) | Phase 1 Reform ($SS1$ Incubation) | Phase 2 Harvest ($SS2$ — 2050 Protocol) | Why It Matters Across Audiences |
 | :--- | :---: | :---: | :---: | :--- |
 | **Struggling Launch & Hardship Share** | 22.0% *(Dunedin)* to 28.5% | **4.0% to 4.5%** | **1.5%** | Slashes Oranga Tamariki care, avoidable hospital nights, and justice burdens by **over 75%** |
@@ -72,6 +62,16 @@ When Aotearoa pairs **Phase 1 ($SS1$: Revenue-Neutral Foundation & Incubation)**
 | **Working-Age PAYE Tax Rate & Net Crown Debt** | 22.0% → **28.2% PAYE / 185% Debt** | **22.0% PAYE** *(20.84% req. → Sinks Debt)* | **18.85% PAYE (-3.15 pp Cut) / 22% Debt** | Retires **NZD 17.8B–21.9B** debt/wave (-60 bps credit); sustains a **3% GDP Defense commitment at +20.72% CE** |
 | **Year 5 Audited Actuarial Return (at 2% Real)** | NZD 0B *(Cash breakeven takes 18.8 yrs)* | **NZD 35.25B Fiscal / NZD 85.40B GDP** | **NZD 1,510.7B 60-Yr Realized Cash GDP** | Achieves **3.84x fiscal breakeven by Year 5** (1.16x from direct cost avoidance alone) |
 | **Long-Run Household Welfare Gain (CE %)** | **-16.21% CE** *(LTFM Sinkhole)* | **+9.5% (*Rural*) to +17.7% (*Auckland*)** | **+18.2% (*Rural*) to +28.7% (*Auckland*)** | **+24.24% National gain (+40.45 pp net swing vs. LTFM)**; **47.3% from dynamic complementarity** |
+
+```
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|                                                                                   |
+|                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
+|                                                                                   |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+```
 
 ---
 
