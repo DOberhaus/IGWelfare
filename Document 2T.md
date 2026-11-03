@@ -17,7 +17,7 @@ The answer lies in the distinction between **"thin" numbers** and **"thick" numb
 
 In the computational macroeconomics and stochastic dynamic programming literature, converting a deterministic scalar parameter into a "thick" distribution without adding new grid axes is formally known as **Dimension-Free State-Contingent Parameterization** (or *Comonotonic Tail-Risk Conditioning across the Rouwenhorst Markov and Endogenous Asset Manifold*). Rather than expanding the exogenous Markov state space via a Cartesian product $`Z_1 \times Z_2 \times Z_3`$—which suffers from the curse of dimensionality and falsely assumes that extended *whānau* care capacity, rental eviction risk, and early-childhood staffing bottlenecks are statistically independent of household income and wealth—we project these structural frictions directly onto the existing 26,901-point state tensor $`(a, h, \theta_c, z, j)`$ using canonical parameters `K_whanau_base`, `Q_reg_base`, `G_ece_stage1`, `G_ece_stage2`, and `agej`. Our objective is to avoid two common modeling pitfalls: sacrificing structural realism to keep the state space computationally tractable under the curse of dimensionality, or misrepresenting distributional tail risks by treating population averages as representative of heterogeneous household realities.
 
-* **"Thin" Numbers (Deterministic Means Modeled in Spreadsheets):** A conventional spreadsheet tracks a single real-numbered average per cohort or region—such as mean household income $`\bar{y}_k`$, average regional house price $`Q_k`$, average public early-childhood expenditure $`G_{\mathrm{ece}}`$, and average extended *whānau* support $`\bar{K}_{\mathrm{wh\bar{a}nau}}`$—and feeds those scalar averages into real-valued algebraic formulas:
+* **"Thin" Numbers (Deterministic Means Modeled in Spreadsheets):** A conventional spreadsheet tracks a single real-numbered average per cohort or region—such as mean household income $`\bar{y}_k`$, average regional house price *Q_k*, average public early-childhood expenditure $`G_{\mathrm{ece}}`$, and average extended *whānau* support $`\bar{K}_{\mathrm{wh\bar{a}nau}}`$—and feeds those scalar averages into real-valued algebraic formulas:
 
 $$Y_{\mathrm{Excel}} = f\left(\mathbb{E}[a], \mathbb{E}[h], \mathbb{E}[\theta_c], \mathbb{E}[z]\right)$$
 
@@ -25,13 +25,13 @@ $$Y_{\mathrm{Excel}} = f\left(\mathbb{E}[a], \mathbb{E}[h], \mathbb{E}[\theta_c]
 
 $$Y_{\mathrm{VFI}} = \mathbb{E}_{\mu_k}\left[f\left(a, h, \theta_c, z\right)\right] = \sum_{a, h, \theta_c, z} \mu_k\left(a, h, \theta_c, z, j\right) f\left(a, h, \theta_c, z\right)$$
 
-Whenever the structural law of motion $`f(\cdot)`$ is strongly concave, features kinked corner constraints ($`i_c = 0`$, $`a^{\prime} \ge 0`$), or exhibits harmonic-mean bottlenecks ($`\varphi_2 = -0.95 < 0`$), **Jensen's Inequality** guarantees a massive divergence between the function of the average and the average of the function:
+Whenever the structural law of motion $`f(\cdot)`$ is strongly concave, features kinked corner constraints (*i_c* = 0, $`a^{\prime} \ge 0`$), or exhibits harmonic-mean bottlenecks ($`\varphi_2 = -0.95 < 0`$), **Jensen's Inequality** guarantees a massive divergence between the function of the average and the average of the function:
 
 $$
 \mathbb{E}_{\mu_k}\left\lbrack f\left(a, h, \theta_c, z\right) \right\rbrack \ll f\left(\mathbb{E}\lbrack a \rbrack, \mathbb{E}\lbrack h \rbrack, \mathbb{E}\lbrack \theta_c \rbrack, \mathbb{E}\lbrack z \rbrack\right)
 $$
 
-In a deterministic spreadsheet, an average child with average family income $`\bar{z} = 1.0`$, average public wraparound $`G_{\mathrm{ece},2} = 0.065`$, and average extended *whānau* support $`\bar{K}_{\mathrm{wh\bar{a}nau}} = 0.35`$ smoothly clears the Stage-2 adolescent skill gate with zero skill erosion. In the real world—and in our VFI distribution—early skill erosion into the struggling launch tier ($`h_1\text{--}h_2`$), state-care entry (Exit 1), acute hospitalisation (Exit 2), and trans-Tasman brain drain are driven by **interacting tail states** (such as a household in $`z_1`$ unemployment simultaneously hitting the $a = 0$ rental-stress boundary and the $`i_c = 0`$ child-investment corner).
+In a deterministic spreadsheet, an average child with average family income $`\bar{z} = 1.0`$, average public wraparound $`G_{\mathrm{ece},2} = 0.065`$, and average extended *whānau* support $`\bar{K}_{\mathrm{wh\bar{a}nau}} = 0.35`$ smoothly clears the Stage-2 adolescent skill gate with zero skill erosion. In the real world—and in our VFI distribution—early skill erosion into the struggling launch tier ($`h_1\text{--}h_2`$), state-care entry (Exit 1), acute hospitalisation (Exit 2), and trans-Tasman brain drain are driven by **interacting tail states** (such as a household in $`z_1`$ unemployment simultaneously hitting the $a = 0$ rental-stress boundary and the *i_c* = 0 child-investment corner).
 
 ---
 
@@ -39,9 +39,9 @@ In a deterministic spreadsheet, an average child with average family income $`\b
 
 When researchers realize that regional parameters like extended *whānau* support (`K_whanau_base`), housing user costs (`Q_reg_base`), and public wraparound effectiveness (`G_ece`) vary across households, their first instinct is often to add new exogenous shock dimensions—for example, expanding `n_z` from a 1D vector of 7 states to a 3D tensor `n_z = [7, 3, 3]` (63 exogenous states per grid point).
 
-Adding orthogonal $z$-dimensions is both computationally wasteful and economically misspecified:
+Adding orthogonal *z*-dimensions is both computationally wasteful and economically misspecified:
 * **Computational Cost:** Increasing $`N_z`$ from 7 to 63 multiplies the size of the Markov transition matrix $`\pi_z`$ by $`(63/7)^2 = 81\times`$ and expands the GPU return-matrix workspace by $`9\times`$.
-* **Economic Misspecification:** Real-world shocks to extended *whānau* care capacity, rental eviction risk, and early-childhood service access are **not orthogonal** to a household's income shock $z$, net worth $a$, and adult skill tier $h$; they are **tightly co-determined** by them.
+* **Economic Misspecification:** Real-world shocks to extended *whānau* care capacity, rental eviction risk, and early-childhood service access are **not orthogonal** to a household's income shock *z*, net worth *a*, and adult skill tier *h*; they are **tightly co-determined** by them.
 
 **The Zero-Dimension-Cost "Thickening" Principle:** Instead of adding new grid axes, we convert thin regional scalars (`K_whanau_base`, `Q_reg`, `G_ece_stage1`, `G_ece_stage2`, and `sj`) into **state-contingent functions** evaluated directly on the existing state space $`(a, h, \theta_c, z, j, k)`$. Because the VFI solver already loops over every $`(a, h, \theta_c, z, j)`$ coordinate on the GPU, conditioning these parameters on existing state variables transforms each scalar into a **26,901-point thick probability distribution** at **zero additional GPU memory or grid-dimension cost**.
 
@@ -112,7 +112,7 @@ $$\xi_{\mathrm{hh}}\left(a, Q_k\right) = \xi_{\mathrm{reg},k} \cdot \left(0.25 +
 $$p_H\left(a, z, Q_k, j\right) = \left(\xi_{\mathrm{hh}}\left(a, Q_k\right) rh_k + \left(1 - \xi_{\mathrm{hh}}\left(a, Q_k\right)\right) \frac{rr_k}{0.5 \bar{\chi}}\right)\left(1 + 0.12 \mathbb{I}\left(a \lt 0.08 Q_k \land z \lt 0.85\right)\right)$$
 
 Projecting $`p_H`$ onto the $(a, z)$ sub-manifold expands housing user costs from 1 scalar per region into $`61 \times 7 = 427`$ state-contingent values per region:
-1. **The 20% LVR Deposit Gate ($`a \lt 0.20 * Q_k`$):** Young households without sufficient equity to clear the `0.20 * Q_k` deposit hurdle face the unblended rental user cost—explaining why the Age-20 Youth Capital Grant ($E$) and metropolitan house-price cooling ($`Q_k`$ down) interact multiplicatively to lift young-adult homeownership in Auckland from 28.0% to 41.2%.
+1. **The 20% LVR Deposit Gate ($`a \lt 0.20 * Q_k`$):** Young households without sufficient equity to clear the `0.20 * Q_k` deposit hurdle face the unblended rental user cost—explaining why the Age-20 Youth Capital Grant (*E*) and metropolitan house-price cooling (*Q_k* down) interact multiplicatively to lift young-adult homeownership in Auckland from 28.0% to 41.2%.
 2. **Comonotonic Tail Coupling of Eviction & Transience Risk ($`a \lt 0.08 * Q_k`$ and $`z \lt 0.85`$):** Renters with near-zero liquid buffers who simultaneously experience an adverse Rouwenhorst earnings shock face a 12% effective housing cost and transience wedge (forced moves, emergency accommodation, and school disruption).
 3. **Retiree Renter Vulnerability ($`j \ge J_r`$ and $`a \lt 0.20 * Q_k`$):** Elderly households who reach age 65 ($`age_j \ge J_r`$) without home equity remain exposed to rental user costs $`rr_k`$ during retirement.
 
