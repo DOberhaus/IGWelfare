@@ -34,9 +34,7 @@ New Zealanders already know how to break out of that trap. In 2012, when Emirate
 ```
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
-|                                                                                   |
 |                       [ THIS SPACE INTENTIONALLY LEFT BLANK ]                     |
-|                                                                                   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
 ```
