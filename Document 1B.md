@@ -258,6 +258,7 @@ Because cohorts at active parenting ages $`j \in [j_{s1,\mathrm{start}}, j_{s2,\
 $$
 K_{\mathrm{whanau}}(k) = \min\left(1.0, \max\left(0.0, K_{\mathrm{whanau},0}(k) \cdot \Phi_{\mathrm{time}}(A_{\mathrm{super}}) \cdot \Phi_{\mathrm{home}}(p_{\mathrm{super}}, Q_k)\right)\right)
 $$
+
 The two endogenous multipliers are defined as follows:
 
 **1. Asymmetric Grandparent and Aunty Time Multiplier Across the Retirement-Age U-Curve ($`\Phi_{\mathrm{time}}`$):** Let $`A_{\mathrm{super}} = 20 + (J_r - 1)\Delta t`$ denote the statutory NZ Superannuation eligibility age relative to the statutory baseline $`A_{\mathrm{base}} = 65.0`$:
@@ -465,6 +466,7 @@ $$
 $$
 
 Consequently, evaluating the unbuffered $`SS0`$ fiscal remediation functional across Exits 1, 2, and 4 under the `MetroSqueeze_GUiNZ` stationary measure yields an additional **+NZD 10.8B/yr** in projected 2050 structural drag (**NZD 17.7B/yr** $`\to`$ **NZD 28.5B/yr**), while increasing the Year-5 ACC actuarial return multiple of the integrated reform package in `Table 16` from **3.84x** (**NZD 35.25B**) to **4.26x** (**NZD 39.14B**, or **4.45x** including full transience recovery):
+
 $$
 \Delta \mathcal{D}_{\mathrm{GUiNZ}} = \sum_{k=1}^{4} \sum_{x \in \lbrace 1,2,4 \rbrace} \int_{\mathcal{S}} C_x(s) d\left(\mu_{2010}^{\mathrm{GUiNZ}}(s \mid k) - \mu_{1972}^{\mathrm{Dunedin}}(s \mid k)\right) = +\mathrm{NZD}\ 10.8\mathrm{B/yr}
 $$

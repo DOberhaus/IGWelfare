@@ -670,7 +670,7 @@ To ensure full replicability and unambiguous citation across the theoretical ope
 To keep this specification guide within GitHub's per-file MathJax rendering limits while giving our state-contingent operator methodology a full pedagogical treatment, Section 10 has been published as a standalone companion monograph: **[Document 2B: "Thick" vs. "Thin" Numbers in Quantitative Public Policy — Why Dimension-Free State-Contingent Conditioning Captures Comonotonic Tail Risks Without Expanding GPU Grid Dimensions](Document%202B.md)**.
 
 **[Document 2B](Document%202B.md)** provides the formal Jensen's Inequality proofs and state-sub-manifold equations for our four zero-dimension-cost operators:
-- **[1]** **State-Contingent Extended *Whānau* Care ($K_{\mathrm{wh\bar{a}nau}}^{\mathrm{net}}$):** Comonotonic Sandwich-Generation Care Reversal under Super Age 67/70 and trust-gated adolescent mentoring (`Section 4.1`).
-- **[2]** **Price-Manifold Conditioned Public Wraparound ($G_{\mathrm{ece},s}^{\mathrm{eff}}(Q_k)$):** The *Kaiako* housing-affordability workforce supply deflator (`Section 4.2`).
-- **[3]** **Sub-Manifold Conditioned Housing User Costs ($p_H(a, z, Q_k, j)$):** The 61-point asset-grid 20% LVR deposit cliff and comonotonic eviction/transience tail (`Section 4.3`).
-- **[4]** **Skill-Manifold Conditioned Survival and Late-Life Labor Disutility ($s_j^{\mathrm{eff}}(h, j)$):** Capturing actuarial regressivity and the 38%–52% disability benefit substitution leak (`Section 4.4`).
+- **[1]** **State-Contingent Extended *Whānau* Care ($`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{net}}`$):** Comonotonic Sandwich-Generation Care Reversal under Super Age 67/70 and trust-gated adolescent mentoring (`Section 4.1`).
+- **[2]** **Price-Manifold Conditioned Public Wraparound ($`G_{\mathrm{ece},s}^{\mathrm{eff}}(Q_k)`$):** The *Kaiako* housing-affordability workforce supply deflator (`Section 4.2`).
+- **[3]** **Sub-Manifold Conditioned Housing User Costs ($`p_H(a, z, Q_k, j)`$):** The 61-point asset-grid 20% LVR deposit cliff and comonotonic eviction/transience tail (`Section 4.3`).
+- **[4]** **Skill-Manifold Conditioned Survival and Late-Life Labor Disutility ($`s_j^{\mathrm{eff}}(h, j)`$):** Capturing actuarial regressivity and the 38%–52% disability benefit substitution leak (`Section 4.4`).
