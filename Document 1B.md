@@ -423,29 +423,25 @@ Evaluating the unified government budget identity and household welfare decompos
 
 ---
 
-#### 3.4.8 Cohort Distribution Drift and Transience Haircuts in the 4-Region + Abroad Framework
+#### 3.4.8 Cohort Distribution Drift and Transience Haircuts Across the 4-Region + Abroad Framework (`Dunedin_22` vs. `MetroSqueeze_GUiNZ`)
 
-Let $s_1 = (a_1, h_1, pv_1, z, r)$ denote the initial state vector at Gate 1 (ages 0–5) across the four domestic regions $r \in \{1, 2, 3, 4\}$ (`Rural`, `Small Urban`, `Large Urban`, `Auckland`), with dimension $r = 5$ denoting `Abroad`. Under Stone–Geary non-homothetic preferences with regional housing subsistence requirement $p_{h,r}^r(t)\bar{h}$ and stochastic energy expenditure $p_e(z_2, t)$, private parental cash investment $i_c^\star(s_1, t)$ satisfies the Kuhn–Tucker condition:
+Let $s_1 = (a_1, h_1, \theta_c, z, k)$ denote the initial household state vector at Gate 1 (ages 0–5) across the four domestic regions $k \in \{1, 2, 3, 4\}$ (`Rural`, `Small`, `Large`, `Auckland`), with dimension $k = 5$ denoting `Abroad`. Under Stone–Geary non-homothetic preferences with regional housing subsistence requirement $p_{H,k}(j)\bar{h}$ and mandatory transport/energy floor $\bar{e}_k$, private parental cash enrichment $i_c^\star(s_1, t)$ satisfies the Kuhn–Tucker condition:
 
-$$i_c^\star(s_1, t) = \max\left\{ 0, \theta_c \left[ y_{1,r}(s_1) + T_{\text{cash}}(t) - p_{h,r}^r(t)\bar{h} - p_e(z_2, t) - \bar{c}_0 \right] \right\}$$
+$$i_c^\star(s_1, t) = \max\left\{ 0, \theta_c \left[ y_{\mathrm{disp},k}(s_1) + T_k(t) - p_{H,k}(t)\bar{h} - \bar{e}_k(t) - \bar{g}_{\mathrm{ECE}} \right] \right\}$$
 
-Define the critical disposable-income boundary $\tilde{y}_{1,r}(t) \equiv \bar{c}_0 + p_{h,r}^r(t)\bar{h} + p_e(z_2, t) - T_{\text{cash}}(t)$. Between the 1972–1973 Dunedin baseline ($t = 1972$) and the 2009–2010 `GUiNZ` baseline ($t = 2010$), the reduction in real unconditional family transfers ($\Delta T_{\text{cash}} < 0$) and the appreciation of untaxed urban land ($\frac{p_{h,4}^r(2010)\bar{h}}{\bar{y}_1} = 3.10\times$ versus $1.20\times$ in 1972) shifted $\tilde{y}_{1,r}(t)$ upward from the 22nd to the 30th percentile of the birth distribution:
+Define the critical disposable-income boundary $\tilde{y}_{1,k}(t) \equiv \bar{g}_{\mathrm{ECE}} + p_{H,k}(t)\bar{h} + \bar{e}_k(t) - T_k(t)$. Between the 1972–1973 Dunedin baseline ($t = 1972$, `Dunedin_22`) and the 2009–2010 *Growing Up in New Zealand* baseline ($t = 2010$, `MetroSqueeze_GUiNZ`), the reduction in unconditional family transfers and the appreciation of untaxed metropolitan land ($Q_{\mathrm{Auckland}} = 3.10\times$ versus $1.20\times$ in 1972) shifted $\tilde{y}_{1,k}(t)$ upward, expanding the struggling launch trajectory ($h_1\text{–}h_2$) from $22.0\%$ to $28.5\%$ nationally (and $34.0\%\text{–}36.6\%$ in Auckland):
 
-$$\Pr_{1972}^{\text{Dunedin}}(i_c^\star(s_1) = 0) = \sum_{r=1}^{4} \omega_r \int_{y_{1,r} \le \tilde{y}_{1,r}(1972)} d\mu_{1972}(s_1 \mid r) = 0.220$$
+$$\Pr_{1972}^{\mathrm{Dunedin}}(h_{\mathrm{launch}} \in \{h_1, h_2\}) = \sum_{k=1}^{4} \omega_k \int_{y_{1,k} \le \tilde{y}_{1,k}(1972)} d\mu_{1972}(s_1 \mid k) = 0.220$$
 
-$$\Pr_{2010}^{\text{GUiNZ}}(i_c^\star(s_1) = 0) = \sum_{r=1}^{4} \omega_r \int_{y_{1,r} \le \tilde{y}_{1,r}(2010)} d\mu_{2010}(s_1 \mid r) = 0.300$$
+$$\Pr_{2010}^{\mathrm{GUiNZ}}(h_{\mathrm{launch}} \in \{h_1, h_2\}) = \sum_{k=1}^{4} \omega_k \int_{y_{1,k} \le \tilde{y}_{1,k}(2010)} d\mu_{2010}(s_1 \mid k) = 0.285$$
 
-Let $\nu_r(a_1, p_{h,r}^r) \in [0, 1]$ denote the forced residential relocation rate prior to age 5 in private rental tenure. Residential churn erodes early skill self-productivity $\gamma_1$ by the factor $(1 - \zeta \nu_r)$ inside the Cunha–Heckman–Schennach (2010) CES production function:
+Let $\nu_k(a_1, Q_k) \in [0, 1]$ denote the forced residential relocation rate prior to age 5 in private rental tenure ($>45\%$ in `GUiNZ`). Residential churn erodes early skill retention by $(1 - \zeta \nu_k)$ entering the Stage-2 school-age CES technology ($\varphi_2 = -0.95 < 0$). Because Stage-2 inputs exhibit strong Cunha–Heckman dynamic complementarity ($\sigma_2 = \frac{1}{1 - \varphi_2} = 0.51 < 1$), the cross-partial derivatives of expected adult skill readiness with respect to universal in-kind wraparound $G_{\mathrm{ECE},1}$ and the struggling corner share $\Pr(i_c^\star = 0)$ as well as tenure stabilization ($-\nu_k$) are strictly positive:
 
-$$h_2(s_1) = A_1 \left[ \gamma_1 (1 - \zeta \nu_r(a_1, p_{h,r}^r)) h_1^{\phi_1} + (1 - \gamma_1) \left( G_{\text{ECE},1}^{\text{in-kind}} + \kappa_1 i_c^\star(s_1) + \omega_1 \tau_c w_1 h_1 \right)^{\phi_1} \right]^{\frac{\rho_1}{\phi_1}}$$
+$$\frac{\partial^2 \mathbb{E}[\theta'_c]}{\partial G_{\mathrm{ECE},1} \partial \Pr(i_c^\star = 0)} > 0 \quad \text{and} \quad \frac{\partial^2 \mathbb{E}[\theta'_c]}{\partial G_{\mathrm{ECE},1} \partial (-\nu_k)} > 0$$
 
-Because early inputs are strong complements ($\phi_1 = -0.50 < 0 \implies \sigma_1 = \frac{1}{1 - \phi_1} = 0.67 < 1$), the cross-partial derivatives of expected Gate 2 readiness $\mathbb{E}[h_2]$ with respect to universal in-kind early childhood provision $G_{\text{ECE},1}^{\text{in-kind}}$ and the subsistence-corner mass $\Pr(i_c^\star = 0)$ as well as tenure stabilization ($-\nu_r$) are strictly positive:
+Consequently, evaluating the unbuffered $SS0$ fiscal remediation functional across Exits 1, 2, and 4 under the `MetroSqueeze_GUiNZ` stationary measure yields an additional $+\text{NZD } 10.8\text{B/yr}$ in projected 2050 structural drag ($\text{NZD } 17.7\text{B/yr} \to \text{NZD } 28.5\text{B/yr}$), while increasing the Year-5 ACC actuarial return multiple of the integrated reform package in `Table 16` from $3.84\times$ ($\text{NZD } 35.25\text{B}$) to $4.26\times$ ($\text{NZD } 39.14\text{B}$, or $4.45\times$ including full transience recovery):
 
-$$\frac{\partial^2 \mathbb{E}[h_2]}{\partial G_{\text{ECE},1}^{\text{in-kind}} \partial \Pr(i_c^\star = 0)} > 0 \quad \text{and} \quad \frac{\partial^2 \mathbb{E}[h_2]}{\partial G_{\text{ECE},1}^{\text{in-kind}} \partial (-\nu_r)} > 0$$
-
-Consequently, evaluating the unbuffered `SS0` fiscal remediation functional across health, state-care, and justice exits $x \in \{1, 2, 4\}$ under the 2010 `GUiNZ` stationary measure yields an additional $+\text{NZD } 10.8\text{B/yr}$ in structural drag while increasing the Year-5 ACC actuarial return multiple of the integrated reform package from $3.84\times$ to $4.45\times$:
-
-$$\Delta \mathcal{D}_{\text{GUiNZ}} = \sum_{r=1}^{4} \sum_{x \in \{1,2,4\}} \int_{\mathcal{S}} C_x(s) d\left(\mu_{2010}^{\text{GUiNZ}}(s \mid r) - \mu_{1972}^{\text{Dunedin}}(s \mid r)\right) = +\text{NZD } 10.8\text{B/yr}$$
+$$\Delta \mathcal{D}_{\mathrm{GUiNZ}} = \sum_{k=1}^{4} \sum_{x \in \{1,2,4\}} \int_{\mathcal{S}} C_x(s) d\left(\mu_{2010}^{\mathrm{GUiNZ}}(s \mid k) - \mu_{1972}^{\mathrm{Dunedin}}(s \mid k)\right) = +\text{NZD } 10.8\text{B/yr}$$
 
 ---
 
@@ -536,35 +532,32 @@ $$\Delta \mathcal{D}_{\text{GUiNZ}} = \sum_{r=1}^{4} \sum_{x \in \{1,2,4\}} \int
 
 Arguments for and against tax reform are often shallow, because they depend on "thin" numbers: a tax rate here or a percentage of capital flight there.  Our theoretical foundation admits a more substantial analysis that respects both the topography of the wealth terrain, and the willingness of its inhabitants to endure the exercise as both a worthy challenge and a worthwhile reward.  From these three papers we map the practical routes calibrated to New Zealand data.
 
-### 4.2.1 Three-Elasticity Decomposition of Top Marginal Tax Rates
-Following Piketty, Saez, and Stantcheva (2014), the total observed taxable income elasticity $e_{\text{total}}$ with respect to the net-of-tax rate $(1 - \tau_{\text{top}})$ decomposes into real productive supply ($e_1$), tax-base sheltering ($e_2$), and zero-sum compensation bargaining ($e_3$):
+### 4.5.1 Three-Elasticity Decomposition of Top Marginal Tax Rates
+Following Piketty, Saez, and Stantcheva (2014), the total observed taxable income elasticity $e_{\mathrm{total}}$ with respect to the net-of-tax rate $(1 - \tau_{\mathrm{top}})$ decomposes into real productive supply ($e_1$), tax-base sheltering ($e_2$), and zero-sum compensation bargaining ($e_3$):
 
-$$e_{\text{total}} = e_1 + e_2 + e_3$$
+$$e_{\mathrm{total}} = e_1 + e_2 + e_3$$
 
-When capital-gain and land shelters remain open ($\tau_a = 0$), reductions in $\tau_{\text{top}}$ primarily stimulate rent-seeking bargaining ($e_3 > 0$) while the real productive elasticity remains small ($e_1 \approx 0.15\text{–}0.25$). The net fiscal revenue derivative is therefore strictly negative:
+When capital-gain and land shelters remain open ($\tau_a = 0$), reductions in $\tau_{\mathrm{top}}$ primarily stimulate rent-seeking bargaining ($e_3 > 0$) while the real productive elasticity remains small ($e_1 \approx 0.15\text{–}0.25$). The net fiscal revenue derivative is therefore strictly negative:
 
-$$\frac{d\mathcal{R}}{d(1 - \tau_{\text{top}})} = Y_{\text{top}} \left( e_1 - \frac{1 - \tau_{\text{top}}}{\tau_{\text{top}}} \right) < 0 \quad \text{for } e_1 \ll \frac{1 - \tau_{\text{top}}}{\tau_{\text{top}}}$$
+$$\frac{d\mathcal{R}}{d(1 - \tau_{\mathrm{top}})} = Y_{\mathrm{top}} \left( e_1 - \frac{1 - \tau_{\mathrm{top}}}{\tau_{\mathrm{top}}} \right) < 0 \quad \text{for } e_1 \ll \frac{1 - \tau_{\mathrm{top}}}{\tau_{\mathrm{top}}}$$
 
-### 4.2.2 Return Heterogeneity Under Wealth-Stock vs. Capital-Income Taxation
-In the 8-PType occupational-choice block (Guvenen et al., 2023; Murphy, Shleifer, & Vishny, 1991), agents possess heterogeneous entrepreneurial productivity $z_h$ versus passive land-holding return $z_\ell (\dot{P}_L / P_L)$. Introducing a book-value wealth/land tax $\tau_a = 1.5\%$ paired with lower taxes on active earnings ($\Delta \tau_k < 0, \Delta \tau_y < 0$) yields the after-tax return schedule:
+### 4.5.2 Return Heterogeneity Under Wealth-Stock vs. Capital-Income Taxation
+In the 8-PType occupational-choice block (Guvenen et al., 2023; Murphy, Shleifer, & Vishny, 1991), agents possess heterogeneous entrepreneurial productivity $z_h$ versus passive land-holding return $z_\ell (\dot{P}_L / P_L)$. Introducing a book-value wealth/land tax $\tau_a = 1.5\%$ paired with lower taxes on active earnings ($\Delta \tau_k < 0, \Delta \tau_l < 0$) yields the after-tax return schedule:
 
-$$r_{\text{net}}(z, \tau_a, \tau_k) = (1 - \tau_k) z_h k^{\alpha - 1} + z_\ell \left( \frac{\dot{P}_L}{P_L} \right) - \tau_a$$
+$$r_{\mathrm{net}}(z, \tau_a, \tau_k) = (1 - \tau_k) z_h k^{\alpha - 1} + z_\ell \left( \frac{\dot{P}_L}{P_L} \right) - \tau_a$$
 
-Differentiating the stationary asset cutoff $A^\star(\tau_a)$ confirms that wealth-stock taxation compresses speculative land hoarding ($\partial A^\star(z_\ell) / \partial \tau_a < 0$) and expands the stationary measure of high-productivity builders ($\Delta \mu^\star(z_h) > 0$), reducing equilibrium metropolitan housing rents $p_{h,r}^r$ by $10.5\%$ and curtailing outbound graduate migration to the `Abroad` state ($r = 5$):
+Differentiating the stationary asset cutoff $A^\star(\tau_a)$ confirms that wealth-stock taxation compresses speculative land hoarding ($\partial A^\star(z_\ell) / \partial \tau_a < 0$) and expands the stationary measure of high-productivity builders ($\Delta \mu^\star(z_h) > 0$), reducing equilibrium metropolitan housing prices $Q_k$ by $10.5\%$ and curtailing outbound graduate migration to the `Abroad` state ($k = 5$):
 
-$$V_{20,r}^{\text{Domestic}}(a_{20} + B_{\text{youth}}, h_3) \ge V_{20,5}^{\text{Abroad}}(a_{20}, h_3) - c_{\text{mig}} \quad \forall r \in \{1, 2, 3, 4\}$$
+$$V_{20,k}^{\mathrm{Domestic}}(a_{20} + E, h_3) \ge V_{20,5}^{\mathrm{Abroad}}(a_{20}, h_3) - \kappa_{\mathrm{mig}} \quad \forall k \in \{1, 2, 3, 4\}$$
 
-### 4.2.3 Parental Developmental Time Crowd-Out Under High Abatement
-Consider a liquidity-constrained Gate 1 household subject to benefit abatement rate $\tau_{\text{abate}} \in [0.70, 0.90]$ that increases low-wage labor supply by $\Delta \ell_{\text{coerced}} > 0$, inducing a one-for-one reduction in parental developmental time $\Delta \tau_c = -\Delta \ell_{\text{coerced}} < 0$. Differentiating $h_2(s_1)$ with respect to $\ell_{\text{coerced}}$ yields:
+### 4.5.3 Parental Developmental Time Crowd-Out Under High Abatement
+Consider a liquidity-constrained Gate 1 household subject to benefit abatement rate $\tau_{\mathrm{abate}} \in [0.70, 0.90]$ that increases low-wage labor supply by $\Delta \ell_{\mathrm{coerced}} > 0$, inducing a one-for-one reduction in parental developmental time $\Delta \ell_{\mathrm{child}} = -\Delta \ell_{\mathrm{coerced}} < 0$. Differentiating Stage-1 skill $\theta'_c(s_1)$ with respect to $\ell_{\mathrm{coerced}}$ yields:
 
-$$\frac{d h_2}{d \ell_{\text{coerced}}} = \frac{\partial h_2}{\partial I_1} \left[ \kappa_1 \mathbb{I}(i_c^\star > 0) w_{\min}(1 - \tau_{\text{abate}}) - \omega_1 w_1 h_1 \right] < 0$$
+$$\frac{d \theta'_c}{d \ell_{\mathrm{coerced}}} = \frac{\partial \theta'_c}{\partial I_{\mathrm{tot},1}} \left[ \mathbb{I}(i_c^\star > 0) w_{\min}(1 - \tau_{\mathrm{abate}}) - \gamma_{1,\mathrm{par}} w_k h_p \right] < 0$$
 
-At or near the Stone–Geary corner ($\mathbb{I}(i_c^\star > 0) = 0$), the marginal cash term vanishes while the loss of parental time $-\omega_1 w_1 h_1$ strictly degrades early skill formation $h_2$.
+At or near the Stone–Geary corner ($\mathbb{I}(i_c^\star > 0) = 0$), the marginal cash term vanishes while the loss of parental care time $-\gamma_{1,\mathrm{par}} w_k h_p$ strictly degrades early skill formation $\theta'_c$.
 
-To evaluate the distributional incidence of `SS0 -> SS1 -> SS2` without arbitrary brackets, `Plot_WealthBracket_GiveAndGain.m` maps **10 official survey-anchored `Earn + Own` (*Annual Household Income + Net Worth*) benchmarks** drawn directly from:
-1. **Statistics New Zealand Household Economic Survey (*HES* June 2024/2025):** Median household income = **NZD 119k** (`Tier 3: 120k + 340k`); median household net worth = **NZD 529k** (`Tier 4: 135k + 530k`), alongside `Q1` Hardship Renters (`Tier 1: 45k + 12k`, P12) and `Q2` Young Savers (`Tier 2: 85k + 115k`, P35).
-2. **Rashbrooke (*Wealth and New Zealand* / *Too Much Money* Wealth Percentile Tables):** Top 10% (`P90: 240k + 2.15M`), Top 5% (`P95: 310k + 3.10M`), Top 2% (`P98: 450k + 5.20M`), and Top 1% (`P99: 600k + 8.50M`).
-3. **Inland Revenue High-Wealth Individuals Research Project (*HWIRP* April 2023) & *NBR Rich List*:** IRD High-Wealth Median (`Tier 9, P99.9: 2.1M + 50M`, where baseline effective tax rates on economic income averaged just 8.9%) and the *NBR Rich List* Median (`Tier 10, P99.99: 6.5M + 140M`).
+### 4.5.4 Empirical Mapping Across the 10 Survey-Anchored Benchmarks
 
 For each tier $m \in \{1, \dots, 10\}$, total Consumption-Equivalent welfare change ($`\Delta\mathrm{CE}_m`$) is decomposed into **3 Tax & Valuation-Cooling Channels** (House-price cooling $\Delta Q_k$, the annual book-value land/wealth levy $\tau_a = 0.015$ (1.5%) above the family-home exemption, and the Estate levy $\tau_b$) and **4 Economic & Cohesion Gain Channels** (ECE/Rent relief + Youth Grant $E$, the **-3.12 to -3.43 pp $SS2$ PAYE cut** + **-60 bps** credit relief, the Firm productive return boost $`\Delta R_k(z_{h,k})`$, and the Social Cohesion / retained-family dividend $`\Delta u_{\mathrm{rel}}`$), reporting separate trajectories for **Active Growth Entrepreneurs** ($`z_f = z_{h,k}`$, 80% operating equity share) versus **Passive Residential Land Hoarders** ($`z_f = z_{\ell,k}`$, 85% passive property share):
 
@@ -836,6 +829,7 @@ Anchored to the national household consumption base (`NZD_Billion_Per_CE_Pct = N
 | **9. The Devolved Half-Bridge:**<br>**Scotland** (*Early-Years & Mentoring Success Hit by Wage-Tax Ceiling*) | 10 Years (2017–2026) | **Deployed:** *Child Poverty Act*, *Scottish Child Payment* (to GBP 28.20 $\rightarrow$ 40/wk), 1,140 hrs universal ECE, *The Promise* & *MCR Pathways* mentoring.<br>**Missing:** Sovereign land, estate, or corporate tax powers (relied on 42%–48% PAYE hikes & 1991 Council Tax). | **Validates Aspect 1** ($`\Delta G_{\mathrm{ECE},1}`$, Gate 3 mentoring $`\Delta_{\mathrm{Tuakana}}`$, Exit 1 Care closure) **AND proves why Aspects 2 & 3** ($`\tau_a, \tau_b \to E`$ vs. $`\tau_l \uparrow`$) **are essential** | Cut child poverty **6 percentage points below the rest of the UK** (21% vs. 27%+) and lifted mentored care-experienced youth progression from **54.0% to 81.6%**, but stalled above the 18% interim target due to uncooled urban housing ($`Q_k`$) and lack of sovereign wealth/land tax levers |
 | **10. The Primate-City Trap:**<br>**21st-Century South Korea** (*Cautionary "Seoul Squeeze"*) | 25 Years (2000–2025) | **Deployed:** High formal schooling investment.<br>**Missing:** Primate-city housing anti-speculation rules & public First-2000-Days wraparound (replaced by private *Hagwon* child-cost pressure). | Validates why **Aspect 1** schooling fails without **Aspects 2 & 3** (Auckland housing cooling $`Q_{\mathrm{Akl}} \downarrow`$ & universal in-kind $`G_{\mathrm{ECE}}`$) | Unchecked Seoul housing squeeze ($`Q_k \uparrow`$) and private tutoring costs crushed cooperative family bargaining, driving Total Fertility Rate down to **0.72–0.75** (Doepke et al., 2022) |
 | **11. The Land-Bubble Collapse:**<br>**Post-1990 Bubble Japan** (*Cautionary Land Overvaluation*) | 30 Years (1990–2020) | **Deployed:** Strong base schooling & industrial quality.<br>**Missing:** Fiscal valves to prevent excess corporate/household savings from pouring into urban land speculation; weak support for working mothers. | Validates Hirano–Toda (2025) land-bubble drag ($`G_k > R`$) in **Aspects 2 & 3** when speculative property is left untaxed | 1991 land-bubble collapse triggered **30 years of balance-sheet stagnation**, depressed fertility, and rapid aging |
+| **12. The Unfunded Rate-Cut & Abatement Trap:**<br>**The Curse of Voodoo Economics** *Post-1981 US & 1991 NZ Tax/Welfare Shifts* (*Cautionary Supply-Side & Coercive Abatement*) | 35–45 Years (1981–2025) | **Deployed:** Top-bracket statutory tax cuts without land/estate base broadening ($\tau_a = 0$), paired with 1991 benefit cuts and 70%–90% abatement cliffs. **Missing:** First-2,000-Days wraparound ($G_{\mathrm{ECE},1}$) and Guvenen wealth-to-enterprise rebalancing ($\tau_a \to z_h$). | Validates why cutting $\tau_k, \tau_l$ without $`\tau_a = 1.5\%`$ fuels land hoarding ($z_\ell$) and deficits, while punitive benefit abatement at the $i_c = 0$ corner strips parental time ($\ell_{\mathrm{child}} \downarrow$) and erodes Stage-1 skill $\theta_c$. | 50-year 18-OECD audit shows zero GDP growth lift from top rate cuts alongside higher deficits and top-1% concentration (Hope & Limberg, 2022; Piketty, Saez, & Stantcheva, 2014; Straub & Werning, 2020). |
 
 * **Scotland Literature & Official Audit Citations (2017–2026):**
   * *Wellbeing Economy Governments (WEGo) & Post-Growth Welfare Synthesis:* Corlet Walker, Druckman, & Jackson (2021, *The Lancet Planetary Health* 5(4): e237–e246), linking Scotland, New Zealand, Iceland, Wales, and Finland.
