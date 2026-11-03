@@ -254,22 +254,28 @@ Because cohorts at active parenting ages $j \in [j_{s1,\mathrm{start}}, j_{s2,\m
 $$
 K_{\mathrm{whanau}}(k) = \min\left(1.0, \max\left(0.0, K_{\mathrm{whanau},0}(k) \cdot \Phi_{\mathrm{time}}(A_{\mathrm{super}}) \cdot \Phi_{\mathrm{home}}(p_{\mathrm{super}}, Q_k)\right)\right)
 $$
-
 The two endogenous multipliers are defined as follows:
 
-1. **Asymmetric Grandparent and Aunty Time Multiplier Across the Retirement-Age U-Curve ($\Phi_{\mathrm{time}}$):** Let $A_{\mathrm{super}} = 20 + (J_r - 1)\Delta t$ denote the statutory NZ Superannuation eligibility age relative to the statutory baseline $A_{\mathrm{base}} = 65.0$:
-   - *Above Age 65 (Austerity Squeeze, $A_{\mathrm{super}} \ge 65$):* Raising $A_{\mathrm{super}}$ above 65 forces older *whānau* aged 65 to $A_{\mathrm{super}}$ to remain in market employment ($\ell > 0$) to satisfy the pre-retirement budget constraint, withdrawing alloparental caregiving time exponentially at rate $\eta_{\mathrm{elder}} = 0.09\text{ yr}^{-1}$.
-   - *Below Age 65 (Early Retirement Kuia/Koroua Dividend, $A_{\mathrm{super}} < 65$):* Lowering $A_{\mathrm{super}}$ below 65 releases healthy 60-to-64-year-old *kuia*, *koroua*, and aunties into voluntary alloparental support with concave hyperbolic-tangent saturation ($\kappa_{\mathrm{kuia}}^{\max} = 0.16$, saturation scale $\tau_{\mathrm{kuia}} = 1.80\text{ yrs}$):
+**1. Asymmetric Grandparent and Aunty Time Multiplier Across the Retirement-Age U-Curve ($`\Phi_{\mathrm{time}}`$):** Let $`A_{\mathrm{super}} = 20 + (J_r - 1)\Delta t`$ denote the statutory NZ Superannuation eligibility age relative to the statutory baseline $`A_{\mathrm{base}} = 65.0`$:
+- *Above Age 65 (Austerity Squeeze, $`A_{\mathrm{super}} \ge 65`$):* Raising $`A_{\mathrm{super}}`$ above 65 forces older *whānau* aged 65 to $`A_{\mathrm{super}}`$ to remain in market employment ($`\ell > 0`$) to satisfy the pre-retirement budget constraint, withdrawing alloparental caregiving time exponentially at rate $`\eta_{\mathrm{elder}} = 0.09\text{ yr}^{-1}`$.
+- *Below Age 65 (Early Retirement Kuia/Koroua Dividend, $`A_{\mathrm{super}} < 65`$):* Lowering $`A_{\mathrm{super}}`$ below 65 releases healthy 60-to-64-year-old *kuia*, *koroua*, and aunties into voluntary alloparental support with concave hyperbolic-tangent saturation ($`\kappa_{\mathrm{kuia}}^{\max} = 0.16`$, saturation scale $`\tau_{\mathrm{kuia}} = 1.80\text{ yrs}`$):
 
-   <p align="center">$\displaystyle \Phi_{\mathrm{time}}\left(A_{\mathrm{super}}\right) = \begin{cases} \exp\left(-\eta_{\mathrm{elder}}\left(A_{\mathrm{super}} - 65.0\right)\right) & \text{if } A_{\mathrm{super}} \ge 65.0 \\ 1.0 + \kappa_{\mathrm{kuia}}^{\max} \tanh\left(\dfrac{65.0 - A_{\mathrm{super}}}{\tau_{\mathrm{kuia}}}\right) & \text{if } A_{\mathrm{super}} < 65.0 \end{cases}$</p>
+$$
+\Phi_{\mathrm{time}}\left(A_{\mathrm{super}}\right) = \begin{cases}
+\exp\left(-\eta_{\mathrm{elder}}\left(A_{\mathrm{super}} - 65.0\right)\right) & \text{if } A_{\mathrm{super}} \ge 65.0 \\
+1.0 + \kappa_{\mathrm{kuia}}^{\max} \tanh\left(\frac{65.0 - A_{\mathrm{super}}}{\tau_{\mathrm{kuia}}}\right) & \text{if } A_{\mathrm{super}} < 65.0
+\end{cases}
+$$
 
-   Evaluated across statutory retirement ages, this yields $\Phi_{\mathrm{time}}(64) = 1.081$ (**+8.1% *Kuia* time boost**), $\Phi_{\mathrm{time}}(63) = 1.129$ (**+12.9% boost**), $\Phi_{\mathrm{time}}(65) = 1.000$ (baseline), $\Phi_{\mathrm{time}}(67) = 0.835$ (**-16.5% time loss**), and $\Phi_{\mathrm{time}}(70) = 0.638$ (**-36.2% time loss**).
+Evaluated across statutory retirement ages, this yields $`\Phi_{\mathrm{time}}(64) = 1.081`$ (**+8.1% *Kuia* time boost**), $`\Phi_{\mathrm{time}}(63) = 1.129`$ (**+12.9% boost**), $`\Phi_{\mathrm{time}}(65) = 1.000`$ (baseline), $`\Phi_{\mathrm{time}}(67) = 0.835`$ (**-16.5% time loss**), and $`\Phi_{\mathrm{time}}(70) = 0.638`$ (**-36.2% time loss**).
 
-2. **Elder Housing Tenure Stability and Staying in Their Own Homes ($\Phi_{\mathrm{home}}$):** For retired or semi-retired grandmothers and aunties to provide a physical sanctuary in region $k$, their pension income $p_{\mathrm{super}}$ must cover the regional housing maintenance and energy user cost relative to the baseline house price $Q_{k,0}$:
+**2. Elder Housing Tenure Stability and Staying in Their Own Homes ($`\Phi_{\mathrm{home}}`$):** For retired or semi-retired grandmothers and aunties to provide a physical sanctuary in region $`k`$, their pension income $`p_{\mathrm{super}}`$ must cover the regional housing maintenance and energy user cost relative to the baseline house price $`Q_{k,0}`$:
 
-   <p align="center">$\displaystyle \Phi_{\mathrm{home}}\left(p_{\mathrm{super}}, Q_k\right) = \min\left(1.20, \max\left(0.50, \left(\frac{p_{\mathrm{super}}}{0.180}\right)\left(\frac{Q_{k,0}}{Q_k}\right)^{0.35}\right)\right)$</p>
+$$
+\Phi_{\mathrm{home}}\left(p_{\mathrm{super}}, Q_k\right) = \min\left(1.20, \max\left(0.50, \left(\frac{p_{\mathrm{super}}}{0.180}\right)\left(\frac{Q_{k,0}}{Q_k}\right)^{0.35}\right)\right)
+$$
 
-   Under Status Quo ($SS0$) at Age 65 ($p_{\mathrm{super}} = 0.180$ and $Q_k = Q_{k,0}$), both multipliers evaluate to unity ($\Phi_{\mathrm{time}} = \Phi_{\mathrm{home}} = 1.0$). Under our Generational Plan ($SS1 \to SS2$), land-tax and housing-supply reforms cool metropolitan house prices ($Q_k < Q_{k,0}$) while lowering $A_{\mathrm{super}}$ to **64** in $SS2$, raising both $\Phi_{\mathrm{home}} > 1$ and $\Phi_{\mathrm{time}} = 1.081$.
+Under Status Quo ($`SS0`$) at Age 65 ($`p_{\mathrm{super}} = 0.180`$ and $`Q_k = Q_{k,0}`$), both multipliers evaluate to unity ($`\Phi_{\mathrm{time}} = \Phi_{\mathrm{home}} = 1.0`$). Under our Generational Plan ($`SS1 \to SS2`$), land-tax and housing-supply reforms cool metropolitan house prices ($`Q_k < Q_{k,0}`$) while lowering $`A_{\mathrm{super}}`$ to **64** in $`SS2`$, raising both $`\Phi_{\mathrm{home}} > 1`$ and $`\Phi_{\mathrm{time}} = 1.081`$.
 
 ---
 
@@ -567,11 +573,15 @@ Differentiating the stationary asset cutoff $A^\star(\tau_a)$ confirms that weal
 
 $$V_{20,k}^{\mathrm{Domestic}}(a_{20} + E, h_3) \ge V_{20,5}^{\mathrm{Abroad}}(a_{20}, h_3) - \kappa_{\mathrm{mig}} \quad \forall k \in \{1, 2, 3, 4\}$$
 
-### 4.5.3 Parental Developmental Time Crowd-Out Under High Abatement
-Consider a liquidity-constrained Gate 1 household subject to benefit abatement rate $\tau_{\mathrm{abate}} \in [0.70, 0.90]$ that increases low-wage labor supply by $\Delta \ell_{\mathrm{coerced}} > 0$, inducing a one-for-one reduction in parental developmental time $\Delta \ell_{\mathrm{child}} = -\Delta \ell_{\mathrm{coerced}} < 0$. Differentiating Stage-1 skill $\theta'_c$ with respect to coerced labor hours yields:
-$$\frac{d \theta'_c}{d \ell_{\mathrm{coerced}}} = \frac{\partial \theta'_c}{\partial I_{\mathrm{tot},1}} \left[ \mathbb{I}(i_c^\star > 0) w_{\min}(1 - \tau_{\mathrm{abate}}) - \gamma_{1,\mathrm{par}} w_k h_p \right] < 0$$
+## 4.5.3 Parental Developmental Time Crowd-Out Under High Abatement
 
-At or near the Stone–Geary corner ($\mathbb{I}(i_c^\star > 0) = 0$), the marginal cash term vanishes while the loss of parental care time $-\gamma_{1,\mathrm{par}} w_k h_p$ strictly degrades early skill formation $\theta'_c$.
+Consider a liquidity-constrained Gate 1 household subject to benefit abatement rate $`\tau_{\mathrm{abate}} \in [0.70, 0.90]`$ that increases low-wage labor supply by $`\Delta \ell_{\mathrm{coerced}} > 0`$, inducing a one-for-one reduction in parental developmental time $`\Delta \ell_{\mathrm{child}} = -\Delta \ell_{\mathrm{coerced}} < 0`$. Differentiating Stage-1 skill $`\theta'_c`$ with respect to coerced labor hours yields:
+
+$$
+\frac{d \theta'_c}{d \ell_{\mathrm{coerced}}} = \frac{\partial \theta'_c}{\partial I_{\mathrm{tot},1}} \left[ \mathbb{I}(i_c^\star > 0) w_{\min}(1 - \tau_{\mathrm{abate}}) - \gamma_{1,\mathrm{par}} w_k h_p \right] < 0
+$$
+
+At or near the Stone–Geary corner ($`\mathbb{I}(i_c^\star > 0) = 0`$), the marginal cash term vanishes while the loss of parental care time $`-\gamma_{1,\mathrm{par}} w_k h_p`$ strictly degrades early skill formation $`\theta'_c`$.
 
 ### 4.5.4 Empirical Mapping Across the 10 Survey-Anchored Benchmarks
 

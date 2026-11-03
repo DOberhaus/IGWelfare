@@ -101,44 +101,76 @@ $$
 \Theta_s(\tilde{\theta}_c) = \left[ \gamma_{s,\mathrm{self}}\tilde{\theta}_c^{\varphi_s} + \gamma_{s,\mathrm{inv}}\left(i_c + G_{\mathrm{ECE},s}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}\right)^{\varphi_s} + \gamma_{s,\mathrm{par}}\bar{h}_p^{\varphi_s} \right]^{1/\varphi_s}, \quad s \in \lbrace 1, 2 \rbrace
 $$
 
-<p align="center">$\displaystyle \theta'_c = \begin{cases} (1 - \omega_{s1})\theta_c + \omega_{s1}\Theta_1(\theta_c) & \text{if } j \in \mathcal{J}_{c,1} \\ (1 - \omega_{s2})\theta_{c,\mathrm{ret}} + \omega_{s2}\Theta_2(\theta_{c,\mathrm{ret}})\exp\left(\Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}})\right) & \text{if } j \in \mathcal{J}_{c,2} \\ \theta_c & \text{otherwise} \end{cases}$</p>
+$$
+\theta'_c = \begin{cases}
+(1 - \omega_{s1})\theta_c + \omega_{s1}\Theta_1(\theta_c) & \text{if } j \in \mathcal{J}_{c,1} \\
+(1 - \omega_{s2})\theta_{c,\mathrm{ret}} + \omega_{s2}\Theta_2(\theta_{c,\mathrm{ret}})\exp\left(\Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}})\right) & \text{if } j \in \mathcal{J}_{c,2} \\
+\theta_c & \text{otherwise}
+\end{cases}
+$$
 
 Because Stage 2 exhibits strong dynamic complementarity ($\sigma_2 = \frac{1}{1 - \varphi_2} = 0.51 < 1$) and unbanked gain depreciation $\delta_{\theta,\mathrm{fade}} > 0$ (Bailey et al., 2017; Rea & Burton, 2019; Lillard, 2005), early skill gains erode during middle childhood and early adolescence ($J = 5$, child ages 12–14) if children transition into passive factory-model schooling or if Stage-2 socio-emotional stability collapses. We formalize two countervailing mechanisms operating at this gate:
 
-1. **Observable Family Unemployment & Housing Distress Shock ($\psi_{\mathrm{unemp}}$):** Following the empirical job-displacement and *Family Stress Model* literature (Conger et al., 1992; Rege, Telle, & Votruba, 2011; Coelli, 2011; *Growing Up in New Zealand* "Now We Are 12", Morton et al., 2024), when a parent in region $k$ experiences an adverse labor-market productivity or unemployment realization $z_p \in \mathcal{Z}_{\mathrm{distress}}$ (specifically $z_p = z_1$, or $z_p = z_2$ combined with housing hardship $a_p < 0.08 Q_k$) during the child's adolescent window, household psychological stress and reduced parental bandwidth impose a non-cognitive skill penalty $-\psi_{\mathrm{unemp}} < 0$.
+1. **Observable Family Unemployment & Housing Distress Shock ($\psi_{\mathrm{unemp}}$):** Following the empirical job-displacement and *Family Stress Model* literature (Conger et al., 1992; Rege, Telle, & Votruba, 2011; Coelli, 2011; *Growing Up in New Zealand* "Now We Are 12", Morton et al., 2024), when a parent in region $k$ experiences an adverse labor-market productivity or unemployment realization
+   $z_p \in \mathcal{Z}_{\mathrm{distress}}$
+   (specifically $z_p = z_1$, or $z_p = z_2$ combined with housing hardship
+   $a_p < 0.08 Q_k$)
+   during the child's adolescent window, household psychological stress and reduced parental bandwidth impose a non-cognitive skill penalty
+   $-\psi_{\mathrm{unemp}} < 0$.
 
 2. **Bidirectional Montessori / *Tuakana–Teina* Cross-Age Mentoring ($M_{\mathrm{mentor}} \in [0, 1]$):** While Stage 2 cognitive investment productivity is low ($\gamma_{2,C,3} = 0.044$), non-cognitive malleability remains more than twice as high ($\gamma_{2,N,3} = 0.104$, Cunha et al., 2010). Synthesizing indigenous *Tuakana–Teina* and *Ako* reciprocal whānau in *Kura Kaupapa Māori* and bilingual units, the Graeme Dingle Foundation's *Stars / Te Kāhui Whetū* and *Project K* peer-mentoring programs, high-agency vertical-*whānau* state schools, and Montessori's multi-age *Erdkinder* pedagogy (Lillard, 2005; Lillard & Else-Quest, 2006; Agostinelli, Saharkhiz, & Wiswall, 2024; Resnjanskij et al., 2024), structured cross-age mentoring where adolescents at $J = 5$ mentor younger children at $J = 2\text{--}3$ generates a **two-way intra-generational spillover** without adding an endogenous state variable:
    - *Downward Scaffolding Multiplier on Stage 1 ($\kappa_{\mathrm{down}} > 0$):* Near-peer tutoring and role-modeling by the *tuakana* adolescent cohort (with mean skill $\bar{\theta}_{J=5}$) augment the effective productivity of public early childhood and primary investments for younger *teina*:
 
-     <p align="center">$\displaystyle G_{\mathrm{ECE},1}^{\mathrm{eff}} = G_{\mathrm{ECE},1} \left(1 + \kappa_{\mathrm{down}} M_{\mathrm{mentor}} \bar{\theta}_{J=5}\right)$</p>
+$$
+G_{\mathrm{ECE},1}^{\mathrm{eff}} = G_{\mathrm{ECE},1} \left(1 + \kappa_{\mathrm{down}} M_{\mathrm{mentor}} \bar{\theta}_{J=5}\right)
+$$
 
    - *Upward "Protégé Effect", Zero Fade-Out, & Stress Buffer on Stage 2 ($\kappa_{\mathrm{up}} > 0$):* Serving as a high-agency *tuakana* mentor builds adolescent executive function, self-regulation, and *mana*, eliminating unbanked Stage-1 skill fade-out ($(1 - M_{\mathrm{mentor}})\delta_{\theta,\mathrm{fade}} \to 0$) and directly buffering the family unemployment shock via the adolescent net shift $\Psi_{J=5}$:
 
-     <p align="center">$\displaystyle \Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}}) = -\psi_{\mathrm{unemp}} \mathbb{I}(z_p \in \mathcal{Z}_{\mathrm{distress}}) (1 - \zeta_{\mathrm{buf}} M_{\mathrm{mentor}}) + \kappa_{\mathrm{up}} M_{\mathrm{mentor}}$</p>
+$$
+\Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}}) = -\psi_{\mathrm{unemp}} \mathbb{I}(z_p \in \mathcal{Z}_{\mathrm{distress}}) (1 - \zeta_{\mathrm{buf}} M_{\mathrm{mentor}}) + \kappa_{\mathrm{up}} M_{\mathrm{mentor}}
+$$
 
-   In the compact 4D projection (`Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_SSankey.m`), this induces the unified anchored log-skill transition mean across the 7-point adult human capital grid $h_{\mathrm{child}} \in \mathcal{H}$:
+   - *Compact 4D Log-Skill Projection:* In `Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_SSankey.m`, this induces the unified anchored log-skill transition mean across the 7-point adult human capital grid $h_{\mathrm{child}} \in \mathcal{H}$:
 
-   <p align="center">$\displaystyle \mu_{\ln h}(h_p, i_c, z_p, a_p; k) = \rho_{hc} \ln(h_p) + \gamma_{ic} \ln\left(\frac{i_c + G_{\mathrm{ECE},1}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}}{\bar{i}_c + G_{\mathrm{ECE,base}} + \bar{g}_{\mathrm{ECE}}}\right) - \psi_{\mathrm{crowd}} \ln(\max(1, Q_k)) \mathbb{I}(a_p < 0.08 Q_k) + \Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}}) + \alpha_{\mathrm{grid}}$</p>
+$$
+\mu_{\ln h}(h_p, i_c, z_p, a_p; k) = \rho_{hc} \ln(h_p) + \gamma_{ic} \ln\left(\frac{i_c + G_{\mathrm{ECE},1}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}}{\bar{i}_c + G_{\mathrm{ECE,base}} + \bar{g}_{\mathrm{ECE}}}\right) - \psi_{\mathrm{crowd}} \ln(\max(1, Q_k)) \mathbb{I}(a_p < 0.08 Q_k) + \Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}}) + \alpha_{\mathrm{grid}}
+$$
 
-3. **The Endogenous Pension–*Whānau* Coupling Operator ($K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)$):** To make New Zealand Superannuation parameters ($A_{\mathrm{super}}, p_{\mathrm{super}}$) and regional housing user costs ($Q_k$) endogenously legible to the younger parenting generation without expanding the 4D GPU state vector $(a, h, z, j)$, `HumanCapital_Lifecycle_aprimeFn.m`, `ReturnFn_SpatialHH_Compact4D.m`, and `Build_IntergenTransitionMatrix.m` evaluate effective regional *whānau* capacity $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k) = K_{\mathrm{wh\bar{a}nau},0}(k) \cdot \Phi_{\mathrm{super}}(k)$ from baseline proximity $K_{\mathrm{wh\bar{a}nau},0} = [0.42, 0.38, 0.32, 0.28]$ (`[Rural, Small, Large, Auckland]`) and the **Elder Time & Housing Stability Factor** $\Phi_{\mathrm{super}}(k) \in [0.45, 1.25]$:
+3\. **The Endogenous Pension–*Whānau* Coupling Operator ($K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)$):** To make New Zealand Superannuation parameters ($A_{\mathrm{super}}, p_{\mathrm{super}}$) and regional housing user costs ($Q_k$) endogenously legible to the younger parenting generation without expanding the 4D GPU state vector $(a, h, z, j)$, `HumanCapital_Lifecycle_aprimeFn.m`, `ReturnFn_SpatialHH_Compact4D.m`, and `Build_IntergenTransitionMatrix.m` evaluate effective regional *whānau* capacity $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k) = K_{\mathrm{wh\bar{a}nau},0}(k) \cdot \Phi_{\mathrm{super}}(k)$ from baseline proximity $K_{\mathrm{wh\bar{a}nau},0} = [0.42, 0.38, 0.32, 0.28]$ (`[Rural, Small, Large, Auckland]`) and the **Elder Time & Housing Stability Factor** $\Phi_{\mathrm{super}}(k) \in [0.45, 1.25]$:
 
-   <p align="center">$\displaystyle \Phi_{\mathrm{super}}(k) = \underbrace{\Phi_{\mathrm{time}}(A_{\mathrm{super}})}_{\text{Kuia / Aunty time availability}} \times \underbrace{\min\left(1.15, \max\left(0.50, \frac{p_{\mathrm{super}}}{0.18} \cdot \left(\frac{Q_{k,0}}{Q_k}\right)^{0.35}\right)\right)}_{\text{Ability of aunties / kaumātua to stay in their own homes}}$</p>
+$$
+\Phi_{\mathrm{super}}(k) = \underbrace{\Phi_{\mathrm{time}}(A_{\mathrm{super}})}_{\text{Kuia / Aunty time availability}} \times \underbrace{\min\left(1.15, \max\left(0.50, \frac{p_{\mathrm{super}}}{0.18} \cdot \left(\frac{Q_{k,0}}{Q_k}\right)^{0.35}\right)\right)}_{\text{Ability of aunties / kaumātua to stay in their own homes}}
+$$
 
-   where $\Phi_{\mathrm{time}}(A_{\mathrm{super}}) = \exp(-\eta_{\mathrm{elder}}(A_{\mathrm{super}} - 65))$ for $A_{\mathrm{super}} \ge 65$ ($\eta_{\mathrm{elder}} = 0.09\text{ yr}^{-1}$, yielding a $-36.2\%$ loss at Age 70: $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}} \to [0.27, 0.24, 0.20, 0.18]$) and $\Phi_{\mathrm{time}}(A_{\mathrm{super}}) = 1 + 0.16 \tanh((65 - A_{\mathrm{super}})/1.80)$ for $A_{\mathrm{super}} < 65$ ($+8.1\%$ boost at Age 64). In turn, $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)$ feeds directly into (i) Stage-1 informal *whānau* care and pooled *whānau* human capital $\bar{h}_p$, (ii) Stage-2 fade-out retention (`fade_residual`) and adolescent crisis buffering $\Psi_{J=5}$ (`psi_unemp_step`), and (iii) domestic youth retention (`whanau_stay_pull`) in $\Pi_{\mathrm{mig}}$.
+   - *Downstream Channels:* Where $\Phi_{\mathrm{time}}(A_{\mathrm{super}}) = \exp(-\eta_{\mathrm{elder}}(A_{\mathrm{super}} - 65))$ for $A_{\mathrm{super}} \ge 65$ ($\eta_{\mathrm{elder}} = 0.09\text{ yr}^{-1}$, yielding a $-36.2\%$ loss at Age 70: $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}} \to [0.27, 0.24, 0.20, 0.18]$) and $\Phi_{\mathrm{time}}(A_{\mathrm{super}}) = 1 + 0.16 \tanh((65 - A_{\mathrm{super}})/1.80)$ for $A_{\mathrm{super}} < 65$ ($+8.1\%$ boost at Age 64). In turn, $K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)$ feeds directly into (i) Stage-1 informal *whānau* care and pooled *whānau* human capital
+     $\bar{h}_p$,
+     (ii) Stage-2 fade-out retention (`fade_residual`) and adolescent crisis buffering
+     $\Psi_{J=5}$ (`psi_unemp_step`), and (iii) domestic youth retention (`whanau_stay_pull`) in $\Pi_{\mathrm{mig}}$.
 
-4. **De Nardi (2004) Luxury Warm-Glow Bequest Motive:**
+4\. **De Nardi (2004) Luxury Warm-Glow Bequest Motive:**
 
-   <p align="center">$\displaystyle u_{\mathrm{beq}}(a'; \tau_b) = b_1 \frac{\left(1 + \frac{(1 - \tau_b)a'}{b_2}\right)^{1 - \eta_c} - 1}{1 - \eta_c}$</p>
+$$
+u_{\mathrm{beq}}(a'; \tau_b) = b_1 \frac{\left(1 + \frac{(1 - \tau_b)a'}{b_2}\right)^{1 - \eta_c} - 1}{1 - \eta_c}
+$$
 
-5. **Relational Altruism, Social Cohesion Utility ($u_{\mathrm{rel}}$), & Transparency International CPI Calibration:** Captures the utility gain experienced by citizens and aging parents when the struggling launch share ($\mathrm{Frac}_{\mathrm{struggling}}$) is compressed and domestic social cohesion ($S_t$, `S_cohesion`) rises as educated youth remain in New Zealand:
+5\. **Relational Altruism, Social Cohesion Utility ($u_{\mathrm{rel}}$), & Transparency International CPI Calibration:** Captures the utility gain experienced by citizens and aging parents when the struggling launch share ($\mathrm{Frac}_{\mathrm{struggling}}$) is compressed and domestic social cohesion ($S_t$, `S_cohesion`) rises as educated youth remain in New Zealand:
 
-   <p align="center">$\displaystyle u_{\mathrm{rel}}(\mathrm{Frac}_{\mathrm{struggling}}, S_t) = \chi_{\mathrm{rel}} \left[ (0.285 - \mathrm{Frac}_{\mathrm{struggling}}) + 0.015 (S_t - 100) \right]$</p>
+$$
+u_{\mathrm{rel}}(\mathrm{Frac}_{\mathrm{struggling}}, S_t) = \chi_{\mathrm{rel}} \left[ (0.285 - \mathrm{Frac}_{\mathrm{struggling}}) + 0.015 (S_t - 100) \right]
+$$
 
-   Along the transition path, the macro **Social Cohesion Index** $S_t$ evolves endogenously as a linear functional of struggling-launch compression, youth brain-drain closure (`Nat_Emig_Abroad_Pct`), and moderated replacement-migration turnover (`Churn_Rate`):
+   - *Macro Social Cohesion Law of Motion:* Along the transition path, the macro **Social Cohesion Index** $S_t$ evolves endogenously as a linear functional of struggling-launch compression, youth brain-drain closure (`Nat_Emig_Abroad_Pct`), and moderated replacement-migration turnover (`Churn_Rate`):
 
-   <p align="center">$\displaystyle S_t = 100.0 + \zeta_{\mathrm{hardship}} (0.220 - \mathrm{Frac}_{\mathrm{struggling},t}) + \zeta_{\mathrm{ret}} (0.1093 - \mathrm{Emig}_{\mathrm{Nat},t}) - \zeta_{\mathrm{churn}} \max(0, \mathrm{Churn}_t - \overline{\mathrm{Churn}})$</p>
+$$
+S_t = 100.0 + \zeta_{\mathrm{hardship}} (0.220 - \mathrm{Frac}_{\mathrm{struggling},t}) + \zeta_{\mathrm{ret}} (0.1093 - \mathrm{Emig}_{\mathrm{Nat},t}) - \zeta_{\mathrm{churn}} \max(0, \mathrm{Churn}_t - \overline{\mathrm{Churn}})
+$$
 
-   Empirically, $S_t$ is anchored to New Zealand's sovereign **Transparency International Corruption Perceptions Index (CPI)** ("Social Credit Rating"), which declined from **96/100** (2004 peak) and **88/100** (#1 equal globally in 2021) to a 30-year low of **81/100** (#4 equal in the 2025/2026 release, behind **#1 Denmark at 89, #2 Finland at 88, and #3 Singapore at 84**; Office of the Controller and Auditor-General, *New Zealand's Integrity Inheritance*, 2026; TI-NZ *National Integrity System Gap Analysis*, 2026). Compressing $\mathrm{Frac}_{\mathrm{struggling}}$ from $0.220$ to $0.015$ and cutting $\mathrm{Emig}_{\mathrm{Nat}}$ from $10.93\%$ to $7.60\%$ lifts $S_t$ from $100.0$ ($SS0$) to $118.4$ ($SS1$) and $126.0$ ($SS2$).
+   - *Empirical CPI Anchor:* Empirically, $S_t$ is anchored to New Zealand's sovereign **Transparency International Corruption Perceptions Index (CPI)** ("Social Credit Rating"), which declined from **96/100** (2004 peak) and **88/100** (#1 equal globally in 2021) to a 30-year low of **81/100** (#4 equal in the 2025/2026 release, behind **#1 Denmark at 89, #2 Finland at 88, and #3 Singapore at 84**; Office of the Controller and Auditor-General, *New Zealand's Integrity Inheritance*, 2026; TI-NZ *National Integrity System Gap Analysis*, 2026). Compressing
+     $\mathrm{Frac}_{\mathrm{struggling}}$
+     from $0.220$ to $0.015$ and cutting
+     $\mathrm{Emig}_{\mathrm{Nat}}$
+     from $10.93\%$ to $7.60\%$ lifts $S_t$ from $100.0$ ($SS0$) to $118.4$ ($SS1$) and $126.0$ ($SS2$).
 
 ---
 
@@ -146,9 +178,17 @@ Because Stage 2 exhibits strong dynamic complementarity ($\sigma_2 = \frac{1}{1 
 
 To eliminate CPU nested loops, `Build_IntergenTransitionMatrix.m` executes all three intergenerational operators via 4D/5D GPU tensor broadcasting and `accumarray` projection, mapping the stationary distribution $`\mu_k\left(a, h, z, j\right)`$ and policy arrays `Policy` into the newborn adult distribution `jequaloneDist` ($`\mu_{1,k}\left(a_1, h_1, z_1\right)`$).
 
-### 4.1 Stage 1 Operator ($Q_h$): Two-Stage Childhood Skill & Montessori / Tuakana–Teina Gate
+## 4.1 Stage 1 Operator ($Q_h$): Two-Stage Childhood Skill & Montessori / Tuakana–Teina Gate
 
-For fertile parental cohorts in Stage 1 ($\mathcal{J}_{c,1}$) and Stage 2 ($\mathcal{J}_{c,2}$), expected log pre-labor-market skill $\ln(\hat{h}_{\mathrm{child}})$ integrates Stage-1 private and public investment $(i_{c,1}, G_{\mathrm{ECE},1})$, housing crowding penalties, and the **Gate 3 ($J = 5$, Ages 12–14) Montessori / *Tuakana–Teina* & Graeme Dingle Foundation Mentoring Operator**:
+For fertile parental cohorts in Stage 1
+($\mathcal{J}_{c,1}$)
+and Stage 2
+($\mathcal{J}_{c,2}$),
+expected log pre-labor-market skill
+$\ln(\hat{h}_{\mathrm{child}})$
+integrates Stage-1 private and public investment
+$(i_{c,1}, G_{\mathrm{ECE},1})$,
+housing crowding penalties, and the **Gate 3 ($J = 5$, Ages 12–14) Montessori / *Tuakana–Teina* & Graeme Dingle Foundation Mentoring Operator**:
 
 $$
 \ln(\hat{h}_{\mathrm{child}}) = \rho_{hc} \ln(h_p) + \gamma_{ic} \ln\left(1 + i_{c,\mathrm{eff}} + G_{\mathrm{ECE,eff}}\right) - \psi_{\mathrm{crowd}} \ln(Q_k) \mathbb{I}_{\mathrm{hard}} + \Delta_{\mathrm{Adol}}(z_p, M_{\mathrm{Tuakana}}) + \eta_h
@@ -156,7 +196,13 @@ $$
 
 where the Adolescent Gate ($J = 5$) transition term $\Delta_{\mathrm{Adol}}(z_p, M_{\mathrm{Tuakana}})$ captures both family unemployment vulnerability (`iz == 1`) and the reciprocal *Tuakana–Teina* / *Ako* / Montessori *Erdkinder* mentoring dividend:
 
-<p align="center">$\displaystyle \Delta_{\mathrm{Adol}}(z_p, M_{\mathrm{Tuakana}}) = \begin{cases} -0.22 & \text{if } z_p = z_1 \text{ and unbuffered by mentoring } (M_{\mathrm{Tuakana}} = 0) \\ 0.00 & \text{if standard schooling } (z_p > z_1, M_{\mathrm{Tuakana}} = 0) \\ +0.05 \text{ in } SS0 \ (+0.11 \text{ in } SS1, +0.14 \text{ in } SS2) & \text{if enrolled in Montessori / Tuakana--Teina mentoring } (M_{\mathrm{Tuakana}} = 1) \end{cases}$</p>
+$$
+\Delta_{\mathrm{Adol}}(z_p, M_{\mathrm{Tuakana}}) = \begin{cases}
+-0.22 & \text{if } z_p = z_1 \text{ and unbuffered by mentoring } (M_{\mathrm{Tuakana}} = 0) \\
+0.00 & \text{if standard schooling } (z_p > z_1, M_{\mathrm{Tuakana}} = 0) \\
++0.05 \text{ in } SS0 \ (+0.11 \text{ in } SS1, +0.14 \text{ in } SS2) & \text{if enrolled in Montessori / Tuakana--Teina mentoring } (M_{\mathrm{Tuakana}} = 1)
+\end{cases}
+$$
 
 ### 4.2 Stage 2 Operator ($\mathbf{Q}_a$): The NZD 1.6T Property Estate Wave & Youth Capital Grant $E$
 Dying retirees ($j \ge J_r$, weighted by mortality $1 - s_j$) in region $k$ leave net-of-tax estates $\left(1 - \tau_b\right) a^{\prime *}\left(a, h, z, j; k\right)$. Adding the universal age-20 Youth Capital Grant $E$ (`YouthGrant`) induces the initial young-adult asset distribution $P_{a,k}\left(a_1\right)$ over `a_grid`.
@@ -217,28 +263,78 @@ with $`N_{\mathrm{births}} = 60,000/\mathrm{yr}`$, sovereign bond yield $`r_{\ma
   3. *Preventative Infrastructure Stewardship (Local Government (Water Services) / Te Waihanga National Infrastructure Plan & The 2026 Moa Point Review):* As documented in the *Independent Crown Review into the Moa Point Wastewater Treatment Plant Failure* (Jaduram et al., Sept 2026), deferring preventative maintenance creates an unsustainable escalation in reactive remediation costs. Ring-fencing $`\Omega_{\mathrm{reinv},g} = 0.50 \Omega_{\mathrm{reform},g}`$ into a statutory Infrastructure & Core Health Endowment prevents short-term operating budgets from raiding capital maintenance.
   4. *New Zealand Superannuation and Retirement Income Act 2001 (Part 1 & Part 2) & Te Tiriti o Waitangi Jurisprudence:* Preserving universal entitlement at Age 65 (`Jr`, and lowering to Age 64 in $SS2$) avoids the severe disparate impact on Māori and Pasifika life-expectancy cohorts that would result from raising the statutory age to 67 or 70, while honoring the *Te Tiriti o Waitangi* principles of active protection (*kaitiakitanga*) and equity across *mokopuna* cohorts (Waitangi Tribunal *Wai 2575 Hauora* and *Wai 2915 Oranga Tamariki* reports).
 
-### 5.3 Cooperative Childcare Bargaining, Hyperbolic Fertility (`FertilityBargaining_Module.m`), & Cao & Li's (2022) Intended-vs.-Realized Fertility Wedge
+## 5.3 Cooperative Childcare Bargaining, Hyperbolic Fertility (`FertilityBargaining_Module.m`), & Cao & Li's (2022) Intended-vs.-Realized Fertility Wedge
 
-Following Doepke, Hannusch, Kindermann, and Tertilt (2022) and Cao and Li (2022, *Journal of Population Economics*), couples in fertile brackets $j \in \{2, 3, 4\}$ with female/male productivity $`\left(h_f, h_m\right)`$ and quasi-hyperbolic present-bias parameter $`\beta_{\mathrm{hyp}} = 0.72`$ bargain cooperatively over fertility $`n_f \in \{0, 1, 2, 3\}`$. A birth occurs if and only if both partners achieve positive net marital surplus over their outside options:
+Following Doepke, Hannusch, Kindermann, and Tertilt (2022) and Cao and Li (2022, *Journal of Population Economics*), couples in fertile brackets
+$j \in \lbrace 2, 3, 4 \rbrace$
+with female and male productivity
+$(h_f, h_m)$
+and quasi-hyperbolic present-bias parameter
+$\beta_{\mathrm{hyp}} = 0.72$
+bargain cooperatively over fertility
+$n_f \in \lbrace 0, 1, 2, 3 \rbrace$.
+A birth occurs if and only if both partners achieve positive net marital surplus over their outside options:
 
 $$
-S_f\left(n_f; Q_k, G_{\mathrm{ECE}}, \theta_{\tau}\right) = u_f\left(c_f\left(n_f\right)\right) + \beta_{\mathrm{hyp}} \delta V_f^{\prime}\left(n_f\right) - \theta_{\tau} \psi_{\mathrm{time}} n_f + \omega_{\mathrm{ECE}} G_{\mathrm{ECE}} n_f - \psi_Q Q_k n_f \ge \underline{U}_f
+S_f(n_f; Q_k, G_{\mathrm{ECE}}, \theta_\tau) = u_f(c_f(n_f)) + \beta_{\mathrm{hyp}} \delta V'_f(n_f) - \theta_\tau \psi_{\mathrm{time}} n_f + \omega_{\mathrm{ECE}} G_{\mathrm{ECE}} n_f - \psi_Q Q_k n_f \ge \underline{U}_f
 $$
 
-* **Theoretical & Empirical Identification via Cao & Li (2022, Propositions 1–5) — Why We Evaluate** $`\beta_{\mathrm{hyp}} = 0.72`$ **Analytically in `FertilityBargaining_Module.m` Rather Than Calling `vfoptions.exoticpreferences = 'QuasiHyperbolic'`:**
-1. **The Intended ($n^c$) vs. Realized ($n^t$) Fertility Wedge (Cao & Li, 2022, Propositions 1, 2, & 5):** Incorporating quasi-hyperbolic discounting ($\beta \delta^{t'-t}$) into a dynamic Barro–Becker overlapping generations model with altruism $\Phi(n) = \frac{n^{1-\epsilon}}{1-\epsilon}$, Cao and Li (2022, Eqs. 5–6) show that when young adults formulate their *intended fertility plan* in Period 1 (*the commitment problem*, $n^c$), steady-state fertility satisfies $\beta \delta^2 R^2 \frac{\Phi(n^c)}{n^c} = 1$, whereas when they reach the active childbearing window in Period 2 without a commitment device (*the time-consistent / realized problem*, $n^t$), they discount the Period-3 dynastic utility of children $\Phi(n)V_1(e', b')$ by an *additional factor of* $\beta$, yielding $(\beta \delta R)^2 \frac{\Phi(n^t)}{n^t} = 1$. Dividing the two steady-state conditions yields Cao and Li's closed-form identification equation (*Proposition 5*, p. 997). Matching New Zealand's gap between intended family size ($n^c \approx 2.15$) and baseline realized Total Fertility Rate ($n^t = 1.66$ nationally and $1.49$ in Auckland, so $n^t / n^c \in [0.693, 0.772]$) pins down the effective hyperbolic fertility discount factor at $\beta_{\mathrm{hyp}} = 0.72$:
+**Theoretical & Empirical Identification via Cao & Li (2022, Propositions 1–5) — Why We Evaluate $\beta_{\mathrm{hyp}} = 0.72$ Analytically in `FertilityBargaining_Module.m` Rather Than Calling `vfoptions.exoticpreferences = 'QuasiHyperbolic'`:**
 
-   <p align="center">$\displaystyle n^t = n^c \beta_{\mathrm{hyp}}^{1/\epsilon} \iff \ln(n^t) = \ln(n^c) + \frac{1}{\epsilon} \ln(\beta_{\mathrm{hyp}})$</p>
+**1. The Intended ($n^c$) vs. Realized ($n^t$) Fertility Wedge (Cao & Li, 2022, Propositions 1, 2, & 5):** Incorporating quasi-hyperbolic discounting ($\beta \delta^{t'-t}$) into a dynamic Barro–Becker overlapping generations model with altruism
+$\Phi(n) = \frac{n^{1-\epsilon}}{1-\epsilon}$,
+Cao and Li (2022, Eqs. 5–6) show that when young adults formulate their *intended fertility plan* in Period 1 (*the commitment problem*, $n^c$), steady-state fertility satisfies
+$\beta \delta^2 R^2 \frac{\Phi(n^c)}{n^c} = 1$,
+whereas when they reach the active childbearing window in Period 2 without a commitment device (*the time-consistent / realized problem*, $n^t$), they discount the Period-3 dynastic utility of children
+$\Phi(n)V_1(e', b')$
+by an *additional factor of* $\beta$, yielding
+$(\beta \delta R)^2 \frac{\Phi(n^t)}{n^t} = 1$.
+Dividing the two steady-state conditions yields Cao and Li's closed-form identification equation (*Proposition 5*, p. 997). Matching New Zealand's gap between intended family size ($n^c \approx 2.15$) and baseline realized Total Fertility Rate ($n^t = 1.66$ nationally and $1.49$ in Auckland, so $n^t / n^c \in [0.693, 0.772]$) pins down the effective hyperbolic fertility discount factor at
+$\beta_{\mathrm{hyp}} = 0.72$:
 
-2. **Exact Separation of Period-2 Fertility Realization from Commitment Savings:** In the VFI Toolkit, enabling `vfoptions.exoticpreferences = 'QuasiHyperbolic'` applies quasi-hyperbolic discounting to every continuous savings choice $a'$ across all $J$ ages, requiring dual value functions and more than doubling GPU backward-induction runtime. In New Zealand's institutional setting, compulsory KiwiSaver/Superannuation and mortgage amortization act as commitment devices on lifecycle asset accumulation ($a'$), whereas no commitment device exists for childbearing ($n_f$). Evaluating the extra Period-2 present-bias factor $\beta_{\mathrm{hyp}} = 0.72$ directly inside `FertilityBargaining_Module.m` analytically replicates Cao and Li's Equation (6) time-consistent fertility wedge at zero additional VFI cost.
+$$
+n^t = n^c \beta_{\mathrm{hyp}}^{1/\epsilon} \Longleftrightarrow \ln(n^t) = \ln(n^c) + \frac{1}{\epsilon} \ln(\beta_{\mathrm{hyp}})
+$$
 
-3. **Interaction with Credit Constraints ($i_c = 0$) and Spousal Bargaining (Doepke & Tertilt, 2018; Cao & Li, 2022, Sec. 4):** Cao and Li (2022, Proposition 4) show that in a frictionless credit market, present-biased parents substitute child quality for quantity ($n^t < n^c \implies e^t > e^c$), and note that unmodeled hyperbolic discounting confounds estimates of spousal fertility bargaining (Doepke & Tertilt, 2018). In our spatial OLG framework, unconstrained urban couples exhibit Cao and Li's quantity-to-quality shift, whereas rent-squeezed low-income households ($a' \ge 0, i_c = 0$) are prevented by the borrowing constraint from increasing $i_c$ until universal First-2000-Days wraparound ($G_{\mathrm{ECE},1}$) and the Youth Grant ($E$) relax their Period-2 budget constraint.
+**2. Exact Separation of Period-2 Fertility Realization from Commitment Savings:** In the VFI Toolkit, enabling `vfoptions.exoticpreferences = 'QuasiHyperbolic'` applies quasi-hyperbolic discounting to every continuous savings choice $a'$ across all $J$ ages, requiring dual value functions and more than doubling GPU backward-induction runtime. In New Zealand's institutional setting, compulsory KiwiSaver/Superannuation and mortgage amortization act as commitment devices on lifecycle asset accumulation ($a'$), whereas no commitment device exists for childbearing
+($n_f$).
+Evaluating the extra Period-2 present-bias factor
+$\beta_{\mathrm{hyp}} = 0.72$
+directly inside `FertilityBargaining_Module.m` analytically replicates Cao and Li's Equation (6) time-consistent fertility wedge at zero additional VFI cost.
 
-4. **Why We Couple `vfoptions.experienceasset = 1` with Analytical Period-2 $\beta_{\mathrm{hyp}}$ Evaluation Rather Than Global `vfoptions.exoticpreferences = 'QuasiHyperbolic'`:** While VFI Toolkit natively supports pairing `experienceasset = 1` (for the child's skill stock $\theta_c$) with `vfoptions.exoticpreferences = 'QuasiHyperbolic'`, enabling global quasi-hyperbolic discounting applies $\beta_{\mathrm{hyp}} = 0.72$ to every continuous choice $(a', i_c, \ell, I_h)$ across all $J = 27$ ages. Doing so would (i) misattribute the early-childhood $i_c = 0$ investment corner to parental myopia rather than binding credit and housing-subsistence constraints (`gbar_ece > 0`), (ii) counterfactually depress mortgage and KiwiSaver wealth accumulation ($a'$) that are anchored by institutional commitment devices in New Zealand, and (iii) require tracking dual value functions $(V_j, W_j)$ under non-monotone Markov-perfect policy gaming across the 60-year transition path. Evaluating:
+**3. Interaction with Credit Constraints ($i_c = 0$) and Spousal Bargaining (Doepke & Tertilt, 2018; Cao & Li, 2022, Sec. 4):** Cao and Li (2022, Proposition 4) show that in a frictionless credit market, present-biased parents substitute child quality for quantity
+($n^t < n^c \Rightarrow e^t > e^c$),
+and note that unmodeled hyperbolic discounting confounds estimates of spousal fertility bargaining (Doepke & Tertilt, 2018). In our spatial OLG framework, unconstrained urban couples exhibit Cao and Li's quantity-to-quality shift, whereas rent-squeezed low-income households
+($a' \ge 0, i_c = 0$)
+are prevented by the borrowing constraint from increasing
+$i_c$
+until universal First-2000-Days wraparound
+($G_{\mathrm{ECE},1}$)
+and the Youth Grant ($E$) relax their Period-2 budget constraint.
 
-   <p align="center">$\displaystyle W_f(n_f) = u_f(n_f) + \beta_{\mathrm{hyp}} \delta V'_f(n_f)$</p>
+**4. Why We Couple `vfoptions.experienceasset = 1` with Analytical Period-2 $\beta_{\mathrm{hyp}}$ Evaluation Rather Than Global `vfoptions.exoticpreferences = 'QuasiHyperbolic'`:** While VFI Toolkit natively supports pairing `experienceasset = 1` (for the child's skill stock
+$\theta_c$)
+with `vfoptions.exoticpreferences = 'QuasiHyperbolic'`, enabling global quasi-hyperbolic discounting applies
+$\beta_{\mathrm{hyp}} = 0.72$
+to every continuous choice
+$(a', i_c, \ell, I_h)$
+across all $J = 27$ ages. Doing so would (i) misattribute the early-childhood
+$i_c = 0$
+investment corner to parental myopia rather than binding credit and housing-subsistence constraints
+($\bar{g}_{\mathrm{ECE}} > 0$),
+(ii) counterfactually depress mortgage and KiwiSaver wealth accumulation ($a'$) that are anchored by institutional commitment devices in New Zealand, and (iii) require tracking dual value functions
+$(V_j, W_j)$
+under non-monotone Markov-perfect policy gaming across the 60-year transition path. Evaluating the Period-2 fertility continuation objective:
 
-   directly on the uncommitted fertility margin inside `FertilityBargaining_Module.m` (paired with our `experienceasset = 1` child skill law of motion and $\mathcal{T}_{\mathrm{IG}}$ dynastic closure) achieves exact mathematical equivalence on the Cao and Li (2022) fertility wedge while keeping the $i_c = 0$ hardship corner purely credit- and rent-driven.
+$$
+W_f(n_f) = u_f(n_f) + \beta_{\mathrm{hyp}} \delta V'_f(n_f)
+$$
+
+directly on the uncommitted fertility margin inside `FertilityBargaining_Module.m` (paired with our `experienceasset = 1` child skill law of motion and
+$\mathcal{T}_{\mathrm{IG}}$
+dynastic closure) achieves exact mathematical equivalence on the Cao and Li (2022) fertility wedge while keeping the
+$i_c = 0$
+hardship corner purely credit- and rent-driven.
 
 ### 5.4 Endogenous NZ Superannuation Solvency & The Retirement-Age U-Curve ($`A_{\mathrm{super}} \in [60, 75]`$ in `FertilityBargaining_Module.m`)
 
