@@ -1,25 +1,34 @@
-# IGWelfare: Intergenerational Welfare OLG Modeling
+# IGWelfare: Intergenerational Welfare, Capital Allocation, & Human Potential in New Zealand
 
-This repository provides a workspace for evaluating intergenerational welfare, spatial housing dynamics, human capital formation, and fiscal solvency across four regions in New Zealand using Overlapping Generations (OLG) models.
+This repository contains the quantitative general-equilibrium model, replication suite, and monograph series for evaluating intergenerational welfare, spatial housing dynamics, human capability formation, and long-run fiscal solvency across four regions in Aotearoa New Zealand (plus an endogenous international emigration margin) using a GPU-accelerated Overlapping Generations (OLG) framework.
 
 ---
 
-## 📚 Documentation & Reading Guide
+## 📚 Monograph Suite & Reading Guide
 
-Before running the code, review the core documentation included in the repository root to understand the theoretical framework, calibration, and architectural choices:
+Before running the code, consult the six companion documents in the repository root, organized around three core questions:
 
-* **[Document 1A.md](Document%201A.md), [Document 1B.md](Document%201B.md), & [Document 1C.md](Document%201C.md):** Foundational model architecture, human capital lifecycle dynamics, and talent allocation insights.
-* **[Document 2.md](Document%202.md):** Model harmonization, policy experiments, multi-region transition analyses, and major structural mechanics—including how the variable time grid (`Configure_TimeGrid_Params.m`) operates to trade off model resolution against compute speed (e.g., running higher-resolution `dt=3` vs. faster `dt=5` configurations).
+### 1. *How Do We Calculate These Impacts?* (Strategy, Policy & Audit)
+* **[Document 1C.md](Document%201C.md) (*Flying, Not Floundering — Executive Brief & Suite Guide*):** A standalone 6-page broad-circulation executive digest and role-based reading guide.
+* **[Document 1A.md](Document%201A.md) (*Multi-Audience Strategic Monograph*):** Targeted briefings for five core audiences, the three coupled lifecycle aspects, the 5-Stage Population and 6-Gate Fiscal Sankey ledgers, the 10-Tier Survey-Anchored wealth incidence, the Year-5 ACC Actuarial Continuation Audit, and 12 international benchmarks.
+* **[Document 1B.md](Document%201B.md) (*Strategy & Policy Answer Key*):** Line-item cross-reference mapping every claim, table, and figure in Documents 1A, 1C, and 3 to exact MATLAB scripts, VFI Toolkit variables, structural equations, and CSV/PNG/HTML outputs.
+
+### 2. *What Mathematical Tools Do We Use?* (Technical Specification & Methodology)
+* **[Document 2.md](Document%202.md) (*Technical Documentation & Model Specification Guide*):** Complete 8-PType Mixed Finite/Infinite-Horizon Bellman equations, exact $\Delta t$-scaling laws (`Configure_TimeGrid_Params.m` for trading off high-resolution `dt=3` vs. fast `dt=5` execution), Simulated Method of Moments (SMM) calibration matrices, and the 22-file codebase manifest.
+* **[Document 2B.md](Document%202B.md) (*"Thick" vs. "Thin" Numbers in Quantitative Public Policy*):** Standalone technical tutorial on dimension-free state-contingent conditioning—showing how comonotonic tail risks (sandwich-generation care reversal, *Kaiako* rent crowd-out, the 20% LVR deposit cliff, and differential mortality) are solved on the 26,901-point GPU state manifold at zero additional grid-dimension cost.
+
+### 3. *What Do Our Calculations Mean for Working Together?* (Coalition & Public Synthesis)
+* **[Document 3.md](Document%203.md) (*Leaving Our Silos, Lifting All Boats*):** Maps the 11-layer constructive synergy stack onto New Zealand's four policy constituencies (*Barnardos/Youth*, *WellBeing/Housing*, *GrowthNZ/Venture*, and *Fiscal Stewards*), contrasting standalone silos and 6-year "Stop-Go" political cycles against the Treasury LTFM sinkhole and a 3%-of-GDP defense commitment.
 
 ---
 
 ## 💻 System Requirements & Setup
 
-Solving multi-region, multi-asset OLG models with transition paths is computationally intensive. To run the suite, ensure your environment meets the following baseline:
+Solving multi-region, multi-asset mixed-horizon OLG models with 60-year transition paths is computationally intensive. Ensure your environment meets the following baseline:
 
 * **MATLAB:** R2025b or later (with Parallel Computing Toolbox).
-* **Hardware:** A modern NVIDIA GPU with **at least 16GB VRAM** (required for large state-space array operations and transition path convergence).
-* **Dependencies:** VFI Toolkit by Robert Kirkby (`vfitoolkit/VFIToolkit-matlab` on GitHub).
+* **Hardware:** A modern NVIDIA GPU with **at least 16GB VRAM** (required for vectorized 4D/5D GPU array operations and transition path shooting).
+* **Dependencies:** [VFI Toolkit](https://github.com/vfitoolkit/VFIToolkit-matlab) by Robert Kirkby.
   * Clone or download the VFI Toolkit and add it (with all subfolders) to your MATLAB path before executing any scripts:
     ```matlab
     addpath(genpath('/path/to/VFIToolkit-matlab'));
@@ -29,25 +38,30 @@ Solving multi-region, multi-asset OLG models with transition paths is computatio
 
 ## 🚀 Key Entry Points (What to Run)
 
-You do not need to run individual helper or return functions manually. Use these primary master scripts depending on your goal:
+You do not need to run individual helper or return functions (`ReturnFn_*.m`) manually. Use these primary scripts depending on your goal (see **Section 8 of [Document 2.md](Document%202.md)** for the full 22-file manifest):
 
 * **Full Suite Execution:**
-  * `Run_All_NZ_Intergen_Suite.m` — The primary wrapper script to execute the full pipeline, generate welfare decompositions, and build all figures and interactive outputs.
-* **Core Model & Equilibrium Solvers:**
-  * `Configure_TimeGrid_Params.m` — Adjusts parametric period length (e.g., `dt=3` vs. `dt=5`; see [Document 2.md](Document%202.md) for details).
-  * `NZ_4Region_Master.m` — Solves the baseline 4-region steady-state equilibrium (`SS0`/`SS2`).
-  * `TransPath_4Region_Master.m` — Computes the dynamic transition path across regions between steady states.
-  * `PolicyExperiment_LeeSeshadri_4Region.m` — Runs the human capital and intergenerational policy counterfactuals.
-  * `WelfareDecomposition_4Region.m` — Computes the 7-factor welfare attribution and wealth bracket impacts.
-* **Visualization & Reporting:**
-  * `Plot_*.m` scripts (e.g., `Plot_ChildFates_SSankey.m`, `Plot_ChildFiscal_SSankey.m`, `Plot_Fertility_SuperSolvency_2Panel.m`, `Plot_WealthBracket_PainAndCelebration.m`) — Generate the standalone static figures and interactive HTML Sankey diagrams from solved model workspaces.
+  * `Run_All_NZ_Intergen_Suite.m` — Master execution pipeline with `.mat` checkpoint caching (`Cache_NZ_Intergen/`) across `Active_Phases = {'SS0', 'SS1', 'SS2'}`.
+* **Core Configuration & Equilibrium Solvers:**
+  * `Configure_TimeGrid_Params.m` — Maps all flow rates, survival curves, and developmental stage indices across $\Delta t \in \{5, 3, 2, 1\}$ (see [Document 2.md](Document%202.md) Section 1.2).
+  * `NZ_4Region_Master.m` & `Solve_Spatial_GE_Loop.m` — Initializes and solves the 8-PType mixed-horizon General Equilibrium (`ValueFnIter_MixHorz_PType` & `StationaryDist_MixHorz_PType`).
+  * `WelfareDecomposition_4Region.m` — Computes the multiphase (`SS1`, `SS2`) Daruich / Lee-Seshadri welfare decompositions (`Table 1`), spatial quintiles (`Table 2`), and housing tenure cleavages (`Table 3`).
+  * `Counterfactuals_LeeSeshadri_4Region.m` — Runs the multi-stage human capital counterfactuals (`Tables 4–6` & `12A–C`).
+  * `FertilityBargaining_Module.m` — Solves cooperative childcare bargaining, hyperbolic fertility, and the continuous Age 60–75 NZ Superannuation U-Curve (`Tables 7, 8, & 8B`).
+  * `TransPath_4Region_Master.m` — Computes the 60-year multiphase transition path with dynamic regional weights and credibility blending.
+* **Visualization, Actuarial Audits & Interactive Reporting:**
+  * `Plot_ChildFates_SSankey.m` & `Plot_ChildFiscal_SSankey.m` — Generate the 5-Stage (17-Node) Population Sankey, the 6-Gate (26-Node) Fiscal Sankey, the 2050 Debt-Sinking Protocol, and standalone interactive HTML5 explorers (via `exportSankeyToHTML.m`).
+  * `Plot_CumulativeTransitionPayoffs.m` & `Plot_ActuarialContinuationValuation.m` — Compute 60-year transition integrals and the Year-5 ACC-style Actuarial Continuation Audit (`Table 16`).
+  * `Plot_WealthBracket_GiveAndGain.m` — Evaluates Fiscal Give vs. Economic Gain and balance-sheet resilience across 10 survey-anchored Earn + Own tiers (`Table 17`).
+  * `Plot_Counterfactuals_And_MirrorInvestments.m` — Generates the 11-Layer Constructive Synergy Attribution (`Table 19`) and Mirror Investment Ledger (`Table 20`).
+  * `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m` — Renders the 3D LTFM Fiscal Sinkhole & Defense Shock surface, Stop-Go perishability paths (`Table 21`), and the $4 \times 4$ Coalition Matrix (`Table 22`).
 
 ---
 
-## 📂 Precomputed Results (`Output_NZ_4Region_Intergen/`)
+## 📂 Precomputed Outputs (`Output_NZ_4Region_Intergen/`)
 
-If you want to explore the results without running the GPU-heavy solvers from scratch, check the **`Output_NZ_4Region_Intergen/`** directory. It contains:
+To inspect the results without running the GPU solvers from scratch, browse the **[`Output_NZ_4Region_Intergen/`](Output_NZ_4Region_Intergen/)** directory:
 
-* **Interactive HTML Sankey Diagrams:** Self-contained HTML visualizations mapping intergenerational child fates (rent-seeking vs. productive building) and lifecycle fiscal flows across the 10-tier structure, complete with hover narratives.
-* **Static Figures & Plots:** Multi-panel charts covering NZ Superannuation solvency, fertility bargaining, pre-employment opportunity indices, 7-factor stacked welfare attributions, and actuarial continuation valuations.
-* **Saved Data:** Precomputed `.mat` workspaces and summary tables generated by the master suite.
+* **Interactive HTML5 + SVG Sankey Explorers:** Zero-dependency web diagrams (`Interactive_ChildFates_*.html`, `Interactive_ChildFiscal_*.html`) featuring clickable node/ribbon dialogs and embedded empirical/theoretical narratives.
+* **Publication Figures (`.png`):** High-resolution multi-panel charts covering cohort transition paths, housing tenure cleavages, brain-drain closure, the NZ Super Age 60–75 U-Curve, Year-5 ACC actuarial audits, 10-tier wealth resilience, 11-layer synergy attributions, mirror investment ledgers, and 3D LTFM fiscal surfaces.
+* **Leave-Behind Audit Tables (`.csv`):** Complete replication tables (`Table1` through `Table22`) matching every figure and cross-reference in [Document 1B.md](Document%201B.md).
