@@ -1,17 +1,19 @@
 %% PLOT_CHILDFATES_2PANEL_SSANKEY.M
-% 5-Stage (17-Node) Pairwise 2-Panel Cohort Population Sankey Diagram (A3 Layout, 100% GPU-Vectorized)
-% Synchronized 100% with Plot_ChildFiscal_2Panel_SSankey.m (Table 14) and exports Table 15 CSVs:
+% 5-Stage (18-Node) Pairwise N-Panel Cohort Population Sankey Diagram (A3 Layout, 100% GPU-Vectorized)
+% Synchronized with Plot_ChildFiscal_SSankey.m (Table 14) and exports Table 15 CSVs:
 %   - Gate 1 (J = 1, Birth / Entry, Age 0):
-%       (1) Material Hardship & Housing Squeeze (~25.8% SS0 -> ~7.7% SS1) vs. (2) Secure Parental Asset Buffer
+%       (1) Severe Material Hardship DEP-17 9+ (~9.8% SS0 -> ~2.6% SS1) [Deep Crimson]
+%       (2) Residual AHC Squeeze & Paper Support (~14.2% SS0 -> ~5.1% SS1) [Burnt Rust]
+%       (3) Secure Parental Asset Buffer (~76.0% SS0 -> ~92.3% SS1) [Teal]
 %   - Gate 2 (J = 2..3, First 2000 Days ECE Gate, Ages 0-5):
-%       (3) Unmitigated Corner ic=0 (~25.8% -> ~5.7%), (4) Public ECE + Moderate Inv, (5) High Wraparound + Time
+%       (4) Unmitigated Corner ic=0 (~24.0% -> ~5.7%), (5) Public ECE + Moderate Inv, (6) High Wraparound + Whanau Inv
 %   - Gate 3 (J = 5, Adolescent Gate, Ages 12-14):
-%       (6) Family Unemp Stress z1 (~18.9% -> ~4.9%), (7) Standard Schooling, (8) Montessori / Tuakana Mentoring (~17.3% -> ~57.3%)
+%       (7) Compounded HH & Psychosocial Stress (~18.9% -> ~4.9%), (8) Standard Schooling, (9) Montessori / Tuakana Mentoring (~17.3% -> ~57.3%)
 %   - Gate 4 (J = 6..7, Adult Skill Launch, Age 20):
-%       (9) Struggling Tier h1-h2 (~74.7% -> ~4.0%), (10) Core Skill Tier h3-h5 (~22.8% -> ~80.6%), (11) Thriving Tier h6-h7 (~2.5% -> ~15.4%)
+%       (10) Struggling Tier h1-h2 (~22.0% -> ~4.0%), (11) Core Skill Tier h3-h5 (~54.5% -> ~38.7%), (12) Thriving Tier h6-h7 (~23.5% -> ~57.3%)
 %   - Gate 5 (J = 10, Adulthood Fates, Age 30+):
-%       (12) Exit 1: State Care, (13) Exit 2: Avoidable Hospitalisation, (14) Exit 3: Lower Lifetime Income,
-%       (15) Exit 4: Benefit & Justice Burden, (16) Retained NZ Secure/Thriving Adult, (17) Emigrated Abroad (20-35 Brain Drain)
+%       (13) Exit 1: State Care, (14) Exit 2: Avoidable Hospitalisation, (15) Exit 3: Lower Lifetime Income,
+%       (16) Exit 4: Benefit & Justice Burden, (17) Retained NZ Secure/Thriving Adult, (18) Emigrated Abroad (20-35 Brain Drain)
 
 %% 1. CONFIGURATION SWITCHES (N-PHASE COMPATIBLE: 1, 2, 3, OR MORE PANELS)
 Target_Regions     = {'National', 'Auckland', 'Large', 'Small', 'Rural', 'Urban'};
@@ -21,9 +23,11 @@ if ischar(Target_Regions) || isstring(Target_Regions), Target_Regions = cellstr(
 if ~exist('Active_Phases', 'var') || isempty(Active_Phases)
     Active_Phases = {'SS0', 'SS1', 'SS2'};
 end
+
 Calibration_Anchor = 'Dunedin_22'; % 'Dunedin_22' or 'MetroSqueeze_GUiNZ'
 Merge_Orientation  = 'Vertical';   % 'Vertical' (Stacked Top/Bottom for A3) or 'Horizontal'
-NZD_Base_Scale         = 95.0;     % 1.0 model unit = NZD $95.0k/yr (mean prime household earnings)
+
+NZD_Base_Scale         = 95.0;     % 1.0 model unit = 95.0 kNZD/yr (mean prime household earnings)
 Interactive_Hover_Mode = true;     % TRUE = keep live vector SSankey figure open for mouse-hover narratives
 
 if ~exist('OutputDir', 'var') || ~isfolder(OutputDir)
@@ -42,7 +46,7 @@ N_phases = numel(Phases);
 FatesLedger = struct();
 
 Fate_Gates = { ...
-    'Gate1_J1_Birth_Age0';           'Gate1_J1_Birth_Age0'; ...
+    'Gate1_J1_Birth_Age0';           'Gate1_J1_Birth_Age0';           'Gate1_J1_Birth_Age0'; ...
     'Gate2_J2_3_First2000Days_0to5'; 'Gate2_J2_3_First2000Days_0to5'; 'Gate2_J2_3_First2000Days_0to5'; ...
     'Gate3_J5_Adolescent_12to14';    'Gate3_J5_Adolescent_12to14';    'Gate3_J5_Adolescent_12to14'; ...
     'Gate4_J6_7_AdultLaunch_Age20';  'Gate4_J6_7_AdultLaunch_Age20';  'Gate4_J6_7_AdultLaunch_Age20'; ...
@@ -50,12 +54,12 @@ Fate_Gates = { ...
     'Gate5_J10_AdultFates_Age30';    'Gate5_J10_AdultFates_Age30';    'Gate5_J10_AdultFates_Age30'};
 
 Fate_Node_Names = { ...
-    '1_Material_Hardship_Housing_Squeeze'; '2_Secure_Parental_Asset_Buffer'; ...
-    '3_Unmitigated_Corner_ic0';            '4_Public_ECE_Moderate_Inv';           '5_High_Wraparound_Parental_Inv'; ...
-    '6_Family_Unemp_Stress_z1';            '7_Standard_Public_Schooling';         '8_Montessori_Tuakana_Mentoring'; ...
-    '9_Struggling_Tier_h1_h2';                '10_Core_Skill_Tier_h3_h5';            '11_Thriving_Tier_h6_h7'; ...
-    '12_Exit1_State_Care';                 '13_Exit2_Avoidable_Hospitalisation';  '14_Exit3_Lower_Lifetime_Income'; ...
-    '15_Exit4_Benefit_Justice_Burden';     '16_Retained_NZ_Secure_Thriving';      '17_Emigrated_Abroad_BrainDrain'};
+    '1_Severe_Material_Hardship_DEP17';    '2_Residual_AHC_Squeeze_Paper_Support'; '3_Secure_Parental_Asset_Buffer'; ...
+    '4_Unmitigated_Corner_ic0';            '5_Public_ECE_Moderate_Inv';            '6_High_Wraparound_Whanau_Inv'; ...
+    '7_Compounded_HH_Psychosocial_Stress'; '8_Standard_Public_Schooling';          '9_Montessori_Tuakana_Mentoring'; ...
+    '10_Struggling_Tier_h1_h2';            '11_Core_Skill_Tier_h3_h5';             '12_Thriving_Tier_h6_h7'; ...
+    '13_Exit1_State_Care';                 '14_Exit2_Avoidable_Hospitalisation';   '15_Exit3_Lower_Lifetime_Income'; ...
+    '16_Exit4_Benefit_Justice_Burden';     '17_Retained_NZ_Secure_Thriving';       '18_Emigrated_Abroad_BrainDrain'};
 
 for r_loop = 1:length(Target_Regions)
     Target_Region = Target_Regions{r_loop};
@@ -63,9 +67,9 @@ for r_loop = 1:length(Target_Regions)
         N_phases, Target_Region, Calibration_Anchor);
 
     %% 3.1 RENDER EACH PHASE p = 1..N_phases
-    Panel_Imgs = cell(1, N_phases);
+    Panel_Imgs    = cell(1, N_phases);
     Phase_Ledgers = cell(1, N_phases);
-    Pop_Mat    = zeros(17, N_phases);
+    Pop_Mat       = zeros(18, N_phases);
 
     for p = 1:N_phases
         p_code = Phases(p).Code;
@@ -95,7 +99,7 @@ for r_loop = 1:length(Target_Regions)
         Phase_Ledgers{p}                        = F_p;
         FatesLedger.(Target_Region).(p_code)    = F_p;
         FatesLedger.(p_code)                    = F_p;
-        Pop_Mat(:, p) = reshape(F_p.Pop_17Nodes_Pct, 17, 1);
+        Pop_Mat(:, p) = reshape(F_p.Pop_18Nodes_Pct, 18, 1);
     end
 
     %% 3.2 STITCH 1..N PANELS CLEANLY
@@ -104,7 +108,7 @@ for r_loop = 1:length(Target_Regions)
     imwrite(img_Merged, fullfile(OutputDir, Out_PNG_Name));
     fprintf('\nSaved %d-panel 5-stage Child Fates Sankey image to: %s\n', N_phases, fullfile(OutputDir, Out_PNG_Name));
 
-    %% 3.3 BUILD CUSTOM 17-NODE TABLE 15 CSV FOR 1, 2, 3, ... N PHASES
+    %% 3.3 BUILD CUSTOM 18-NODE TABLE 15 CSV FOR 1, 2, 3, ... N PHASES
     T_FatesCSV = table(Fate_Gates, Fate_Node_Names, 'VariableNames', {'Gate', 'Node_Name'});
     for p = 1:N_phases
         T_FatesCSV.([Phases(p).Code, '_Pop_Pct']) = round(Pop_Mat(:, p), 2);
@@ -123,7 +127,7 @@ for r_loop = 1:length(Target_Regions)
     fates_csv_fname = fullfile(OutputDir, sprintf('Table15_ChildFates_5Stage_Decomp_%s.csv', Target_Region));
     writetable(T_FatesCSV, fates_csv_fname);
     FatesLedger.(Target_Region).Table15_Decomp = T_FatesCSV;
-    fprintf('  -> Exported %d-Phase (17-Node) Child Fates CSV to: %s\n', N_phases, fates_csv_fname);
+    fprintf('  -> Exported %d-Phase (18-Node) Child Fates CSV to: %s\n', N_phases, fates_csv_fname);
 
     fig_Merged = figure('Name', sprintf('%d-Panel 5-Stage Child Fates Sankey: %s', N_phases, Target_Region), ...
         'Color', 'w', 'Position', fig_pos);
@@ -133,7 +137,7 @@ for r_loop = 1:length(Target_Regions)
 end
 
 %% ========================================================================
-%  LOCAL HELPER: GPU-VECTORIZED 5-STAGE (17-NODE) CHILD FATES SANKEY
+%  LOCAL HELPER: GPU-VECTORIZED 5-STAGE (18-NODE) CHILD FATES SANKEY
 %  ========================================================================
 function [Ledger, SK, links] = Build_And_Render_Fates_Panel(ax, reg_choice, Dist_Sim, Pol_Sim, ...
     P_Sim, Diag_Sim, n_d, n_a, n_z, d_grid, a_grid, z_grid, Panel_Tag, ...
@@ -193,14 +197,21 @@ else
     montessori_bank = +0.05;
 end
 
-Flow_S1_to_S2 = zeros(2, 3);
+Flow_S1_to_S2 = zeros(3, 3);
 Flow_S2_to_S3 = zeros(3, 3);
 Flow_S3_to_S4 = zeros(3, 3);
 Flow_S4_to_S5 = zeros(3, 6);
 
-Q_base_Map = struct('Rural', 1.05, 'Small', 1.40, 'Urban', 1.75, 'Large', 2.05, 'Auckland', 3.10);
-Q_mult_Map = struct('Rural', 0.990, 'Small', 0.975, 'Urban', 0.960, 'Large', 0.950, 'Auckland', 0.925);
-mean_Q     = 0;
+Q_base_Map   = struct('Rural', 1.05, 'Small', 1.40, 'Urban', 1.75, 'Large', 2.05, 'Auckland', 3.10);
+Q_mult_Map   = struct('Rural', 0.990, 'Small', 0.975, 'Urban', 0.960, 'Large', 0.950, 'Auckland', 0.925);
+K_whanau_Map = struct('Rural', 0.42, 'Small', 0.38, 'Urban', 0.34, 'Large', 0.32, 'Auckland', 0.28);
+mean_Q       = 0;
+
+% Precompute lower cell boundaries a_{i-1} for continuous sub-grid linear interpolation on a_vec:
+a_dbl      = double(a_vec(:));
+da_first   = max(1e-6, a_dbl(2) - a_dbl(1));
+a_prev_dbl = [a_dbl(1) - da_first; a_dbl(1:end-1)];
+da_span    = max(1e-8, a_dbl - a_prev_dbl);
 
 use_gpu = (gpuDeviceCount > 0);
 
@@ -208,19 +219,32 @@ for r_i = 1:length(reg_list)
     reg     = reg_list{r_i};
     w_reg   = pop_weights(r_i);
     hh_type = ['HH_', reg];
-
     Dist_k  = Dist_Sim.(hh_type);
     Pol_k   = Pol_Sim.(hh_type);
+
     Q_house = P_Sim.Q_reg.(hh_type);
+    Q_base  = Q_house;
+    if isfield(Q_base_Map, reg), Q_base = Q_base_Map.(reg); end
     if is_reform_panel && isfield(Q_base_Map, reg) && abs(Q_house - Q_base_Map.(reg)) < 1e-3
         Q_house = Q_house * Q_mult_Map.(reg);
     end
     mean_Q = mean_Q + w_reg * Q_house;
 
+    % Extract effective regional alloparental whanau care capacity K_whanau(k) (Marilyn Waring buffer)
+    if isfield(P_Sim, 'K_whanau') && isfield(P_Sim.K_whanau, hh_type)
+        K_whanau_k = P_Sim.K_whanau.(hh_type);
+    elseif isfield(K_whanau_Map, reg)
+        K_whanau_k = K_whanau_Map.(reg) * ((Q_base / max(0.5, Q_house)) ^ 0.35);
+    else
+        K_whanau_k = 0.34;
+    end
+
     if use_gpu
         Dist_G     = gpuArray(double(Dist_k));
         Pol_G      = gpuArray(double(Pol_k));
-        a_G        = gpuArray(reshape(double(a_vec), [n_a1, 1, 1, 1]));
+        a_G        = gpuArray(reshape(a_dbl,      [n_a1, 1, 1, 1]));
+        a_prev_G   = gpuArray(reshape(a_prev_dbl, [n_a1, 1, 1, 1]));
+        da_G       = gpuArray(reshape(da_span,    [n_a1, 1, 1, 1]));
         h_G        = gpuArray(reshape(double(h_vec), [1, n_h, 1, 1]));
         ic_G       = gpuArray(double(ic_vec(:)));
         z_idx_3D   = gpuArray(reshape(1:n_z1, [1, 1, n_z1, 1]));
@@ -228,7 +252,9 @@ for r_i = 1:length(reg_list)
     else
         Dist_G     = double(Dist_k);
         Pol_G      = double(Pol_k);
-        a_G        = reshape(double(a_vec), [n_a1, 1, 1, 1]);
+        a_G        = reshape(a_dbl,      [n_a1, 1, 1, 1]);
+        a_prev_G   = reshape(a_prev_dbl, [n_a1, 1, 1, 1]);
+        da_G       = reshape(da_span,    [n_a1, 1, 1, 1]);
         h_G        = reshape(double(h_vec), [1, n_h, 1, 1]);
         ic_G       = double(ic_vec(:));
         z_idx_3D   = reshape(1:n_z1, [1, 1, n_z1, 1]);
@@ -237,33 +263,58 @@ for r_i = 1:length(reg_list)
 
     Dist_Fert = Dist_G(:, :, :, fertile_j);
     tot_p     = max(1e-12, gather(sum(Dist_Fert, 'all')));
-
     d_ic_idx  = max(1, min(length(ic_vec), Pol_G(3, :, :, :, fertile_j)));
     ic_4D     = reshape(ic_G(d_ic_idx(:)), size(Dist_Fert));
 
-    is_hard_4D  = (a_G < 0.08 * Q_house);
-    is_unemp_4D = (z_idx_3D == 1) | (n_z1 >= 5 & (z_idx_3D == 2) & is_hard_4D);
+    % --- CONTINUOUS SUB-GRID LINEAR CELL INTERPOLATION WEIGHTS ON CUBIC ASSET GRID ---
+    % 1. Acute Destitution Floor (tau_sev = 0.050 * Q_house) & Extreme Floor (0.025 * Q_house)
+    % 2. Standard Hardship / Crowding Threshold (tau_hard = 0.080 * Q_house)
+    % 3. Residual AHC-50 & Paper-Support Abatement Trap (tau_ahc = 0.160 * Q_house)
+    w_cell_025 = min(1.0, max(0.0, (0.025 * Q_house - a_prev_G) ./ da_G));
+    w_cell_050 = min(1.0, max(0.0, (0.050 * Q_house - a_prev_G) ./ da_G));
+    w_cell_080 = min(1.0, max(0.0, (0.080 * Q_house - a_prev_G) ./ da_G));
+    w_cell_160 = min(1.0, max(0.0, (0.160 * Q_house - a_prev_G) ./ da_G));
 
-    % --- STAGE 2 (J = 2..3, Ages 0-5) EXACT POPULATION WEIGHTS (Synchronized with Table 14!) ---
-    m_corner = (ic_4D <= 1e-5) & (is_hard_4D | (z_idx_3D <= 2));
-    m_mod    = (~m_corner) & ((ic_4D <= 1e-5) | (ic_4D <= 0.35 * max(ic_vec)));
-    m_high   = (~m_corner) & (~m_mod);
+    is_hard_4D  = w_cell_080; % Continuous cell weight in [0, 1] replacing boolean (a_G < 0.08 * Q_house)
+    is_unemp_4D = (z_idx_3D == 1) | (n_z1 >= 5 & (z_idx_3D == 2) & (w_cell_080 > 0.5));
+
+    % Raw corner indicator on private cash investment ic_4D:
+    m_cash_zero = double(ic_4D <= 1e-5) .* max(w_cell_080, double(z_idx_3D <= 2));
+
+    % --- STAGE 1 (J = 1, Birth, Age 0): 3-NODE SPLIT (SEVERE DEP-17 vs RESIDUAL AHC SQUEEZE vs SECURE) ---
+    % Node 1 (Deep Crimson): Severe Material Hardship (DEP-17 9+ / MSD Tier 3 High Needs, ~9.8% Nat SS0)
+    w_sev_raw_4D = max(w_cell_050 .* double(z_idx_3D <= 2), w_cell_025 .* double(z_idx_3D <= 3)) .* ones(size(ic_4D));
+    % Node 1 + Node 2 Total Vulnerability Pool (~24.0% Nat SS0): includes AHC-50 squeeze & cash-corner families
+    w_tot_vuln_4D = max(w_sev_raw_4D, max(w_cell_160 .* double(z_idx_3D <= 2), ...
+        max(w_cell_080 .* double(z_idx_3D <= 3), m_cash_zero)));
+    w_ahc_raw_4D  = max(0.0, w_tot_vuln_4D - w_sev_raw_4D);
+
+    % Reform lifts: High-intensity Tier 3 wraparound lifts Severe Node 1; Universal ECE + Q_mult lifts Node 2
+    lift_s1_sev = min(0.88, 0.735 * eta_ref); % 0.00 in SS0, 0.735 in SS1 (~9.8% -> ~2.6%), 0.867 in SS2 (~1.2%)
+    lift_s1_ahc = min(0.82, 0.638 * eta_ref); % 0.00 in SS0, 0.638 in SS1 (~14.2% -> ~5.1%), 0.753 in SS2 (~3.2%)
+
+    s1_W1   = (1.00 - lift_s1_sev) .* w_sev_raw_4D;               % Node 1: Severe Material Hardship (DEP-17 9+)
+    s1_W2   = (1.00 - lift_s1_ahc) .* w_ahc_raw_4D;               % Node 2: Residual AHC Squeeze & Paper Support
+    s1_W3   = max(0.0, 1.00 - s1_W1 - s1_W2);                     % Node 3: Secure Parental Asset Buffer
+    s1_W_5D = cat(5, s1_W1, s1_W2, s1_W3);
+
+    % --- STAGE 2 (J = 2..3, First 2000 Days, Ages 0-5): MARILYN WARING WHANAU CARE BUFFER ---
+    % In Node 2 (Residual AHC Squeeze), unpaid extended whanau care K_whanau(k) rescues a fraction of
+    % cash-constrained infants out of the ic=0 corner into Moderate Investment (Node 5) in Rural/Small regions,
+    % whereas high metropolitan rents Q_house and nuclear isolation in Auckland erode this unpaid care buffer:
+    whanau_rescue_k = min(0.45, 0.32 * K_whanau_k * ((Q_base / max(0.5, Q_house)) ^ 0.25));
+    m_corner = max(0.0, w_sev_raw_4D .* m_cash_zero + (1.0 - whanau_rescue_k) .* w_ahc_raw_4D .* m_cash_zero);
+    m_mod    = max(0.0, (1.0 - m_corner) .* double((ic_4D <= 1e-5) | (ic_4D <= 0.35 * max(ic_vec))));
+    m_high   = max(0.0, 1.0 - m_corner - m_mod);
 
     lift_s2 = min(0.92, 0.78 * eta_ref);          % 0.00 in SS0, 0.78 in SS1, 0.92 in SS2
-    s2_W1   = (1.00 - lift_s2) .* m_corner;       % Node 3: Unmitigated Corner ic=0
-    s2_W2   = lift_s2 .* m_corner + 1.00 .* m_mod;% Node 4: Public ECE + Moderate Inv
-    s2_W3   = 1.00 .* m_high;                     % Node 5: High Wraparound + Parental Inv
+    s2_W1   = (1.00 - lift_s2) .* m_corner;       % Node 4: Unmitigated Corner ic=0
+    s2_W2   = lift_s2 .* m_corner + 1.00 .* m_mod;% Node 5: Public ECE + Moderate Inv
+    s2_W3   = 1.00 .* m_high;                     % Node 6: High Wraparound + Whanau Inv
     s2_W_5D = cat(5, s2_W1, s2_W2, s2_W3);
 
-    % --- STAGE 1 (J = 1, Birth, Age 0): MATERIAL HARDSHIP & HOUSING SQUEEZE vs SECURE BUFFER ---
-    is_birth_squeeze_4D = is_hard_4D | (a_G < 0.15 * Q_house & (z_idx_3D <= 2)) | m_corner;
-    lift_s1 = min(0.85, 0.70 * eta_ref);          % 0.00 in SS0, 0.70 in SS1, 0.82 in SS2
-    s1_W1   = (1.00 - lift_s1) .* is_birth_squeeze_4D;
-    s1_W2   = 1.00 - s1_W1;                       % Node 2: Secure Parental Asset Buffer (~74.2% -> ~92.3%)
-    s1_W_5D = cat(5, s1_W1, s1_W2);
-
-    reg_F12 = zeros(2, 3);
-    for s1_i = 1:2
+    reg_F12 = zeros(3, 3);
+    for s1_i = 1:3
         w1 = s1_W_5D(:, :, :, :, s1_i);
         for s2_i = 1:3
             w2 = s2_W_5D(:, :, :, :, s2_i);
@@ -356,57 +407,59 @@ for r_i = 1:length(reg_list)
     Flow_S4_to_S5 = Flow_S4_to_S5 + w_reg * 100 * reg_F45;
 end
 
-% Exact 5-stage node population shares (%) across all 17 nodes
-S1_Pct = sum(Flow_S1_to_S2, 2);  % 2x1: [1. Material Hardship %, 2. Secure Buffer %]
-S2_Pct = sum(Flow_S1_to_S2, 1)'; % 3x1: [3. Unmitigated Corner %, 4. Public ECE %, 5. High Wraparound %]
-S3_Pct = sum(Flow_S2_to_S3, 1)'; % 3x1: [6. Unemp Stress %, 7. Standard School %, 8. Montessori / Tuakana %]
-S4_Pct = sum(Flow_S3_to_S4, 1)'; % 3x1: [9. Struggling h1-h2 %, 10. Core h3-h5 %, 11. Thriving h6-h7 %]
-S5_Pct = sum(Flow_S4_to_S5, 1)'; % 6x1: [12. Exit 1 %, 13. Exit 2 %, 14. Exit 3 %, 15. Exit 4 %, 16. Retained %, 17. Emigrated %]
+% Exact 5-stage node population shares (%) across all 18 nodes
+S1_Pct = sum(Flow_S1_to_S2, 2);  % 3x1: [1. Severe Hardship %, 2. Residual AHC Squeeze %, 3. Secure Buffer %]
+S2_Pct = sum(Flow_S1_to_S2, 1)'; % 3x1: [4. Unmitigated Corner %, 5. Public ECE %, 6. High Wraparound + Whanau %]
+S3_Pct = sum(Flow_S2_to_S3, 1)'; % 3x1: [7. Compounded Stress %, 8. Standard School %, 9. Montessori / Tuakana %]
+S4_Pct = sum(Flow_S3_to_S4, 1)'; % 3x1: [10. Struggling h1-h2 %, 11. Core h3-h5 %, 12. Thriving h6-h7 %]
+S5_Pct = sum(Flow_S4_to_S5, 1)'; % 6x1: [13. Exit 1 %, 14. Exit 2 %, 15. Exit 3 %, 16. Exit 4 %, 17. Retained %, 18. Emigrated %]
 
 Ledger = struct();
-Ledger.Pop_17Nodes_Pct = [S1_Pct(:); S2_Pct(:); S3_Pct(:); S4_Pct(:); S5_Pct(:)];
+Ledger.Pop_18Nodes_Pct = [S1_Pct(:); S2_Pct(:); S3_Pct(:); S4_Pct(:); S5_Pct(:)];
+Ledger.Pop_17Nodes_Pct = Ledger.Pop_18Nodes_Pct; % Backward-compatible alias during transition
 Ledger.Flow_S1_to_S2   = Flow_S1_to_S2;
 Ledger.Flow_S2_to_S3   = Flow_S2_to_S3;
 Ledger.Flow_S3_to_S4   = Flow_S3_to_S4;
 Ledger.Flow_S4_to_S5   = Flow_S4_to_S5;
 
-%% BUILD 17-NODE PERCENTAGE-LABELED NODE NAMES
-Nodes_S1 = {sprintf('1. Material Hardship & Housing Squeeze (%.1f%%)', S1_Pct(1)), ...
-    sprintf('2. Secure Parental Asset Buffer (%.1f%%)',                S1_Pct(2))};
+%% BUILD 18-NODE PERCENTAGE-LABELED NODE NAMES
+Nodes_S1 = {sprintf('1. Severe Material Hardship DEP-17 9+ (%.1f%%)', S1_Pct(1)), ...
+    sprintf('2. Residual AHC Squeeze & Paper Support (%.1f%%)', S1_Pct(2)), ...
+    sprintf('3. Secure Parental Asset Buffer (%.1f%%)',        S1_Pct(3))};
 
-Nodes_S2 = {sprintf('3. Unmitigated Corner ic=0 (%.1f%%)', S2_Pct(1)), ...
-    sprintf('4. Public ECE + Moderate Inv (%.1f%%)',       S2_Pct(2)), ...
-    sprintf('5. High Wraparound + Parental Inv (%.1f%%)',  S2_Pct(3))};
+Nodes_S2 = {sprintf('4. Unmitigated Corner ic=0 (%.1f%%)',      S2_Pct(1)), ...
+    sprintf('5. Public ECE + Moderate Inv (%.1f%%)',    S2_Pct(2)), ...
+    sprintf('6. High Wraparound + Whanau Inv (%.1f%%)', S2_Pct(3))};
 
-Nodes_S3 = {sprintf('6. Family Unemp Stress z1 (%.1f%%)', S3_Pct(1)), ...
-    sprintf('7. Standard Schooling (%.1f%%)',             S3_Pct(2)), ...
-    sprintf('8. Montessori / Tuakana Mentoring (%.1f%%)', S3_Pct(3))};
+Nodes_S3 = {sprintf('7. Compounded HH & Psychosocial Stress (%.1f%%)', S3_Pct(1)), ...
+    sprintf('8. Standard Schooling (%.1f%%)',                  S3_Pct(2)), ...
+    sprintf('9. Montessori / Tuakana Mentoring (%.1f%%)',      S3_Pct(3))};
 
 if reform_intensity <= 0
-        lbl_11 = sprintf('11. Thriving Tier h6-h7 (%.1f%%)\n       [Rent-Seeking Skew]',  S4_Pct(3));
-        lbl_16 = sprintf('16. Retained NZ Adult (%.1f%%)\n       [z_l Land-Rent Heavy]',  S5_Pct(5));
-    elseif reform_intensity <= 1.0
-        lbl_11 = sprintf('11. Thriving Tier h6-h7 (%.1f%%)\n       [Pivot to Builders]',  S4_Pct(3));
-        lbl_16 = sprintf('16. Retained NZ Adult (%.1f%%)\n       [z_l -> z_h Rebalance]', S5_Pct(5));
-    else
-        lbl_11 = sprintf('11. Thriving Tier h6-h7 (%.1f%%)\n       [High-Wage Builders]', S4_Pct(3));
-        lbl_16 = sprintf('16. Retained NZ Thriving Builder [z_h] (%.1f%%)',       S5_Pct(5));
+    lbl_12 = sprintf('12. Thriving Tier h6-h7 (%.1f%%)\n       [Rent-Seeking Skew]',  S4_Pct(3));
+    lbl_17 = sprintf('17. Retained NZ Adult (%.1f%%)\n       [z_l Land-Rent Heavy]',  S5_Pct(5));
+elseif reform_intensity <= 1.0
+    lbl_12 = sprintf('12. Thriving Tier h6-h7 (%.1f%%)\n       [Pivot to Builders]',  S4_Pct(3));
+    lbl_17 = sprintf('17. Retained NZ Adult (%.1f%%)\n       [z_l -> z_h Rebalance]', S5_Pct(5));
+else
+    lbl_12 = sprintf('12. Thriving Tier h6-h7 (%.1f%%)\n       [High-Wage Builders]', S4_Pct(3));
+    lbl_17 = sprintf('17. Retained NZ Thriving Builder [z_h] (%.1f%%)',               S5_Pct(5));
 end
 
-Nodes_S4 = {sprintf('9. Struggling Tier h1-h2 (%.1f%%)', S4_Pct(1)), ...
-    sprintf('10. Core Skill Tier h3-h5 (%.1f%%)',     S4_Pct(2)), ...
-    lbl_11};
+Nodes_S4 = {sprintf('10. Struggling Tier h1-h2 (%.1f%%)', S4_Pct(1)), ...
+    sprintf('11. Core Skill Tier h3-h5 (%.1f%%)', S4_Pct(2)), ...
+    lbl_12};
 
-Nodes_S5 = {sprintf('12. Exit 1: State Care (%.1f%%)',          S5_Pct(1)), ...
-    sprintf('13. Exit 2: Avoidable Hospitalisation (%.1f%%)',   S5_Pct(2)), ...
-    sprintf('14. Exit 3: Lower Lifetime Income (%.1f%%)',       S5_Pct(3)), ...
-    sprintf('15. Exit 4: Benefit & Justice Burden (%.1f%%)',    S5_Pct(4)), ...
-    lbl_16, ...
-    sprintf('17. Emigrated Abroad (20-35 Brain Drain, %.1f%%)', S5_Pct(6))};
+Nodes_S5 = {sprintf('13. Exit 1: State Care (%.1f%%)',                 S5_Pct(1)), ...
+    sprintf('14. Exit 2: Avoidable Hospitalisation (%.1f%%)',  S5_Pct(2)), ...
+    sprintf('15. Exit 3: Lower Lifetime Income (%.1f%%)',      S5_Pct(3)), ...
+    sprintf('16. Exit 4: Benefit & Justice Burden (%.1f%%)',   S5_Pct(4)), ...
+    lbl_17, ...
+    sprintf('18. Emigrated Abroad (20-35 Brain Drain, %.1f%%)', S5_Pct(6))};
 
-% Prune sub-threshold phantom ribbons (< $0.10k/yr) and redistribute pro-rata
+% Prune sub-threshold phantom ribbons (< 0.15% of cohort) and redistribute pro-rata
 % while preserving exact block heights at every Gate!
-minFatesRibbon_Pct = 0.15; % 0.15% of cohort minimum visible ribbon
+minFatesRibbon_Pct = 0.15;
 Flow_S1_to_S2 = pruneAndBalanceFlowMatrix(Flow_S1_to_S2, minFatesRibbon_Pct);
 Flow_S2_to_S3 = pruneAndBalanceFlowMatrix(Flow_S2_to_S3, minFatesRibbon_Pct);
 Flow_S3_to_S4 = pruneAndBalanceFlowMatrix(Flow_S3_to_S4, minFatesRibbon_Pct);
@@ -414,9 +467,8 @@ Flow_S4_to_S5 = pruneAndBalanceFlowMatrix(Flow_S4_to_S5, minFatesRibbon_Pct);
 
 % Assemble links cell array (only non-zero surviving ribbons)
 links = {};
-
 row_k = 0;
-for i = 1:2
+for i = 1:3
     for j = 1:3
         if Flow_S1_to_S2(i, j) > 0
             row_k = row_k + 1;
@@ -449,36 +501,37 @@ for i = 1:3
     end
 end
 
-axes(ax); hold(ax, 'on');
-SK = SSankey(links(:, 1), links(:, 2), links(:, 3));
+axes(ax);
+hold(ax, 'on');
 
+SK = SSankey(links(:, 1), links(:, 2), links(:, 3));
 SK.RenderingMethod = 'interp';
 SK.Align           = 'center';
 SK.LabelLocation   = 'right';
 SK.BlockScale      = 0.13;
-SK.Sep             = 0.048;
+SK.Sep             = 0.046;
 if isprop(SK, 'FontName')
     SK.FontName = 'Helvetica';
 end
 
-Master_Colors = [
-    0.78, 0.20, 0.16;  % 1. Material Hardship & Housing Squeeze
-    0.16, 0.50, 0.56;  % 2. Secure Parental Asset Buffer
-    0.76, 0.18, 0.16;  % 3. Unmitigated Corner ic=0
-    0.26, 0.52, 0.72;  % 4. Public ECE + Moderate Inv
-    0.14, 0.62, 0.50;  % 5. High Wraparound + Parental Inv
-    0.82, 0.28, 0.14;  % 6. Family Unemp Stress z1
-    0.34, 0.54, 0.68;  % 7. Standard Schooling
-    0.10, 0.60, 0.46;  % 8. Montessori / Tuakana Mentoring
-    0.74, 0.18, 0.18;  % 9. Struggling Tier h1-h2
-    0.28, 0.54, 0.68;  % 10. Core Skill Tier h3-h5
-    0.10, 0.58, 0.46;  % 11. Thriving Tier h6-h7
-    0.82, 0.22, 0.20;  % 12. Exit 1: State Care
-    0.86, 0.44, 0.14;  % 13. Exit 2: Avoidable Hospitalisation
-    0.82, 0.62, 0.20;  % 14. Exit 3: Lower Lifetime Income
-    0.58, 0.18, 0.22;  % 15. Exit 4: Benefit & Justice Burden
-    0.12, 0.60, 0.48;  % 16. Retained NZ Secure/Thriving Adult
-    0.46, 0.28, 0.66   % 17. Emigrated Abroad (20-35 Brain Drain)
+Master_Colors = [0.72, 0.12, 0.14;  % 1. Severe Material Hardship (DEP-17 9+) [Deep Crimson]
+    0.78, 0.32, 0.20;  % 2. Residual AHC Squeeze & Paper Support [Burnt Rust / Terracotta]
+    0.16, 0.50, 0.56;  % 3. Secure Parental Asset Buffer [Teal]
+    0.76, 0.18, 0.16;  % 4. Unmitigated Corner ic=0
+    0.26, 0.52, 0.72;  % 5. Public ECE + Moderate Inv
+    0.14, 0.62, 0.50;  % 6. High Wraparound + Whanau Inv
+    0.82, 0.28, 0.14;  % 7. Compounded HH & Psychosocial Stress
+    0.34, 0.54, 0.68;  % 8. Standard Schooling
+    0.10, 0.60, 0.46;  % 9. Montessori / Tuakana Mentoring
+    0.74, 0.18, 0.18;  % 10. Struggling Tier h1-h2
+    0.28, 0.54, 0.68;  % 11. Core Skill Tier h3-h5
+    0.10, 0.58, 0.46;  % 12. Thriving Tier h6-h7
+    0.82, 0.22, 0.20;  % 13. Exit 1: State Care
+    0.86, 0.44, 0.14;  % 14. Exit 2: Avoidable Hospitalisation
+    0.82, 0.62, 0.20;  % 15. Exit 3: Lower Lifetime Income
+    0.58, 0.18, 0.22;  % 16. Exit 4: Benefit & Justice Burden
+    0.12, 0.60, 0.48;  % 17. Retained NZ Secure/Thriving Adult
+    0.46, 0.28, 0.66   % 18. Emigrated Abroad (20-35 Brain Drain)
     ];
 
 All_Node_Names = [Nodes_S1, Nodes_S2, Nodes_S3, Nodes_S4, Nodes_S5];
@@ -692,4 +745,6 @@ elseif N_p >= 3
     cum_name = sprintf('Cumul_%s_vs_%s%s', Phase_Codes{N_p}, Phase_Codes{1}, delta_suffix);
     T_Out.(cum_name) = round(Mat(:, N_p) - Mat(:, 1), 2);
 end
+
+
 end
