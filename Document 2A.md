@@ -88,9 +88,9 @@ In the GPU experience-asset specification (`NZ_4Region_Master.m` and `ReturnFn_S
 * **`d_grid` (`n_d = [4, 3, 7]`, 84 composite decision states):**
   * $\ell \in \{0, 0.5, 0.8, 1.0\}$ ($n_{d_1} = 4$, extensive and intensive margin market labor supply).
   * $I_h \in \text{linspace}(0, 0.30, 3)^{\top}$ ($n_{d_2} = 3$, adult Ben-Porath on-the-job training time).
-  * $i_c \in [0, 0.50]$ ($n_{d_3} = 7$, private early/school child skill investment, placed last in `n_d` as the experience-asset control). To prevent working families in the residual after-housing-costs (AHC) squeeze (**Node 2**) from being artificially rounded down to the $i_c = 0$ corner—which occurs under linear spacing where the first positive rung sits at $`0.0833 \approx \text{NZD } 7,917\text{/yr}`$—`d_grid_ic` uses a convex power grid:
+  * $i_c \in [0, 0.50]$ ($n_{d_3} = 7$, private early/school child skill investment, placed last in `n_d` as the experience-asset control). To prevent working families in the residual after-housing-costs (AHC) squeeze (**Node 2**) from being artificially rounded down to the $i_c = 0$ corner—which occurs under linear spacing where the first positive rung sits at $`0.0833 \approx 7,917\text{ NZD/yr}`$—`d_grid_ic` uses a convex power grid:
     $$d_{\text{grid,ic}} = 0.50 \times (\text{linspace}(0, 1, 7))^{1.8} = [0, 0.0203, 0.0706, 0.1460, 0.2456, 0.3649, 0.5000]^{\top}$$
-    providing accessible interior rungs at $i_{c,2} = 0.0203$ ($`\approx \text{NZD } 1,929\text{/yr}`$) and $i_{c,3} = 0.0706$ ($`\approx \text{NZD } 6,707\text{/yr}`$) while matching the 7-tier resolution of $h$ and $z$.
+    providing accessible interior rungs at $i_{c,2} = 0.0203$ ($`\approx 1,929\text{ NZD/yr}`$) and $i_{c,3} = 0.0706$ ($`\approx 6,707\text{ NZD/yr}`$) while matching the 7-tier resolution of $h$ and $z$.
 * **`a_grid` (`n_a = [61, 7, 9]`):**
   * $a_1 \in [0, 25]$ ($n_{a_1} = 61$, household liquid net worth spaced cubically via $25 \times (\text{linspace}(0, 1, 61))^3$, concentrating 17 grid nodes below $a = 0.48 \approx \text{NZD } 45\text{k}$ to resolve regional housing thresholds $Q_k$ via continuous sub-grid linear cell interpolation).
   * $h \in \{0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80\}$ ($n_{a_2} = 7$, canonical adult human capital tiers $h_1 \dots h_7$: $h_1\text{–}h_2$ Struggling, $h_3\text{–}h_5$ Core, $h_6\text{–}h_7$ Thriving).
@@ -111,21 +111,19 @@ $$
 Following Kiyotaki, Michaelides, and Nikolov (2024), households with net worth below the regional down-payment threshold ($`a < \xi_k Q_k`$, where $`\xi_k = 0.20`$) are **Renters** facing rental user cost $`r_{h,k}^{\mathrm{rent}} = \left(1 + \mu_{\mathrm{maint}} - G_k / R\right) Q_k`$, while households with $`a \ge \xi_k Q_k`$ are **Homeowners** facing user cost $`r_{h,k}^{\mathrm{own}} = \left(1 + \mu_{\mathrm{maint}} - G_k / R - \psi_{\mathrm{own}}\right) Q_k`$. Optimal non-durable consumption $`c_{nd} = \phi_{nd} e_{\mathrm{tot}}`$ and housing services $`c_H = \left(1 - \phi_{nd}\right) e_{\mathrm{tot}} / r_{h,k}`$ combine in the Cobb-Douglas bundle $`c_{\mathrm{comp}} = c_{nd}^{\phi_{nd}} c_H^{1 - \phi_{nd}}`$.
 
 
-### 3.3 Discretization of Early Childhood Investment (`d_grid_ic`) and Sub-Grid Hardship Interpolation
+#### 3.2.1 Discretization of Early Childhood Investment (`d_grid_ic`)
+In the baseline VFI configuration (`NZ_4Region_Master.m`), household liquid assets $a \in [0, 25]$ use cubic spacing (`25 * linspace(0, 1, 61).^3`), providing high resolution across low-wealth states ($a_1 \dots a_{17}$ span $0 \text{ to } 0.4741$, or $0 text{ to } 45,040$ NZD at the $95,000$ NZD base scale). However, when the early childhood investment decision grid `d_grid_ic` ($n_{ic} = 7$ points on $[0, 0.50]$) is spaced linearly (`linspace(0, 0.50, 7)'`), the first positive investment rung sits at $ic_2 = 0.0833$ ($\approx 7,917\text{ NZD/yr}$ of private out-of-pocket expenditure).
 
-#### 3.3.1 Eliminating the Linear `d_grid_ic` Corner Artifact
-In the baseline VFI configuration (`NZ_4Region_Master.m`), household liquid assets $a \in [0, 25]$ use cubic spacing (`25 * linspace(0, 1, 61).^3`), providing high resolution across low-wealth states ($a_1 \dots a_{17}$ span $0$ to $0.4741$, or $0$ to $\$45,040\text{ NZD}$ at the $\$95,000\text{ NZD}$ base scale). However, when the early childhood investment decision grid `d_grid_ic` ($n_{ic} = 7$ points on $[0, 0.50]$) is spaced linearly (`linspace(0, 0.50, 7)'`), the first positive investment rung sits at $ic_2 = 0.0833$ ($\approx \$7,917\text{ NZD/yr}$ of private out-of-pocket expenditure).
+For households in **Node 2 (Residual AHC Squeeze & Paper Support)** whose optimal private cash investment lies between $1,500 \text{ to } 5,000 \text{ NZD/yr}$ ($ic \in [0.015, 0.055]$), a linear decision grid offers no interior point between $0$ and $0.0833$, artificially rounding their policy choice down to the $ic = 0$ corner. Replacing linear spacing with a convex power grid of identical dimension ($n_{ic} = 7$, incurring zero additional GPU memory or Bellman iteration cost):
 
-For households in **Node 2 (Residual AHC Squeeze & Paper Support)** whose optimal private cash investment lies between $\$1,500$ and $\$5,000\text{ NZD/yr}$ ($ic \in [0.015, 0.055]$), a linear decision grid offers no interior point between $0$ and $0.0833$, artificially rounding their policy choice down to the $ic = 0$ corner. Replacing linear spacing with a convex power grid of identical dimension ($n_{ic} = 7$, incurring zero additional GPU memory or Bellman iteration cost):
+$$d_{\text{grid,ic}} = 0.50 \times \left(\text{linspace}(0, 1, 7)\right)^{1.8} = [0, 0.0203, 0.0706, 0.1460, 0.2456, 0.3649, 0.5000]^{\top}$$
 
-$$d_{\text{grid,ic}} = 0.50 \times \left(\text{linspace}(0, 1, 7)\right)^{1.8} = [0, \; 0.0203, \; 0.0706, \; 0.1460, \; 0.2456, \; 0.3649, \; 0.5000]^{\top}$$
+introduces an accessible first positive rung at $ic_2 = 0.0203$ ($\approx 1,929\text{ NZD/yr}$) and second rung at $ic_3 = 0.0706$ ($\approx 6,707\text{ NZD/yr}$). This allows squeezed working families in Node 2 to register modest positive investments rather than pooling synthetically at $ic = 0$.
 
-introduces an accessible first positive rung at $ic_2 = 0.0203$ ($\approx \$1,929\text{ NZD/yr}$) and second rung at $ic_3 = 0.0706$ ($\approx \$6,707\text{ NZD/yr}$). This allows squeezed working families in Node 2 to register modest positive investments rather than pooling synthetically at $ic = 0$.
-
-#### 3.3.2 Continuous Sub-Grid Cell Interpolation for Regional Housing Thresholds
+#### 3.2.2 Continuous Sub-Grid Cell Interpolation for Regional Housing Thresholds
 Because regional housing price multipliers $Q_{\text{reg}}(k)$ span a threefold range (`Rural` $= 1.05$ to `Auckland` $= 3.10$), hard boolean asset cutoffs such as $a < \tau_1 Q_{\text{reg}}$ can fall near a grid node boundary in one region while sitting mid-interval in another. To prevent step-function discretization jumps when housing supply reforms ($Q_{\text{mult}}$) shift $Q_{\text{reg}}$, the 18-node Sankey aggregation evaluates continuous linear cell-fraction weights over the cubic asset grid $a_1 < a_2 < \dots < a_{61}$:
 
-$$w_{\text{cell}}(a_i; \tau Q_{\text{reg}}) = \min\left(1, \; \max\left(0, \; \frac{\tau Q_{\text{reg}} - a_{i-1}}{a_i - a_{i-1}}\right)\right)$$
+$$w_{\text{cell}}(a_i; \tau Q_{\text{reg}}) = \min\left(1, \max\left(0, \frac{\tau Q_{\text{reg}} - a_{i-1}}{a_i - a_{i-1}}\right)\right)$$
 
 with $a_0 \equiv a_1 - (a_2 - a_1)$. This ensures that marginal changes in regional housing costs ($Q_{\text{reg}}$) and alloparental buffering ($K_{\text{whānau}}$) map smoothly into cohort population shares across all four regions.
 
@@ -166,9 +164,7 @@ $$
 
 - *Upward "Protégé Effect", Zero Fade-Out, & Stress Buffer on Stage 2 ($`\kappa_{\mathrm{up}} > 0`$):* Serving as a high-agency *tuakana* mentor builds adolescent executive function, self-regulation, and *mana*, eliminating unbanked Stage-1 skill fade-out ($`(1 - M_{\mathrm{mentor}})\delta_{\theta,\mathrm{fade}} \to 0`$) and directly buffering the family unemployment shock via the adolescent net shift $`\Psi_{J=5}`$:
 
-$$
-\Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}}) = -\psi_{\mathrm{unemp}} \mathbb{I}(z_p \in \mathcal{Z}_{\mathrm{distress}}) (1 - \zeta_{\mathrm{buf}} M_{\mathrm{mentor}}) + \kappa_{\mathrm{up}} M_{\mathrm{mentor}}
-$$
+See definition of $\Psi_{J=5}$ above.
 
 - *Compact 4D Log-Skill Projection:* In `Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_SSankey.m`, this induces the unified anchored log-skill transition mean across the 7-point adult human capital grid $h_{\mathrm{child}} \in \mathcal{H}$:
 
