@@ -222,7 +222,7 @@ Flow_S1_to_S2 = zeros(4, 3); % 4 Gate-1 Birth Nodes -> 3 Gate-2 Public/Corner St
 Flow_S2_to_S3 = zeros(3, 4); % 3 Gate-2 States      -> 4 Gate-3 Public/Crisis States
 Flow_S3_to_S4 = zeros(4, 3); % 4 Gate-3 States      -> 3 Gate-4 Launch Skill Tiers
 Pop_S1_Birth  = zeros(1, 4); % [1: Severe DEP-17 %, 2: Residual AHC Squeeze %, 3: Universal 100%, 4: Secure Buffer %]
-Pop_S2_ECE    = zeros(1, 3); % [5: Corner ic=0 %, 6: Mod ECE %, 7: High ECE %] — matches 18-Node Fate Chart!
+Pop_S2_ECE    = zeros(1, 3); % [5: Corner ic=0 %, 6: Mod ECE %, 7: High ECE %] — matches 18-Node Fate Chart
 Pop_S3_Adol   = zeros(1, 4); % [9: HH Unemp Rem %, 10: Psychosocial CAMHS/ACC %, 11: Std School %, 12: Tuakana %]
 Pop_S4_Skill  = zeros(1, 3); % [14: Struggling h1-h2 %, 15: Core h3-h5 %, 16: Thriving h6-h7 %]
 
@@ -237,11 +237,29 @@ Q_base_Map   = struct('Rural', 1.05, 'Small', 1.40, 'Urban', 1.75, 'Large', 2.05
 Q_mult_Map   = struct('Rural', 0.990, 'Small', 0.975, 'Urban', 0.960, 'Large', 0.950, 'Auckland', 0.925);
 K_whanau_Map = struct('Rural', 0.42, 'Small', 0.38, 'Urban', 0.34, 'Large', 0.32, 'Auckland', 0.28);
 
-% Precompute lower cell boundaries a_{i-1} for continuous sub-grid linear interpolation on a_vec:
-a_dbl      = double(a_vec(:));
-da_first   = max(1e-6, a_dbl(2) - a_dbl(1));
-a_prev_dbl = [a_dbl(1) - da_first; a_dbl(1:end-1)];
-da_span    = max(1e-8, a_dbl - a_prev_dbl);
+% Precompute [n_a1 x 1] cell spans, threshold row vector tau_cuts [1 x 4], and [n_h x 3] Tier_Map:
+a_dbl    = double(a_vec(:));
+da_span  = [max(1e-6, a_dbl(2) - a_dbl(1)); diff(a_dbl)];
+a_prev   = a_dbl - da_span;
+tau_cuts = [0.025, 0.050, 0.080, 0.160]; % [1: Extreme, 2: Severe DEP-17, 3: Hardship, 4: AHC-50]
+Tier_Map = double([ismember((1:n_h)', 1:2), ismember((1:n_h)', 3:5), ismember((1:n_h)', 6:7)]); % [7 x 3]
+
+if ~is_reform_panel
+    P_unemp   = [0.82, 0.16, 0.02; 0.55, 0.37, 0.08; 0.28, 0.54, 0.18];
+    P_stabl   = [0.35, 0.58, 0.07; 0.12, 0.68, 0.20; 0.05, 0.55, 0.40];
+    psy_share = 0.346; % In SS0: ~8.90 kNZD HH Unemp/Truancy vs ~4.70 kNZD CAMHS/ACC ISSC (out of 13.60 kNZD)
+else
+    P_unemp   = [0.38, 0.34, 0.28; 0.16, 0.36, 0.48; 0.08, 0.30, 0.62];
+    P_stabl   = [0.14, 0.46, 0.40; 0.04, 0.38, 0.58; 0.02, 0.26, 0.72];
+    psy_share = 0.560; % In SS1: ~1.10 kNZD HH Unemp vs ~1.40 kNZD CAMHS/ACC 38% Clinical Floor (out of 2.50 kNZD)
+end
+% [3 x 4] projection operator splitting Gate-3 Stress (state 1) into Node 9 (HH Unemp) & Node 10 (CAMHS/ACC):
+Split_3to4 = [1.0 - psy_share, psy_share, 0, 0; ...
+    0,               0,         1, 0; ...
+    0,               0,         0, 1];
+lift_s1    = min([0.88, 0.82], [0.735, 0.638] * eta_ref); % [Severe Node 1 lift, AHC Node 2 lift]
+lift_s2    = min(0.92, 0.78 * eta_ref);
+s3_shifts  = reshape([-0.22, 0.00, montessori_bank], [1, 1, 1, 1, 1, 3]);
 
 use_gpu = (gpuDeviceCount > 0);
 
@@ -253,19 +271,15 @@ for r_i = 1:length(reg_list)
     Pol_k   = Pol_Sim.(hh_type);
 
     Q_house = P_Sim.Q_reg.(hh_type);
-    Q_base  = Q_house;
-    if isfield(Q_base_Map, reg), Q_base = Q_base_Map.(reg); end
-    if is_reform_panel && isfield(Q_base_Map, reg) && abs(Q_house - Q_base_Map.(reg)) < 1e-3
+    Q_base  = getfield_def(Q_base_Map, reg, Q_house);
+    if is_reform_panel && isfield(Q_base_Map, reg) && abs(Q_house - Q_base) < 1e-3
         Q_house = Q_house * Q_mult_Map.(reg);
     end
 
-    % Extract effective regional alloparental whanau care capacity K_whanau(k) (Marilyn Waring buffer)
     if isfield(P_Sim, 'K_whanau') && isfield(P_Sim.K_whanau, hh_type)
         K_whanau_k = P_Sim.K_whanau.(hh_type);
-    elseif isfield(K_whanau_Map, reg)
-        K_whanau_k = K_whanau_Map.(reg) * ((Q_base / max(0.5, Q_house)) ^ 0.35);
     else
-        K_whanau_k = 0.34;
+        K_whanau_k = getfield_def(K_whanau_Map, reg, 0.34) * ((Q_base / max(0.5, Q_house)) ^ 0.35);
     end
 
     w_mkt = getfield_def(P_Sim, 'w', 1.0);
@@ -274,208 +288,112 @@ for r_i = 1:length(reg_list)
     end
     if is_reform_panel, w_mkt = w_mkt * 1.042; end
 
+    % Vectorized [n_a1 x 4] continuous sub-grid linear interpolation weights:
+    W_cell = min(1.0, max(0.0, (Q_house .* tau_cuts - a_prev) ./ da_span));
+
+    Dist_G   = double(Dist_k);
+    Pol_G    = double(Pol_k);
+    a_G      = reshape(a_dbl,               [n_a1, 1, 1, 1]);
+    h_G      = reshape(double(h_vec),       [1, n_h, 1, 1]);
+    z_G      = reshape(double(z_vec),       [1, 1, n_z1, 1]);
+    l_G      = double(l_vec(:));
+    Ih_G     = double(Ih_vec(:));
+    ic_G     = double(ic_vec(:));
+    z_idx_3D = reshape(1:n_z1,              [1, 1, n_z1, 1]);
+    log_h_5D = reshape(log(double(h_vec)),  [1, 1, 1, 1, n_h]);
+    W_G      = reshape(W_cell,              [n_a1, 1, 1, 1, 4]);
+    Tier_G   = Tier_Map;
+
     if use_gpu
-        Dist_G     = gpuArray(double(Dist_k));
-        Pol_G      = gpuArray(double(Pol_k));
-        a_G        = gpuArray(reshape(a_dbl,      [n_a1, 1, 1, 1]));
-        a_prev_G   = gpuArray(reshape(a_prev_dbl, [n_a1, 1, 1, 1]));
-        da_G       = gpuArray(reshape(da_span,    [n_a1, 1, 1, 1]));
-        h_G        = gpuArray(reshape(double(h_vec), [1, n_h, 1, 1]));
-        z_G        = gpuArray(reshape(double(z_vec), [1, 1, n_z1, 1]));
-        l_G        = gpuArray(double(l_vec(:)));
-        Ih_G       = gpuArray(double(Ih_vec(:)));
-        ic_G       = gpuArray(double(ic_vec(:)));
-        z_idx_3D   = gpuArray(reshape(1:n_z1, [1, 1, n_z1, 1]));
-        log_h_dst5 = gpuArray(reshape(log(double(h_vec)), [1, 1, 1, 1, n_h]));
-    else
-        Dist_G     = double(Dist_k);
-        Pol_G      = double(Pol_k);
-        a_G        = reshape(a_dbl,      [n_a1, 1, 1, 1]);
-        a_prev_G   = reshape(a_prev_dbl, [n_a1, 1, 1, 1]);
-        da_G       = reshape(da_span,    [n_a1, 1, 1, 1]);
-        h_G        = reshape(double(h_vec), [1, n_h, 1, 1]);
-        z_G        = reshape(double(z_vec), [1, 1, n_z1, 1]);
-        l_G        = double(l_vec(:));
-        Ih_G       = double(Ih_vec(:));
-        ic_G       = double(ic_vec(:));
-        z_idx_3D   = reshape(1:n_z1, [1, 1, n_z1, 1]);
-        log_h_dst5 = reshape(log(double(h_vec)), [1, 1, 1, 1, n_h]);
+        Dist_G   = gpuArray(Dist_G);   Pol_G    = gpuArray(Pol_G);
+        a_G      = gpuArray(a_G);      h_G      = gpuArray(h_G);
+        z_G      = gpuArray(z_G);      l_G      = gpuArray(l_G);
+        Ih_G     = gpuArray(Ih_G);     ic_G     = gpuArray(ic_G);
+        z_idx_3D = gpuArray(z_idx_3D); log_h_5D = gpuArray(log_h_5D);
+        W_G      = gpuArray(W_G);      Tier_G   = gpuArray(Tier_G);
     end
 
     %% PART A (GPU): GATES 1 TO 4 — SYNCHRONIZED WITH 18-NODE PLOT_CHILDFATES_SSANKEY.M
-    Dist_Fert = Dist_G(:, :, :, fertile_j);
-    tot_p     = max(1e-12, gather(sum(Dist_Fert, 'all')));
-    d_ic_idx  = max(1, min(length(ic_vec), Pol_G(3, :, :, :, fertile_j)));
-    ic_4D     = reshape(ic_G(d_ic_idx(:)), size(Dist_Fert));
-    pwage_4D  = w_mkt .* z_G .* h_G;
+    Dist_Fert   = Dist_G(:, :, :, fertile_j);
+    N_st        = numel(Dist_Fert);
+    p_flat      = Dist_Fert(:) / max(1e-12, sum(Dist_Fert, 'all')); % [N_st x 1] normalized state mass
+    d_ic_idx    = max(1, min(length(ic_vec), Pol_G(3, :, :, :, fertile_j)));
+    ic_4D       = reshape(ic_G(d_ic_idx(:)), size(Dist_Fert));
+    pwage_4D    = w_mkt .* z_G .* h_G + 0 .* ic_4D;
+    is_hard_4D  = W_G(:, :, :, :, 3);
+    is_unemp_4D = (z_idx_3D == 1) | (n_z1 >= 5 & (z_idx_3D == 2) & (is_hard_4D > 0.5));
+    m_cash_zero = double(ic_4D <= 1e-5) .* max(is_hard_4D, double(z_idx_3D <= 2));
 
-    % Continuous sub-grid linear cell interpolation weights on cubic asset grid:
-    w_cell_025 = min(1.0, max(0.0, (0.025 * Q_house - a_prev_G) ./ da_G));
-    w_cell_050 = min(1.0, max(0.0, (0.050 * Q_house - a_prev_G) ./ da_G));
-    w_cell_080 = min(1.0, max(0.0, (0.080 * Q_house - a_prev_G) ./ da_G));
-    w_cell_160 = min(1.0, max(0.0, (0.160 * Q_house - a_prev_G) ./ da_G));
+    % --- GATE 1 (4 Nodes) & GATE 2 (3 Public/Corner States) MATRIX CONTRACTION ---
+    w_sev_4D = max(W_G(:,:,:,:,2) .* (z_idx_3D <= 2), W_G(:,:,:,:,1) .* (z_idx_3D <= 3)) + 0 .* ic_4D;
+    w_tot_4D = max(w_sev_4D, max(W_G(:,:,:,:,4) .* (z_idx_3D <= 2), max(is_hard_4D .* (z_idx_3D <= 3), m_cash_zero)));
+    w_ahc_4D = max(0.0, w_tot_4D - w_sev_4D);
 
-    is_hard_4D  = w_cell_080;
-    is_unemp_4D = (z_idx_3D == 1) | (n_z1 >= 5 & (z_idx_3D == 2) & (w_cell_080 > 0.5));
-    m_cash_zero = double(ic_4D <= 1e-5) .* max(w_cell_080, double(z_idx_3D <= 2));
+    s1_W1_sev = (1.0 - lift_s1(1)) .* w_sev_4D;
+    s1_W2_ahc = (1.0 - lift_s1(2)) .* w_ahc_4D;
+    S1_Pop_W  = reshape(cat(5, s1_W1_sev, s1_W2_ahc, ones(size(ic_4D)), max(0.0, 1.0 - s1_W1_sev - s1_W2_ahc)), N_st, 4);
 
-    % Gate 1 Population Weights (Matching Fates Nodes 1, 2, 3):
-    w_sev_raw_4D  = max(w_cell_050 .* double(z_idx_3D <= 2), w_cell_025 .* double(z_idx_3D <= 3)) .* ones(size(ic_4D));
-    w_tot_vuln_4D = max(w_sev_raw_4D, max(w_cell_160 .* double(z_idx_3D <= 2), ...
-        max(w_cell_080 .* double(z_idx_3D <= 3), m_cash_zero)));
-    w_ahc_raw_4D  = max(0.0, w_tot_vuln_4D - w_sev_raw_4D);
-
-    lift_s1_sev = min(0.88, 0.735 * eta_ref);
-    lift_s1_ahc = min(0.82, 0.638 * eta_ref);
-    s1_W1_sev   = (1.00 - lift_s1_sev) .* w_sev_raw_4D;         % Node 1: Severe Material Hardship (DEP-17 9+)
-    s1_W2_ahc   = (1.00 - lift_s1_ahc) .* w_ahc_raw_4D;         % Node 2: Residual AHC Squeeze & Paper Support
-    s1_W4_sec   = max(0.0, 1.00 - s1_W1_sev - s1_W2_ahc);       % Node 4: Secure Parental Asset Buffer
-
-    % Gate 2 Population Weights (with Marilyn Waring K_whanau(k) rescue out of ic=0 corner):
     whanau_rescue_k = min(0.45, 0.32 * K_whanau_k * ((Q_base / max(0.5, Q_house)) ^ 0.25));
-    m_corner = max(0.0, w_sev_raw_4D .* m_cash_zero + (1.0 - whanau_rescue_k) .* w_ahc_raw_4D .* m_cash_zero);
+    m_corner = max(0.0, w_sev_4D .* m_cash_zero + (1.0 - whanau_rescue_k) .* w_ahc_4D .* m_cash_zero);
     m_mod    = max(0.0, (1.0 - m_corner) .* double((ic_4D <= 1e-5) | (ic_4D <= 0.35 * max(ic_vec))));
-    m_high   = max(0.0, 1.0 - m_corner - m_mod);
+    S2_W     = reshape(cat(5, (1.0 - lift_s2) .* m_corner, lift_s2 .* m_corner + m_mod, max(0.0, 1.0 - m_corner - m_mod)), N_st, 3);
 
-    lift_s2 = min(0.92, 0.78 * eta_ref);
-    s2_W1   = (1.00 - lift_s2) .* m_corner;
-    s2_W2   = lift_s2 .* m_corner + 1.00 .* m_mod;
-    s2_W3   = 1.00 .* m_high;
-    s2_W_5D = cat(5, s2_W1, s2_W2, s2_W3);
+    % Gate 1 Dollar Flows Matrix [N_st x 4]: [1: Acute Tier 3, 2: AHC Paper/Landlord, 3: Univ Birth, 4: Priv Out-of-Pocket]
+    univ_rate = 0.142 + 0.045 * eta_ref * double(is_reform_panel);
+    G1_Cost_M = NZD_Scale .* reshape(cat(5, ...
+        (0.195 + 0.045 .* double(z_idx_3D == 1)) .* s1_W1_sev, ...
+        (0.095 + 0.028 * max(0, Q_house - 1.0))  .* s1_W2_ahc, ...
+        univ_rate + 0 .* ic_4D, ...
+        0.045 * Q_house + 0.120 .* pwage_4D .* (0.25 + 0.75 .* (1.0 - m_corner)) + 0.55 .* (1 - s_sub) .* ic_4D), N_st, 4);
 
-    % --- GATE 1 (J = 1, Birth, Age 0): FOUR BIRTH FISCAL FLOWS (kNZD/yr per cohort birth) ---
-    %   (1) Node 1: Acute Hardship Tier 3 Support (Deep Crimson — Special Needs, Emergency Housing, OT crisis)
-    %   (2) Node 2: Residual AHC Paper Support & Landlord Capture (Burnt Rust — AS rent capture + abated WfF)
-    %   (3) Node 3: Universal Birth Benefit (Steel Blue — PPL + BestStart + LMC, 100% of births)
-    %   (4) Node 4: Private Birth Out-of-Pocket (Warm Gold — Secure parental setup & time)
-    Acute_Birth_4D = NZD_Scale .* (0.195 .* s1_W1_sev + 0.045 .* double(z_idx_3D == 1) .* s1_W1_sev);
-    AHC_Paper_4D   = NZD_Scale .* ((0.095 + 0.028 * max(0, Q_house - 1.0)) .* s1_W2_ahc);
-    if is_reform_panel
-        Univ_Birth_4D = NZD_Scale .* (0.142 + 0.045 * eta_ref + 0 .* Dist_Fert);
-    else
-        Univ_Birth_4D = NZD_Scale .* (0.142 + 0 .* Dist_Fert);
-    end
-    Priv_Birth_4D = NZD_Scale .* (0.045 * Q_house + 0.120 .* pwage_4D .* (0.25 + 0.75 .* (1.0 - m_corner)) + 0.55 .* (1 - s_sub) .* ic_4D);
-
-    % Track Marilyn Waring unpaid whanau care valuation (Lane B) vs AS Landlord Capture (Lane D) in Node 2:
-    waring_whanau_kNZD = NZD_Scale * gather(sum(Dist_Fert .* s1_W2_ahc .* (0.085 * K_whanau_k .* pwage_4D), 'all')) / tot_p;
-    as_landlord_kNZD   = NZD_Scale * gather(sum(Dist_Fert .* AHC_Paper_4D, 'all')) / tot_p;
+    % Marilyn Waring unpaid whanau care valuation (Lane B) vs AS Landlord Capture (Lane D) in Node 2:
+    waring_whanau_kNZD = NZD_Scale * gather(p_flat' * reshape(s1_W2_ahc .* (0.085 * K_whanau_k .* pwage_4D), N_st, 1));
+    as_landlord_kNZD   = gather(p_flat' * G1_Cost_M(:, 2));
     Whanau_Care_G1_G2  = Whanau_Care_G1_G2 + w_reg * [waring_whanau_kNZD, as_landlord_kNZD];
 
-    reg_Pop_S1 = [gather(sum(Dist_Fert .* s1_W1_sev, 'all')) / tot_p, ...
-        gather(sum(Dist_Fert .* s1_W2_ahc, 'all')) / tot_p, ...
-        1.00, ...
-        gather(sum(Dist_Fert .* s1_W4_sec, 'all')) / tot_p];
+    reg_Pop_S1 = gather(p_flat' * S1_Pop_W);              % [1 x 4]
+    reg_Pop_S2 = gather(p_flat' * S2_W);                  % [1 x 3]
+    reg_F12    = gather(G1_Cost_M' * (p_flat .* S2_W));   % [4 x 3] in one matrix product
 
-    reg_F12    = zeros(4, 3);
-    reg_Pop_S2 = zeros(1, 3);
-    for s2_i = 1:3
-        ws = s2_W_5D(:, :, :, :, s2_i);
-        reg_Pop_S2(s2_i) = gather(sum(Dist_Fert .* ws, 'all')) / tot_p;
-        reg_F12(1, s2_i) = gather(sum(Dist_Fert .* Acute_Birth_4D .* ws, 'all')) / tot_p;
-        reg_F12(2, s2_i) = gather(sum(Dist_Fert .* AHC_Paper_4D   .* ws, 'all')) / tot_p;
-        reg_F12(3, s2_i) = gather(sum(Dist_Fert .* Univ_Birth_4D  .* ws, 'all')) / tot_p;
-        reg_F12(4, s2_i) = gather(sum(Dist_Fert .* Priv_Birth_4D  .* ws, 'all')) / tot_p;
-    end
+    % Gate 2 Dollar Flows Matrix [N_st x 3]: [5: ECE Corner Need, 6: Public ECE Mod, 7: High Public ECE]
+    G2_Cost_M = NZD_Scale .* reshape(cat(5, ...
+        0.135 + 0.085 .* is_hard_4D + 0.065 .* double(is_unemp_4D) + 0 .* ic_4D, ...
+        G_ece_eff + 0.045 + s_sub .* ic_4D, ...
+        G_ece_eff + 0.065 + s_sub .* ic_4D), N_st, 3);
+    reg_ECE_Step = gather(sum((p_flat .* S2_W) .* G2_Cost_M, 1)); % [1 x 3]
 
-    % --- GATE 2 (J = 2..3, First 2000 Days ECE Gate) ANNUAL COST FLOWS (kNZD/yr per cohort child) ---
-    ECE_Corner_Need_4D = NZD_Scale .* (0.135 + 0.085 .* is_hard_4D + 0.065 .* double(is_unemp_4D));
-    ECE_PubMod_Cost_4D = NZD_Scale .* (G_ece_eff + 0.045 + s_sub .* ic_4D);
-    ECE_High_Cost_4D   = NZD_Scale .* (G_ece_eff + 0.065 + s_sub .* ic_4D);
-
-    reg_ECE_Step = [gather(sum(Dist_Fert .* ECE_Corner_Need_4D .* s2_W1, 'all')) / tot_p, ...
-        gather(sum(Dist_Fert .* ECE_PubMod_Cost_4D .* s2_W2, 'all')) / tot_p, ...
-        gather(sum(Dist_Fert .* ECE_High_Cost_4D   .* s2_W3, 'all')) / tot_p];
-
-    % --- GATE 3 (J = 5, Ages 12-14 Adolescent Gate): OPTION 2 SPLIT OF NODE 9 (HH UNEMP) VS NODE 10 (CAMHS/ACC ISSC) ---
-    if ~is_reform_panel
-        P_unemp = [0.82, 0.16, 0.02; 0.55, 0.37, 0.08; 0.28, 0.54, 0.18];
-        P_stabl = [0.35, 0.58, 0.07; 0.12, 0.68, 0.20; 0.05, 0.55, 0.40];
-        psy_share_of_stress = 0.346; % In SS0: ~8.90 kNZD HH Unemp/Truancy vs ~4.70 kNZD CAMHS/ACC ISSC (out of 13.60 kNZD)
-    else
-        P_unemp = [0.38, 0.34, 0.28; 0.16, 0.36, 0.48; 0.08, 0.30, 0.62];
-        P_stabl = [0.14, 0.46, 0.40; 0.04, 0.38, 0.58; 0.02, 0.26, 0.72];
-        psy_share_of_stress = 0.560; % In SS1: ~1.10 kNZD HH Unemp vs ~1.40 kNZD CAMHS/ACC 38% Clinical Floor (out of 2.50 kNZD)
-    end
-
-    Adol_Cost_TotStress_4D = NZD_Scale .* (0.100 + 0.120 + 0.126 + 0.068 + 0.045 .* is_hard_4D);
-    Adol_Cost_Node9_HH_4D  = (1.0 - psy_share_of_stress) .* Adol_Cost_TotStress_4D; % Node 9: HH Unemp & Truancy Remediation
-    Adol_Cost_Node10_Psy4D = psy_share_of_stress         .* Adol_Cost_TotStress_4D; % Node 10: Psychosocial CAMHS & ACC ISSC
-    Adol_Cost_Node11_Sch4D = NZD_Scale .* (0.105 + s_sub .* ic_4D + 0 .* Dist_Fert);         % Node 11: Public Schooling (d_2)
-    Adol_Cost_Node12_Tua4D = NZD_Scale .* (0.105 + 0.038 + s_sub .* ic_4D + 0 .* Dist_Fert); % Node 12: Montessori / Tuakana
-
-    % Gate 3 -> Gate 4 (J = 6..7 Adult Skill Launch) Gaussian Transitions
+    % --- GATE 3 (4 Public/Crisis States) & GATE 4 (3 Skill Tiers) VECTORIZED CONTRACTION ---
     ic_eff_4D  = max(ic_4D, 0.185 .* (1.0 - m_corner));
-    inv_gap_4D = log(ic_eff_4D + G_ece_eff + 0.02) - log(0.20 + 0.05 + 0.02);
+    inv_gap_4D = log(ic_eff_4D + G_ece_eff + 0.02) - log(0.27);
     if strcmpi(Calibration_Anchor, 'Dunedin_22')
-        crowd_pen_4D = 0.14 * log(max(1.0, Q_house)) .* is_hard_4D;
-        grid_anchor  = +0.265;
+        base_log_h = rho_hc .* log(h_G) + gamma_ic .* inv_gap_4D - 0.14 * log(max(1.0, Q_house)) .* is_hard_4D + 0.265;
     else
-        crowd_pen_4D = 0.18 * log(max(1.0, Q_house)) .* is_hard_4D;
-        grid_anchor  = +0.105;
+        base_log_h = rho_hc .* log(h_G) + gamma_ic .* inv_gap_4D - 0.18 * log(max(1.0, Q_house)) .* is_hard_4D + 0.105;
     end
 
-    base_log_h_4D = rho_hc .* log(h_G) + gamma_ic .* inv_gap_4D - crowd_pen_4D + grid_anchor;
-    s3_shifts     = [-0.22, 0.00, montessori_bank];
+    % Broadcast across all 7 h-points (dim 5) and all 3 Gate-3 shifts (dim 6), then project via Tier_G [7 x 3]:
+    pdf_6D    = exp(-0.5 .* ((log_h_5D - (base_log_h + s3_shifts)) ./ sig_hc).^2);
+    pdf_6D    = pdf_6D ./ sum(pdf_6D, 5);
+    P_Tier_3D = reshape(reshape(permute(pdf_6D, [1,2,3,4,6,5]), N_st * 3, n_h) * Tier_G, [N_st, 3, 3]);
 
-    p_st_cell = cell(1, 3); p_co_cell = cell(1, 3); p_th_cell = cell(1, 3);
-    for s3_i = 1:3
-        mean_4D = base_log_h_4D + s3_shifts(s3_i);
-        pdf_5D  = exp(-0.5 .* ((log_h_dst5 - mean_4D) ./ sig_hc).^2);
-        pdf_5D  = pdf_5D ./ sum(pdf_5D, 5);
-        p_st_cell{s3_i} = sum(pdf_5D(:, :, :, :, 1:2), 5);
-        p_co_cell{s3_i} = sum(pdf_5D(:, :, :, :, 3:5), 5);
-        p_th_cell{s3_i} = sum(pdf_5D(:, :, :, :, 6:7), 5);
-    end
+    u_flat      = reshape(double(is_unemp_4D) + 0 .* ic_4D, N_st, 1);
+    M_s2_u      = (p_flat .* u_flat)       .* S2_W; % [N_st x 3]
+    M_s2_s      = (p_flat .* (1 - u_flat)) .* S2_W; % [N_st x 3]
+    reg_F23_3x3 = gather(sum(M_s2_u, 1)' .* P_unemp + sum(M_s2_s, 1)' .* P_stabl); % [3 x 3]
+    M_s3        = M_s2_u * P_unemp + M_s2_s * P_stabl;                             % [N_st x 3]
+    reg_F34_3x3 = gather(squeeze(sum(M_s3 .* P_Tier_3D, 1)));                      % [3 x 3]
 
-    reg_F23_raw   = zeros(3, 4); % Columns: [9_HH_Unemp, 10_Psychosocial_CAMHS_ACC, 11_Public_School, 12_Tuakana]
-    reg_F34_raw   = zeros(4, 3);
-    reg_Pop_S3    = zeros(1, 4);
-    reg_Pop_S4    = zeros(1, 3);
-    reg_Adol_Step = zeros(1, 4);
+    % Project 3 Gate-3 states onto 4 Fiscal Nodes [9: HH Unemp, 10: CAMHS/ACC, 11: Public School, 12: Tuakana] via Split_3to4:
+    reg_F23_raw = reg_F23_3x3 * Split_3to4;  % [3 x 4]
+    reg_F34_raw = Split_3to4' * reg_F34_3x3; % [4 x 3]
+    reg_Pop_S3  = sum(reg_F23_raw, 1);       % [1 x 4]
+    reg_Pop_S4  = sum(reg_F34_raw, 1);       % [1 x 3]
 
-    for s2_i = 1:3
-        ws2     = s2_W_5D(:, :, :, :, s2_i);
-        mass_s2 = Dist_Fert .* ws2;
-        for s3_i = 1:3
-            p_s3_4D = P_unemp(s2_i, s3_i) .* double(is_unemp_4D) + P_stabl(s2_i, s3_i) .* (1.0 - double(is_unemp_4D));
-            mass_s3 = mass_s2 .* p_s3_4D;
-            m_share = gather(sum(mass_s3, 'all')) / tot_p;
-
-            m_st = gather(sum(mass_s3 .* p_st_cell{s3_i}, 'all')) / tot_p;
-            m_co = gather(sum(mass_s3 .* p_co_cell{s3_i}, 'all')) / tot_p;
-            m_th = gather(sum(mass_s3 .* p_th_cell{s3_i}, 'all')) / tot_p;
-
-            if s3_i == 1
-                % Split Gate 3 stress state into Node 9 (HH Unemp/Truancy) and Node 10 (Psychosocial CAMHS/ACC ISSC)
-                sh_hh  = (1.0 - psy_share_of_stress) * m_share;
-                sh_psy = psy_share_of_stress         * m_share;
-                reg_Pop_S3(1)    = reg_Pop_S3(1)    + sh_hh;
-                reg_Pop_S3(2)    = reg_Pop_S3(2)    + sh_psy;
-                reg_Adol_Step(1) = reg_Adol_Step(1) + gather(sum(mass_s3 .* Adol_Cost_Node9_HH_4D,  'all')) / tot_p;
-                reg_Adol_Step(2) = reg_Adol_Step(2) + gather(sum(mass_s3 .* Adol_Cost_Node10_Psy4D, 'all')) / tot_p;
-                reg_F23_raw(s2_i, 1) = sh_hh;
-                reg_F23_raw(s2_i, 2) = sh_psy;
-
-                reg_F34_raw(1, :) = reg_F34_raw(1, :) + (1.0 - psy_share_of_stress) * [m_st, m_co, m_th];
-                reg_F34_raw(2, :) = reg_F34_raw(2, :) + psy_share_of_stress         * [m_st, m_co, m_th];
-            elseif s3_i == 2
-                reg_Pop_S3(3)    = reg_Pop_S3(3)    + m_share;
-                reg_Adol_Step(3) = reg_Adol_Step(3) + gather(sum(mass_s3 .* Adol_Cost_Node11_Sch4D, 'all')) / tot_p;
-                reg_F23_raw(s2_i, 3) = m_share;
-                reg_F34_raw(3, :)    = reg_F34_raw(3, :) + [m_st, m_co, m_th];
-            else
-                reg_Pop_S3(4)    = reg_Pop_S3(4)    + m_share;
-                reg_Adol_Step(4) = reg_Adol_Step(4) + gather(sum(mass_s3 .* Adol_Cost_Node12_Tua4D, 'all')) / tot_p;
-                reg_F23_raw(s2_i, 4) = m_share;
-                reg_F34_raw(4, :)    = reg_F34_raw(4, :) + [m_st, m_co, m_th];
-            end
-
-            reg_Pop_S4(1) = reg_Pop_S4(1) + m_st;
-            reg_Pop_S4(2) = reg_Pop_S4(2) + m_co;
-            reg_Pop_S4(3) = reg_Pop_S4(3) + m_th;
-        end
-    end
+    tot_stress_flat = NZD_Scale .* reshape(0.414 + 0.045 .* is_hard_4D + 0 .* ic_4D, N_st, 1);
+    G3_Cost_M = [tot_stress_flat * [1.0 - psy_share, psy_share], ...
+        NZD_Scale .* reshape(0.105 + s_sub .* ic_4D,         N_st, 1), ...
+        NZD_Scale .* reshape(0.143 + s_sub .* ic_4D,         N_st, 1)]; % [N_st x 4]
+    reg_Adol_Step = gather(sum((M_s3 * Split_3to4) .* G3_Cost_M, 1)); % [1 x 4]
 
     Flow_S1_to_S2     = Flow_S1_to_S2     + w_reg * reg_F12;
     Flow_S2_to_S3     = Flow_S2_to_S3     + w_reg * reg_F23_raw;
@@ -1389,4 +1307,6 @@ else
     img_Merged    = horzcat(blocks{:});
     fig_pos       = [20, 80, min(1920, 920 * N_p), 740];
 end
+
+
 end
