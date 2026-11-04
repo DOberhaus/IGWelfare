@@ -45,4 +45,6 @@ for iter = 1:6
     cScale(validC) = colTarget(validC) ./ cSum(validC);
     F_clean = bsxfun(@times, F_clean, cScale);
 end
+
+
 end

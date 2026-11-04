@@ -28,7 +28,7 @@ if ~exist('Active_Phases', 'var') || isempty(Active_Phases)
 end
 Calibration_Anchor = 'Dunedin_22'; % 'Dunedin_22' or 'MetroSqueeze_GUiNZ'
 Merge_Orientation  = 'Vertical';   % 'Vertical' (Stacked Top/Bottom for A3) or 'Horizontal'
-NZD_Base_Scale     = 95.0;         % 1.0 model unit = NZD $95.0k/yr (mean prime household earnings)
+NZD_Base_Scale     = 95.0;         % 1.0 model unit = $95.0 kNZD/yr (mean prime household earnings)
 Interactive_Hover_Mode = true;     % TRUE = keep live vector SSankey figure open for mouse-hover narratives
 
 if ~exist('OutputDir', 'var') || ~isfolder(OutputDir)
@@ -72,9 +72,9 @@ for r_loop = 1:length(Target_Regions)
         % 2. If Interactive_Hover_Mode is enabled, wire up hover callbacks & keep figure open!
         if Interactive_Hover_Mode && strcmpi(Target_Region, 'National')
             fiscalNarrativeMap = getFiscalRibbonNarratives(p_code);
-            attachSankeyHoverNarratives(axP, SK_p, links_p, fiscalNarrativeMap, 'NZD $%.2fk/yr per cohort birth');
+            attachSankeyHoverNarratives(axP, SK_p, links_p, fiscalNarrativeMap, '$%.2f kNZD/yr per cohort birth');
             html_fname = fullfile(OutputDir, sprintf('Interactive_ChildFiscal_%s_%s.html', p_code, Target_Region));
-            exportSankeyToHTML(axP, SK_p, links_p, fiscalNarrativeMap, 'NZD $%.2fk/yr per cohort birth', html_fname);
+            exportSankeyToHTML(axP, SK_p, links_p, fiscalNarrativeMap, '$%.2f kNZD/yr per cohort birth', html_fname);
         else
             close(figP);
         end
@@ -1388,52 +1388,5 @@ else
     blocks{end+1} = right_pad;
     img_Merged    = horzcat(blocks{:});
     fig_pos       = [20, 80, min(1920, 920 * N_p), 740];
-end
-end
-
-function T_Out = Build_NPhase_Summary_Table(Phase_Ledgers, Phase_Codes, vec_field, val_suffix, delta_suffix)
-N_p   = numel(Phase_Ledgers);
-L_ref = Phase_Ledgers{1};
-n_row = numel(L_ref.(vec_field));
-
-if isfield(L_ref, 'Gate_Column') && isfield(L_ref, 'Node_Names')
-    Gates = L_ref.Gate_Column;
-    Names = L_ref.Node_Names;
-else
-    Gates = { ...
-        'Gate1_J1_Birth_Age0';           'Gate1_J1_Birth_Age0'; ...
-        'Gate2_J2_3_First2000Days_0to5'; 'Gate2_J2_3_First2000Days_0to5'; 'Gate2_J2_3_First2000Days_0to5'; ...
-        'Gate3_J5_Adolescent_12to14';    'Gate3_J5_Adolescent_12to14';    'Gate3_J5_Adolescent_12to14'; ...
-        'Gate4_J6_7_AdultLaunch_Age20';  'Gate4_J6_7_AdultLaunch_Age20';  'Gate4_J6_7_AdultLaunch_Age20'; ...
-        'Gate5_J10_AdultFates_Age30';    'Gate5_J10_AdultFates_Age30';    'Gate5_J10_AdultFates_Age30'; ...
-        'Gate5_J10_AdultFates_Age30';    'Gate5_J10_AdultFates_Age30';    'Gate5_J10_AdultFates_Age30'};
-    Names = { ...
-        '1_Material_Hardship_Housing_Squeeze'; '2_Secure_Parental_Asset_Buffer'; ...
-        '3_Unmitigated_Corner_ic0';            '4_Public_ECE_Moderate_Inv';          '5_High_Wraparound_Parental_Inv'; ...
-        '6_Family_Unemp_Stress_z1';            '7_Standard_Public_Schooling';        '8_Montessori_Peer_Mentoring'; ...
-        '9_Struggling_Tier_h1_h2';                '10_Core_Skill_Tier_h3_h5';           '11_Thriving_Tier_h6_h7'; ...
-        '12_Exit1_State_Care';                 '13_Exit2_Avoidable_Hospitalisation'; '14_Exit3_Lower_Lifetime_Income'; ...
-        '15_Exit4_Benefit_Justice_Burden';     '16_Retained_NZ_Secure_Thriving';     '17_Emigrated_Abroad_BrainDrain'};
-end
-
-T_Out = table(Gates(1:n_row), Names(1:n_row), 'VariableNames', {'Gate', 'Node_Name'});
-Mat   = zeros(n_row, N_p);
-
-for p = 1:N_p
-    col_vec   = reshape(Phase_Ledgers{p}.(vec_field), n_row, 1);
-    Mat(:, p) = col_vec;
-    T_Out.([Phase_Codes{p}, val_suffix]) = round(col_vec, 2);
-end
-
-% Add incremental phase-to-phase deltas and cumulative delta vs Phase 1 (SS0)
-if N_p == 2
-    T_Out.(['Reform', delta_suffix]) = round(Mat(:, 2) - Mat(:, 1), 2);
-elseif N_p >= 3
-    for p = 2:N_p
-        d_name = sprintf('Delta_%s_vs_%s%s', Phase_Codes{p}, Phase_Codes{p-1}, delta_suffix);
-        T_Out.(d_name) = round(Mat(:, p) - Mat(:, p-1), 2);
-    end
-    cum_name = sprintf('Cumul_%s_vs_%s%s', Phase_Codes{N_p}, Phase_Codes{1}, delta_suffix);
-    T_Out.(cum_name) = round(Mat(:, N_p) - Mat(:, 1), 2);
 end
 end

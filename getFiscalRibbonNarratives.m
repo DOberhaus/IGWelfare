@@ -62,7 +62,7 @@ else
     narrativeMap('2->6') = 'SS1/SS2 Rent Cooling + Kuia Time + Universal ECE: Cooling metro rents (Q_mult), Super Age 64 Kuia time (+8.1% Phi_time), and universal ECE shift Node 2 families from landlord-captured subsidies into productive Node 6 early enrichment [Ref 26, 47].';
 end
 narrativeMap('3->5') = 'Universal PPL/BestStart baseline support flowing to families still trapped in the Gate 2 cash corner.';
-narrativeMap('3->6') = 'Universal Birth Benefit (PPL + BestStart) seamlessly衔接 (bridging) into Universal First 2000 Days Public ECE Wraparound (Node 6) [Ref 14, 37].';
+narrativeMap('3->6') = 'Universal Birth Benefit (PPL + BestStart) seamlessly (bridging) into Universal First 2000 Days Public ECE Wraparound (Node 6) [Ref 14, 37].';
 narrativeMap('3->7') = 'Universal Birth Benefit co-funding families entering High-Intensity Public ECE (Node 7).';
 narrativeMap('4->8') = 'Parental Warm Gold Continuity (Lane A Cash + Lane B Time): Secure-buffer birth commitment flowing into ongoing First 2000 Days private parental and whanau investment (~18.5-18.7 kNZD/yr conditional per child) [Ref 21, 47].';
 
