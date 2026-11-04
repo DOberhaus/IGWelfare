@@ -710,24 +710,23 @@ if isfield(L_ref, 'Gate_Column') && isfield(L_ref, 'Node_Names')
     Names = L_ref.Node_Names;
 else
     Gates = { ...
-        'Gate1_J1_Birth_Age0';           'Gate1_J1_Birth_Age0'; ...
+        'Gate1_J1_Birth_Age0';           'Gate1_J1_Birth_Age0';           'Gate1_J1_Birth_Age0'; ...
         'Gate2_J2_3_First2000Days_0to5'; 'Gate2_J2_3_First2000Days_0to5'; 'Gate2_J2_3_First2000Days_0to5'; ...
         'Gate3_J5_Adolescent_12to14';    'Gate3_J5_Adolescent_12to14';    'Gate3_J5_Adolescent_12to14'; ...
         'Gate4_J6_7_AdultLaunch_Age20';  'Gate4_J6_7_AdultLaunch_Age20';  'Gate4_J6_7_AdultLaunch_Age20'; ...
         'Gate5_J10_AdultFates_Age30';    'Gate5_J10_AdultFates_Age30';    'Gate5_J10_AdultFates_Age30'; ...
         'Gate5_J10_AdultFates_Age30';    'Gate5_J10_AdultFates_Age30';    'Gate5_J10_AdultFates_Age30'};
     Names = { ...
-        '1_Material_Hardship_Housing_Squeeze'; '2_Secure_Parental_Asset_Buffer'; ...
-        '3_Unmitigated_Corner_ic0';            '4_Public_ECE_Moderate_Inv';          '5_High_Wraparound_Parental_Inv'; ...
-        '6_Family_Unemp_Stress_z1';            '7_Standard_Public_Schooling';        '8_Montessori_Peer_Mentoring'; ...
-        '9_Struggling_Tier_h1_h2';                '10_Core_Skill_Tier_h3_h5';           '11_Thriving_Tier_h6_h7'; ...
-        '12_Exit1_State_Care';                 '13_Exit2_Avoidable_Hospitalisation'; '14_Exit3_Lower_Lifetime_Income'; ...
-        '15_Exit4_Benefit_Justice_Burden';     '16_Retained_NZ_Secure_Thriving';     '17_Emigrated_Abroad_BrainDrain'};
+        '1_Severe_Material_Hardship_DEP17';    '2_Residual_AHC_Squeeze_Paper_Support'; '3_Secure_Parental_Asset_Buffer'; ...
+        '4_Unmitigated_Corner_ic0';            '5_Public_ECE_Moderate_Inv';            '6_High_Wraparound_Whanau_Inv'; ...
+        '7_Compounded_HH_Psychosocial_Stress'; '8_Standard_Public_Schooling';          '9_Montessori_Tuakana_Mentoring'; ...
+        '10_Struggling_Tier_h1_h2';            '11_Core_Skill_Tier_h3_h5';             '12_Thriving_Tier_h6_h7'; ...
+        '13_Exit1_State_Care';                 '14_Exit2_Avoidable_Hospitalisation';   '15_Exit3_Lower_Lifetime_Income'; ...
+        '16_Exit4_Benefit_Justice_Burden';     '17_Retained_NZ_Secure_Thriving';       '18_Emigrated_Abroad_BrainDrain'};
 end
 
 T_Out = table(Gates(1:n_row), Names(1:n_row), 'VariableNames', {'Gate', 'Node_Name'});
 Mat   = zeros(n_row, N_p);
-
 for p = 1:N_p
     col_vec   = reshape(Phase_Ledgers{p}.(vec_field), n_row, 1);
     Mat(:, p) = col_vec;
@@ -745,6 +744,127 @@ elseif N_p >= 3
     cum_name = sprintf('Cumul_%s_vs_%s%s', Phase_Codes{N_p}, Phase_Codes{1}, delta_suffix);
     T_Out.(cum_name) = round(Mat(:, N_p) - Mat(:, 1), 2);
 end
+end
 
+function F_clean = pruneAndBalanceFlowMatrix(F_in, min_thresh)
+%% PRUNEANDBALANCEFLOWMATRIX
+% Zeroes out sub-threshold phantom ribbons (< min_thresh) and redistributes mass
+% across surviving entries via RAS iterative proportional fitting so row & col margins stay exact.
+row_targets = sum(F_in, 2);
+col_targets = sum(F_in, 1);
+F_clean     = F_in;
+mask_keep   = (F_in >= min_thresh);
 
+% Guarantee at least the largest entry in every non-empty row and column survives
+for r = 1:size(F_in, 1)
+    if row_targets(r) > 0 && ~any(mask_keep(r, :))
+        [~, idx_m] = max(F_in(r, :));
+        mask_keep(r, idx_m) = true;
+    end
+end
+for c = 1:size(F_in, 2)
+    if col_targets(c) > 0 && ~any(mask_keep(:, c))
+        [~, idx_m] = max(F_in(:, c));
+        mask_keep(idx_m, c) = true;
+    end
+end
+
+F_clean(~mask_keep) = 0;
+for iter = 1:12
+    for r = 1:size(F_clean, 1)
+        rs = sum(F_clean(r, :));
+        if rs > 1e-12
+            F_clean(r, :) = F_clean(r, :) * (row_targets(r) / rs);
+        end
+    end
+    for c = 1:size(F_clean, 2)
+        cs = sum(F_clean(:, c));
+        if cs > 1e-12
+            F_clean(:, c) = F_clean(:, c) * (col_targets(c) / cs);
+        end
+    end
+end
+end
+
+function narrativeMap = getFatesRibbonNarratives(phase_code)
+%% GETFATESRIBBONNARRATIVES
+% Returns containers.Map keyed by 'srcNum->dstNum' (and 'NODE_num') for the 18-Node Fates Sankey.
+narrativeMap = containers.Map('KeyType', 'char', 'ValueType', 'char');
+is_ref = ~strcmpi(phase_code, 'SS0');
+
+% --- NODE-LEVEL DESCRIPTIONS (1..18) ---
+narrativeMap('NODE_1')  = 'Node 1 — Severe Material Hardship (DEP-17 9+): Households at the acute asset floor (a < 0.05*Q_reg) with bottom labor productivity (z <= 2). Anchored to Stats NZ / MSD DEP-17 9+ and Treasury IDI high-priority birth flags [Ref 48].';
+narrativeMap('NODE_2')  = 'Node 2 — Residual AHC Squeeze & Paper Support: Households above emergency destitution (0.05*Q_reg <= a < 0.16*Q_reg) qualifying on paper for WfF/AS/BestStart, but squeezed by metro rents (Q_reg), abatement cliffs, and time poverty. Buffered in provincial regions by Marilyn Waring unpaid whanau care K_whanau(k) [Ref 47, 48].';
+narrativeMap('NODE_3')  = 'Node 3 — Secure Parental Asset Buffer: Households with sufficient liquid equity and after-housing-cost disposable income to sustain baseline First 2000 Days enrichment without emergency transfers.';
+narrativeMap('NODE_4')  = 'Node 4 — Unmitigated Corner (ic = 0): Families forced to zero out-of-pocket early enrichment by acute hardship (Node 1) or metropolitan nuclear isolation where extended whanau are priced out (Node 2) [Ref 1, 11, 47].';
+narrativeMap('NODE_5')  = 'Node 5 — Public ECE + Moderate Investment: Children receiving universal public ECE wraparound (G_ece_1) and/or rescued from the cash corner by extended whanau alloparental care K_whanau(k) [Ref 11, 14, 47].';
+narrativeMap('NODE_6')  = 'Node 6 — High Wraparound + Whanau Investment: Children receiving high private and alloparental whanau enrichment alongside public First 2000 Days scaffolding (phi_1 = +0.35 substitutability).';
+narrativeMap('NODE_7')  = 'Node 7 — Compounded Household & Psychosocial Stress (Ages 12-14): Captures the multiplicative interaction of family unemployment distress (z1-z2) and cross-income adolescent psychosocial hazards (bullying 32-35%, Youth19 clinical depression 23%, algorithmic compulsion, and ACC Sensitive Claims trauma) [Ref 17, 19, 20, 38].';
+narrativeMap('NODE_8')  = 'Node 8 — Standard Public Schooling (Ages 12-14): Conventional age-segregated secondary schooling without structured cross-age Tuakana-Teina or Erdkinder mentoring (subject to delta_fade = 0.22 skill fade-out) [Ref 15].';
+narrativeMap('NODE_9')  = 'Node 9 — Montessori / Tuakana-Teina Mentoring (Ages 12-14): High-agency vertical whanau, Kura, Graeme Dingle Stars/Project K, KiVa bystander norms, and Planet Youth family/mentor scaffolding [Ref 18, 20, 55].';
+narrativeMap('NODE_10') = 'Node 10 — Struggling Adult Skill Tier (h1-h2, Age 20): Calibrated to the Dunedin Study 22.0% high-burden developmental cohort at labor market entry [Ref 16].';
+narrativeMap('NODE_11') = 'Node 11 — Core Adult Skill Tier (h3-h5, Age 20): Skilled domestic workforce foundation launching into vocational and tertiary pathways.';
+narrativeMap('NODE_12') = 'Node 12 — Thriving Adult Skill Tier (h6-h7, Age 20): High-capability graduates and entrepreneurs (pivoting from z_l land speculation in SS0 to z_h builders in SS1/SS2) [Ref 2, 7].';
+narrativeMap('NODE_13') = 'Node 13 — Exit 1 (State Care / Oranga Tamariki): Acute statutory care and protection liability (~37.1k-54.7k NZD/yr direct flow + 181k NZD lifetime abuse-in-care liability) [Ref 37].';
+narrativeMap('NODE_14') = 'Node 14 — Exit 2 (Avoidable Hospitalisation & Acute Mental Health): Preventable paediatric/adult hospital admissions, CAMHS, and ACC ISSC trauma rehabilitation [Ref 16, 38].';
+narrativeMap('NODE_15') = 'Node 15 — Exit 3 (Lower Lifetime Income & Tax Drag): Permanent earnings and PAYE/GST tax-base erosion from unbuffered childhood/adolescent skill loss.';
+narrativeMap('NODE_16') = 'Node 16 — Exit 4 (Long-Term Benefit, LOPE & Justice Burden): Supported Living, Jobseeker hardship, ACC Loss of Potential Earnings (LOPE at 80% min wage), and Corrections outlays [Ref 16, 38].';
+narrativeMap('NODE_17') = 'Node 17 — Retained NZ Secure/Thriving Adult: Domestic skilled adults powering high-productivity z_h enterprises and the 2050 50/50 Sovereign Debt-Sinking & Infrastructure Protocol.';
+narrativeMap('NODE_18') = 'Node 18 — Emigrated Abroad (Age 20-35 Brain Drain): Young adults departing to Australia/OECD via the 4x5 Gumbel sorting matrix Pi_mig [Ref 23, 24, 25].';
+
+% --- RIBBON-LEVEL TRANSITIONS (GATE 1 -> GATE 2: 1..3 -> 4..6) ---
+if ~is_ref
+    narrativeMap('1->4') = 'SS0 Acute Deprivation Trap: Without proactive Tier 3 wraparound, Severe Material Hardship (DEP-17 9+) forces families directly into the Unmitigated Corner (ic = 0) during the First 2000 Days [Ref 1, 48].';
+    narrativeMap('2->4') = 'SS0 Paper-Support Failure & Metro Isolation: In high-rent Auckland/Large metros (Q_reg = 2.05-3.10), AS rent capture and nuclear isolation from extended whanau push Residual AHC Squeeze infants into the ic = 0 corner [Ref 47, 48].';
+    narrativeMap('2->5') = 'SS0 Marilyn Waring Unpaid Whanau Rescue: In Rural and Small provincial regions (K_whanau = 0.38-0.42), nearby kaumatua and aunties provide unpaid alloparental care that rescues squeezed Node 2 infants out of the cash corner [Ref 26, 47].';
+else
+    narrativeMap('1->5') = 'SS1/SS2 Proactive First-2000-Days Wraparound: Universal G_ece_1 (0.110-0.130) and Whanau Ora / Barnardos navigators lift 78%-92% of severe-hardship infants out of the ic = 0 corner into enriched ECE [Ref 14, 37].';
+    narrativeMap('2->5') = 'SS1/SS2 Housing Cooling + Whanau & Universal ECE: Cooling metro rents (Q_mult), Super Age 64 Kuia time (+8.1% Phi_time), and universal ECE move squeezed Node 2 families into thriving early trajectories [Ref 26, 47].';
+end
+narrativeMap('3->5') = 'Secure-buffer families combining 20-Hours / universal public ECE with moderate private early-childhood investment.';
+narrativeMap('3->6') = 'Secure-buffer families investing at the top rungs of the convex d_grid_ic power grid alongside extended whanau enrichment.';
+
+% --- GATE 2 -> GATE 3 (4..6 -> 7..9) ---
+if ~is_ref
+    narrativeMap('4->7') = 'SS0 82% Compounded Stress Lock-In: Children from the ic=0 corner hit by family unemployment (z1) and adolescent psychosocial hazards (bullying, Youth19 depression, sexual trauma) face an 82% lock-in to Node 7 [Ref 19, 20, 38].';
+    narrativeMap('5->7') = 'SS0 Cross-Income Psychosocial & Household Shock: Even among moderate-ECE families, post-2012 cyberbullying (32-35%), anxiety/depressive escalation (52.4% in GUiNZ age 12), and job shocks pull adolescents into Node 7 [Ref 17, 19, 20].';
+else
+    narrativeMap('4->7') = 'SS1/SS2 38% Clinical Persistence Floor: While mentoring and family buffers cut the stress trap from 82% to 38%, the model retains a 38% residual for acute clinical trauma requiring specialized CAMHS and ACC ISSC care [Ref 38, 55].';
+    narrativeMap('4->9') = 'SS1/SS2 14-Fold Surge in Mentoring Access Under Stress (2% -> 28%): Tuakana-Teina, Graeme Dingle Stars/Project K, KiVa peer norms, and Planet Youth family buffers insulate vulnerable teens [Ref 18, 20, 55].';
+    narrativeMap('5->9') = 'SS1/SS2 Mainstreamed Montessori Erdkinder & Tuakana-Teina Mentoring (57.3%-65.0% cohort coverage): Halts delta_fade = 0.22 skill fade-out and inoculates executive function against algorithmic capture [Ref 15, 18, 55].';
+end
+narrativeMap('5->8') = 'Transition from early childhood ECE into standard public intermediate/secondary schooling (d_2).';
+narrativeMap('6->9') = 'High-wraparound early childhood cohorts continuing into high-agency Montessori / Tuakana-Teina leadership.';
+
+% --- GATE 3 -> GATE 4 (7..9 -> 10..12) ---
+narrativeMap('7->10') = 'Cunha-Heckman Stage-2 Bottleneck (phi_2 = -0.95): Unbuffered household & psychosocial stress (-0.22 log-skill shift) drives adolescents into the Dunedin 22% Struggling Adult Tier (h1-h2) at Age 20 [Ref 11, 16].';
+narrativeMap('8->11') = 'Standard schooling cohorts launching into the Core Adult Skill Tier (h3-h5) at Age 20.';
+narrativeMap('9->12') = 'Two-Way Ako / Protege Dividend (+0.11 to +0.14 log-skill boost): Mentored adolescents launch into the Thriving Adult Skill Tier (h6-h7) at Age 20 [Ref 18].';
+
+% --- GATE 4 -> GATE 5 (10..12 -> 13..18) ---
+narrativeMap('10->13') = 'Dunedin Concentration into Exit 1 (State Care): 9.0% of retained Struggling h1-h2 youth experience statutory care/protection pathways [Ref 16, 37].';
+narrativeMap('10->14') = 'Dunedin Concentration into Exit 2 (Avoidable Hospitalisation & CAMHS): 16.5% of retained h1-h2 youth incur acute hospital and mental health burdens [Ref 16, 38].';
+narrativeMap('10->15') = 'Exit 3 (Lower Lifetime Income): 26.0% of retained h1-h2 youth remain in low-wage employment with permanently reduced lifetime earnings and tax receipts.';
+narrativeMap('10->16') = 'Dunedin Concentration into Exit 4 (Benefit, LOPE & Justice Burden): 38.5% of retained h1-h2 youth enter long-term SLP/Jobseeker dependency, ACC LOPE (80% min wage), or Corrections [Ref 16, 38].';
+narrativeMap('11->17') = '82.7% of retained Core Skill Tier (h3-h5) adults establish secure, thriving domestic careers in New Zealand.';
+narrativeMap('12->17') = '99.2% of retained Thriving Tier (h6-h7) adults become high-wage domestic builders and innovators (z_h) when retained in NZ [Ref 2, 7].';
+narrativeMap('12->18') = 'Trans-Tasman & OECD Brain Drain (Pi_mig): High-skill h6-h7 young adults departing to Australia/OECD (cut from 22% conditional rate in SS0 to 12% in SS1 via Youth Grant E, Q_reg cooling, and z_h firm wages) [Ref 23, 24, 25].';
+end
+
+function attachSankeyHoverNarratives(ax, SK, links, narrativeMap, valFmt)
+%% ATTACHSANKEYHOVERNARRATIVES
+% Wires lightweight live MATLAB mouse-hover callout banner at top of figure.
+fig = ancestor(ax, 'figure');
+if isempty(fig) || ~isvalid(fig), return; end
+infoBanner = annotation(fig, 'textbox', [0.02, 0.935, 0.96, 0.055], ...
+    'String', 'Hover mouse over any Sankey block or ribbon to inspect its empirical mechanism & citation...', ...
+    'FontName', 'Helvetica', 'FontSize', 9.2, 'FontWeight', 'bold', ...
+    'Color', [0.12, 0.16, 0.22], 'BackgroundColor', [0.97, 0.98, 1.00], ...
+    'EdgeColor', [0.45, 0.55, 0.70], 'LineWidth', 1.0, 'Interpreter', 'none', ...
+    'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left', 'Margin', 4);
+setappdata(fig, 'SankeyHoverBanner', infoBanner);
+setappdata(fig, 'SankeyLinks', links);
+setappdata(fig, 'SankeyNarrativeMap', narrativeMap);
+setappdata(fig, 'SankeyValFmt', valFmt);
+setappdata(fig, 'SankeyObj', SK);
 end
