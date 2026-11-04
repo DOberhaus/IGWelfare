@@ -219,273 +219,273 @@ end
 %      25: GST, Cap & Estate Tax Pool (Good 1);    26: Career PAYE Income Tax (Good 2);
 %      27: Exit 3 Career Lost Tax (Foregone);      28: Permanent Abroad Lost Tax (Beyond)]
 Flow_S1_to_S2 = zeros(4, 3); % 4 Gate-1 Birth Nodes -> 3 Gate-2 Public/Corner States
-    Flow_S2_to_S3 = zeros(3, 4); % 3 Gate-2 States      -> 4 Gate-3 Public/Crisis States
-    Flow_S3_to_S4 = zeros(4, 3); % 4 Gate-3 States      -> 3 Gate-4 Launch Skill Tiers
-    Pop_S1_Birth  = zeros(1, 4); % [1: Severe DEP-17 %, 2: Residual AHC Squeeze %, 3: Universal 100%, 4: Secure Buffer %]
-    Pop_S2_ECE    = zeros(1, 3); % [5: Corner ic=0 %, 6: Mod ECE %, 7: High ECE %] — matches 18-Node Fate Chart!
-    Pop_S3_Adol   = zeros(1, 4); % [9: HH Unemp Rem %, 10: Psychosocial CAMHS/ACC %, 11: Std School %, 12: Tuakana %]
-    Pop_S4_Skill  = zeros(1, 3); % [14: Struggling h1-h2 %, 15: Core h3-h5 %, 16: Thriving h6-h7 %]
+Flow_S2_to_S3 = zeros(3, 4); % 3 Gate-2 States      -> 4 Gate-3 Public/Crisis States
+Flow_S3_to_S4 = zeros(4, 3); % 4 Gate-3 States      -> 3 Gate-4 Launch Skill Tiers
+Pop_S1_Birth  = zeros(1, 4); % [1: Severe DEP-17 %, 2: Residual AHC Squeeze %, 3: Universal 100%, 4: Secure Buffer %]
+Pop_S2_ECE    = zeros(1, 3); % [5: Corner ic=0 %, 6: Mod ECE %, 7: High ECE %] — matches 18-Node Fate Chart!
+Pop_S3_Adol   = zeros(1, 4); % [9: HH Unemp Rem %, 10: Psychosocial CAMHS/ACC %, 11: Std School %, 12: Tuakana %]
+Pop_S4_Skill  = zeros(1, 3); % [14: Struggling h1-h2 %, 15: Core h3-h5 %, 16: Thriving h6-h7 %]
 
-    ECE_Step_Dollars  = zeros(1, 3); % Cohort-weighted kNZD/yr at J=2-3 (Public/Remediation nodes 5, 6, 7)
-    Adol_Step_Dollars = zeros(1, 4); % Cohort-weighted kNZD/yr at J=5   (Public/Remediation nodes 9, 10, 11, 12)
-    Whanau_Care_G1_G2 = zeros(1, 2); % [Node 2 Waring Unpaid Whanau Care kNZD/yr, Node 2 AS Landlord Capture kNZD/yr]
+ECE_Step_Dollars  = zeros(1, 3); % Cohort-weighted kNZD/yr at J=2-3 (Public/Remediation nodes 5, 6, 7)
+Adol_Step_Dollars = zeros(1, 4); % Cohort-weighted kNZD/yr at J=5   (Public/Remediation nodes 9, 10, 11, 12)
+Whanau_Care_G1_G2 = zeros(1, 2); % [Node 2 Waring Unpaid Whanau Care kNZD/yr, Node 2 AS Landlord Capture kNZD/yr]
 
-    Age30_Fiscal     = zeros(3, 6);  % 3 Skill Tiers x 6 Gate-5 Nodes (Nodes 17..22)
-    CareerRet_Fiscal = zeros(3, 6);  % 3 Skill Tiers x 6 Gate-6 Nodes (Nodes 23..28)
+Age30_Fiscal     = zeros(3, 6);  % 3 Skill Tiers x 6 Gate-5 Nodes (Nodes 17..22)
+CareerRet_Fiscal = zeros(3, 6);  % 3 Skill Tiers x 6 Gate-6 Nodes (Nodes 23..28)
 
-    Q_base_Map   = struct('Rural', 1.05, 'Small', 1.40, 'Urban', 1.75, 'Large', 2.05, 'Auckland', 3.10);
-    Q_mult_Map   = struct('Rural', 0.990, 'Small', 0.975, 'Urban', 0.960, 'Large', 0.950, 'Auckland', 0.925);
-    K_whanau_Map = struct('Rural', 0.42, 'Small', 0.38, 'Urban', 0.34, 'Large', 0.32, 'Auckland', 0.28);
+Q_base_Map   = struct('Rural', 1.05, 'Small', 1.40, 'Urban', 1.75, 'Large', 2.05, 'Auckland', 3.10);
+Q_mult_Map   = struct('Rural', 0.990, 'Small', 0.975, 'Urban', 0.960, 'Large', 0.950, 'Auckland', 0.925);
+K_whanau_Map = struct('Rural', 0.42, 'Small', 0.38, 'Urban', 0.34, 'Large', 0.32, 'Auckland', 0.28);
 
-    % Precompute lower cell boundaries a_{i-1} for continuous sub-grid linear interpolation on a_vec:
-    a_dbl      = double(a_vec(:));
-    da_first   = max(1e-6, a_dbl(2) - a_dbl(1));
-    a_prev_dbl = [a_dbl(1) - da_first; a_dbl(1:end-1)];
-    da_span    = max(1e-8, a_dbl - a_prev_dbl);
+% Precompute lower cell boundaries a_{i-1} for continuous sub-grid linear interpolation on a_vec:
+a_dbl      = double(a_vec(:));
+da_first   = max(1e-6, a_dbl(2) - a_dbl(1));
+a_prev_dbl = [a_dbl(1) - da_first; a_dbl(1:end-1)];
+da_span    = max(1e-8, a_dbl - a_prev_dbl);
 
-    use_gpu = (gpuDeviceCount > 0);
+use_gpu = (gpuDeviceCount > 0);
 
-    for r_i = 1:length(reg_list)
-        reg     = reg_list{r_i};
-        w_reg   = pop_weights(r_i);
-        hh_type = ['HH_', reg];
-        Dist_k  = Dist_Sim.(hh_type);
-        Pol_k   = Pol_Sim.(hh_type);
+for r_i = 1:length(reg_list)
+    reg     = reg_list{r_i};
+    w_reg   = pop_weights(r_i);
+    hh_type = ['HH_', reg];
+    Dist_k  = Dist_Sim.(hh_type);
+    Pol_k   = Pol_Sim.(hh_type);
 
-        Q_house = P_Sim.Q_reg.(hh_type);
-        Q_base  = Q_house;
-        if isfield(Q_base_Map, reg), Q_base = Q_base_Map.(reg); end
-        if is_reform_panel && isfield(Q_base_Map, reg) && abs(Q_house - Q_base_Map.(reg)) < 1e-3
-            Q_house = Q_house * Q_mult_Map.(reg);
-        end
+    Q_house = P_Sim.Q_reg.(hh_type);
+    Q_base  = Q_house;
+    if isfield(Q_base_Map, reg), Q_base = Q_base_Map.(reg); end
+    if is_reform_panel && isfield(Q_base_Map, reg) && abs(Q_house - Q_base_Map.(reg)) < 1e-3
+        Q_house = Q_house * Q_mult_Map.(reg);
+    end
 
-        % Extract effective regional alloparental whanau care capacity K_whanau(k) (Marilyn Waring buffer)
-        if isfield(P_Sim, 'K_whanau') && isfield(P_Sim.K_whanau, hh_type)
-            K_whanau_k = P_Sim.K_whanau.(hh_type);
-        elseif isfield(K_whanau_Map, reg)
-            K_whanau_k = K_whanau_Map.(reg) * ((Q_base / max(0.5, Q_house)) ^ 0.35);
-        else
-            K_whanau_k = 0.34;
-        end
+    % Extract effective regional alloparental whanau care capacity K_whanau(k) (Marilyn Waring buffer)
+    if isfield(P_Sim, 'K_whanau') && isfield(P_Sim.K_whanau, hh_type)
+        K_whanau_k = P_Sim.K_whanau.(hh_type);
+    elseif isfield(K_whanau_Map, reg)
+        K_whanau_k = K_whanau_Map.(reg) * ((Q_base / max(0.5, Q_house)) ^ 0.35);
+    else
+        K_whanau_k = 0.34;
+    end
 
-        w_mkt = getfield_def(P_Sim, 'w', 1.0);
-        if isfield(P_Sim, 'w_reg') && isfield(P_Sim.w_reg, hh_type)
-            w_mkt = P_Sim.w_reg.(hh_type);
-        end
-        if is_reform_panel, w_mkt = w_mkt * 1.042; end
+    w_mkt = getfield_def(P_Sim, 'w', 1.0);
+    if isfield(P_Sim, 'w_reg') && isfield(P_Sim.w_reg, hh_type)
+        w_mkt = P_Sim.w_reg.(hh_type);
+    end
+    if is_reform_panel, w_mkt = w_mkt * 1.042; end
 
-        if use_gpu
-            Dist_G     = gpuArray(double(Dist_k));
-            Pol_G      = gpuArray(double(Pol_k));
-            a_G        = gpuArray(reshape(a_dbl,      [n_a1, 1, 1, 1]));
-            a_prev_G   = gpuArray(reshape(a_prev_dbl, [n_a1, 1, 1, 1]));
-            da_G       = gpuArray(reshape(da_span,    [n_a1, 1, 1, 1]));
-            h_G        = gpuArray(reshape(double(h_vec), [1, n_h, 1, 1]));
-            z_G        = gpuArray(reshape(double(z_vec), [1, 1, n_z1, 1]));
-            l_G        = gpuArray(double(l_vec(:)));
-            Ih_G       = gpuArray(double(Ih_vec(:)));
-            ic_G       = gpuArray(double(ic_vec(:)));
-            z_idx_3D   = gpuArray(reshape(1:n_z1, [1, 1, n_z1, 1]));
-            log_h_dst5 = gpuArray(reshape(log(double(h_vec)), [1, 1, 1, 1, n_h]));
-        else
-            Dist_G     = double(Dist_k);
-            Pol_G      = double(Pol_k);
-            a_G        = reshape(a_dbl,      [n_a1, 1, 1, 1]);
-            a_prev_G   = reshape(a_prev_dbl, [n_a1, 1, 1, 1]);
-            da_G       = reshape(da_span,    [n_a1, 1, 1, 1]);
-            h_G        = reshape(double(h_vec), [1, n_h, 1, 1]);
-            z_G        = reshape(double(z_vec), [1, 1, n_z1, 1]);
-            l_G        = double(l_vec(:));
-            Ih_G       = double(Ih_vec(:));
-            ic_G       = double(ic_vec(:));
-            z_idx_3D   = reshape(1:n_z1, [1, 1, n_z1, 1]);
-            log_h_dst5 = reshape(log(double(h_vec)), [1, 1, 1, 1, n_h]);
-        end
+    if use_gpu
+        Dist_G     = gpuArray(double(Dist_k));
+        Pol_G      = gpuArray(double(Pol_k));
+        a_G        = gpuArray(reshape(a_dbl,      [n_a1, 1, 1, 1]));
+        a_prev_G   = gpuArray(reshape(a_prev_dbl, [n_a1, 1, 1, 1]));
+        da_G       = gpuArray(reshape(da_span,    [n_a1, 1, 1, 1]));
+        h_G        = gpuArray(reshape(double(h_vec), [1, n_h, 1, 1]));
+        z_G        = gpuArray(reshape(double(z_vec), [1, 1, n_z1, 1]));
+        l_G        = gpuArray(double(l_vec(:)));
+        Ih_G       = gpuArray(double(Ih_vec(:)));
+        ic_G       = gpuArray(double(ic_vec(:)));
+        z_idx_3D   = gpuArray(reshape(1:n_z1, [1, 1, n_z1, 1]));
+        log_h_dst5 = gpuArray(reshape(log(double(h_vec)), [1, 1, 1, 1, n_h]));
+    else
+        Dist_G     = double(Dist_k);
+        Pol_G      = double(Pol_k);
+        a_G        = reshape(a_dbl,      [n_a1, 1, 1, 1]);
+        a_prev_G   = reshape(a_prev_dbl, [n_a1, 1, 1, 1]);
+        da_G       = reshape(da_span,    [n_a1, 1, 1, 1]);
+        h_G        = reshape(double(h_vec), [1, n_h, 1, 1]);
+        z_G        = reshape(double(z_vec), [1, 1, n_z1, 1]);
+        l_G        = double(l_vec(:));
+        Ih_G       = double(Ih_vec(:));
+        ic_G       = double(ic_vec(:));
+        z_idx_3D   = reshape(1:n_z1, [1, 1, n_z1, 1]);
+        log_h_dst5 = reshape(log(double(h_vec)), [1, 1, 1, 1, n_h]);
+    end
 
-        %% PART A (GPU): GATES 1 TO 4 — SYNCHRONIZED WITH 18-NODE PLOT_CHILDFATES_SSANKEY.M
-        Dist_Fert = Dist_G(:, :, :, fertile_j);
-        tot_p     = max(1e-12, gather(sum(Dist_Fert, 'all')));
-        d_ic_idx  = max(1, min(length(ic_vec), Pol_G(3, :, :, :, fertile_j)));
-        ic_4D     = reshape(ic_G(d_ic_idx(:)), size(Dist_Fert));
-        pwage_4D  = w_mkt .* z_G .* h_G;
+    %% PART A (GPU): GATES 1 TO 4 — SYNCHRONIZED WITH 18-NODE PLOT_CHILDFATES_SSANKEY.M
+    Dist_Fert = Dist_G(:, :, :, fertile_j);
+    tot_p     = max(1e-12, gather(sum(Dist_Fert, 'all')));
+    d_ic_idx  = max(1, min(length(ic_vec), Pol_G(3, :, :, :, fertile_j)));
+    ic_4D     = reshape(ic_G(d_ic_idx(:)), size(Dist_Fert));
+    pwage_4D  = w_mkt .* z_G .* h_G;
 
-        % Continuous sub-grid linear cell interpolation weights on cubic asset grid:
-        w_cell_025 = min(1.0, max(0.0, (0.025 * Q_house - a_prev_G) ./ da_G));
-        w_cell_050 = min(1.0, max(0.0, (0.050 * Q_house - a_prev_G) ./ da_G));
-        w_cell_080 = min(1.0, max(0.0, (0.080 * Q_house - a_prev_G) ./ da_G));
-        w_cell_160 = min(1.0, max(0.0, (0.160 * Q_house - a_prev_G) ./ da_G));
+    % Continuous sub-grid linear cell interpolation weights on cubic asset grid:
+    w_cell_025 = min(1.0, max(0.0, (0.025 * Q_house - a_prev_G) ./ da_G));
+    w_cell_050 = min(1.0, max(0.0, (0.050 * Q_house - a_prev_G) ./ da_G));
+    w_cell_080 = min(1.0, max(0.0, (0.080 * Q_house - a_prev_G) ./ da_G));
+    w_cell_160 = min(1.0, max(0.0, (0.160 * Q_house - a_prev_G) ./ da_G));
 
-        is_hard_4D  = w_cell_080;
-        is_unemp_4D = (z_idx_3D == 1) | (n_z1 >= 5 & (z_idx_3D == 2) & (w_cell_080 > 0.5));
-        m_cash_zero = double(ic_4D <= 1e-5) .* max(w_cell_080, double(z_idx_3D <= 2));
+    is_hard_4D  = w_cell_080;
+    is_unemp_4D = (z_idx_3D == 1) | (n_z1 >= 5 & (z_idx_3D == 2) & (w_cell_080 > 0.5));
+    m_cash_zero = double(ic_4D <= 1e-5) .* max(w_cell_080, double(z_idx_3D <= 2));
 
-        % Gate 1 Population Weights (Matching Fates Nodes 1, 2, 3):
-        w_sev_raw_4D  = max(w_cell_050 .* double(z_idx_3D <= 2), w_cell_025 .* double(z_idx_3D <= 3)) .* ones(size(ic_4D));
-        w_tot_vuln_4D = max(w_sev_raw_4D, max(w_cell_160 .* double(z_idx_3D <= 2), ...
-                        max(w_cell_080 .* double(z_idx_3D <= 3), m_cash_zero)));
-        w_ahc_raw_4D  = max(0.0, w_tot_vuln_4D - w_sev_raw_4D);
+    % Gate 1 Population Weights (Matching Fates Nodes 1, 2, 3):
+    w_sev_raw_4D  = max(w_cell_050 .* double(z_idx_3D <= 2), w_cell_025 .* double(z_idx_3D <= 3)) .* ones(size(ic_4D));
+    w_tot_vuln_4D = max(w_sev_raw_4D, max(w_cell_160 .* double(z_idx_3D <= 2), ...
+        max(w_cell_080 .* double(z_idx_3D <= 3), m_cash_zero)));
+    w_ahc_raw_4D  = max(0.0, w_tot_vuln_4D - w_sev_raw_4D);
 
-        lift_s1_sev = min(0.88, 0.735 * eta_ref);
-        lift_s1_ahc = min(0.82, 0.638 * eta_ref);
-        s1_W1_sev   = (1.00 - lift_s1_sev) .* w_sev_raw_4D;         % Node 1: Severe Material Hardship (DEP-17 9+)
-        s1_W2_ahc   = (1.00 - lift_s1_ahc) .* w_ahc_raw_4D;         % Node 2: Residual AHC Squeeze & Paper Support
-        s1_W4_sec   = max(0.0, 1.00 - s1_W1_sev - s1_W2_ahc);       % Node 4: Secure Parental Asset Buffer
+    lift_s1_sev = min(0.88, 0.735 * eta_ref);
+    lift_s1_ahc = min(0.82, 0.638 * eta_ref);
+    s1_W1_sev   = (1.00 - lift_s1_sev) .* w_sev_raw_4D;         % Node 1: Severe Material Hardship (DEP-17 9+)
+    s1_W2_ahc   = (1.00 - lift_s1_ahc) .* w_ahc_raw_4D;         % Node 2: Residual AHC Squeeze & Paper Support
+    s1_W4_sec   = max(0.0, 1.00 - s1_W1_sev - s1_W2_ahc);       % Node 4: Secure Parental Asset Buffer
 
-        % Gate 2 Population Weights (with Marilyn Waring K_whanau(k) rescue out of ic=0 corner):
-        whanau_rescue_k = min(0.45, 0.32 * K_whanau_k * ((Q_base / max(0.5, Q_house)) ^ 0.25));
-        m_corner = max(0.0, w_sev_raw_4D .* m_cash_zero + (1.0 - whanau_rescue_k) .* w_ahc_raw_4D .* m_cash_zero);
-        m_mod    = max(0.0, (1.0 - m_corner) .* double((ic_4D <= 1e-5) | (ic_4D <= 0.35 * max(ic_vec))));
-        m_high   = max(0.0, 1.0 - m_corner - m_mod);
+    % Gate 2 Population Weights (with Marilyn Waring K_whanau(k) rescue out of ic=0 corner):
+    whanau_rescue_k = min(0.45, 0.32 * K_whanau_k * ((Q_base / max(0.5, Q_house)) ^ 0.25));
+    m_corner = max(0.0, w_sev_raw_4D .* m_cash_zero + (1.0 - whanau_rescue_k) .* w_ahc_raw_4D .* m_cash_zero);
+    m_mod    = max(0.0, (1.0 - m_corner) .* double((ic_4D <= 1e-5) | (ic_4D <= 0.35 * max(ic_vec))));
+    m_high   = max(0.0, 1.0 - m_corner - m_mod);
 
-        lift_s2 = min(0.92, 0.78 * eta_ref);
-        s2_W1   = (1.00 - lift_s2) .* m_corner;
-        s2_W2   = lift_s2 .* m_corner + 1.00 .* m_mod;
-        s2_W3   = 1.00 .* m_high;
-        s2_W_5D = cat(5, s2_W1, s2_W2, s2_W3);
+    lift_s2 = min(0.92, 0.78 * eta_ref);
+    s2_W1   = (1.00 - lift_s2) .* m_corner;
+    s2_W2   = lift_s2 .* m_corner + 1.00 .* m_mod;
+    s2_W3   = 1.00 .* m_high;
+    s2_W_5D = cat(5, s2_W1, s2_W2, s2_W3);
 
-        % --- GATE 1 (J = 1, Birth, Age 0): FOUR BIRTH FISCAL FLOWS (kNZD/yr per cohort birth) ---
-        %   (1) Node 1: Acute Hardship Tier 3 Support (Deep Crimson — Special Needs, Emergency Housing, OT crisis)
-        %   (2) Node 2: Residual AHC Paper Support & Landlord Capture (Burnt Rust — AS rent capture + abated WfF)
-        %   (3) Node 3: Universal Birth Benefit (Steel Blue — PPL + BestStart + LMC, 100% of births)
-        %   (4) Node 4: Private Birth Out-of-Pocket (Warm Gold — Secure parental setup & time)
-        Acute_Birth_4D = NZD_Scale .* (0.195 .* s1_W1_sev + 0.045 .* double(z_idx_3D == 1) .* s1_W1_sev);
-        AHC_Paper_4D   = NZD_Scale .* ((0.095 + 0.028 * max(0, Q_house - 1.0)) .* s1_W2_ahc);
-        if is_reform_panel
-            Univ_Birth_4D = NZD_Scale .* (0.142 + 0.045 * eta_ref + 0 .* Dist_Fert);
-        else
-            Univ_Birth_4D = NZD_Scale .* (0.142 + 0 .* Dist_Fert);
-        end
-        Priv_Birth_4D = NZD_Scale .* (0.045 * Q_house + 0.120 .* pwage_4D .* (0.25 + 0.75 .* (1.0 - m_corner)) + 0.55 .* (1 - s_sub) .* ic_4D);
+    % --- GATE 1 (J = 1, Birth, Age 0): FOUR BIRTH FISCAL FLOWS (kNZD/yr per cohort birth) ---
+    %   (1) Node 1: Acute Hardship Tier 3 Support (Deep Crimson — Special Needs, Emergency Housing, OT crisis)
+    %   (2) Node 2: Residual AHC Paper Support & Landlord Capture (Burnt Rust — AS rent capture + abated WfF)
+    %   (3) Node 3: Universal Birth Benefit (Steel Blue — PPL + BestStart + LMC, 100% of births)
+    %   (4) Node 4: Private Birth Out-of-Pocket (Warm Gold — Secure parental setup & time)
+    Acute_Birth_4D = NZD_Scale .* (0.195 .* s1_W1_sev + 0.045 .* double(z_idx_3D == 1) .* s1_W1_sev);
+    AHC_Paper_4D   = NZD_Scale .* ((0.095 + 0.028 * max(0, Q_house - 1.0)) .* s1_W2_ahc);
+    if is_reform_panel
+        Univ_Birth_4D = NZD_Scale .* (0.142 + 0.045 * eta_ref + 0 .* Dist_Fert);
+    else
+        Univ_Birth_4D = NZD_Scale .* (0.142 + 0 .* Dist_Fert);
+    end
+    Priv_Birth_4D = NZD_Scale .* (0.045 * Q_house + 0.120 .* pwage_4D .* (0.25 + 0.75 .* (1.0 - m_corner)) + 0.55 .* (1 - s_sub) .* ic_4D);
 
-        % Track Marilyn Waring unpaid whanau care valuation (Lane B) vs AS Landlord Capture (Lane D) in Node 2:
-        waring_whanau_kNZD = NZD_Scale * gather(sum(Dist_Fert .* s1_W2_ahc .* (0.085 * K_whanau_k .* pwage_4D), 'all')) / tot_p;
-        as_landlord_kNZD   = NZD_Scale * gather(sum(Dist_Fert .* AHC_Paper_4D, 'all')) / tot_p;
-        Whanau_Care_G1_G2  = Whanau_Care_G1_G2 + w_reg * [waring_whanau_kNZD, as_landlord_kNZD];
+    % Track Marilyn Waring unpaid whanau care valuation (Lane B) vs AS Landlord Capture (Lane D) in Node 2:
+    waring_whanau_kNZD = NZD_Scale * gather(sum(Dist_Fert .* s1_W2_ahc .* (0.085 * K_whanau_k .* pwage_4D), 'all')) / tot_p;
+    as_landlord_kNZD   = NZD_Scale * gather(sum(Dist_Fert .* AHC_Paper_4D, 'all')) / tot_p;
+    Whanau_Care_G1_G2  = Whanau_Care_G1_G2 + w_reg * [waring_whanau_kNZD, as_landlord_kNZD];
 
-        reg_Pop_S1 = [gather(sum(Dist_Fert .* s1_W1_sev, 'all')) / tot_p, ...
-                      gather(sum(Dist_Fert .* s1_W2_ahc, 'all')) / tot_p, ...
-                      1.00, ...
-                      gather(sum(Dist_Fert .* s1_W4_sec, 'all')) / tot_p];
+    reg_Pop_S1 = [gather(sum(Dist_Fert .* s1_W1_sev, 'all')) / tot_p, ...
+        gather(sum(Dist_Fert .* s1_W2_ahc, 'all')) / tot_p, ...
+        1.00, ...
+        gather(sum(Dist_Fert .* s1_W4_sec, 'all')) / tot_p];
 
-        reg_F12    = zeros(4, 3);
-        reg_Pop_S2 = zeros(1, 3);
-        for s2_i = 1:3
-            ws = s2_W_5D(:, :, :, :, s2_i);
-            reg_Pop_S2(s2_i) = gather(sum(Dist_Fert .* ws, 'all')) / tot_p;
-            reg_F12(1, s2_i) = gather(sum(Dist_Fert .* Acute_Birth_4D .* ws, 'all')) / tot_p;
-            reg_F12(2, s2_i) = gather(sum(Dist_Fert .* AHC_Paper_4D   .* ws, 'all')) / tot_p;
-            reg_F12(3, s2_i) = gather(sum(Dist_Fert .* Univ_Birth_4D  .* ws, 'all')) / tot_p;
-            reg_F12(4, s2_i) = gather(sum(Dist_Fert .* Priv_Birth_4D  .* ws, 'all')) / tot_p;
-        end
+    reg_F12    = zeros(4, 3);
+    reg_Pop_S2 = zeros(1, 3);
+    for s2_i = 1:3
+        ws = s2_W_5D(:, :, :, :, s2_i);
+        reg_Pop_S2(s2_i) = gather(sum(Dist_Fert .* ws, 'all')) / tot_p;
+        reg_F12(1, s2_i) = gather(sum(Dist_Fert .* Acute_Birth_4D .* ws, 'all')) / tot_p;
+        reg_F12(2, s2_i) = gather(sum(Dist_Fert .* AHC_Paper_4D   .* ws, 'all')) / tot_p;
+        reg_F12(3, s2_i) = gather(sum(Dist_Fert .* Univ_Birth_4D  .* ws, 'all')) / tot_p;
+        reg_F12(4, s2_i) = gather(sum(Dist_Fert .* Priv_Birth_4D  .* ws, 'all')) / tot_p;
+    end
 
-        % --- GATE 2 (J = 2..3, First 2000 Days ECE Gate) ANNUAL COST FLOWS (kNZD/yr per cohort child) ---
-        ECE_Corner_Need_4D = NZD_Scale .* (0.135 + 0.085 .* is_hard_4D + 0.065 .* double(is_unemp_4D));
-        ECE_PubMod_Cost_4D = NZD_Scale .* (G_ece_eff + 0.045 + s_sub .* ic_4D);
-        ECE_High_Cost_4D   = NZD_Scale .* (G_ece_eff + 0.065 + s_sub .* ic_4D);
+    % --- GATE 2 (J = 2..3, First 2000 Days ECE Gate) ANNUAL COST FLOWS (kNZD/yr per cohort child) ---
+    ECE_Corner_Need_4D = NZD_Scale .* (0.135 + 0.085 .* is_hard_4D + 0.065 .* double(is_unemp_4D));
+    ECE_PubMod_Cost_4D = NZD_Scale .* (G_ece_eff + 0.045 + s_sub .* ic_4D);
+    ECE_High_Cost_4D   = NZD_Scale .* (G_ece_eff + 0.065 + s_sub .* ic_4D);
 
-        reg_ECE_Step = [gather(sum(Dist_Fert .* ECE_Corner_Need_4D .* s2_W1, 'all')) / tot_p, ...
-                        gather(sum(Dist_Fert .* ECE_PubMod_Cost_4D .* s2_W2, 'all')) / tot_p, ...
-                        gather(sum(Dist_Fert .* ECE_High_Cost_4D   .* s2_W3, 'all')) / tot_p];
+    reg_ECE_Step = [gather(sum(Dist_Fert .* ECE_Corner_Need_4D .* s2_W1, 'all')) / tot_p, ...
+        gather(sum(Dist_Fert .* ECE_PubMod_Cost_4D .* s2_W2, 'all')) / tot_p, ...
+        gather(sum(Dist_Fert .* ECE_High_Cost_4D   .* s2_W3, 'all')) / tot_p];
 
-        % --- GATE 3 (J = 5, Ages 12-14 Adolescent Gate): OPTION 2 SPLIT OF NODE 9 (HH UNEMP) VS NODE 10 (CAMHS/ACC ISSC) ---
-        if ~is_reform_panel
-            P_unemp = [0.82, 0.16, 0.02; 0.55, 0.37, 0.08; 0.28, 0.54, 0.18];
-            P_stabl = [0.35, 0.58, 0.07; 0.12, 0.68, 0.20; 0.05, 0.55, 0.40];
-            psy_share_of_stress = 0.346; % In SS0: ~8.90 kNZD HH Unemp/Truancy vs ~4.70 kNZD CAMHS/ACC ISSC (out of 13.60 kNZD)
-        else
-            P_unemp = [0.38, 0.34, 0.28; 0.16, 0.36, 0.48; 0.08, 0.30, 0.62];
-            P_stabl = [0.14, 0.46, 0.40; 0.04, 0.38, 0.58; 0.02, 0.26, 0.72];
-            psy_share_of_stress = 0.560; % In SS1: ~1.10 kNZD HH Unemp vs ~1.40 kNZD CAMHS/ACC 38% Clinical Floor (out of 2.50 kNZD)
-        end
+    % --- GATE 3 (J = 5, Ages 12-14 Adolescent Gate): OPTION 2 SPLIT OF NODE 9 (HH UNEMP) VS NODE 10 (CAMHS/ACC ISSC) ---
+    if ~is_reform_panel
+        P_unemp = [0.82, 0.16, 0.02; 0.55, 0.37, 0.08; 0.28, 0.54, 0.18];
+        P_stabl = [0.35, 0.58, 0.07; 0.12, 0.68, 0.20; 0.05, 0.55, 0.40];
+        psy_share_of_stress = 0.346; % In SS0: ~8.90 kNZD HH Unemp/Truancy vs ~4.70 kNZD CAMHS/ACC ISSC (out of 13.60 kNZD)
+    else
+        P_unemp = [0.38, 0.34, 0.28; 0.16, 0.36, 0.48; 0.08, 0.30, 0.62];
+        P_stabl = [0.14, 0.46, 0.40; 0.04, 0.38, 0.58; 0.02, 0.26, 0.72];
+        psy_share_of_stress = 0.560; % In SS1: ~1.10 kNZD HH Unemp vs ~1.40 kNZD CAMHS/ACC 38% Clinical Floor (out of 2.50 kNZD)
+    end
 
-        Adol_Cost_TotStress_4D = NZD_Scale .* (0.100 + 0.120 + 0.126 + 0.068 + 0.045 .* is_hard_4D);
-        Adol_Cost_Node9_HH_4D  = (1.0 - psy_share_of_stress) .* Adol_Cost_TotStress_4D; % Node 9: HH Unemp & Truancy Remediation
-        Adol_Cost_Node10_Psy4D = psy_share_of_stress         .* Adol_Cost_TotStress_4D; % Node 10: Psychosocial CAMHS & ACC ISSC
-        Adol_Cost_Node11_Sch4D = NZD_Scale .* (0.105 + s_sub .* ic_4D + 0 .* Dist_Fert);         % Node 11: Public Schooling (d_2)
-        Adol_Cost_Node12_Tua4D = NZD_Scale .* (0.105 + 0.038 + s_sub .* ic_4D + 0 .* Dist_Fert); % Node 12: Montessori / Tuakana
+    Adol_Cost_TotStress_4D = NZD_Scale .* (0.100 + 0.120 + 0.126 + 0.068 + 0.045 .* is_hard_4D);
+    Adol_Cost_Node9_HH_4D  = (1.0 - psy_share_of_stress) .* Adol_Cost_TotStress_4D; % Node 9: HH Unemp & Truancy Remediation
+    Adol_Cost_Node10_Psy4D = psy_share_of_stress         .* Adol_Cost_TotStress_4D; % Node 10: Psychosocial CAMHS & ACC ISSC
+    Adol_Cost_Node11_Sch4D = NZD_Scale .* (0.105 + s_sub .* ic_4D + 0 .* Dist_Fert);         % Node 11: Public Schooling (d_2)
+    Adol_Cost_Node12_Tua4D = NZD_Scale .* (0.105 + 0.038 + s_sub .* ic_4D + 0 .* Dist_Fert); % Node 12: Montessori / Tuakana
 
-        % Gate 3 -> Gate 4 (J = 6..7 Adult Skill Launch) Gaussian Transitions
-        ic_eff_4D  = max(ic_4D, 0.185 .* (1.0 - m_corner));
-        inv_gap_4D = log(ic_eff_4D + G_ece_eff + 0.02) - log(0.20 + 0.05 + 0.02);
-        if strcmpi(Calibration_Anchor, 'Dunedin_22')
-            crowd_pen_4D = 0.14 * log(max(1.0, Q_house)) .* is_hard_4D;
-            grid_anchor  = +0.265;
-        else
-            crowd_pen_4D = 0.18 * log(max(1.0, Q_house)) .* is_hard_4D;
-            grid_anchor  = +0.105;
-        end
+    % Gate 3 -> Gate 4 (J = 6..7 Adult Skill Launch) Gaussian Transitions
+    ic_eff_4D  = max(ic_4D, 0.185 .* (1.0 - m_corner));
+    inv_gap_4D = log(ic_eff_4D + G_ece_eff + 0.02) - log(0.20 + 0.05 + 0.02);
+    if strcmpi(Calibration_Anchor, 'Dunedin_22')
+        crowd_pen_4D = 0.14 * log(max(1.0, Q_house)) .* is_hard_4D;
+        grid_anchor  = +0.265;
+    else
+        crowd_pen_4D = 0.18 * log(max(1.0, Q_house)) .* is_hard_4D;
+        grid_anchor  = +0.105;
+    end
 
-        base_log_h_4D = rho_hc .* log(h_G) + gamma_ic .* inv_gap_4D - crowd_pen_4D + grid_anchor;
-        s3_shifts     = [-0.22, 0.00, montessori_bank];
+    base_log_h_4D = rho_hc .* log(h_G) + gamma_ic .* inv_gap_4D - crowd_pen_4D + grid_anchor;
+    s3_shifts     = [-0.22, 0.00, montessori_bank];
 
-        p_st_cell = cell(1, 3); p_co_cell = cell(1, 3); p_th_cell = cell(1, 3);
+    p_st_cell = cell(1, 3); p_co_cell = cell(1, 3); p_th_cell = cell(1, 3);
+    for s3_i = 1:3
+        mean_4D = base_log_h_4D + s3_shifts(s3_i);
+        pdf_5D  = exp(-0.5 .* ((log_h_dst5 - mean_4D) ./ sig_hc).^2);
+        pdf_5D  = pdf_5D ./ sum(pdf_5D, 5);
+        p_st_cell{s3_i} = sum(pdf_5D(:, :, :, :, 1:2), 5);
+        p_co_cell{s3_i} = sum(pdf_5D(:, :, :, :, 3:5), 5);
+        p_th_cell{s3_i} = sum(pdf_5D(:, :, :, :, 6:7), 5);
+    end
+
+    reg_F23_raw   = zeros(3, 4); % Columns: [9_HH_Unemp, 10_Psychosocial_CAMHS_ACC, 11_Public_School, 12_Tuakana]
+    reg_F34_raw   = zeros(4, 3);
+    reg_Pop_S3    = zeros(1, 4);
+    reg_Pop_S4    = zeros(1, 3);
+    reg_Adol_Step = zeros(1, 4);
+
+    for s2_i = 1:3
+        ws2     = s2_W_5D(:, :, :, :, s2_i);
+        mass_s2 = Dist_Fert .* ws2;
         for s3_i = 1:3
-            mean_4D = base_log_h_4D + s3_shifts(s3_i);
-            pdf_5D  = exp(-0.5 .* ((log_h_dst5 - mean_4D) ./ sig_hc).^2);
-            pdf_5D  = pdf_5D ./ sum(pdf_5D, 5);
-            p_st_cell{s3_i} = sum(pdf_5D(:, :, :, :, 1:2), 5);
-            p_co_cell{s3_i} = sum(pdf_5D(:, :, :, :, 3:5), 5);
-            p_th_cell{s3_i} = sum(pdf_5D(:, :, :, :, 6:7), 5);
-        end
+            p_s3_4D = P_unemp(s2_i, s3_i) .* double(is_unemp_4D) + P_stabl(s2_i, s3_i) .* (1.0 - double(is_unemp_4D));
+            mass_s3 = mass_s2 .* p_s3_4D;
+            m_share = gather(sum(mass_s3, 'all')) / tot_p;
 
-        reg_F23_raw   = zeros(3, 4); % Columns: [9_HH_Unemp, 10_Psychosocial_CAMHS_ACC, 11_Public_School, 12_Tuakana]
-        reg_F34_raw   = zeros(4, 3);
-        reg_Pop_S3    = zeros(1, 4);
-        reg_Pop_S4    = zeros(1, 3);
-        reg_Adol_Step = zeros(1, 4);
+            m_st = gather(sum(mass_s3 .* p_st_cell{s3_i}, 'all')) / tot_p;
+            m_co = gather(sum(mass_s3 .* p_co_cell{s3_i}, 'all')) / tot_p;
+            m_th = gather(sum(mass_s3 .* p_th_cell{s3_i}, 'all')) / tot_p;
 
-        for s2_i = 1:3
-            ws2     = s2_W_5D(:, :, :, :, s2_i);
-            mass_s2 = Dist_Fert .* ws2;
-            for s3_i = 1:3
-                p_s3_4D = P_unemp(s2_i, s3_i) .* double(is_unemp_4D) + P_stabl(s2_i, s3_i) .* (1.0 - double(is_unemp_4D));
-                mass_s3 = mass_s2 .* p_s3_4D;
-                m_share = gather(sum(mass_s3, 'all')) / tot_p;
+            if s3_i == 1
+                % Split Gate 3 stress state into Node 9 (HH Unemp/Truancy) and Node 10 (Psychosocial CAMHS/ACC ISSC)
+                sh_hh  = (1.0 - psy_share_of_stress) * m_share;
+                sh_psy = psy_share_of_stress         * m_share;
+                reg_Pop_S3(1)    = reg_Pop_S3(1)    + sh_hh;
+                reg_Pop_S3(2)    = reg_Pop_S3(2)    + sh_psy;
+                reg_Adol_Step(1) = reg_Adol_Step(1) + gather(sum(mass_s3 .* Adol_Cost_Node9_HH_4D,  'all')) / tot_p;
+                reg_Adol_Step(2) = reg_Adol_Step(2) + gather(sum(mass_s3 .* Adol_Cost_Node10_Psy4D, 'all')) / tot_p;
+                reg_F23_raw(s2_i, 1) = sh_hh;
+                reg_F23_raw(s2_i, 2) = sh_psy;
 
-                m_st = gather(sum(mass_s3 .* p_st_cell{s3_i}, 'all')) / tot_p;
-                m_co = gather(sum(mass_s3 .* p_co_cell{s3_i}, 'all')) / tot_p;
-                m_th = gather(sum(mass_s3 .* p_th_cell{s3_i}, 'all')) / tot_p;
-
-                if s3_i == 1
-                    % Split Gate 3 stress state into Node 9 (HH Unemp/Truancy) and Node 10 (Psychosocial CAMHS/ACC ISSC)
-                    sh_hh  = (1.0 - psy_share_of_stress) * m_share;
-                    sh_psy = psy_share_of_stress         * m_share;
-                    reg_Pop_S3(1)    = reg_Pop_S3(1)    + sh_hh;
-                    reg_Pop_S3(2)    = reg_Pop_S3(2)    + sh_psy;
-                    reg_Adol_Step(1) = reg_Adol_Step(1) + gather(sum(mass_s3 .* Adol_Cost_Node9_HH_4D,  'all')) / tot_p;
-                    reg_Adol_Step(2) = reg_Adol_Step(2) + gather(sum(mass_s3 .* Adol_Cost_Node10_Psy4D, 'all')) / tot_p;
-                    reg_F23_raw(s2_i, 1) = sh_hh;
-                    reg_F23_raw(s2_i, 2) = sh_psy;
-
-                    reg_F34_raw(1, :) = reg_F34_raw(1, :) + (1.0 - psy_share_of_stress) * [m_st, m_co, m_th];
-                    reg_F34_raw(2, :) = reg_F34_raw(2, :) + psy_share_of_stress         * [m_st, m_co, m_th];
-                elseif s3_i == 2
-                    reg_Pop_S3(3)    = reg_Pop_S3(3)    + m_share;
-                    reg_Adol_Step(3) = reg_Adol_Step(3) + gather(sum(mass_s3 .* Adol_Cost_Node11_Sch4D, 'all')) / tot_p;
-                    reg_F23_raw(s2_i, 3) = m_share;
-                    reg_F34_raw(3, :)    = reg_F34_raw(3, :) + [m_st, m_co, m_th];
-                else
-                    reg_Pop_S3(4)    = reg_Pop_S3(4)    + m_share;
-                    reg_Adol_Step(4) = reg_Adol_Step(4) + gather(sum(mass_s3 .* Adol_Cost_Node12_Tua4D, 'all')) / tot_p;
-                    reg_F23_raw(s2_i, 4) = m_share;
-                    reg_F34_raw(4, :)    = reg_F34_raw(4, :) + [m_st, m_co, m_th];
-                end
-
-                reg_Pop_S4(1) = reg_Pop_S4(1) + m_st;
-                reg_Pop_S4(2) = reg_Pop_S4(2) + m_co;
-                reg_Pop_S4(3) = reg_Pop_S4(3) + m_th;
+                reg_F34_raw(1, :) = reg_F34_raw(1, :) + (1.0 - psy_share_of_stress) * [m_st, m_co, m_th];
+                reg_F34_raw(2, :) = reg_F34_raw(2, :) + psy_share_of_stress         * [m_st, m_co, m_th];
+            elseif s3_i == 2
+                reg_Pop_S3(3)    = reg_Pop_S3(3)    + m_share;
+                reg_Adol_Step(3) = reg_Adol_Step(3) + gather(sum(mass_s3 .* Adol_Cost_Node11_Sch4D, 'all')) / tot_p;
+                reg_F23_raw(s2_i, 3) = m_share;
+                reg_F34_raw(3, :)    = reg_F34_raw(3, :) + [m_st, m_co, m_th];
+            else
+                reg_Pop_S3(4)    = reg_Pop_S3(4)    + m_share;
+                reg_Adol_Step(4) = reg_Adol_Step(4) + gather(sum(mass_s3 .* Adol_Cost_Node12_Tua4D, 'all')) / tot_p;
+                reg_F23_raw(s2_i, 4) = m_share;
+                reg_F34_raw(4, :)    = reg_F34_raw(4, :) + [m_st, m_co, m_th];
             end
-        end
 
-        Flow_S1_to_S2     = Flow_S1_to_S2     + w_reg * reg_F12;
-        Flow_S2_to_S3     = Flow_S2_to_S3     + w_reg * reg_F23_raw;
-        Flow_S3_to_S4     = Flow_S3_to_S4     + w_reg * reg_F34_raw;
-        Pop_S1_Birth      = Pop_S1_Birth      + w_reg * reg_Pop_S1;
-        Pop_S2_ECE        = Pop_S2_ECE        + w_reg * reg_Pop_S2;
-        Pop_S3_Adol       = Pop_S3_Adol       + w_reg * reg_Pop_S3;
-        Pop_S4_Skill      = Pop_S4_Skill      + w_reg * (reg_Pop_S4 / max(1e-12, sum(reg_Pop_S4)));
-        ECE_Step_Dollars  = ECE_Step_Dollars  + w_reg * reg_ECE_Step;
-        Adol_Step_Dollars = Adol_Step_Dollars + w_reg * reg_Adol_Step;
+            reg_Pop_S4(1) = reg_Pop_S4(1) + m_st;
+            reg_Pop_S4(2) = reg_Pop_S4(2) + m_co;
+            reg_Pop_S4(3) = reg_Pop_S4(3) + m_th;
+        end
+    end
+
+    Flow_S1_to_S2     = Flow_S1_to_S2     + w_reg * reg_F12;
+    Flow_S2_to_S3     = Flow_S2_to_S3     + w_reg * reg_F23_raw;
+    Flow_S3_to_S4     = Flow_S3_to_S4     + w_reg * reg_F34_raw;
+    Pop_S1_Birth      = Pop_S1_Birth      + w_reg * reg_Pop_S1;
+    Pop_S2_ECE        = Pop_S2_ECE        + w_reg * reg_Pop_S2;
+    Pop_S3_Adol       = Pop_S3_Adol       + w_reg * reg_Pop_S3;
+    Pop_S4_Skill      = Pop_S4_Skill      + w_reg * (reg_Pop_S4 / max(1e-12, sum(reg_Pop_S4)));
+    ECE_Step_Dollars  = ECE_Step_Dollars  + w_reg * reg_ECE_Step;
+    Adol_Step_Dollars = Adol_Step_Dollars + w_reg * reg_Adol_Step;
 
     %% PART B (GPU): GATES 5 & 6 — ALL 4 BARNARDOS EXITS VS. TAX REVENUES BY CATEGORY
     d_l_all  = max(1, min(n_l,  Pol_G(1, :, :, :, :)));
@@ -594,345 +594,345 @@ Flow_S1_to_S2 = zeros(4, 3); % 4 Gate-1 Birth Nodes -> 3 Gate-2 Public/Corner St
 end
 
 %% HARMONIZE 6-GATE (28-NODE) FLOW SCALES & SPLIT PRIVATE PARENTAL COMMITMENT INTO NODE 8 (GATE 2) & NODE 13 (GATE 3)
-    Pop_Priv_G1_G2  = 1.0 - Pop_S2_ECE(1);                 % ~76.0% in SS0 -> ~94.3% in SS1
-    Pop_Priv_G3     = 1.0 - sum(Pop_S3_Adol(1:2));         % ~81.1% in SS0 -> ~95.1% in SS1
-    Pop_S1_Birth(4) = max(0.0, 1.0 - Pop_S1_Birth(1) - Pop_S1_Birth(2));
+Pop_Priv_G1_G2  = 1.0 - Pop_S2_ECE(1);                 % ~76.0% in SS0 -> ~94.3% in SS1
+Pop_Priv_G3     = 1.0 - sum(Pop_S3_Adol(1:2));         % ~81.1% in SS0 -> ~95.1% in SS1
+Pop_S1_Birth(4) = max(0.0, 1.0 - Pop_S1_Birth(1) - Pop_S1_Birth(2));
 
-    Pop_S2_ECE_4Node  = [Pop_S2_ECE(1), Pop_S2_ECE(2), Pop_S2_ECE(3), Pop_Priv_G1_G2];
-    Pop_S3_Adol_5Node = [Pop_S3_Adol(1), Pop_S3_Adol(2), Pop_S3_Adol(3), Pop_S3_Adol(4), Pop_Priv_G3];
+Pop_S2_ECE_4Node  = [Pop_S2_ECE(1), Pop_S2_ECE(2), Pop_S2_ECE(3), Pop_Priv_G1_G2];
+Pop_S3_Adol_5Node = [Pop_S3_Adol(1), Pop_S3_Adol(2), Pop_S3_Adol(3), Pop_S3_Adol(4), Pop_Priv_G3];
 
-    if ~is_reform_panel
-        cond_priv_G2 = 18.50;
-        cond_priv_G3 = 19.00;
+if ~is_reform_panel
+    cond_priv_G2 = 18.50;
+    cond_priv_G3 = 19.00;
+else
+    cond_priv_G2 = 18.70;
+    cond_priv_G3 = 19.80;
+end
+Priv_Cohort_G2 = Pop_Priv_G1_G2 * cond_priv_G2;
+Priv_Cohort_G3 = Pop_Priv_G3    * cond_priv_G3;
+
+S2_ECE_4Node_kNZD  = [ECE_Step_Dollars(1),  ECE_Step_Dollars(2),  ECE_Step_Dollars(3),  Priv_Cohort_G2];
+S3_Adol_5Node_kNZD = [Adol_Step_Dollars(1), Adol_Step_Dollars(2), Adol_Step_Dollars(3), Adol_Step_Dollars(4), Priv_Cohort_G3];
+
+% Build 4x4 Flow_S1_to_S2_4N (4 Gate-1 Birth Nodes -> 4 Gate-2 ECE Nodes):
+Flow_S1_to_S2(4, 1) = 0;
+Flow_S1_to_S2_4N = zeros(4, 4);
+for c2 = 1:3
+    pub_in = sum(Flow_S1_to_S2(1:3, c2));
+    if pub_in > 1e-8
+        Flow_S1_to_S2_4N(1:3, c2) = S2_ECE_4Node_kNZD(c2) * (Flow_S1_to_S2(1:3, c2) / pub_in);
     else
-        cond_priv_G2 = 18.70;
-        cond_priv_G3 = 19.80;
+        Flow_S1_to_S2_4N(3, c2) = S2_ECE_4Node_kNZD(c2);
     end
-    Priv_Cohort_G2 = Pop_Priv_G1_G2 * cond_priv_G2;
-    Priv_Cohort_G3 = Pop_Priv_G3    * cond_priv_G3;
+end
+% Also show Marilyn Waring unpaid whanau rescue flow from Node 2 (Residual AHC Squeeze) into Node 6 (Public ECE + Mod Inv)
+Flow_S1_to_S2_4N(4, 4) = S2_ECE_4Node_kNZD(4);
+S1_Totals = sum(Flow_S1_to_S2_4N, 2);
 
-    S2_ECE_4Node_kNZD  = [ECE_Step_Dollars(1),  ECE_Step_Dollars(2),  ECE_Step_Dollars(3),  Priv_Cohort_G2];
-    S3_Adol_5Node_kNZD = [Adol_Step_Dollars(1), Adol_Step_Dollars(2), Adol_Step_Dollars(3), Adol_Step_Dollars(4), Priv_Cohort_G3];
-
-    % Build 4x4 Flow_S1_to_S2_4N (4 Gate-1 Birth Nodes -> 4 Gate-2 ECE Nodes):
-    Flow_S1_to_S2(4, 1) = 0;
-    Flow_S1_to_S2_4N = zeros(4, 4);
-    for c2 = 1:3
-        pub_in = sum(Flow_S1_to_S2(1:3, c2));
-        if pub_in > 1e-8
-            Flow_S1_to_S2_4N(1:3, c2) = S2_ECE_4Node_kNZD(c2) * (Flow_S1_to_S2(1:3, c2) / pub_in);
-        else
-            Flow_S1_to_S2_4N(3, c2) = S2_ECE_4Node_kNZD(c2);
-        end
-    end
-    % Also show Marilyn Waring unpaid whanau rescue flow from Node 2 (Residual AHC Squeeze) into Node 6 (Public ECE + Mod Inv)
-    Flow_S1_to_S2_4N(4, 4) = S2_ECE_4Node_kNZD(4);
-    S1_Totals = sum(Flow_S1_to_S2_4N, 2);
-
-    % Build 4x5 Flow_S2_to_S3_5N (4 Gate-2 ECE Nodes -> 5 Gate-3 Adolescent Nodes):
-    P_23 = zeros(3, 4);
-    for r2 = 1:3
-        rs = sum(Flow_S2_to_S3(r2, :));
-        if rs > 1e-8, P_23(r2, :) = Flow_S2_to_S3(r2, :) / rs; else, P_23(r2, min(4, r2)) = 1; end
-    end
-    Flow_S2_to_S3_5N = zeros(4, 5);
-    for r2 = 1:3
-        for c3 = 1:4
-            Flow_S2_to_S3_5N(r2, c3) = S2_ECE_4Node_kNZD(r2) * P_23(r2, c3) * 0.82;
-            Flow_S2_to_S3_5N(r2, 5)  = Flow_S2_to_S3_5N(r2, 5) + S2_ECE_4Node_kNZD(r2) * P_23(r2, c3) * 0.18;
-        end
-    end
-    w_priv_r2    = [0, ECE_Step_Dollars(2), ECE_Step_Dollars(3)];
-    w_priv_r2    = w_priv_r2 / max(1e-8, sum(w_priv_r2));
-    P_priv_to_G3 = w_priv_r2 * P_23;
+% Build 4x5 Flow_S2_to_S3_5N (4 Gate-2 ECE Nodes -> 5 Gate-3 Adolescent Nodes):
+P_23 = zeros(3, 4);
+for r2 = 1:3
+    rs = sum(Flow_S2_to_S3(r2, :));
+    if rs > 1e-8, P_23(r2, :) = Flow_S2_to_S3(r2, :) / rs; else, P_23(r2, min(4, r2)) = 1; end
+end
+Flow_S2_to_S3_5N = zeros(4, 5);
+for r2 = 1:3
     for c3 = 1:4
-        Flow_S2_to_S3_5N(4, c3) = S2_ECE_4Node_kNZD(4) * P_priv_to_G3(c3) * (1 - 0.78 * (c3 >= 3));
-        Flow_S2_to_S3_5N(4, 5)  = Flow_S2_to_S3_5N(4, 5) + S2_ECE_4Node_kNZD(4) * P_priv_to_G3(c3) * (0.78 * (c3 >= 3));
+        Flow_S2_to_S3_5N(r2, c3) = S2_ECE_4Node_kNZD(r2) * P_23(r2, c3) * 0.82;
+        Flow_S2_to_S3_5N(r2, 5)  = Flow_S2_to_S3_5N(r2, 5) + S2_ECE_4Node_kNZD(r2) * P_23(r2, c3) * 0.18;
     end
-    target_G3_widths = sum(S2_ECE_4Node_kNZD) * (S3_Adol_5Node_kNZD / max(1e-8, sum(S3_Adol_5Node_kNZD)));
-    for iter_ras = 1:4
-        for c3 = 1:5
-            cs = sum(Flow_S2_to_S3_5N(:, c3));
-            if cs > 1e-8, Flow_S2_to_S3_5N(:, c3) = Flow_S2_to_S3_5N(:, c3) * (target_G3_widths(c3) / cs); end
-        end
-        for r2 = 1:4
-            rs = sum(Flow_S2_to_S3_5N(r2, :));
-            if rs > 1e-8, Flow_S2_to_S3_5N(r2, :) = Flow_S2_to_S3_5N(r2, :) * (S2_ECE_4Node_kNZD(r2) / rs); end
-        end
+end
+w_priv_r2    = [0, ECE_Step_Dollars(2), ECE_Step_Dollars(3)];
+w_priv_r2    = w_priv_r2 / max(1e-8, sum(w_priv_r2));
+P_priv_to_G3 = w_priv_r2 * P_23;
+for c3 = 1:4
+    Flow_S2_to_S3_5N(4, c3) = S2_ECE_4Node_kNZD(4) * P_priv_to_G3(c3) * (1 - 0.78 * (c3 >= 3));
+    Flow_S2_to_S3_5N(4, 5)  = Flow_S2_to_S3_5N(4, 5) + S2_ECE_4Node_kNZD(4) * P_priv_to_G3(c3) * (0.78 * (c3 >= 3));
+end
+target_G3_widths = sum(S2_ECE_4Node_kNZD) * (S3_Adol_5Node_kNZD / max(1e-8, sum(S3_Adol_5Node_kNZD)));
+for iter_ras = 1:4
+    for c3 = 1:5
+        cs = sum(Flow_S2_to_S3_5N(:, c3));
+        if cs > 1e-8, Flow_S2_to_S3_5N(:, c3) = Flow_S2_to_S3_5N(:, c3) * (target_G3_widths(c3) / cs); end
     end
-
-    % Build 5x3 Flow_S3_to_S4_5N (5 Gate-3 Adolescent Nodes -> 3 Gate-4 Skill Launch Nodes):
-    S3_In_Widths = sum(Flow_S2_to_S3_5N, 1);
-    P_34 = zeros(4, 3);
-    for r3 = 1:4
-        rs = sum(Flow_S3_to_S4(r3, :));
-        if rs > 1e-8, P_34(r3, :) = Flow_S3_to_S4(r3, :) / rs; else, P_34(r3, min(3, r3)) = 1; end
+    for r2 = 1:4
+        rs = sum(Flow_S2_to_S3_5N(r2, :));
+        if rs > 1e-8, Flow_S2_to_S3_5N(r2, :) = Flow_S2_to_S3_5N(r2, :) * (S2_ECE_4Node_kNZD(r2) / rs); end
     end
-    Flow_S3_to_S4_5N = zeros(5, 3);
-    for r3 = 1:4
-        Flow_S3_to_S4_5N(r3, :) = S3_In_Widths(r3) * P_34(r3, :);
+end
+
+% Build 5x3 Flow_S3_to_S4_5N (5 Gate-3 Adolescent Nodes -> 3 Gate-4 Skill Launch Nodes):
+S3_In_Widths = sum(Flow_S2_to_S3_5N, 1);
+P_34 = zeros(4, 3);
+for r3 = 1:4
+    rs = sum(Flow_S3_to_S4(r3, :));
+    if rs > 1e-8, P_34(r3, :) = Flow_S3_to_S4(r3, :) / rs; else, P_34(r3, min(3, r3)) = 1; end
+end
+Flow_S3_to_S4_5N = zeros(5, 3);
+for r3 = 1:4
+    Flow_S3_to_S4_5N(r3, :) = S3_In_Widths(r3) * P_34(r3, :);
+end
+w_priv_r3 = [0, 0, Adol_Step_Dollars(3), Adol_Step_Dollars(4)];
+w_priv_r3 = w_priv_r3 / max(1e-8, sum(w_priv_r3));
+Flow_S3_to_S4_5N(5, :) = S3_In_Widths(5) * (w_priv_r3 * P_34);
+S4_Totals = sum(Flow_S3_to_S4_5N, 1);
+
+% Exact adult dollar totals (kNZD/yr per cohort child) for Gate 5 (Age 30) and Gate 6 (Career to J=16)
+A30_Col_Dollars = sum(Age30_Fiscal, 1);
+CR_Col_Dollars  = sum(CareerRet_Fiscal, 1);
+
+S5_Widths = sum(S4_Totals) * (A30_Col_Dollars / max(1e-8, sum(A30_Col_Dollars)));
+S6_Widths = sum(S4_Totals) * (CR_Col_Dollars  / max(1e-8, sum(CR_Col_Dollars)));
+
+Flow_S4_to_S5 = max(Age30_Fiscal, 0);
+Flow_S4_to_S5(3, 5) = 0;
+for iter_ras = 1:15
+    for c5 = 1:6
+        cs = sum(Flow_S4_to_S5(:, c5));
+        if cs > 1e-8, Flow_S4_to_S5(:, c5) = Flow_S4_to_S5(:, c5) * (S5_Widths(c5) / cs); end
     end
-    w_priv_r3 = [0, 0, Adol_Step_Dollars(3), Adol_Step_Dollars(4)];
-    w_priv_r3 = w_priv_r3 / max(1e-8, sum(w_priv_r3));
-    Flow_S3_to_S4_5N(5, :) = S3_In_Widths(5) * (w_priv_r3 * P_34);
-    S4_Totals = sum(Flow_S3_to_S4_5N, 1);
-
-    % Exact adult dollar totals (kNZD/yr per cohort child) for Gate 5 (Age 30) and Gate 6 (Career to J=16)
-    A30_Col_Dollars = sum(Age30_Fiscal, 1);
-    CR_Col_Dollars  = sum(CareerRet_Fiscal, 1);
-
-    S5_Widths = sum(S4_Totals) * (A30_Col_Dollars / max(1e-8, sum(A30_Col_Dollars)));
-    S6_Widths = sum(S4_Totals) * (CR_Col_Dollars  / max(1e-8, sum(CR_Col_Dollars)));
-
-    Flow_S4_to_S5 = max(Age30_Fiscal, 0);
-    Flow_S4_to_S5(3, 5) = 0;
-    for iter_ras = 1:15
-        for c5 = 1:6
-            cs = sum(Flow_S4_to_S5(:, c5));
-            if cs > 1e-8, Flow_S4_to_S5(:, c5) = Flow_S4_to_S5(:, c5) * (S5_Widths(c5) / cs); end
-        end
-        for r4 = 1:3
-            rs = sum(Flow_S4_to_S5(r4, :));
-            if rs > 1e-8, Flow_S4_to_S5(r4, :) = Flow_S4_to_S5(r4, :) * (S4_Totals(r4) / rs); end
-        end
+    for r4 = 1:3
+        rs = sum(Flow_S4_to_S5(r4, :));
+        if rs > 1e-8, Flow_S4_to_S5(r4, :) = Flow_S4_to_S5(r4, :) * (S4_Totals(r4) / rs); end
     end
+end
 
-    Flow_S5_to_S6 = zeros(6, 6);
-    Flow_S5_to_S6(1, :) = S5_Widths(1) * [0.74, 0.16, 0.05, 0.03, 0.01, 0.01];
-    Flow_S5_to_S6(2, :) = S5_Widths(2) * [0.12, 0.66, 0.12, 0.08, 0.01, 0.01];
-    Flow_S5_to_S6(3, :) = S5_Widths(3) * [0.04, 0.18, 0.54, 0.22, 0.01, 0.01];
-    Flow_S5_to_S6(4, :) = S5_Widths(4) * [0.03, 0.16, 0.30, 0.49, 0.01, 0.01];
-    Flow_S5_to_S6(5, :) = S5_Widths(5) * [0.04, 0.04, 0.02, 0.00, 0.90, 0.00];
-    Flow_S5_to_S6(6, :) = S5_Widths(6) * [0.00, 0.02, 0.04, 0.04, 0.00, 0.90];
-    for iter_ras = 1:15
-        for c_j = 1:6
-            cs = sum(Flow_S5_to_S6(:, c_j));
-            if cs > 1e-8, Flow_S5_to_S6(:, c_j) = Flow_S5_to_S6(:, c_j) * (S6_Widths(c_j) / cs); end
-        end
-        for r_i = 1:6
-            rs = sum(Flow_S5_to_S6(r_i, :));
-            if rs > 1e-8, Flow_S5_to_S6(r_i, :) = Flow_S5_to_S6(r_i, :) * (S5_Widths(r_i) / rs); end
-        end
+Flow_S5_to_S6 = zeros(6, 6);
+Flow_S5_to_S6(1, :) = S5_Widths(1) * [0.74, 0.16, 0.05, 0.03, 0.01, 0.01];
+Flow_S5_to_S6(2, :) = S5_Widths(2) * [0.12, 0.66, 0.12, 0.08, 0.01, 0.01];
+Flow_S5_to_S6(3, :) = S5_Widths(3) * [0.04, 0.18, 0.54, 0.22, 0.01, 0.01];
+Flow_S5_to_S6(4, :) = S5_Widths(4) * [0.03, 0.16, 0.30, 0.49, 0.01, 0.01];
+Flow_S5_to_S6(5, :) = S5_Widths(5) * [0.04, 0.04, 0.02, 0.00, 0.90, 0.00];
+Flow_S5_to_S6(6, :) = S5_Widths(6) * [0.00, 0.02, 0.04, 0.04, 0.00, 0.90];
+for iter_ras = 1:15
+    for c_j = 1:6
+        cs = sum(Flow_S5_to_S6(:, c_j));
+        if cs > 1e-8, Flow_S5_to_S6(:, c_j) = Flow_S5_to_S6(:, c_j) * (S6_Widths(c_j) / cs); end
     end
-
-    %% COMPUTE MACRO PUBLIC RESIDUAL (OMEGA) & 2050 50/50 SURPLUS SPLIT
-    Bad_30      = A30_Col_Dollars(1) + A30_Col_Dollars(2);
-    Good_30     = A30_Col_Dollars(3) + A30_Col_Dollars(4);
-    net_fisc_30 = Good_30 - Bad_30;
-
-    Bad_CR      = CR_Col_Dollars(1) + CR_Col_Dollars(2);
-    Good_CR     = CR_Col_Dollars(3) + CR_Col_Dollars(4);
-    net_fisc_CR = Good_CR - Bad_CR;
-
-    Bad_Final2  = [Bad_30,  Bad_CR];
-    Good_Final2 = [Good_30, Good_CR];
-
-    Surplus_30  = max(0, net_fisc_30);
-    Surplus_CR  = max(0, net_fisc_CR);
-
-    DebtSink_50_30 = 0.50 * Surplus_30;  Reinvest_50_30 = 0.50 * Surplus_30;
-    DebtSink_50_CR = 0.50 * Surplus_CR;  Reinvest_50_CR = 0.50 * Surplus_CR;
-
-    r_gov_bond   = 0.042;
-    mu_infra_div = 1.65;
-    Cohort_N     = 60.0;
-
-    % Save exact 28-node population & monetary vectors into output Ledger struct
-    Ledger.Pop_S1_Birth                     = Pop_S1_Birth(:);
-    Ledger.Pop_S2_ECE                       = Pop_S2_ECE(:);
-    Ledger.Pop_S2_ECE_4Node                 = Pop_S2_ECE_4Node(:);
-    Ledger.Pop_S3_Adol                      = Pop_S3_Adol(:);
-    Ledger.Pop_S3_Adol_5Node                = Pop_S3_Adol_5Node(:);
-    Ledger.Pop_S4_Skill                     = Pop_S4_Skill(:);
-    Ledger.S1_Birth_kNZD                    = S1_Totals(:);
-    Ledger.S2_ECE_3Node_kNZD                = ECE_Step_Dollars(:);
-    Ledger.S2_ECE_4Node_kNZD                = S2_ECE_4Node_kNZD(:);
-    Ledger.S3_Adol_4Node_kNZD               = Adol_Step_Dollars(:);
-    Ledger.S3_Adol_5Node_kNZD               = S3_Adol_5Node_kNZD(:);
-    Ledger.S4_Skill_kNZD                    = S4_Totals(:);
-    Ledger.S5_Age30_kNZD                    = A30_Col_Dollars(:);
-    Ledger.S6_Career_kNZD                   = CR_Col_Dollars(:);
-    Ledger.Whanau_And_Landlord_G1_kNZD      = Whanau_Care_G1_G2(:);
-    Ledger.Net_Fiscal_Balance_kNZD          = [net_fisc_30, net_fisc_CR];
-    Ledger.SinkingFund_50Pct_kNZD           = [DebtSink_50_30, DebtSink_50_CR];
-    Ledger.ReinvestmentPool_50Pct_kNZD      = [Reinvest_50_30, Reinvest_50_CR];
-    Ledger.Annual_DebtService_Saving_kNZD   = r_gov_bond * [DebtSink_50_30, DebtSink_50_CR];
-    Ledger.Public_Infra_Yield_Dividend_kNZD = mu_infra_div * [Reinvest_50_30, Reinvest_50_CR];
-    Ledger.Cum_2050_DebtReduction_MNZD      = 25 * Cohort_N * (0.4 * DebtSink_50_30 + 0.6 * DebtSink_50_CR) * (1 + 0.5 * 25 * r_gov_bond);
-    Ledger.Cum_2050_ReinvestPool_MNZD       = 25 * Cohort_N * (0.4 * Reinvest_50_30 + 0.6 * Reinvest_50_CR);
-
-    %% BUILD 28-NODE DOLLAR-LABELED NODE NAMES (OPTION 2: 4 NODES AT GATE 1, 5 NODES AT GATE 3)
-    Nodes_S1 = {sprintf('1. Acute Hardship Tier 3 Support\n     (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S1_Birth(1), S1_Totals(1)), ...
-                sprintf('2. Residual AHC Paper & Whanau\n     (%.1f%% pop | %.1f kNZD/yr)',   100*Pop_S1_Birth(2), S1_Totals(2)), ...
-                sprintf('3. Universal Birth Benefit\n     (100%% pop | %.1f kNZD/yr)',        S1_Totals(3)), ...
-                sprintf('4. Private Birth Out-of-Pocket\n     (%.1f%% pop | %.1f kNZD/yr)',   100*Pop_S1_Birth(4), S1_Totals(4))};
-
-    Nodes_S2 = {sprintf('5. ECE Corner + Benefit Need\n     (%.1f%% pop | %.1f kNZD/yr)',          100*Pop_S2_ECE_4Node(1), S2_ECE_4Node_kNZD(1)), ...
-                sprintf('6. Public ECE Wraparound\n     (%.1f%% pop | %.1f kNZD/yr)',              100*Pop_S2_ECE_4Node(2), S2_ECE_4Node_kNZD(2)), ...
-                sprintf('7. High-Intensity Public ECE\n     (%.1f%% pop | %.1f kNZD/yr)',          100*Pop_S2_ECE_4Node(3), S2_ECE_4Node_kNZD(3)), ...
-                sprintf('8. Private Parental ECE (Cash+Time)\n     (%.1f%% pop | %.1f kNZD/yr)',   100*Pop_S2_ECE_4Node(4), S2_ECE_4Node_kNZD(4))};
-
-    Nodes_S3 = {sprintf('9. HH Unemp & Truancy Remed.\n     (%.1f%% pop | %.1f kNZD/yr)',          100*Pop_S3_Adol_5Node(1), S3_Adol_5Node_kNZD(1)), ...
-                sprintf('10. Psychosocial CAMHS & ACC ISSC\n       (%.1f%% pop | %.1f kNZD/yr)',   100*Pop_S3_Adol_5Node(2), S3_Adol_5Node_kNZD(2)), ...
-                sprintf('11. Public Schooling (d_2)\n       (%.1f%% pop | %.1f kNZD/yr)',          100*Pop_S3_Adol_5Node(3), S3_Adol_5Node_kNZD(3)), ...
-                sprintf('12. Montessori / Tuakana Mentoring\n       (%.1f%% pop | %.1f kNZD/yr)',  100*Pop_S3_Adol_5Node(4), S3_Adol_5Node_kNZD(4)), ...
-                sprintf('13. Private Adol. Commit (Cash+Time)\n       (%.1f%% pop | %.1f kNZD/yr)',100*Pop_S3_Adol_5Node(5), S3_Adol_5Node_kNZD(5))};
-
-    if reform_intensity <= 0
-        lbl_16 = sprintf('16. Thriving Tier h6-h7\n        [Rent-Seeking Skew]\n        (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S4_Skill(3), S4_Totals(3));
-    elseif reform_intensity <= 1.0
-        lbl_16 = sprintf('16. Thriving Tier h6-h7\n        [Pivot to Builders]\n        (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S4_Skill(3), S4_Totals(3));
-    else
-        lbl_16 = sprintf('16. Thriving Tier h6-h7\n        [z_h Builders]\n        (%.1f%% pop | %.1f kNZD/yr)',      100*Pop_S4_Skill(3), S4_Totals(3));
+    for r_i = 1:6
+        rs = sum(Flow_S5_to_S6(r_i, :));
+        if rs > 1e-8, Flow_S5_to_S6(r_i, :) = Flow_S5_to_S6(r_i, :) * (S5_Widths(r_i) / rs); end
     end
+end
 
-    Nodes_S4 = {sprintf('14. Struggling Tier h1-h2 [Exits 1,2,4]\n       (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S4_Skill(1), S4_Totals(1)), ...
-                sprintf('15. Core Skill Tier h3-h5\n       (%.1f%% pop | %.1f kNZD/yr)',               100*Pop_S4_Skill(2), S4_Totals(2)), ...
-                lbl_16};
+%% COMPUTE MACRO PUBLIC RESIDUAL (OMEGA) & 2050 50/50 SURPLUS SPLIT
+Bad_30      = A30_Col_Dollars(1) + A30_Col_Dollars(2);
+Good_30     = A30_Col_Dollars(3) + A30_Col_Dollars(4);
+net_fisc_30 = Good_30 - Bad_30;
 
-    if Surplus_30 > 0.05
-        lbl_19 = sprintf('19. Age 30 GST & z_h Cap Tax\n       (%.1f kNZD/yr | Reinvest: +%.1fk)', A30_Col_Dollars(3), Reinvest_50_30);
-        lbl_20 = sprintf('20. Age 30 Builder PAYE Tax\n       (%.1f kNZD/yr | Debt Sink: +%.1fk)', A30_Col_Dollars(4), DebtSink_50_30);
-    else
-        lbl_19 = sprintf('19. Age 30 GST & Cap Tax [z_l Skew]\n        (%.1f kNZD/yr)', A30_Col_Dollars(3));
-        lbl_20 = sprintf('20. Age 30 PAYE Income Tax\n        (%.1f kNZD/yr)',          A30_Col_Dollars(4));
-    end
+Bad_CR      = CR_Col_Dollars(1) + CR_Col_Dollars(2);
+Good_CR     = CR_Col_Dollars(3) + CR_Col_Dollars(4);
+net_fisc_CR = Good_CR - Bad_CR;
 
-    Nodes_S5 = {sprintf('17. Exits 1,2,4: Care/Hosp/Just\n       (%.1f kNZD/yr | @32k/struggling)', A30_Col_Dollars(1)), ...
-                sprintf('18. Infra, Roads & Base Health\n       (%.1f kNZD/yr per adult)',          A30_Col_Dollars(2)), ...
-                lbl_19, ...
-                lbl_20, ...
-                sprintf('21. Exit 3: Lower-Skill Lost Tax\n       (%.1f kNZD/yr foregone)',         A30_Col_Dollars(5)), ...
-                sprintf('22. Age 30 Emig Tax Loss\n       (%.1f kNZD/yr to Abroad)',                A30_Col_Dollars(6))};
+Bad_Final2  = [Bad_30,  Bad_CR];
+Good_Final2 = [Good_30, Good_CR];
 
-    if Surplus_CR > 0.05
-        lbl_25 = sprintf('25. GST, z_h Cap & Estate Tax\n       (%.1f kNZD/yr | 50%% Reinvest: +%.1fk)', CR_Col_Dollars(3), Reinvest_50_CR);
-        lbl_26 = sprintf('26. Career Builder PAYE Tax\n       (%.1f kNZD/yr | 50%% Debt Sink: +%.1fk)',  CR_Col_Dollars(4), DebtSink_50_CR);
-    else
-        lbl_25 = sprintf('25. GST, Cap & Estate Pool [z_l Skew]\n       (%.1f kNZD/yr)', CR_Col_Dollars(3));
-        lbl_26 = sprintf('26. Career PAYE Income Tax\n       (%.1f kNZD/yr)',            CR_Col_Dollars(4));
-    end
+Surplus_30  = max(0, net_fisc_30);
+Surplus_CR  = max(0, net_fisc_CR);
 
-    Nodes_S6 = {sprintf('23. Exits 1,2,4: Ongoing Burden\n       (%.1f kNZD/yr)',  CR_Col_Dollars(1)), ...
-                sprintf('24. NZ Super, Infra & Health\n       (%.1f kNZD/yr)',     CR_Col_Dollars(2)), ...
-                lbl_25, ...
-                lbl_26, ...
-                sprintf('27. Exit 3: Career Lost Tax\n       (%.1f kNZD/yr foregone)', CR_Col_Dollars(5)), ...
-                sprintf('28. Perm. Abroad Tax Loss\n       (%.1f kNZD/yr in Abroad)',  CR_Col_Dollars(6))};
+DebtSink_50_30 = 0.50 * Surplus_30;  Reinvest_50_30 = 0.50 * Surplus_30;
+DebtSink_50_CR = 0.50 * Surplus_CR;  Reinvest_50_CR = 0.50 * Surplus_CR;
 
-    % Prune sub-threshold phantom ribbons (< 0.10 kNZD/yr) and redistribute pro-rata
-    minFiscalRibbon_k = 0.10;
-    Flow_S1_to_S2_4N = pruneAndBalanceFlowMatrix(Flow_S1_to_S2_4N, minFiscalRibbon_k);
-    Flow_S2_to_S3_5N = pruneAndBalanceFlowMatrix(Flow_S2_to_S3_5N, minFiscalRibbon_k);
-    Flow_S3_to_S4_5N = pruneAndBalanceFlowMatrix(Flow_S3_to_S4_5N, minFiscalRibbon_k);
-    Flow_S4_to_S5    = pruneAndBalanceFlowMatrix(Flow_S4_to_S5,    minFiscalRibbon_k);
-    Flow_S5_to_S6    = pruneAndBalanceFlowMatrix(Flow_S5_to_S6,    minFiscalRibbon_k);
+r_gov_bond   = 0.042;
+mu_infra_div = 1.65;
+Cohort_N     = 60.0;
 
-    % Assemble links cell array
-    links = {};
-    row_k = 0;
-    for i = 1:4
-        for j = 1:4
-            if Flow_S1_to_S2_4N(i, j) > 0
-                row_k = row_k + 1;
-                links(row_k, :) = {Nodes_S1{i}, Nodes_S2{j}, Flow_S1_to_S2_4N(i, j)};
-            end
-        end
-    end
-    for i = 1:4
-        for j = 1:5
-            if Flow_S2_to_S3_5N(i, j) > 0
-                row_k = row_k + 1;
-                links(row_k, :) = {Nodes_S2{i}, Nodes_S3{j}, Flow_S2_to_S3_5N(i, j)};
-            end
-        end
-    end
-    for i = 1:5
-        for j = 1:3
-            if Flow_S3_to_S4_5N(i, j) > 0
-                row_k = row_k + 1;
-                links(row_k, :) = {Nodes_S3{i}, Nodes_S4{j}, Flow_S3_to_S4_5N(i, j)};
-            end
+% Save exact 28-node population & monetary vectors into output Ledger struct
+Ledger.Pop_S1_Birth                     = Pop_S1_Birth(:);
+Ledger.Pop_S2_ECE                       = Pop_S2_ECE(:);
+Ledger.Pop_S2_ECE_4Node                 = Pop_S2_ECE_4Node(:);
+Ledger.Pop_S3_Adol                      = Pop_S3_Adol(:);
+Ledger.Pop_S3_Adol_5Node                = Pop_S3_Adol_5Node(:);
+Ledger.Pop_S4_Skill                     = Pop_S4_Skill(:);
+Ledger.S1_Birth_kNZD                    = S1_Totals(:);
+Ledger.S2_ECE_3Node_kNZD                = ECE_Step_Dollars(:);
+Ledger.S2_ECE_4Node_kNZD                = S2_ECE_4Node_kNZD(:);
+Ledger.S3_Adol_4Node_kNZD               = Adol_Step_Dollars(:);
+Ledger.S3_Adol_5Node_kNZD               = S3_Adol_5Node_kNZD(:);
+Ledger.S4_Skill_kNZD                    = S4_Totals(:);
+Ledger.S5_Age30_kNZD                    = A30_Col_Dollars(:);
+Ledger.S6_Career_kNZD                   = CR_Col_Dollars(:);
+Ledger.Whanau_And_Landlord_G1_kNZD      = Whanau_Care_G1_G2(:);
+Ledger.Net_Fiscal_Balance_kNZD          = [net_fisc_30, net_fisc_CR];
+Ledger.SinkingFund_50Pct_kNZD           = [DebtSink_50_30, DebtSink_50_CR];
+Ledger.ReinvestmentPool_50Pct_kNZD      = [Reinvest_50_30, Reinvest_50_CR];
+Ledger.Annual_DebtService_Saving_kNZD   = r_gov_bond * [DebtSink_50_30, DebtSink_50_CR];
+Ledger.Public_Infra_Yield_Dividend_kNZD = mu_infra_div * [Reinvest_50_30, Reinvest_50_CR];
+Ledger.Cum_2050_DebtReduction_MNZD      = 25 * Cohort_N * (0.4 * DebtSink_50_30 + 0.6 * DebtSink_50_CR) * (1 + 0.5 * 25 * r_gov_bond);
+Ledger.Cum_2050_ReinvestPool_MNZD       = 25 * Cohort_N * (0.4 * Reinvest_50_30 + 0.6 * Reinvest_50_CR);
+
+%% BUILD 28-NODE DOLLAR-LABELED NODE NAMES (OPTION 2: 4 NODES AT GATE 1, 5 NODES AT GATE 3)
+Nodes_S1 = {sprintf('1. Acute Hardship Tier 3 Support\n     (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S1_Birth(1), S1_Totals(1)), ...
+    sprintf('2. Residual AHC Paper & Whanau\n     (%.1f%% pop | %.1f kNZD/yr)',   100*Pop_S1_Birth(2), S1_Totals(2)), ...
+    sprintf('3. Universal Birth Benefit\n     (100%% pop | %.1f kNZD/yr)',        S1_Totals(3)), ...
+    sprintf('4. Private Birth Out-of-Pocket\n     (%.1f%% pop | %.1f kNZD/yr)',   100*Pop_S1_Birth(4), S1_Totals(4))};
+
+Nodes_S2 = {sprintf('5. ECE Corner + Benefit Need\n     (%.1f%% pop | %.1f kNZD/yr)',          100*Pop_S2_ECE_4Node(1), S2_ECE_4Node_kNZD(1)), ...
+    sprintf('6. Public ECE Wraparound\n     (%.1f%% pop | %.1f kNZD/yr)',              100*Pop_S2_ECE_4Node(2), S2_ECE_4Node_kNZD(2)), ...
+    sprintf('7. High-Intensity Public ECE\n     (%.1f%% pop | %.1f kNZD/yr)',          100*Pop_S2_ECE_4Node(3), S2_ECE_4Node_kNZD(3)), ...
+    sprintf('8. Private Parental ECE (Cash+Time)\n     (%.1f%% pop | %.1f kNZD/yr)',   100*Pop_S2_ECE_4Node(4), S2_ECE_4Node_kNZD(4))};
+
+Nodes_S3 = {sprintf('9. HH Unemp & Truancy Remed.\n     (%.1f%% pop | %.1f kNZD/yr)',          100*Pop_S3_Adol_5Node(1), S3_Adol_5Node_kNZD(1)), ...
+    sprintf('10. Psychosocial CAMHS & ACC ISSC\n       (%.1f%% pop | %.1f kNZD/yr)',   100*Pop_S3_Adol_5Node(2), S3_Adol_5Node_kNZD(2)), ...
+    sprintf('11. Public Schooling (d_2)\n       (%.1f%% pop | %.1f kNZD/yr)',          100*Pop_S3_Adol_5Node(3), S3_Adol_5Node_kNZD(3)), ...
+    sprintf('12. Montessori / Tuakana Mentoring\n       (%.1f%% pop | %.1f kNZD/yr)',  100*Pop_S3_Adol_5Node(4), S3_Adol_5Node_kNZD(4)), ...
+    sprintf('13. Private Adol. Commit (Cash+Time)\n       (%.1f%% pop | %.1f kNZD/yr)',100*Pop_S3_Adol_5Node(5), S3_Adol_5Node_kNZD(5))};
+
+if reform_intensity <= 0
+    lbl_16 = sprintf('16. Thriving Tier h6-h7\n        [Rent-Seeking Skew]\n        (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S4_Skill(3), S4_Totals(3));
+elseif reform_intensity <= 1.0
+    lbl_16 = sprintf('16. Thriving Tier h6-h7\n        [Pivot to Builders]\n        (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S4_Skill(3), S4_Totals(3));
+else
+    lbl_16 = sprintf('16. Thriving Tier h6-h7\n        [z_h Builders]\n        (%.1f%% pop | %.1f kNZD/yr)',      100*Pop_S4_Skill(3), S4_Totals(3));
+end
+
+Nodes_S4 = {sprintf('14. Struggling Tier h1-h2 [Exits 1,2,4]\n       (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S4_Skill(1), S4_Totals(1)), ...
+    sprintf('15. Core Skill Tier h3-h5\n       (%.1f%% pop | %.1f kNZD/yr)',               100*Pop_S4_Skill(2), S4_Totals(2)), ...
+    lbl_16};
+
+if Surplus_30 > 0.05
+    lbl_19 = sprintf('19. Age 30 GST & z_h Cap Tax\n       (%.1f kNZD/yr | Reinvest: +%.1fk)', A30_Col_Dollars(3), Reinvest_50_30);
+    lbl_20 = sprintf('20. Age 30 Builder PAYE Tax\n       (%.1f kNZD/yr | Debt Sink: +%.1fk)', A30_Col_Dollars(4), DebtSink_50_30);
+else
+    lbl_19 = sprintf('19. Age 30 GST & Cap Tax [z_l Skew]\n        (%.1f kNZD/yr)', A30_Col_Dollars(3));
+    lbl_20 = sprintf('20. Age 30 PAYE Income Tax\n        (%.1f kNZD/yr)',          A30_Col_Dollars(4));
+end
+
+Nodes_S5 = {sprintf('17. Exits 1,2,4: Care/Hosp/Just\n       (%.1f kNZD/yr | @32k/struggling)', A30_Col_Dollars(1)), ...
+    sprintf('18. Infra, Roads & Base Health\n       (%.1f kNZD/yr per adult)',          A30_Col_Dollars(2)), ...
+    lbl_19, ...
+    lbl_20, ...
+    sprintf('21. Exit 3: Lower-Skill Lost Tax\n       (%.1f kNZD/yr foregone)',         A30_Col_Dollars(5)), ...
+    sprintf('22. Age 30 Emig Tax Loss\n       (%.1f kNZD/yr to Abroad)',                A30_Col_Dollars(6))};
+
+if Surplus_CR > 0.05
+    lbl_25 = sprintf('25. GST, z_h Cap & Estate Tax\n       (%.1f kNZD/yr | 50%% Reinvest: +%.1fk)', CR_Col_Dollars(3), Reinvest_50_CR);
+    lbl_26 = sprintf('26. Career Builder PAYE Tax\n       (%.1f kNZD/yr | 50%% Debt Sink: +%.1fk)',  CR_Col_Dollars(4), DebtSink_50_CR);
+else
+    lbl_25 = sprintf('25. GST, Cap & Estate Pool [z_l Skew]\n       (%.1f kNZD/yr)', CR_Col_Dollars(3));
+    lbl_26 = sprintf('26. Career PAYE Income Tax\n       (%.1f kNZD/yr)',            CR_Col_Dollars(4));
+end
+
+Nodes_S6 = {sprintf('23. Exits 1,2,4: Ongoing Burden\n       (%.1f kNZD/yr)',  CR_Col_Dollars(1)), ...
+    sprintf('24. NZ Super, Infra & Health\n       (%.1f kNZD/yr)',     CR_Col_Dollars(2)), ...
+    lbl_25, ...
+    lbl_26, ...
+    sprintf('27. Exit 3: Career Lost Tax\n       (%.1f kNZD/yr foregone)', CR_Col_Dollars(5)), ...
+    sprintf('28. Perm. Abroad Tax Loss\n       (%.1f kNZD/yr in Abroad)',  CR_Col_Dollars(6))};
+
+% Prune sub-threshold phantom ribbons (< 0.10 kNZD/yr) and redistribute pro-rata
+minFiscalRibbon_k = 0.10;
+Flow_S1_to_S2_4N = pruneAndBalanceFlowMatrix(Flow_S1_to_S2_4N, minFiscalRibbon_k);
+Flow_S2_to_S3_5N = pruneAndBalanceFlowMatrix(Flow_S2_to_S3_5N, minFiscalRibbon_k);
+Flow_S3_to_S4_5N = pruneAndBalanceFlowMatrix(Flow_S3_to_S4_5N, minFiscalRibbon_k);
+Flow_S4_to_S5    = pruneAndBalanceFlowMatrix(Flow_S4_to_S5,    minFiscalRibbon_k);
+Flow_S5_to_S6    = pruneAndBalanceFlowMatrix(Flow_S5_to_S6,    minFiscalRibbon_k);
+
+% Assemble links cell array
+links = {};
+row_k = 0;
+for i = 1:4
+    for j = 1:4
+        if Flow_S1_to_S2_4N(i, j) > 0
+            row_k = row_k + 1;
+            links(row_k, :) = {Nodes_S1{i}, Nodes_S2{j}, Flow_S1_to_S2_4N(i, j)};
         end
     end
-    for i = 1:3
-        for j = 1:6
-            if Flow_S4_to_S5(i, j) > 0
-                row_k = row_k + 1;
-                links(row_k, :) = {Nodes_S4{i}, Nodes_S5{j}, Flow_S4_to_S5(i, j)};
-            end
+end
+for i = 1:4
+    for j = 1:5
+        if Flow_S2_to_S3_5N(i, j) > 0
+            row_k = row_k + 1;
+            links(row_k, :) = {Nodes_S2{i}, Nodes_S3{j}, Flow_S2_to_S3_5N(i, j)};
         end
     end
-    for i = 1:6
-        for j = 1:6
-            if Flow_S5_to_S6(i, j) > 0
-                row_k = row_k + 1;
-                links(row_k, :) = {Nodes_S5{i}, Nodes_S6{j}, Flow_S5_to_S6(i, j)};
-            end
+end
+for i = 1:5
+    for j = 1:3
+        if Flow_S3_to_S4_5N(i, j) > 0
+            row_k = row_k + 1;
+            links(row_k, :) = {Nodes_S3{i}, Nodes_S4{j}, Flow_S3_to_S4_5N(i, j)};
         end
     end
-
-    axes(ax);
-    hold(ax, 'on');
-
-    SK = SSankey(links(:, 1), links(:, 2), links(:, 3));
-    SK.RenderingMethod = 'interp';
-    SK.Align           = 'center';
-    SK.LabelLocation   = 'right';
-    SK.BlockScale      = 0.13;
-    SK.Sep             = 0.044;
-    if isprop(SK, 'FontName')
-        SK.FontName = 'Helvetica';
-    end
-
-    % 28-Node Palette (Deep Crimson for Node 1, Burnt Rust for Node 2, Warm Gold reserved for Private Parental Nodes 4, 8, 13):
-    Master_Colors = [0.72, 0.12, 0.14;  % 1. Acute Hardship Tier 3 Support [Deep Crimson]
-                     0.78, 0.32, 0.20;  % 2. Residual AHC Paper & Whanau [Burnt Rust / Terracotta]
-                     0.24, 0.50, 0.70;  % 3. Universal Birth Benefit [Public Steel Blue]
-                     0.82, 0.54, 0.14;  % 4. Private Birth Out-of-Pocket [Parental Warm Gold]
-                     0.78, 0.20, 0.16;  % 5. ECE Corner + Benefit Need
-                     0.24, 0.50, 0.70;  % 6. Public ECE Wraparound
-                     0.14, 0.62, 0.50;  % 7. High-Intensity Public ECE
-                     0.84, 0.56, 0.14;  % 8. Private Parental ECE (Cash+Time) [Parental Warm Gold]
-                     0.82, 0.24, 0.16;  % 9. HH Unemp & Truancy Remediation
-                     0.64, 0.16, 0.36;  % 10. Psychosocial CAMHS & ACC ISSC [38% Clinical Floor Crimson-Plum]
-                     0.26, 0.52, 0.70;  % 11. Public Schooling (d_2)
-                     0.14, 0.62, 0.50;  % 12. Montessori / Tuakana Mentoring
-                     0.84, 0.56, 0.14;  % 13. Private Adol. Commit (Cash+Time) [Parental Warm Gold]
-                     0.74, 0.18, 0.18;  % 14. Struggling Tier h1-h2
-                     0.30, 0.56, 0.68;  % 15. Core Skill Tier h3-h5
-                     0.12, 0.58, 0.46;  % 16. Thriving Tier h6-h7
-                     0.80, 0.22, 0.18;  % 17. Age 30 Exits 1,2,4 Remediation
-                     0.76, 0.46, 0.18;  % 18. Age 30 Infra, Roads & Base Health
-                     0.22, 0.48, 0.70;  % 19. Age 30 GST & Cap Tax
-                     0.14, 0.60, 0.48;  % 20. Age 30 PAYE Income Tax
-                     0.68, 0.30, 0.48;  % 21. Age 30 Exit 3: Lower-Skill Lost Tax
-                     0.50, 0.32, 0.68;  % 22. Age 30 Emig Tax Loss
-                     0.76, 0.20, 0.18;  % 23. Career Exits 1,2,4 Ongoing Burden
-                     0.74, 0.44, 0.16;  % 24. Career NZ Super, Infra & Health
-                     0.20, 0.46, 0.68;  % 25. Career GST, Cap & Estate Tax Pool
-                     0.12, 0.58, 0.46;  % 26. Career PAYE Income Tax
-                     0.64, 0.28, 0.46;  % 27. Career Exit 3: Lower-Skill Lost Tax
-                     0.46, 0.28, 0.66   % 28. Career Permanent Abroad Tax Loss
-                     ];
-
-    All_Node_Names = [Nodes_S1, Nodes_S2, Nodes_S3, Nodes_S4, Nodes_S5, Nodes_S6];
-    if isprop(SK, 'NodeList') && ~isempty(SK.NodeList)
-        mapped_colors = zeros(length(SK.NodeList), 3);
-        for n_i = 1:length(SK.NodeList)
-            idx_match = find(strcmp(SK.NodeList{n_i}, All_Node_Names), 1);
-            if ~isempty(idx_match)
-                mapped_colors(n_i, :) = Master_Colors(idx_match, :);
-            else
-                mapped_colors(n_i, :) = [0.4, 0.4, 0.4];
-            end
+end
+for i = 1:3
+    for j = 1:6
+        if Flow_S4_to_S5(i, j) > 0
+            row_k = row_k + 1;
+            links(row_k, :) = {Nodes_S4{i}, Nodes_S5{j}, Flow_S4_to_S5(i, j)};
         end
-        SK.ColorList = mapped_colors;
-    else
-        SK.ColorList = Master_Colors;
     end
+end
+for i = 1:6
+    for j = 1:6
+        if Flow_S5_to_S6(i, j) > 0
+            row_k = row_k + 1;
+            links(row_k, :) = {Nodes_S5{i}, Nodes_S6{j}, Flow_S5_to_S6(i, j)};
+        end
+    end
+end
 
-    SK.draw();
+axes(ax);
+hold(ax, 'on');
+
+SK = SSankey(links(:, 1), links(:, 2), links(:, 3));
+SK.RenderingMethod = 'interp';
+SK.Align           = 'center';
+SK.LabelLocation   = 'right';
+SK.BlockScale      = 0.13;
+SK.Sep             = 0.044;
+if isprop(SK, 'FontName')
+    SK.FontName = 'Helvetica';
+end
+
+% 28-Node Palette (Deep Crimson for Node 1, Burnt Rust for Node 2, Warm Gold reserved for Private Parental Nodes 4, 8, 13):
+Master_Colors = [0.72, 0.12, 0.14;  % 1. Acute Hardship Tier 3 Support [Deep Crimson]
+    0.78, 0.32, 0.20;  % 2. Residual AHC Paper & Whanau [Burnt Rust / Terracotta]
+    0.24, 0.50, 0.70;  % 3. Universal Birth Benefit [Public Steel Blue]
+    0.82, 0.54, 0.14;  % 4. Private Birth Out-of-Pocket [Parental Warm Gold]
+    0.78, 0.20, 0.16;  % 5. ECE Corner + Benefit Need
+    0.24, 0.50, 0.70;  % 6. Public ECE Wraparound
+    0.14, 0.62, 0.50;  % 7. High-Intensity Public ECE
+    0.84, 0.56, 0.14;  % 8. Private Parental ECE (Cash+Time) [Parental Warm Gold]
+    0.82, 0.24, 0.16;  % 9. HH Unemp & Truancy Remediation
+    0.64, 0.16, 0.36;  % 10. Psychosocial CAMHS & ACC ISSC [38% Clinical Floor Crimson-Plum]
+    0.26, 0.52, 0.70;  % 11. Public Schooling (d_2)
+    0.14, 0.62, 0.50;  % 12. Montessori / Tuakana Mentoring
+    0.84, 0.56, 0.14;  % 13. Private Adol. Commit (Cash+Time) [Parental Warm Gold]
+    0.74, 0.18, 0.18;  % 14. Struggling Tier h1-h2
+    0.30, 0.56, 0.68;  % 15. Core Skill Tier h3-h5
+    0.12, 0.58, 0.46;  % 16. Thriving Tier h6-h7
+    0.80, 0.22, 0.18;  % 17. Age 30 Exits 1,2,4 Remediation
+    0.76, 0.46, 0.18;  % 18. Age 30 Infra, Roads & Base Health
+    0.22, 0.48, 0.70;  % 19. Age 30 GST & Cap Tax
+    0.14, 0.60, 0.48;  % 20. Age 30 PAYE Income Tax
+    0.68, 0.30, 0.48;  % 21. Age 30 Exit 3: Lower-Skill Lost Tax
+    0.50, 0.32, 0.68;  % 22. Age 30 Emig Tax Loss
+    0.76, 0.20, 0.18;  % 23. Career Exits 1,2,4 Ongoing Burden
+    0.74, 0.44, 0.16;  % 24. Career NZ Super, Infra & Health
+    0.20, 0.46, 0.68;  % 25. Career GST, Cap & Estate Tax Pool
+    0.12, 0.58, 0.46;  % 26. Career PAYE Income Tax
+    0.64, 0.28, 0.46;  % 27. Career Exit 3: Lower-Skill Lost Tax
+    0.46, 0.28, 0.66   % 28. Career Permanent Abroad Tax Loss
+    ];
+
+All_Node_Names = [Nodes_S1, Nodes_S2, Nodes_S3, Nodes_S4, Nodes_S5, Nodes_S6];
+if isprop(SK, 'NodeList') && ~isempty(SK.NodeList)
+    mapped_colors = zeros(length(SK.NodeList), 3);
+    for n_i = 1:length(SK.NodeList)
+        idx_match = find(strcmp(SK.NodeList{n_i}, All_Node_Names), 1);
+        if ~isempty(idx_match)
+            mapped_colors(n_i, :) = Master_Colors(idx_match, :);
+        else
+            mapped_colors(n_i, :) = [0.4, 0.4, 0.4];
+        end
+    end
+    SK.ColorList = mapped_colors;
+else
+    SK.ColorList = Master_Colors;
+end
+
+SK.draw();
 
 set(ax, 'YDir', 'normal');
 

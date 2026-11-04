@@ -814,40 +814,65 @@ narrativeMap('NODE_18') = 'Node 18 — Emigrated Abroad (Age 20-35 Brain Drain):
 
 % --- RIBBON-LEVEL TRANSITIONS (GATE 1 -> GATE 2: 1..3 -> 4..6) ---
 if ~is_ref
-    narrativeMap('1->4') = 'SS0 Acute Deprivation Trap: Without proactive Tier 3 wraparound, Severe Material Hardship (DEP-17 9+) forces families directly into the Unmitigated Corner (ic = 0) during the First 2000 Days [Ref 1, 48].';
-    narrativeMap('2->4') = 'SS0 Paper-Support Failure & Metro Isolation: In high-rent Auckland/Large metros (Q_reg = 2.05-3.10), AS rent capture and nuclear isolation from extended whanau push Residual AHC Squeeze infants into the ic = 0 corner [Ref 47, 48].';
-    narrativeMap('2->5') = 'SS0 Marilyn Waring Unpaid Whanau Rescue: In Rural and Small provincial regions (K_whanau = 0.38-0.42), nearby kaumatua and aunties provide unpaid alloparental care that rescues squeezed Node 2 infants out of the cash corner [Ref 26, 47].';
+    narrativeMap('1->4') = 'SS0 Acute Deprivation Trap: Without proactive Tier 3 wraparound, Severe Material Hardship (DEP-17 9+) forces families directly into the Unmitigated Corner (ic = 0, Node 4) during the First 2000 Days [Ref 1, 48].';
+    narrativeMap('1->5') = 'SS0 Partial Community / Whanau Mitigation: Small fraction of DEP-17 9+ births buffered by intensive rural/iwi whanau networks into basic public ECE (Node 5) [Ref 37, 47].';
+    narrativeMap('2->4') = 'SS0 Paper-Support Failure & Metro Isolation: In high-rent Auckland/Large metros (Q_reg = 2.05-3.10), AS rent capture by landlords and nuclear isolation from extended whanau push Residual AHC Squeeze infants into the ic = 0 corner (Node 4) [Ref 47, 48].';
+    narrativeMap('2->5') = 'SS0 Marilyn Waring Unpaid Whanau Rescue: In Rural and Small provincial regions (K_whanau = 0.38-0.42), nearby kaumatua and aunties provide unpaid alloparental care that rescues squeezed Node 2 infants out of the cash corner into Node 5 [Ref 26, 47].';
 else
-    narrativeMap('1->5') = 'SS1/SS2 Proactive First-2000-Days Wraparound: Universal G_ece_1 (0.110-0.130) and Whanau Ora / Barnardos navigators lift 78%-92% of severe-hardship infants out of the ic = 0 corner into enriched ECE [Ref 14, 37].';
-    narrativeMap('2->5') = 'SS1/SS2 Housing Cooling + Whanau & Universal ECE: Cooling metro rents (Q_mult), Super Age 64 Kuia time (+8.1% Phi_time), and universal ECE move squeezed Node 2 families into thriving early trajectories [Ref 26, 47].';
+    narrativeMap('1->4') = 'SS1/SS2 Residual Acute Corner: Small remaining fraction of Tier 3 high-needs households not yet reached by First 2000 Days navigators.';
+    narrativeMap('1->5') = 'SS1/SS2 Proactive First-2000-Days Wraparound: Universal G_ece_1 (0.110-0.130) and Whanau Ora / Barnardos navigators lift 78%-92% of severe-hardship infants out of the ic = 0 corner into enriched ECE (Node 5) [Ref 14, 37].';
+    narrativeMap('2->4') = 'SS1/SS2 Residual AHC Corner: Drastically compressed corner flow (<2%) after metro rent cooling (Q_mult) and universal ECE.';
+    narrativeMap('2->5') = 'SS1/SS2 Housing Cooling + Whanau & Universal ECE: Cooling metro rents (Q_mult), Super Age 64 Kuia time (+8.1% Phi_time), and universal ECE move squeezed Node 2 families into thriving early trajectories (Node 5) [Ref 26, 47].';
 end
-narrativeMap('3->5') = 'Secure-buffer families combining 20-Hours / universal public ECE with moderate private early-childhood investment.';
-narrativeMap('3->6') = 'Secure-buffer families investing at the top rungs of the convex d_grid_ic power grid alongside extended whanau enrichment.';
+narrativeMap('2->6') = 'Squeezed working families accessing high-intensity community/whanau wraparound via convex d_grid_ic interior rungs (0.0203 and 0.0706) and K_whanau(k) co-care [Ref 47].';
+narrativeMap('3->4') = 'Transitory liquidity/income shock pushing a small fraction of asset-buffered households to zero private cash investment.';
+narrativeMap('3->5') = 'Secure-buffer families combining 20-Hours / universal public ECE with moderate private early-childhood investment (Node 5).';
+narrativeMap('3->6') = 'Secure-buffer families investing at the top rungs of the convex d_grid_ic power grid alongside extended whanau enrichment (Node 6, phi_1 = +0.35).';
 
 % --- GATE 2 -> GATE 3 (4..6 -> 7..9) ---
 if ~is_ref
-    narrativeMap('4->7') = 'SS0 82% Compounded Stress Lock-In: Children from the ic=0 corner hit by family unemployment (z1) and adolescent psychosocial hazards (bullying, Youth19 depression, sexual trauma) face an 82% lock-in to Node 7 [Ref 19, 20, 38].';
-    narrativeMap('5->7') = 'SS0 Cross-Income Psychosocial & Household Shock: Even among moderate-ECE families, post-2012 cyberbullying (32-35%), anxiety/depressive escalation (52.4% in GUiNZ age 12), and job shocks pull adolescents into Node 7 [Ref 17, 19, 20].';
+    narrativeMap('4->7') = 'SS0 82% Compounded Stress Lock-In: Children from the ic=0 corner hit by family unemployment (z1) and adolescent psychosocial hazards (bullying 32-35%, Youth19 depression 23%, sexual trauma) face an 82% lock-in to Node 7 [Ref 19, 20, 38].';
+    narrativeMap('4->8') = 'SS0 Partial Schooling Recovery: Children from the ic=0 early corner whose parents regain stable employment, entering standard public schooling (Node 8) but facing delta_fade = 0.22 skill erosion [Ref 15].';
+    narrativeMap('4->9') = 'SS0 Minimal Mentoring Access Under Stress (2%): In the status quo, only 2% of corner-deprived stressed adolescents gain access to Graeme Dingle / Kura / Montessori mentoring (Node 9) [Ref 18].';
+    narrativeMap('5->7') = 'SS0 Cross-Income Psychosocial & Household Shock (lambda_psy): Even among moderate-ECE families, post-2012 cyberbullying (32-35%), anxiety/depressive escalation (52.4% in GUiNZ age 12), and job shocks pull adolescents into Node 7 [Ref 17, 19, 20].';
 else
     narrativeMap('4->7') = 'SS1/SS2 38% Clinical Persistence Floor: While mentoring and family buffers cut the stress trap from 82% to 38%, the model retains a 38% residual for acute clinical trauma requiring specialized CAMHS and ACC ISSC care [Ref 38, 55].';
+    narrativeMap('4->8') = 'SS1/SS2 Stabilized Standard Schooling: Former corner children transitioning into standard public schooling as GE firm reallocation lifts regional employment.';
     narrativeMap('4->9') = 'SS1/SS2 14-Fold Surge in Mentoring Access Under Stress (2% -> 28%): Tuakana-Teina, Graeme Dingle Stars/Project K, KiVa peer norms, and Planet Youth family buffers insulate vulnerable teens [Ref 18, 20, 55].';
+    narrativeMap('5->7') = 'SS1/SS2 Inoculated Psychosocial Incidence: Critical-thinking digital metacognition, KiVa bystander norms, and Planet Youth family connection compress cross-income adolescent distress [Ref 20, 55].';
     narrativeMap('5->9') = 'SS1/SS2 Mainstreamed Montessori Erdkinder & Tuakana-Teina Mentoring (57.3%-65.0% cohort coverage): Halts delta_fade = 0.22 skill fade-out and inoculates executive function against algorithmic capture [Ref 15, 18, 55].';
 end
-narrativeMap('5->8') = 'Transition from early childhood ECE into standard public intermediate/secondary schooling (d_2).';
-narrativeMap('6->9') = 'High-wraparound early childhood cohorts continuing into high-agency Montessori / Tuakana-Teina leadership.';
+narrativeMap('5->8') = 'Transition from early childhood ECE (Node 5) into standard public intermediate/secondary schooling (Node 8).';
+narrativeMap('6->7') = 'High-wraparound early childhood cohorts hit by severe cross-income adolescent psychosocial trauma or sudden parental job loss (Node 7) [Ref 19, 38].';
+narrativeMap('6->8') = 'High-wraparound early childhood cohorts entering standard age-segregated secondary schooling (Node 8).';
+narrativeMap('6->9') = 'High-wraparound early childhood cohorts continuing into high-agency Montessori Erdkinder & Tuakana-Teina leadership (Node 9) [Ref 18].';
 
 % --- GATE 3 -> GATE 4 (7..9 -> 10..12) ---
-narrativeMap('7->10') = 'Cunha-Heckman Stage-2 Bottleneck (phi_2 = -0.95): Unbuffered household & psychosocial stress (-0.22 log-skill shift) drives adolescents into the Dunedin 22% Struggling Adult Tier (h1-h2) at Age 20 [Ref 11, 16].';
-narrativeMap('8->11') = 'Standard schooling cohorts launching into the Core Adult Skill Tier (h3-h5) at Age 20.';
-narrativeMap('9->12') = 'Two-Way Ako / Protege Dividend (+0.11 to +0.14 log-skill boost): Mentored adolescents launch into the Thriving Adult Skill Tier (h6-h7) at Age 20 [Ref 18].';
+narrativeMap('7->10') = 'Cunha-Heckman Stage-2 Bottleneck (phi_2 = -0.95): Unbuffered household & psychosocial stress (-0.22 log-skill shift) drives adolescents into the Dunedin 22% Struggling Adult Tier (h1-h2, Node 10) at Age 20 [Ref 11, 16].';
+narrativeMap('7->11') = 'Resilient or clinically supported adolescents (CAMHS / ACC ISSC + whanau buffer K_whanau) who weather Gate 3 stress and recover into the Core Skill Tier (h3-h5, Node 11) [Ref 38, 47].';
+narrativeMap('7->12') = 'Exceptional high-initial-skill adolescents who overcome Gate 3 stress to reach the Thriving Tier (h6-h7, Node 12).';
+narrativeMap('8->10') = 'Unbanked Skill Fade-Out (delta_fade = 0.22): Without cross-age mentoring, vulnerable students in standard schooling slip downward into the Struggling Tier (h1-h2, Node 10) [Ref 15].';
+narrativeMap('8->11') = 'Standard schooling cohorts (Node 8) launching into the Core Adult Skill Tier (h3-h5, Node 11) at Age 20.';
+narrativeMap('8->12') = 'High-parental-capital students in standard schooling launching into the Thriving Adult Skill Tier (h6-h7, Node 12).';
+narrativeMap('9->10') = 'Small residual of mentored youth with severe baseline deficits who still launch in h1-h2.';
+narrativeMap('9->11') = 'Tuakana-Teina and Graeme Dingle mentoring lifting at-risk adolescents solidly into the Core Adult Skill Tier (h3-h5, Node 11) [Ref 18].';
+narrativeMap('9->12') = 'Two-Way Ako / Protege Dividend (+0.11 to +0.14 log-skill boost): Mentored adolescents launch into the Thriving Adult Skill Tier (h6-h7, Node 12) at Age 20 [Ref 18, 55].';
 
 % --- GATE 4 -> GATE 5 (10..12 -> 13..18) ---
 narrativeMap('10->13') = 'Dunedin Concentration into Exit 1 (State Care): 9.0% of retained Struggling h1-h2 youth experience statutory care/protection pathways [Ref 16, 37].';
 narrativeMap('10->14') = 'Dunedin Concentration into Exit 2 (Avoidable Hospitalisation & CAMHS): 16.5% of retained h1-h2 youth incur acute hospital and mental health burdens [Ref 16, 38].';
 narrativeMap('10->15') = 'Exit 3 (Lower Lifetime Income): 26.0% of retained h1-h2 youth remain in low-wage employment with permanently reduced lifetime earnings and tax receipts.';
 narrativeMap('10->16') = 'Dunedin Concentration into Exit 4 (Benefit, LOPE & Justice Burden): 38.5% of retained h1-h2 youth enter long-term SLP/Jobseeker dependency, ACC LOPE (80% min wage), or Corrections [Ref 16, 38].';
-narrativeMap('11->17') = '82.7% of retained Core Skill Tier (h3-h5) adults establish secure, thriving domestic careers in New Zealand.';
-narrativeMap('12->17') = '99.2% of retained Thriving Tier (h6-h7) adults become high-wage domestic builders and innovators (z_h) when retained in NZ [Ref 2, 7].';
+narrativeMap('10->17') = '10.0% of retained Struggling Tier (h1-h2) young adults who achieve stable adult employment in New Zealand (Node 17).';
+narrativeMap('10->18') = 'Low-skill trans-Tasman emigration from the h1-h2 tier (4% in SS0 -> 2% in SS1).';
+narrativeMap('11->13') = 'Low residual incidence (0.4%) of statutory care/crisis among Core Skill Tier (h3-h5) adults.';
+narrativeMap('11->14') = 'Residual avoidable hospitalisation (2.4%) among Core Skill Tier (h3-h5) adults.';
+narrativeMap('11->15') = 'Underemployment / lower-income drag (8.0%) among Core Skill Tier (h3-h5) adults facing regional mismatch.';
+narrativeMap('11->16') = 'Residual benefit or justice contact (6.5%) among Core Skill Tier (h3-h5) adults.';
+narrativeMap('11->17') = '82.7% of retained Core Skill Tier (h3-h5) adults establish secure, thriving domestic careers in New Zealand (Node 17).';
+narrativeMap('11->18') = 'Trans-Tasman emigration of Core Skill (h3-h5) tradespeople, nurses, and technicians (cut from 11% in SS0 to 6% in SS1 via housing cooling and wage lifts) [Ref 23, 24].';
+narrativeMap('12->14') = 'Minimal residual hospitalisation risk (0.8%) among Thriving Tier (h6-h7) adults.';
+narrativeMap('12->17') = '99.2% of retained Thriving Tier (h6-h7) adults become high-wage domestic builders and innovators (z_h) when retained in NZ (Node 17) [Ref 2, 7].';
 narrativeMap('12->18') = 'Trans-Tasman & OECD Brain Drain (Pi_mig): High-skill h6-h7 young adults departing to Australia/OECD (cut from 22% conditional rate in SS0 to 12% in SS1 via Youth Grant E, Q_reg cooling, and z_h firm wages) [Ref 23, 24, 25].';
 end
 
