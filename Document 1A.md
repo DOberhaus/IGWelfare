@@ -290,9 +290,16 @@ Our 6-Gate Dollar-Weighted Fiscal Sankey traces annual per-child resource flows 
 
 *Interactive Sankey Explorer:* The online versions of these Sankey diagrams feature clickable dialogs for every visible ribbon and node, detailing the structural mechanism driving each flow alongside the empirical data and theoretical literature justifying the calculation.
 
-```text
-                        [ THIS SPACE INTENTIONALLY LEFT BLANK ]                      
-```
+### Lifecycle Vulnerability Gates in the 18-Node Sankey Architecture
+
+To track how early-life conditions propagate into adult human capital ($h_1\text{–}h_7$) and Crown fiscal balances, the 5-stage Sankey framework (`Plot_ChildFates_SSankey.m` and `Plot_ChildFiscal_2Panel_SSankey.m`) models two primary structural bottlenecks—the **First 2000 Days (Gates 1–2)** and the **Early Adolescent Transition (Gate 3)**:
+
+1. **Two-Tier Birth Vulnerability and the Unpaid Whānau Buffer (Gate 1, $J = 1$):** Rather than conflating all early childhood disadvantage into a single indicator, Gate 1 separates acute deprivation (**Node 1: Severe Material Hardship, DEP-17 9+**, ~10% of births in `SS0`) from the broader liquidity and time-poverty trap (**Node 2: Residual AHC Squeeze & Paper Support**, ~14% of births in `SS0`). Constituents in Node 2 qualify on paper for statutory transfers (Working for Families, Best Start, Accommodation Supplement), but face metropolitan rent capture ($Q_{\text{reg}}$), abatement cliffs, and parental time depletion. Consistent with Marilyn Waring's analysis of uncounted household production, whether a Node 2 infant falls into the **Unmitigated Corner ($ic = 0$, Node 4)** or reaches **Moderate / Wraparound Investment (Nodes 5–6)** depends heavily on regional alloparental network capacity ($K_{\text{whānau}}$), which cushions provincial cohorts but is eroded in high-rent metropolitan centers and under policies that delay retirement ($J_r > 65$). Together, Nodes 1 and 2 account for the ~24% vulnerable birth pool that feeds the **22.0% Dunedin Study struggling adult segment (Node 10)**.
+2. **Adolescent Psychosocial & Relational Morbidity (Gate 3, $J = 5$, Ages 12–14):** Household economic stress alone does not explain post-2012 adolescent school detachment and non-cognitive skill loss. Gate 3 incorporates an **Adolescent Psychosocial & Relational Hazard ($\lambda_{\text{psy}}$)** encompassing peer victimization and cyberbullying (32–35% incidence), algorithmic social media compulsion, sexual harm (ACC Sensitive Claims / LOPE liabilities), and depressive/anxiety escalation (52.4% worsening between ages 8 and 12 in *Growing Up in New Zealand*). In `SS0`, these shocks erode executive function across all income tiers and compound multiplicatively with household stress, locking **82%** of vulnerable adolescents into **Node 7 (Compounded Household & Psychosocial Stress)**. Under `SS1`, expanding high-agency Montessori *Erdkinder* / *Tuakana-Teina* mentoring (**Node 9**), metacognitive critical thinking, and family connection buffers reduces conditional stress-trap persistence to **38%** (retaining a conservative 38% clinical floor for acute trauma requiring specialized CAMHS/ACC intervention).
+
+> **Cross-Reference:** For the complete empirical calibration baselines (*Growing Up in New Zealand*, *Youth19*, MSD DEP-17 / AHC-50, and ACC ISSC / SIA actuarial series), the Marilyn Waring unpaid care accounting mechanics, and international policy analogs (the Icelandic *Planet Youth* Prevention Model and *KiVa* New Zealand peer-ecology evaluations), see **[Document 1B: Lifecycle Vulnerability Gates — Empirical Baselines, Unpaid Buffers, and Policy Analogs](./Document_1B.md#lifecycle-vulnerability-gates-empirical-baselines-unpaid-buffers-and-policy-analogs)**.
+
+---
 
 ## Part IV: Integrated Policy Results & Visual Evidence
 

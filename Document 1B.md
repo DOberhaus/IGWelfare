@@ -24,7 +24,7 @@ To make cross-referencing effortless for readers who want every technical, empir
 
 Every strategic claim, welfare percentage, fertility shift, migration flow, wealth-tier incidence figure, and fiscal ledger flow in Documents 1A, 1C, and 3 is mapped below to its exact **MATLAB script**, **VFI Toolkit parameter/grid index**, **structural equation**, and **output CSV/PNG/HTML file** in [`Output_NZ_4Region_Intergen/`](Output_NZ_4Region_Intergen/).
 
-## 1.1 Cross-Reference for Document 1A (Introduction & Overview), Document 1C, and Document 3 ($`SS0 \to SS1 \to SS2`$)
+### 1.1 Cross-Reference for Document 1A (Introduction & Overview), Document 1C, and Document 3 ($`SS0 \to SS1 \to SS2`$)
 
 * **The Treasury Status Quo Binary (185%–200% Net Crown Debt vs. Punitive Tax/Entitlement Cliffs — Doc 1A Intro & Doc 3 Part II):**
   * *Document 1A & Doc 3 Claim:* Under unchanged policy settings, the New Zealand Treasury's *Long-term Fiscal Statement (He Tirohanga Mokopuna 2025)* and 2026 background papers project net core Crown debt spiraling toward **185%–200% of GDP**, or require punitive tax hikes (working-age PAYE or GST rising from 22.0% toward 28.2%–30.7%) and/or entitlement cuts (raising the NZ Superannuation eligibility age toward 67–72), eroding household welfare by **-16.21% CE** (or **-21.69% CE** under an unfunded 3.0%-of-GDP defense commitment).
@@ -83,7 +83,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 
 5\. **Audience 5 — Creatives, Storytellers, & Artists: Building the Future as a Creative Act (Doc 1A Part I.5):**
    * *Parametric & Economic Channels Empowering the Creative Sector:*
-     * **1. Narrative & Civic Credibility ($`\lambda_{\mathrm{cred}}(t)`$ in `TransPath_4Region_Master.m`):** Translating the 17 nodes of the Population Sankey and 26 nodes of the Fiscal Sankey into living *pūrākau* accelerates public and youth belief convergence ($`\lambda_{\mathrm{cred}}(t) \to 1`$), pulling forward brain-drain reversal (`Regime B/C`).
+     * **1. Narrative & Civic Credibility ($`\lambda_{\mathrm{cred}}(t)`$ in `TransPath_4Region_Master.m`):** Translating the 18 nodes of the Population Sankey and 26 nodes of the Fiscal Sankey into living *pūrākau* accelerates public and youth belief convergence ($`\lambda_{\mathrm{cred}}(t) \to 1`$), pulling forward brain-drain reversal (`Regime B/C`).
      * **2. Creative Agency at Gate 2 ($`\Delta_{\mathrm{Tuakana}} = +0.11 \to +0.14`$ in `Build_IntergenTransitionMatrix.m`):** Music, storytelling, *kapa haka*, design, and maker micro-economies are the active non-cognitive inputs inside *Montessori / Tuakana–Teina* and *Stars / Project K* adolescent communities at ages 12–14.
      * **3. The Creative Endowment & Urban Rent Relief ($`E = 0.065 \to 0.080`$, $`Q_{\mathrm{Akl}} -7.5\% \to -10.5\%`$, $`\tau_l: 22.0\% \to 18.5\%`$):** Cooling metropolitan rental user costs ($`rr_k`$) in Auckland and Large regional cities (Wellington, Christchurch, Hamilton, Tauranga, Dunedin) while providing every 20-year-old with the universal **Youth Capital Grant** (*E*) gives young artists, game developers, filmmakers, and cultural founders the economic runway to stay and build IP in Aotearoa rather than emigrating to Melbourne, Sydney, London, or Los Angeles.
 
@@ -91,19 +91,75 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 
 ### 2.2 Aspect 1: Early Childhood & The Adolescent Mentoring Gate (`Ages 0–19`)
 
+Our overlapping generation (OLG) model depends critically on the development potential of human capital, thus we must pay particular attention to the most sensitive periods of of that development potential: childhood and adolescence.  By making the factors of this development explicit and by calibrating our model to domestic and international datasets, it becomes clear just how significant these factors can be for the overall potential of the economy as a whole.
+
+#### 2.2.1 Gate 1 (Age 0) and Gate 2 (Ages 0–5): Differentiating Acute Hardship from the Residual AHC Squeeze
+
+Standard single-threshold poverty metrics obscure the structural mechanisms driving early childhood developmental risk in Aotearoa New Zealand. When the birth entry gate ($J = 1$) conflates acute material deprivation with broader housing-induced liquidity stress into a single vulnerability node (~24–26% of the birth cohort), it invites two opposing critiques: social policy analysts note that official severe material hardship rates are closer to 8–10% at birth, while longitudinal developmental researchers observe that a 10% threshold fails to account for the **22.0% high-burden developmental cohort** documented in the Dunedin Multidisciplinary Health and Development Study (Caspi et al., 2016).
+
+To resolve this tension with institutional precision, the 18-node Sankey architecture partitions childhood entry ($J = 1$) into three distinct constituent states:
+
+1. **Node 1: Severe Material Hardship (DEP-17 9+ / High-Needs Deprivation, ~9.5–10.5% in SS0):** Anchored to Stats NZ and Ministry of Social Development (MSD) severe material hardship thresholds (enforced lack of 9 or more of 17 basic essentials) and Treasury Integrated Data Infrastructure (IDI) multiple-risk birth flags. These households reside at the acute liquid asset floor ($a < 0.05 Q_{\text{reg}}$) alongside bottom labor productivity states ($z \le 2$). Without proactive, high-intensity wraparound intervention, constituents in Node 1 face near-certain entry into the **Unmitigated Corner ($ic = 0$, Node 4)** during the First 2000 Days ($J = 2..3$).
+2. **Node 2: Residual After-Housing-Costs (AHC) Squeeze & Paper Support (~13.5–14.5% in SS0):** Anchored to MSD Household Incomes Report AHC-50 residual income metrics and Welfare Expert Advisory Group (*Whakamana Tāngata*) findings on transfer inadequacy. Constituents in Node 2 sit above the emergency destitution floor ($0.05 Q_{\text{reg}} \le a < 0.16 Q_{\text{reg}}$) and qualify *on paper* for statutory transfers (Working for Families, Best Start, Paid Parental Leave, and the Accommodation Supplement). However, three structural frictions prevent these paper entitlements from securing a healthy First 2000 Days trajectory:
+   * **Metropolitan Housing Capture:** In high-rent regions (`Auckland` $Q = 3.10$, `Large` $Q = 2.05$), housing costs breach Accommodation Supplement caps, absorbing household cash flow.
+   * **Abatement Cliffs and Administrative Friction:** High effective marginal tax rates (EMTRs) on secondary earners and complex application gates penalize variable working hours.
+   * **Time Poverty and Uncounted Alloparental Labor ($K_{\text{whānau}}$):** As established in Marilyn Waring's foundational critique of national income accounting (*Counting for Nothing*, 1988), formal fiscal ledgers treat unpaid household and extended family care as having zero economic value. In our spatial lifecycle framework, whether an infant in **Node 2** falls into the **Unmitigated Corner (Node 4)** or reaches **Public ECE + Moderate Investment (Node 5)** depends critically on regional alloparental network capacity $K_{\text{whānau}}(k)$. In `Rural` ($K_{\text{whānau}} = 0.42$) and `Small` provincial ($0.38$) regions, lower housing costs allow kaumātua and extended whānau to reside in close proximity, providing unpaid care that bridges statutory transfer gaps. Conversely, in metropolitan `Auckland` ($0.28$) and `Large` cities ($0.32$), high housing multipliers ($Q_{\text{reg}} / Q_{\text{reg,base}}$) price extended family out of commuting range, isolating nuclear households. Furthermore, fiscal policies that raise the public pension eligibility age ($J_r > 65$) reduce elder time availability at a rate of $\exp(-0.09 \max(0, \text{Age}_{\text{super}} - 65))$, stripping unpaid care from Node 2 families and shifting long-term costs onto state hospitalisation, benefit, and justice ledgers at Gate 5.
+3. **Node 3: Secure Parental Asset Buffer (~75.0–77.0% in SS0 $\to$ >90.0% in SS1):** Households possessing sufficient liquid equity and after-housing-cost disposable income to absorb birth income transitions and sustain baseline First 2000 Days investment without emergency assistance.
+
+---
+
+#### 2.2.2 Gate 3 (Ages 12–14): Adolescent Psychosocial & Relational Morbidity
+
+#### A. Structural Rationale: Beyond Household Material Deprivation
+In a conventional lifecycle human capital model, adolescent disengagement at the ages 12–14 gate ($J = 5$) is modeled primarily as a transmission of parental unemployment and material deprivation ($z_1$). However, contemporary longitudinal evidence in Aotearoa New Zealand demonstrates that household economic hardship alone leaves a substantial unexplained residual in early secondary school detachment, chronic truancy, and non-cognitive skill depreciation.
+
+Since 2012, four interconnected psychosocial hazards—peer victimization and cyberbullying, algorithmic social media compulsion, sexual violence victimization, and clinical-grade depressive and anxiety morbidity—have operated as cross-income human capital shocks. Within a Cunha-Heckman dynamic complementarity framework, ages 12–14 represent a sensitive neurodevelopmental window for prefrontal cortex pruning and executive function consolidation. Sustained relational threat and attentional fragmentation during this window induce chronic cortisol elevation and sleep architecture disruption, degrading the self-regulatory and cognitive returns on prior early-childhood investments. When these psychosocial shocks intersect with household unemployment stress, they compound multiplicatively, locking vulnerable constituents into attainment-deficit trajectories (**Node 7: Compounded Household & Psychosocial Stress**) and generating severe downstream fiscal liabilities.
+
+#### B. Domestic Baselines: Aotearoa New Zealand Cohort Evidence
+To calibrate the baseline psychosocial hazard rate ($\lambda_{\text{psy}}$) at the ages 12–14 gate, the model draws on four primary domestic statistical series:
+
+* **Longitudinal Depressive and Anxiety Trajectories ([Growing Up in New Zealand](https://www.growingup.co.nz/)):** Data from the *Now We Are Twelve* wave establishes that entering early adolescence is marked by a broad-based deterioration in mental health. Between ages 8 and 12, **52.4%** of the cohort experienced an escalation in depressive symptoms, while **37.2%** experienced rising anxiety scores. Longitudinal regressions confirm two primary drivers at age 12: prior frequent bullying victimization at age 8 and the erosion of communicative parent-child and peer relationships. While depressive symptoms are exacerbated by area-level deprivation, baseline anxiety elevations at age 12 occur across all socioeconomic deciles, confirming that relational and digital stressors operate across the broader youth population.
+* **Secular Surge in Adolescent Clinical Morbidity ([Youth19 Rangatahi Smart Survey](https://www.youth19.ac.nz/)):** Across the Youth2000 longitudinal survey series, the prevalence of clinically significant depressive symptoms (measured via RADS-SF) among secondary school constituents nearly doubled in a single decade, rising from **13%** in 2012 to **23%** in 2019 overall—and surging from **14%** to **28%** among rangatahi Māori and **14%** to **25%** among Pacific youth. Over the same window, 12-month suicide attempt rates among Māori and Pacific adolescents rose to **13%** and **12%** respectively, demonstrating an acute escalation in severe adolescent distress coinciding with the ubiquity of smartphone-mediated social environments.
+* **Peer Victimization and Bullying Incidence ([Mental Health Foundation NZ / OECD PISA](https://mentalhealth.org.nz/)):** New Zealand consistently records one of the highest rates of school bullying in the OECD. In comparative PISA assessments, **32%** of New Zealand students reported being bullied at least a few times a month (compared to the OECD average of **23%**), with incidence peaking in the intermediate and early secondary transition years (ages 12–14). Within the *Growing Up in New Zealand* cohort, **35%** of children reported bullying victimization in the preceding year, with **24%** experiencing weekly verbal degradation or social exclusion.
+* **Sexual Harm and Long-Term Fiscal Liability ([ACC Sensitive Claims](https://www.acc.co.nz/) & [Social Investment Agency](https://sia.govt.nz/)):** Unresolved adolescent sexual harm and severe relational trauma translate directly into long-term Crown fiscal burdens via three documented channels:
+  1. *Direct Rehabilitation and Compensation Costs:* New claims lodged with ACC's Integrated Services for Sensitive Claims (ISSC) increased by **193%** between 2013/14 and 2020/21 (rising from 4,328 to 12,702 annual new claims, with active claims exceeding 38,000). When sexual or physical trauma occurs during childhood or adolescence and impairs adult earning capacity at labor market entry, claimants qualify for Loss of Potential Earnings (LOPE) entitlements set at **80%** of the adult minimum wage—representing both a direct Crown liability and a permanent reduction in lifetime tax receipts (**Node 15: Exit 3 Lower Lifetime Income** and **Node 16: Exit 4 Benefit & Justice Burden**).
+  2. *Educational Detachment and NEET Entry:* Frequent victimization and untreated adolescent trauma are primary precursors to chronic school avoidance, NCEA non-completion, and entry into NEET (Not in Education, Employment, or Training) status at ages 16–24 (**Node 10: Struggling Tier $h_1\text{–}h_2$**).
+  3. *Adult Welfare Inflow:* Actuarial evaluations by the Social Investment Agency confirm that early adolescent mental health and behavioral disengagement are leading predictors of inflow onto Youth Payment, Jobseeker Support (Health and Disability), and long-term Supported Living Payments (SLP).
+
+#### C. International and Domestic Policy Analogs
+A central question for model validation is whether the **SS1 reform package**—specifically the expansion of high-agency Montessori *Erdkinder* / *Tuakana-Teina* mentoring (**Node 9**), family connection buffers ($K_{\text{whānau}}$ and parental time), and critical thinking / digital metacognition—can credibly reduce the stress-trap persistence probability from **82%** to **38%**. Three empirical analogs demonstrate that restructuring the relational and pedagogical architecture of early adolescence yields reductions of this magnitude:
+
+1. **The Icelandic Prevention Model ([Planet Youth](https://planetyouth.org/)):** In the late 1990s, Iceland exhibited the highest rates of adolescent substance abuse, intoxication, and behavioral disengagement in Europe. Rather than relying on individualized clinical therapy or didactic risk education, the Icelandic Prevention Model treated adolescent pathology as an environmental and relational deficit, restructuring the ages 12–16 developmental ecology around four institutional domains: (i) structured quantity and quality of parent-adolescent time; (ii) shifting peer status hierarchies away from unsupervised aggregation; (iii) embedding every adolescent in a relational school environment; and (iv) universalizing access to mentored community cohorts. Within twenty years, 30-day adolescent alcohol intoxication fell from **42%** to **5%**, daily smoking fell from **23%** to **2%**, and cannabis use dropped from **17%** to **5%**, confirming that population-level adolescent crises are highly elastic with respect to family connection and mentored peer architecture.
+2. **Peer-Norm Restructuring in Aotearoa ([KiVa New Zealand Evaluations](https://www.kivaprogram.net/new-zealand/)):** Traditional disciplinary responses to bullying and cyberbullying fail because they treat victimization as a dyadic conflict between perpetrator and victim while leaving the surrounding peer status hierarchy intact. Evaluated across New Zealand schools by researchers at Victoria University of Wellington, the *KiVa* framework targets the bystander peer ecology—training students in critical social awareness, empathy, and collective peer intervention. Within the SS1 framework, the *Tuakana-Teina* (cross-age vertical mentoring) component institutionalizes this mechanism: replacing horizontal age-segregated status competition with vertical mentoring responsibility gives older constituents an institutional mandate to protect and guide younger peers.
+3. **Cognitive Inoculation and Relational Replacement in the Post-Smartphone Era:** Following New Zealand's 2024 statutory restrictions on student cellphone use during school hours and parallel OECD shifts, comparative evaluations highlight a critical distinction between *hardware restriction* and *relational replacement*. Removing mobile devices during instructional hours reduces acute classroom distraction, but leaves after-hours cyberbullying and algorithmic compulsion intact unless paired with: (i) explicit training in metacognitive critical thinking to recognize algorithmic attention-capture and synthetic social comparison; and (ii) embodied agency (*Erdkinder* pedagogy) that satisfies the adolescent developmental drive for autonomy, competence, and social contribution.
+
+#### D. Mapping Mechanisms to the Gate 3 ($J = 5$) Transition Matrix
+To preserve state-space parsimony in the 18-node Sankey diagram while capturing these dynamics accurately, the ages 12–14 transition mechanics distinguish three structural channels:
+
+| Mechanism Channel | Baseline (`SS0`) Vulnerability Dynamics | Reform (`SS1` / `SS2`) Mitigation Pathway |
+| :--- | :--- | :--- |
+| **1. Incidence Channel ($\lambda_{\text{psy}}$)** | High baseline exposure to peer victimization (**32–35%**), algorithmic compulsion, and depressive escalation (**52.4%** worsening from age 8 to 12) erodes executive function across all income deciles, pulling even stable-income adolescents into **Node 7**. | Critical thinking curricula, digital metacognition, and *Tuakana-Teina* vertical peer norms directly reduce the incidence of peer victimization and compulsive digital detachment. |
+| **2. Buffering / Insulation Channel** | When psychosocial harm or sexual trauma occurs inside a household experiencing unemployment or residual AHC stress, lack of relational support results in an **82%** lock-in to the disengagement trap (**Node 7**). | Expanding *Erdkinder* / *Tuakana* mentoring (**Node 9**) to **57%** cohort coverage (and **28%** conditional access for stressed households) alongside strengthened family connection buffers ($K_{\text{whānau}}$) insulates victims, reducing stress-trap persistence to **38%**. |
+| **3. Clinical Floor (The 38% Residual)** | Unmitigated compounding of material and severe psychosocial trauma drives acute CAMHS queues, ACC LOPE claims, and NEET inflow (**Node 10** $\to$ **Nodes 13–16**). | The model explicitly retains a **38%** conditional persistence residual under Phase 1 reform, acknowledging that acute clinical trauma and severe psychiatric morbidity require specialized clinical intervention (ACC ISSC and CAMHS) beyond school and family buffers. |
+
+In consideration of the above, we construct our adolescent gate as follows:
+
+| Aotearoa Delivery Pathway at Gate 3 ($`J = 5`$, Ages 12–14 / Years 8–10) | Representative New Zealand Programs & Institutions | Status Quo (`SS0`) | Phase 1 (`SS1`) | Phase 2 (`SS2`) | Primary Mechanism in `Build_IntergenTransitionMatrix.m` |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| **1. Structured School Peer-Mentoring Charities** | **Graeme Dingle Foundation** (*Stars / Te Kāhui Whetū* Year 12–13 *tuakana* mentoring Year 9 *teina*; *Project K* wilderness & community mentoring), *I Have a Dream NZ* | 10.0% | 28.5% | 32.0% | Insulates at-risk Year 8–10 students against `z1` family unemployment stress; cuts truancy and Exit 1/Exit 4 entry |
+| **2. *Kura Kaupapa Māori*, *Kura-ā-Iwi*, & Pasifika *Tuakana* Academies** | *Te Rūnanga Nui o Ngā Kura Kaupapa Māori*, *Ngā Kura ā Iwi o Aotearoa*, bilingual *whānau* classes, Pasifika *Tuakana–Teina* & Polyfest leadership hubs | 4.7% | 16.8% | 19.5% | Embeds *Tuakana–Teina*, *Ako*, and *Whanaungatanga* across vertical age cohorts; lifts NCEA Level 3 retention |
+| **3. High-Agency Vertical-*Whānau* State Secondary/Intermediate Schools** | *Ao Tawhiti Unlimited Discovery* (Christchurch), *Hobsonville Point Secondary School*, *Tai Wānanga*, project-based state *whānau* houses | 1.8% | 8.5% | 9.5% | Replaces rigid age-segregated tracking with multi-age advisory *whānau* and creative community enterprise projects |
+| **4. State & State-Integrated Montessori Adolescent Units (*Erdkinder*)** | *Wāora Montessori School* (Lower Hutt), *Berhampore*, *Royal Oak Intermediate*, Montessori Aotearoa adolescent units | 0.8% | 3.5% | 4.0% | Direct Montessori *Erdkinder* micro-economy and cross-age mentoring |
+| **Combined Montessori / *Tuakana–Teina* Gate 3 Participation** | **All Four Pathways Combined (`Node 8` in Fates / `Node 10` in Fiscal)** | **17.3%** | **57.3%** | **65.0%** | **Two-way skill boost ($`\Delta \ln h = +0.11`$ to $`+0.14`$) + buffers family job-loss shock** |
+
+Putting this all together, we construct Gates 1-3 with the following constraints and parameters:
+
 * **Intergenerational Borrowing Constraint & Private Corner Solution (*i_c* = 0):**
   * *Document 1A Claim (Part II, Aspect 1):* Cash-poor and rent-squeezed *whānau* in metropolitan centers hit a binding financial corner where discretionary private early-childhood enrichment collapses to zero.
   * *Code & Math Mapping:* In `ReturnFn_SpatialHH.m`, parents during active child-rearing windows $`j \in \mathcal{J}_{c,1} \cup \mathcal{J}_{c,2}`$ cannot borrow against the child's future adult human capital $`h'_1`$ ($`a' \ge 0`$ on `a_grid_assets`). When regional house prices *Q_k* (`Params.Q_reg`: Rural = `1.05`, Small = `1.40`, Large = `2.05`, Auckland = `3.10`) inflate user costs $`rr_k, rh_k`$ or mandatory transport subsistence $`\bar{e}_k`$ (`Params.ebar_energy`: Rural = `0.048`, Small = `0.036`, Large = `0.022`, Auckland = `0.016`) binds, optimal private enrichment investment $`d_3 = i_c \in [0, 0.50]`$ hits `d_grid_ic(1) = 0` alongside asset/income hardship (**25.79%** of the national cohort in Baseline `SS0`, falling to **5.67%** in `SS1` and **2.06%** in `SS2`).
 
 * **Gate 1 — Two-Stage CES Skill Technology ($`\theta_c`$ Experience Asset, Ages 0–5 vs. Ages 6–17):**
   * *Code & Math Mapping:* Implemented in `ChildCES_aprimeFn.m` and `HumanCapital_Lifecycle_aprimeFn.m` with `vfoptions.experienceasset = 1` over the 9-point grid `a_grid_thetac`:
-
-| CES Parameter / Policy Lever | Stage 1: First 2000 Days ($`j \in \mathcal{J}_{c,1}`$, Ages 0–5) | Stage 2: School & Adolescent Years ($`j \in \mathcal{J}_{c,2}`$, Ages 6–17) | Economic & Empirical Interpretation |
-| :--- | :---: | :---: | :--- |
-| **CES Curvature & Elasticity ($`\varphi_s, \sigma_s`$)** | $`\varphi_1 = +0.35`$ ($`\sigma_1 = \frac{1}{1-\varphi_1} = 1.54 > 1`$) | $`\varphi_2 = -0.95`$ ($`\sigma_2 = \frac{1}{1-\varphi_2} = 0.51 < 1`$) | High early substitutability vs. strong school-age dynamic complementarity (Cunha et al., 2010) |
-| **Share Weights ($`\gamma_{s,\mathrm{self}}, \gamma_{s,\mathrm{inv}}, \gamma_{s,\mathrm{par}}`$)** | `0.53` / `0.24` / `0.23` | `0.87` / `0.07` / `0.06` | Self-productivity rises from `0.53` to `0.87` in Stage 2; early investment raises Stage-2 returns |
-| **Public Wraparound Lever ($`G_{\mathrm{ECE},s}`$)** | `0.045` (`SS0`) → `0.110` (`SS1`) → `0.130` (`SS2`) | `0.065` (`SS0`) → `0.085` (`SS1`) → `0.105` (`SS2`) | Universal First-2000-Days wraparound (Gate 1) + Adolescent mentoring expansion (Gate 2) |
-| **Stone-Geary Luxury Floor ($`\bar{g}_{\mathrm{ECE}}`$)** | `Params.gbar_ece = 0.020` | `Params.gbar_ece = 0.020` | Ferriere et al. (2025) non-homothetic floor; in-kind public provision bypasses cash corner |
 
 * **Gate 2 (Sankey Gate 3, $`J = 5`$, Ages 12–14) — Cultural & Pedagogical Synthesis: Montessori *Erdkinder* Meets *Tuakana–Teina* and the Graeme Dingle Foundation:**
   * *Why Early-Childhood Gains Can Erode at Ages 12–14:* When a parent experiences an unbuffered unemployment or severe low-income shock (`is_unemp_stress = (iz == 1) || (n_z1 >= 5 && iz == 2 && is_hardship)`), adolescent skill formation suffers a structural erosion penalty $`\Delta \ln(h_{\mathrm{mean}}) = -0.22`$.
@@ -113,17 +169,12 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
     * ***Manaakitanga*, *Whanaungatanga*, & *Rangatiratanga*:** Uplifting the *mana* of peers through care (*manaakitanga*), school kinship belonging (*whanaungatanga*), and youth creative agency (*rangatiratanga*).
   * *Empirical Breakdown of the 17.3% Baseline (`SS0`) Scaling to 57.3% (`SS1`) and 65.0% (`SS2`):*
 
-[ This space left intentionally blank ]
-
----
-
-| Aotearoa Delivery Pathway at Gate 3 ($`J = 5`$, Ages 12–14 / Years 8–10) | Representative New Zealand Programs & Institutions | Status Quo (`SS0`) | Phase 1 (`SS1`) | Phase 2 (`SS2`) | Primary Mechanism in `Build_IntergenTransitionMatrix.m` |
-| :--- | :--- | :---: | :---: | :---: | :--- |
-| **1. Structured School Peer-Mentoring Charities** | **Graeme Dingle Foundation** (*Stars / Te Kāhui Whetū* Year 12–13 *tuakana* mentoring Year 9 *teina*; *Project K* wilderness & community mentoring), *I Have a Dream NZ* | 10.0% | 28.5% | 32.0% | Insulates at-risk Year 8–10 students against `z1` family unemployment stress; cuts truancy and Exit 1/Exit 4 entry |
-| **2. *Kura Kaupapa Māori*, *Kura-ā-Iwi*, & Pasifika *Tuakana* Academies** | *Te Rūnanga Nui o Ngā Kura Kaupapa Māori*, *Ngā Kura ā Iwi o Aotearoa*, bilingual *whānau* classes, Pasifika *Tuakana–Teina* & Polyfest leadership hubs | 4.7% | 16.8% | 19.5% | Embeds *Tuakana–Teina*, *Ako*, and *Whanaungatanga* across vertical age cohorts; lifts NCEA Level 3 retention |
-| **3. High-Agency Vertical-*Whānau* State Secondary/Intermediate Schools** | *Ao Tawhiti Unlimited Discovery* (Christchurch), *Hobsonville Point Secondary School*, *Tai Wānanga*, project-based state *whānau* houses | 1.8% | 8.5% | 9.5% | Replaces rigid age-segregated tracking with multi-age advisory *whānau* and creative community enterprise projects |
-| **4. State & State-Integrated Montessori Adolescent Units (*Erdkinder*)** | *Wāora Montessori School* (Lower Hutt), *Berhampore*, *Royal Oak Intermediate*, Montessori Aotearoa adolescent units | 0.8% | 3.5% | 4.0% | Direct Montessori *Erdkinder* micro-economy and cross-age mentoring |
-| **Combined Montessori / *Tuakana–Teina* Gate 3 Participation** | **All Four Pathways Combined (`Node 8` in Fates / `Node 10` in Fiscal)** | **17.3%** | **57.3%** | **65.0%** | **Two-way skill boost ($`\Delta \ln h = +0.11`$ to $`+0.14`$) + buffers family job-loss shock** |
+| CES Parameter / Policy Lever | Stage 1: First 2000 Days ($`j \in \mathcal{J}_{c,1}`$, Ages 0–5) | Stage 2: School & Adolescent Years ($`j \in \mathcal{J}_{c,2}`$, Ages 6–17) | Economic & Empirical Interpretation |
+| :--- | :---: | :---: | :--- |
+| **CES Curvature & Elasticity ($`\varphi_s, \sigma_s`$)** | $`\varphi_1 = +0.35`$ ($`\sigma_1 = \frac{1}{1-\varphi_1} = 1.54 > 1`$) | $`\varphi_2 = -0.95`$ ($`\sigma_2 = \frac{1}{1-\varphi_2} = 0.51 < 1`$) | High early substitutability vs. strong school-age dynamic complementarity (Cunha et al., 2010) |
+| **Share Weights ($`\gamma_{s,\mathrm{self}}, \gamma_{s,\mathrm{inv}}, \gamma_{s,\mathrm{par}}`$)** | `0.53` / `0.24` / `0.23` | `0.87` / `0.07` / `0.06` | Self-productivity rises from `0.53` to `0.87` in Stage 2; early investment raises Stage-2 returns |
+| **Public Wraparound Lever ($`G_{\mathrm{ECE},s}`$)** | `0.045` (`SS0`) → `0.110` (`SS1`) → `0.130` (`SS2`) | `0.065` (`SS0`) → `0.085` (`SS1`) → `0.105` (`SS2`) | Universal First-2000-Days wraparound (Gate 1) + Adolescent mentoring expansion (Gate 2) |
+| **Stone-Geary Luxury Floor ($`\bar{g}_{\mathrm{ECE}}`$)** | `Params.gbar_ece = 0.020` | `Params.gbar_ece = 0.020` | Ferriere et al. (2025) non-homothetic floor; in-kind public provision bypasses cash corner |
 
 ---
 
@@ -151,7 +202,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 
 ### 2.4 Part II Synthesis — Social Cohesion, Institutional Friction, Identity Utility, and Coalition Supermodularity as a function of Social Credit Ratings
 
-### 2.4.1 Coase–North Commissioning Efficiency and Williamson Actuarial Alignment
+#### 2.4.1 Coase–North Commissioning Efficiency and Williamson Actuarial Alignment
 
 Let $`\tau_{\mathrm{friction}}(\mathcal{G}) \in [0, 1)`$ denote the share of nominal public social expenditure $`G_{\mathrm{nominal},1}`$ dissipated in inter-agency contracting and compliance overhead under governance structure $`\mathcal{G}`$:
 
@@ -188,20 +239,19 @@ $$
 
 ## 3. Part III Cross-Reference: Population & Fiscal Sankey Ledgers and Interactive Web Explorer
 
-### 3.1 The 5-Stage (17-Node) Population Cohort Fates Sankey (`Table15_ChildFates_5Stage_Decomp_<Region>.csv`)
-*Source Script:* `Plot_ChildFates_SSankey.m` *(Supports $`N = 1, 2, 3, \dots`$ phases via `Active_Phases` and `Build_Phase_Registry.m`; Figure: `Fig_ChildFates_5Stage_2Panel_National_Dunedin_22.png`)*
+## 3.1 The 5-Stage (18-Node) Population Cohort Fates Sankey ( Table15_ChildFates_5Stage_Decomp_<Region>.csv )
 
-<img src="./Output_NZ_4Region_Intergen/Fig_ChildFates_5Stage_2Panel_National_Dunedin_22.png" alt="National 5-Stage Population Cohort Fates Sankey" width="100%" style="display: block; width: 100%; margin: 1.0rem auto; break-inside: avoid; page-break-inside: avoid;" />
+*Source Script:* `Plot_ChildFates_SSankey.m` *(Supports $N = 1, 2, 3, \dots$ phases via `Active_Phases` and `Build_Phase_Registry.m`; Figure: `Fig_ChildFates_5Stage_2Panel_National_Dunedin_22.png`)*
 
-Each node's ribbon width represents the exact percentage of the birth cohort (`Pop_17Nodes_Pct`) passing through that developmental state:
+Each node's ribbon width represents the exact percentage of the birth cohort (`Pop_18Nodes_Pct`) passing through that developmental state:
 
-| Stage (Child $`J`$ Axis) | Node ID & Canonical Label | National `SS0` (%) | National `SS1` (%) | National `SS2` (%) | Auckland `SS0` (%) | Auckland `SS1` (%) | Structural Definition in `Plot_ChildFates_SSankey.m` |
+| *Stage (Child $J$ Axis)* | *Node ID & Canonical Label* | *National `SS0` (%)* | *National `SS1` (%)* | *National `SS2` (%)* | *Auckland `SS0` (%)* | *Auckland `SS1` (%)* | *Structural Definition in `Plot_ChildFates_SSankey.m`* |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Stage 1 ($`J=1`$)**<br>*Birth, Age 0* | `1_Birth_Material_Hardship_Squeeze`<br>`2_Birth_Secure_Parental_Buffer` | 25.79%<br>74.21% | 7.74%<br>92.26% | 4.38%<br>95.62% | 29.40%<br>70.60% | 8.82%<br>91.18% | `is_birth_squeeze_4D`: low asset buffer (`a < 0.15*Q_k`) or low-income corner (`iz <= 2 & ic == 0`) |
-| **Stage 2 ($`J=2\text{–}3`$)**<br>*First 2000 Days* | `3_ECE_Unmitigated_Corner_ic0`<br>`4_ECE_Public_Wraparound_Mod_Inv`<br>`5_ECE_High_Wraparound_Parental_Inv` | 25.79%<br>47.51%<br>26.70% | 5.67%<br>67.63%<br>26.70% | 2.06%<br>69.44%<br>28.50% | 29.40%<br>43.90%<br>26.70% | 6.47%<br>66.83%<br>26.70% | `m_corner = (ic <= 1e-5) & is_hardship`; tracks exit from *i_c* = 0 corner via universal $`G_{\mathrm{ECE},1}`$ |
-| **Stage 3 ($`J=5`$)**<br>*Adol. Gate, 12–14* | `6_Adol_Family_Unemp_Stress_z1`<br>`7_Adol_Standard_Schooling`<br>`8_Adol_Montessori_Tuakana_Mentoring` | 18.88%<br>63.82%<br>17.30% | 4.91%<br>37.79%<br>57.30% | 2.45%<br>32.55%<br>65.00% | 21.15%<br>61.55%<br>17.30% | 5.50%<br>37.20%<br>57.30% | Evaluates parental employment shock `iz == 1` vs. Montessori / *Tuakana–Teina* & Graeme Dingle buffer (`57.3%` in `Dunedin_22`, `58.6%` in `MetroSqueeze_GUiNZ`) |
-| **Stage 4 ($`J=6\text{–}7`$)**<br>*Adult Launch, 20* | `9_Launch_Struggling_Tier_h1_h2`<br>`10_Launch_Core_Tier_h3_h5`<br>`11_Launch_Thriving_Tier_h6_h7` | 22.00%<br>54.50%<br>23.50% | 4.02%<br>38.68%<br>57.30% | 1.50%<br>33.50%<br>65.00% | 24.80%<br>52.10%<br>23.10% | 4.50%<br>37.50%<br>58.00% | Completed pre-labor skill mapped onto 7-point grid `h_vec = [0.45..1.80]` (`22.0%` struggling in `Dunedin_22`, `28.5%` in `MetroSqueeze_GUiNZ`; thriving rises from `23.2%–23.5%` to `57.3%–61.0%+`) |
-| **Stage 5 ($`J=10`$)**<br>*Adulthood, 30+* | `12_Exit1_State_Care_Placement`<br>`13_Exit2_Avoidable_Hospitalisation`<br>`14_Exit3_Lower_Lifetime_Income`<br>`15_Exit4_Benefit_Justice_Burden`<br>`16_Retained_NZ_Thriving_Adult`<br>`17_Emigrated_Abroad_Brain_Drain` | 2.10%<br>4.82%<br>9.63%<br>11.38%<br>61.14%<br>10.93% | 0.49%<br>1.62%<br>4.15%<br>3.89%<br>81.29%<br>8.56% | 0.24%<br>1.12%<br>2.95%<br>2.44%<br>85.65%<br>7.60% | 2.35%<br>5.28%<br>10.42%<br>12.55%<br>50.11%<br>19.29% | 0.54%<br>1.75%<br>4.38%<br>4.18%<br>74.23%<br>14.92% | Dunedin concentration: 22% struggling tier drives **74.1%** of acute Exits 1, 2, 4 in `SS0` (empirical Dunedin Study benchmark: **57%–81%**) |
+| *Stage 1 ($J = 1$)*<br>*Birth, Age 0* | `1_Severe_Material_Hardship_DEP17`<br>`2_Residual_AHC_Squeeze_Paper_Support`<br>`3_Secure_Parental_Asset_Buffer` | 9.80%<br>14.20%<br>76.00% | 2.60%<br>5.14%<br>92.26% | 1.20%<br>3.18%<br>95.62% | 11.40%<br>18.00%<br>70.60% | 3.10%<br>5.72%<br>91.18% | **Node 1 (Deep Crimson):** Acute asset floor ($a < 0.05 Q_k$, DEP-17 9+ `[Ref 48]`).<br>**Node 2 (Burnt Rust):** Residual AHC-50 squeeze ($0.05 Q_k \le a < 0.16 Q_k$), buffered in provincial regions by unpaid *whānau* care $K_{\text{whānau}}(k)$ `[Ref 47]`. |
+| *Stage 2 ($J = 2\text{–}3$)*<br>*First 2000 Days* | `4_Unmitigated_Corner_ic0`<br>`5_Public_ECE_Moderate_Inv`<br>`6_High_Wraparound_Whanau_Inv` | 24.00%<br>49.30%<br>26.70% | 5.67%<br>67.63%<br>26.70% | 2.06%<br>69.44%<br>28.50% | 29.40%<br>43.90%<br>26.70% | 6.47%<br>66.83%<br>26.70% | `m_corner`: tracks exit from $i_c = 0$ corner via universal $G_{\text{ECE},1}$ and regional alloparental buffer $K_{\text{whānau}}(k)$. |
+| *Stage 3 ($J = 5$)*<br>*Adol. Gate, 12–14* | `7_Compounded_HH_Psychosocial_Stress`<br>`8_Standard_Public_Schooling`<br>`9_Montessori_Tuakana_Mentoring` | 18.88%<br>63.82%<br>17.30% | 4.91%<br>37.79%<br>57.30% | 2.45%<br>32.55%<br>65.00% | 21.15%<br>61.55%<br>17.30% | 5.50%<br>37.20%<br>57.30% | Evaluates compounded parental distress ($i_z \in \{1,2\}$) and adolescent psychosocial morbidity $\lambda_{\text{psy}}$ `[Ref 19, 20, 38]` vs. Montessori / *Tuakana–Teina* & family connection buffers `[Ref 18, 55]` (82% $\to$ 38% persistence). |
+| *Stage 4 ($J = 6\text{–}7$)*<br>*Adult Launch, 20* | `10_Struggling_Tier_h1_h2`<br>`11_Core_Skill_Tier_h3_h5`<br>`12_Thriving_Tier_h6_h7` | 22.00%<br>54.50%<br>23.50% | 4.02%<br>38.68%<br>57.30% | 1.50%<br>33.50%<br>65.00% | 24.80%<br>52.10%<br>23.10% | 4.50%<br>37.50%<br>58.00% | Completed pre-labor skill mapped onto 7-point grid `h_vec = [0.45..1.80]` (`22.0%` struggling in `Dunedin_22` `[Ref 16]`, `28.5%` in `MetroSqueeze_GUiNZ` `[Ref 17]`). |
+| *Stage 5 ($J = 10$)*<br>*Adulthood, 30+* | `13_Exit1_State_Care`<br>`14_Exit2_Avoidable_Hospitalisation`<br>`15_Exit3_Lower_Lifetime_Income`<br>`16_Exit4_Benefit_Justice_Burden`<br>`17_Retained_NZ_Secure_Thriving`<br>`18_Emigrated_Abroad_BrainDrain` | 2.10%<br>4.82%<br>9.63%<br>11.38%<br>61.14%<br>10.93% | 0.49%<br>1.62%<br>4.15%<br>3.89%<br>81.29%<br>8.56% | 0.24%<br>1.12%<br>2.95%<br>2.44%<br>85.65%<br>7.60% | 2.35%<br>5.28%<br>10.42%<br>12.55%<br>50.11%<br>19.29% | 0.54%<br>1.75%<br>4.38%<br>4.18%<br>74.23%<br>14.92% | Dunedin concentration: 22% struggling tier (`Node 10`) drives *74.1%* of acute Exits 1, 2, 4 (`Nodes 13, 14, 16`) in `SS0` (empirical Dunedin Study benchmark: *57%–81%* `[Ref 16]`). |
 
 ---
 
@@ -477,7 +527,7 @@ Finally, note that in `SS1` and `SS2`, the critical disposable-income boundary $
 
 ## 4. Part IV Cross-Reference: Core Model Output Tables (Tables 1 to 17)
 
-## 4.1 Table 1: Multiphase 4-Region Daruich (2018) & Lee-Seshadri (2019) Welfare Decomposition ($`SS0 \to SS1 \to SS2`$)
+### 4.1 Table 1: Multiphase 4-Region Daruich (2018) & Lee-Seshadri (2019) Welfare Decomposition ($`SS0 \to SS1 \to SS2`$)
 
 *Source Files:* [`Table1_4Region_Daruich_LeeSeshadri_Decomposition.csv`](Output_NZ_4Region_Intergen/Table1_4Region_Daruich_LeeSeshadri_Decomposition.csv) *(Generated by `WelfareDecomposition_4Region.m` with `Active_Phases = {'SS0', 'SS1', 'SS2'}`)* and cohort transition trajectory [`Table_Trans1_Daruich_Cohort_Welfare_4Region.csv`](Output_NZ_4Region_Intergen/Table_Trans1_Daruich_Cohort_Welfare_4Region.csv) *(Generated by `TransPath_4Region_Master.m`; Figure: `Fig1_Daruich_Cohort_Welfare_4Region.png`)*
 
@@ -588,7 +638,7 @@ $$
 V_{20,k}^{\mathrm{Domestic}}(a_{20} + E, h_3) \ge V_{20,5}^{\mathrm{Abroad}}(a_{20}, h_3) - \kappa_{\mathrm{mig}} \quad \forall k \in \{1, 2, 3, 4\}
 $$
 
-## 4.5.3 Parental Developmental Time Crowd-Out Under High Abatement
+### 4.5.3 Parental Developmental Time Crowd-Out Under High Abatement
 
 Consider a liquidity-constrained Gate 1 household subject to benefit abatement rate $`\tau_{\mathrm{abate}} \in [0.70, 0.90]`$ that increases low-wage labor supply by $`\Delta \ell_{\mathrm{coerced}} > 0`$, inducing a one-for-one reduction in parental developmental time $`\Delta \ell_{\mathrm{child}} = -\Delta \ell_{\mathrm{coerced}} < 0`$. Differentiating Stage-1 skill $`\theta'_c`$ with respect to coerced labor hours yields:
 
@@ -687,7 +737,7 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 
 ---
 
-# 5. Part V Cross-Reference: The 2050 Debt-Sinking Protocol, Actuarial Continuation Valuation, & 11-Layer Constructive Synergy Attribution
+## 5. Part V Cross-Reference: The 2050 Debt-Sinking Protocol, Actuarial Continuation Valuation, & 11-Layer Constructive Synergy Attribution
 
 ### 5.1 The 2050 Sovereign Debt-Sinking & Public Reinvestment Protocol (`FiscalLedger.Protocol_2050_Summary`)
 *Source Function:* `Build_Custom_Protocol_2050_Table` in `Plot_ChildFiscal_SSankey.m` (`Cohort_Births = 60,000/yr`, `r_bond_yield = 0.042`, `mult_reinvest = 1.65`, `Horizon_2050 = 25 yrs`)
