@@ -74,22 +74,30 @@ elseif isfield(Params, 'G_ece')
 end
 M_mentor = min(1.0, max(0.0, (G_ece2_val - 0.045) / (0.085 - 0.045)));
 
+% Precompute sub-grid cell spans [n_a1 x 1] and threshold vector tau_cuts [1 x 4]:
+a_dbl    = double(a_vec(:));
+da_span  = [max(1e-6, a_dbl(2) - a_dbl(1)); diff(a_dbl)];
+a_prev   = a_dbl - da_span;
+tau_cuts = [0.025, 0.050, 0.080, 0.160]; % [1: Extreme, 2: Severe DEP-17, 3: Hardship, 4: AHC-50]
+
 use_gpu = (gpuDeviceCount > 0);
 if use_gpu
-    a_G       = gpuArray(reshape(a_vec, [n_a1, 1, 1, 1]));
-    h_G       = gpuArray(reshape(h_vec, [1, n_h, 1, 1]));
+    a_G       = gpuArray(reshape(a_dbl,      [n_a1, 1, 1, 1]));
+    h_G       = gpuArray(reshape(h_vec,      [1, n_h, 1, 1]));
     ic_G      = gpuArray(ic_vec(:));
+    z_idx_3D  = gpuArray(reshape(1:n_z1,     [1, 1, n_z1, 1]));
     log_h_dst = gpuArray(reshape(log(h_vec), [1, 1, 1, 1, n_h]));
 else
-    a_G       = reshape(a_vec, [n_a1, 1, 1, 1]);
-    h_G       = reshape(h_vec, [1, n_h, 1, 1]);
+    a_G       = reshape(a_dbl,      [n_a1, 1, 1, 1]);
+    h_G       = reshape(h_vec,      [1, n_h, 1, 1]);
     ic_G      = ic_vec(:);
+    z_idx_3D  = reshape(1:n_z1,     [1, 1, n_z1, 1]);
     log_h_dst = reshape(log(h_vec), [1, 1, 1, 1, n_h]);
 end
 
 fertile_j = Params.j_s1_start : Params.j_s2_end;
-retire_j = round(Params.Jr) : Params.J;
-mort_vec = reshape(1 - double(gather(Params.sj(retire_j))), [1, 1, 1, length(retire_j)]);
+retire_j  = round(Params.Jr) : Params.J;
+mort_vec  = reshape(1 - double(gather(Params.sj(retire_j))), [1, 1, 1, length(retire_j)]);
 if use_gpu, mort_vec = gpuArray(mort_vec); end
 
 NewbornDist_PreMig = struct();
@@ -102,12 +110,20 @@ for r_idx = 1:N_reg
     K_reg   = min(1.0, max(0.0, K_reg_vec(r_idx)));
     dK_reg  = K_reg - K_base_vec(r_idx);
 
-    Dist_raw      = double(gather(StationaryDist.(hh_type)));
-    Pol_raw       = double(gather(Policy.(hh_type)));
-    Q_house       = Params.Q_reg.(hh_type);
-    crowd_pen     = 0.08 * log(max(1.0, Q_house));
-    % Stronger extended whanau / papakainga networks cushion severe housing crowding:
-    crowd_pen_eff = crowd_pen * max(0.50, 1.0 - 0.30 * dK_reg);
+    Dist_raw = double(gather(StationaryDist.(hh_type)));
+    Pol_raw  = double(gather(Policy.(hh_type)));
+    Q_house  = Params.Q_reg.(hh_type);
+    Q_base   = Q_house;
+    if isfield(Params, 'Q_reg_base') && isfield(Params.Q_reg_base, hh_type)
+        Q_base = Params.Q_reg_base.(hh_type);
+    end
+
+    % Vectorized [n_a1 x 4] sub-grid cell weights & [n_a1 x 1] Waring-buffered crowding penalty:
+    W_cell    = min(1.0, max(0.0, (Q_house .* tau_cuts - a_prev) ./ da_span));
+    crowd_pen = 0.08 * log(max(1.0, Q_house)) * ...
+                [max(0.55, 1.0 - 0.25 * dK_reg); ...
+                 0.35 * max(0.30, 0.72 - 0.55 * K_reg * ((Q_base / max(0.5, Q_house)) ^ 0.25))];
+    crowd_1D  = [W_cell(:, 3), W_cell(:, 4) - W_cell(:, 3)] * crowd_pen; % [n_a1 x 1]
 
     if is_5D && ndims(Dist_raw) == 5
         Dist_5D   = reshape(Dist_raw, [n_a1, n_h, n_th, n_z1, Params.J]);
@@ -116,58 +132,65 @@ for r_idx = 1:N_reg
         j_launch  = min(Params.J, Params.j_child_launch);
 
         D_th2 = squeeze(sum(Dist_5D(:, :, :, :, j_s1_done), [1, 2, 4]));
-        D_th2 = D_th2(:) / max(1e-12, sum(D_th2(:)));
-        Diag.MeanTheta2.(reg) = sum(D_th2 .* th_vec(:));
+        Diag.MeanTheta2.(reg) = sum(D_th2(:) .* th_vec(:)) / max(1e-12, sum(D_th2(:)));
 
-        % Extract parent-child joint distribution over (a, theta_c) at child launch j_launch
         Mass_a_th   = reshape(sum(Dist_5D(:, :, :, :, j_launch), [2, 4]), [n_a1, n_th]);
         parent_mass = max(1e-12, sum(Mass_a_th, 'all'));
-        Diag.MeanTheta3.(reg) = sum(sum(Mass_a_th, 1)' .* th_vec(:)) / parent_mass;
+        Diag.MeanTheta3.(reg) = (sum(Mass_a_th, 1) * th_vec(:)) / parent_mass;
 
-        % No double-counting of ece_lift or K_whanau in 5D mode (theta_c already evolved via aprimeFn!)
-        is_hard_1D = double(a_vec < 0.08 * Q_house); % [n_a1 x 1]
-        log_h_mean = 0.68 * log(reshape(th_vec, [1, n_th])) + reg_skill_drift(r_idx) - crowd_pen_eff .* is_hard_1D;
-
-        diff_log = reshape(log(h_vec), [n_h, 1, 1]) - reshape(log_h_mean, [1, n_a1, n_th]);
-        trans_p  = exp(-0.5 * (diff_log ./ 0.24).^2);
-        trans_p  = trans_p ./ max(1e-12, sum(trans_p, 1));
+        log_h_mean = 0.68 * log(reshape(th_vec, [1, n_th])) + reg_skill_drift(r_idx) - crowd_1D;
+        diff_log   = reshape(log(h_vec), [n_h, 1, 1]) - reshape(log_h_mean, [1, n_a1, n_th]);
+        trans_p    = exp(-0.5 * (diff_log ./ 0.24).^2);
+        trans_p    = trans_p ./ max(1e-12, sum(trans_p, 1));
 
         Prob_h_child = squeeze(sum(trans_p .* reshape(Mass_a_th, [1, n_a1, n_th]), [2, 3])) / parent_mass;
         Prob_h_child = Prob_h_child(:) / sum(Prob_h_child(:));
 
+        Mass_a_1D = sum(Mass_a_th, 2) / parent_mass;
+        Diag.SevereHardshipShare.(reg) = Mass_a_1D' * W_cell(:, 2);
+        Diag.ResidualAHCShare.(reg)    = Mass_a_1D' * (W_cell(:, 4) - W_cell(:, 2));
+
         Dist_4D = reshape(sum(Dist_5D, 3), [n_a1, n_h, n_z1, Params.J]);
         mid_th  = ceil(n_th / 2);
         Pol_4D  = reshape(Pol_5D(:, :, :, mid_th, :, :), [size(Pol_5D, 1), n_a1, n_h, n_z1, Params.J]);
-        if use_gpu
-            Dist_k = gpuArray(Dist_4D); Pol_k = gpuArray(Pol_4D);
-        else
-            Dist_k = Dist_4D; Pol_k = Pol_4D;
-        end
+        if use_gpu, Dist_k = gpuArray(Dist_4D); Pol_k = gpuArray(Pol_4D);
+        else,       Dist_k = Dist_4D;           Pol_k = Pol_4D; end
     else
         Dist_4D = reshape(Dist_raw, [n_a1, n_h, n_z1, Params.J]);
         Pol_4D  = reshape(Pol_raw,  [size(Pol_raw, 1), n_a1, n_h, n_z1, Params.J]);
-        if use_gpu
-            Dist_k = gpuArray(Dist_4D); Pol_k = gpuArray(Pol_4D);
-        else
-            Dist_k = Dist_4D; Pol_k = Pol_4D;
-        end
+        if use_gpu, Dist_k = gpuArray(Dist_4D); Pol_k = gpuArray(Pol_4D);
+        else,       Dist_k = Dist_4D;           Pol_k = Pol_4D; end
 
         Dist_Fert   = Dist_k(:, :, :, fertile_j);
         parent_mass = max(1e-12, sum(Dist_Fert, 'all'));
+        d_ic_idx    = max(1, min(length(ic_vec), round(Pol_k(ic_pol_row, :, :, :, fertile_j))));
+        ic_4D       = reshape(ic_G(d_ic_idx(:)), size(Dist_Fert));
 
-        d_ic_idx = max(1, min(length(ic_vec), round(Pol_k(ic_pol_row, :, :, :, fertile_j))));
-        ic_4D    = reshape(ic_G(d_ic_idx(:)), size(Dist_Fert));
+        % Broadcast [n_a1 x 4] W_cell against z_idx_3D [1 x 1 x n_z1]:
+        W_G      = reshape(W_cell, [n_a1, 1, 1, 1, 4]);
+        crowd_G  = reshape(crowd_1D, [n_a1, 1, 1, 1]);
+        if use_gpu, W_G = gpuArray(W_G); crowd_G = gpuArray(crowd_G); end
 
-        % 4D Compact Skill Transition: anchored to match 5D baseline distribution in SS0
-        is_hard_4D   = (a_G < 0.08 * Q_house);
-        is_stress_4D = double(ic_4D < 0.01);
-        stress_pen   = 0.045 * is_stress_4D * (1.0 - 0.80 * M_mentor) * (1.0 - 0.55 * K_reg);
-        ece_lift     = 0.55 * (Params.G_ece - 0.045) + 0.04 * (M_mentor - 0.50) + 0.12 * dK_reg;
-        hp_eff_4D    = h_G .* (1.0 + 0.15 * dK_reg);
+        w_sev_az = max(W_G(:,:,:,:,2) .* (z_idx_3D <= 2), W_G(:,:,:,:,1) .* (z_idx_3D <= 3));
+        w_ahc_az = max(W_G(:,:,:,:,4) .* (z_idx_3D <= 2), W_G(:,:,:,:,3) .* (z_idx_3D <= 3)) - w_sev_az;
+
+        Diag.SevereHardshipShare.(reg) = gather(sum(Dist_Fert .* w_sev_az, 'all') / parent_mass);
+        Diag.ResidualAHCShare.(reg)    = gather(sum(Dist_Fert .* w_ahc_az, 'all') / parent_mass);
+
+        % 4D Compact Skill Transition: two-tier convex d_grid_ic stress & Adolescent lambda_psy hazard
+        is_stress_4D = double(ic_4D < 0.005) + 0.55 .* double((ic_4D >= 0.005) & (ic_4D < 0.035));
+        M_trust_k    = M_mentor * (0.45 + 0.55 * min(1.0, K_reg / 0.35));
+        lambda_psy_k = max(0.22 * 0.38, 0.22 * (1.0 - 0.52 * M_trust_k) * (1.0 - 0.35 * min(1.0, K_reg / 0.38)));
+        comp_load_4D = is_stress_4D + lambda_psy_k .* (1.0 + 0.65 .* is_stress_4D);
+        unbuf_mult_k = max(0.38 * lambda_psy_k, (1.0 - 0.80 * M_trust_k) * (1.0 - 0.55 * K_reg));
+
+        stress_pen = 0.038 .* comp_load_4D .* unbuf_mult_k;
+        ece_lift   = 0.55 * (Params.G_ece - 0.045) + 0.04 * (M_mentor - 0.50) + 0.12 * dK_reg;
+        hp_eff_4D  = h_G .* (1.0 + 0.15 * dK_reg);
 
         log_h_mean = Params.rho_hc_ig .* log(hp_eff_4D) ...
-            + Params.gamma_ic .* log(0.82 + 1.15 * (ic_4D + Params.G_ece + 0.020 * dK_reg)) ...
-            + ece_lift - stress_pen + reg_skill_drift(r_idx) - crowd_pen_eff .* is_hard_4D;
+                   + Params.gamma_ic .* log(0.82 + 1.15 * (ic_4D + Params.G_ece + 0.020 * dK_reg)) ...
+                   + ece_lift - stress_pen + reg_skill_drift(r_idx) - crowd_G;
 
         pdf_5D = exp(-0.5 .* ((log_h_dst - log_h_mean) ./ 0.24).^2);
         pdf_5D = pdf_5D ./ sum(pdf_5D, 5);
@@ -175,7 +198,7 @@ for r_idx = 1:N_reg
         Prob_h_child = squeeze(gather(sum(Dist_Fert .* pdf_5D, [1, 2, 3, 4]))) / gather(parent_mass);
         Prob_h_child = Prob_h_child(:) / sum(Prob_h_child(:));
 
-        Diag.MeanTheta3.(reg) = sum(Prob_h_child(:) .* h_vec(:));
+        Diag.MeanTheta3.(reg) = Prob_h_child(:)' * h_vec(:);
         Diag.MeanTheta2.(reg) = 0.92 * Diag.MeanTheta3.(reg);
     end
 

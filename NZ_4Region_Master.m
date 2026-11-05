@@ -61,7 +61,7 @@ for r_idx = 1:N_reg
     n_d.(hh_type)    = [4, 3, 7];
     d_grid_l         = [0; 0.5; 0.8; 1.0];
     d_grid_Ih        = linspace(0, 0.30, 3)';
-    d_grid_ic        = linspace(0, 0.50, 7)';
+    d_grid_ic        = 0.50 * (linspace(0, 1, 7).^1.8)'; % Convex power grid: [0, 0.0203, 0.0706, 0.1460, 0.2456, 0.3649, 0.5000]'
     d_grid.(hh_type) = [d_grid_l; d_grid_Ih; d_grid_ic];
 
     % Endogenous States a: [a1 = Net Worth (a), a2 = Adult HC (h), a3 = Skill Experience Asset (theta_c LAST)]

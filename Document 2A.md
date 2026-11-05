@@ -82,12 +82,20 @@ Replacing distortionary capital income taxation ($`\tau_k`$) with a book-value w
 ## 3. Finite-Horizon Household Problem Across Lenses 1, 2, and 3
 
 ### 3.1 State Vector, Decision Grids, & Return Function Signature
-In the compact 4D GPU specification (`ReturnFn_SpatialHH_Compact4D.m`, 40 arguments), a household in region *k* at age bracket $j \in \lbrace 1, \dots, J \rbrace$ has state vector $\left(a, h, z, j\right)$ and chooses decision vector $d = \left(\ell, I_h, i_c\right)$ and next-period states $\left(a^{\prime}, h^{\prime}\right)$:
-* `d_grid`: $\ell \in \lbrack 0.2, 1.0\rbrack$ ($`n_{d1} = 5`$, labor supply), $`I_h \in \lbrack 0, 0.35\rbrack`$ ($`n_{d2} = 4`$, adult Ben-Porath training time), $`i_c \in \lbrack 0, 0.45\rbrack`$ ($`n_{d3} = 5`$, private early/school child investment).
-* `a_grid`: $a \in \lbrack 0, 25\rbrack$ ($`n_{a1} = 61`$, household net worth) and $h \in \lbrack 0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80\rbrack$ ($`n_{a2} = 7`$, adult human capital tiers $`h_1 \dots h_7`$).
-* `z_grid`: $`z \in \mathcal{Z}_{hh}`$ ($`n_z = 7`$, 7-point Rouwenhorst idiosyncratic earnings shock (Kopecky & Suen, 2010), where $z < 0.80$ $`(i_z \in \lbrace{1,2}\rbrace`$, bottom 10.94\% stationary binomial mass) denotes unemployment/severe distress).
 
-*(In the full two-stage CES experience-asset specification with Emigration Abroad, `ReturnFn_SpatialHH.m` and `HumanCapital_Lifecycle_aprimeFn.m`, `a_grid` also tracks the 5-point child skill experience asset $`\theta_c \in \mathcal{G}_{\theta}`$ across childhood stages $`\mathcal{J}_{c,1}`$ and $`\mathcal{J}_{c,2}`$.)*
+In the GPU experience-asset specification (`NZ_4Region_Master.m` and `ReturnFn_SpatialHH.m`, alongside the compact 4D solver `ReturnFn_SpatialHH_Compact4D.m`), a household in region $k$ at age bracket $j \in \{1, \dots, J\}$ has endogenous state vector $a = (a_1, h, \theta_c)$, exogenous productivity state $z$, and chooses decision vector $d = (\ell, I_h, i_c)$:
+
+* **`d_grid` (`n_d = [4, 3, 7]`, 84 composite decision states):**
+  * $\ell \in \{0, 0.5, 0.8, 1.0\}$ ($n_{d_1} = 4$, extensive and intensive margin market labor supply).
+  * $I_h \in \text{linspace}(0, 0.30, 3)^{\top}$ ($n_{d_2} = 3$, adult Ben-Porath on-the-job training time).
+  * $i_c \in [0, 0.50]$ ($n_{d_3} = 7$, private early/school child skill investment, placed last in `n_d` as the experience-asset control). To prevent working families in the residual after-housing-costs (AHC) squeeze (**Node 2**) from being artificially rounded down to the $i_c = 0$ corner—which occurs under linear spacing where the first positive rung sits at $`0.0833 \approx 7,917\text{ NZD/yr}`$—`d_grid_ic` uses a convex power grid:
+    $$d_{\text{grid,ic}} = 0.50 \times (\text{linspace}(0, 1, 7))^{1.8} = [0, 0.0203, 0.0706, 0.1460, 0.2456, 0.3649, 0.5000]^{\top}$$
+    providing accessible interior rungs at $i_{c,2} = 0.0203$ ($`\approx 1,929\text{ NZD/yr}`$) and $i_{c,3} = 0.0706$ ($`\approx 6,707\text{ NZD/yr}`$) while matching the 7-tier resolution of $h$ and $z$.
+* **`a_grid` (`n_a = [61, 7, 9]`):**
+  * $a_1 \in [0, 25]$ ($n_{a_1} = 61$, household liquid net worth spaced cubically via $25 \times (\text{linspace}(0, 1, 61))^3$, concentrating 17 grid nodes below $a = 0.48 \approx \text{NZD } 45\text{k}$ to resolve regional housing thresholds $Q_k$ via continuous sub-grid linear cell interpolation).
+  * $h \in \{0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80\}$ ($n_{a_2} = 7$, canonical adult human capital tiers $h_1 \dots h_7$: $h_1\text{–}h_2$ Struggling, $h_3\text{–}h_5$ Core, $h_6\text{–}h_7$ Thriving).
+  * $\theta_c \in \text{linspace}(0.45, 1.85, 9)^{\top}$ ($n_{a_3} = 9$, continuous-interpolation child skill experience asset governed by `HumanCapital_Lifecycle_aprimeFn.m`, placed last in `n_a`).
+* **`z_grid` (`n_z = 7`):** $z \in Z_{hh}$ ($n_z = 7$, 7-point Rouwenhorst idiosyncratic earnings shock (Kopecky & Suen, 2010) with $\rho_z = 0.85$ and region-specific drift $\mu_k$ and volatility $\sigma_k \in [0.11, 0.24]$, where $i_z \in \{1, 2\}$ denotes unemployment or severe low-wage distress).
 
 ### 3.2 Budget Constraint, Stone-Geary Subsistence, & Housing Tenure Cutoff
 Effective labor supply during working life ($`j < J_r`$) is $`\ell_{\mathrm{eff}} = \max\left(0,  \ell - I_h\right)`$, generating gross labor income $`y_{\mathrm{lab}} = w_k z h \ell_{\mathrm{eff}}`$. In retirement ($`j \ge J_r`$), households receive universal New Zealand Superannuation $`p_{\mathrm{super}}`$ plus means-tested consumption floor support $\underline{c}$. Total disposable cash-on-hand available for composite expenditure $`e_{\mathrm{tot}}`$ is:
@@ -101,6 +109,23 @@ e_{\mathrm{tot}} = \frac{y_{\mathrm{disp}} - \bar{e}_k - \mathbb{I}_{\left\lbrac
 $$
 
 Following Kiyotaki, Michaelides, and Nikolov (2024), households with net worth below the regional down-payment threshold ($`a < \xi_k Q_k`$, where $`\xi_k = 0.20`$) are **Renters** facing rental user cost $`r_{h,k}^{\mathrm{rent}} = \left(1 + \mu_{\mathrm{maint}} - G_k / R\right) Q_k`$, while households with $`a \ge \xi_k Q_k`$ are **Homeowners** facing user cost $`r_{h,k}^{\mathrm{own}} = \left(1 + \mu_{\mathrm{maint}} - G_k / R - \psi_{\mathrm{own}}\right) Q_k`$. Optimal non-durable consumption $`c_{nd} = \phi_{nd} e_{\mathrm{tot}}`$ and housing services $`c_H = \left(1 - \phi_{nd}\right) e_{\mathrm{tot}} / r_{h,k}`$ combine in the Cobb-Douglas bundle $`c_{\mathrm{comp}} = c_{nd}^{\phi_{nd}} c_H^{1 - \phi_{nd}}`$.
+
+
+#### 3.2.1 Discretization of Early Childhood Investment (`d_grid_ic`)
+In the baseline VFI configuration (`NZ_4Region_Master.m`), household liquid assets $a \in [0, 25]$ use cubic spacing (`25 * linspace(0, 1, 61).^3`), providing high resolution across low-wealth states ($a_1 \dots a_{17}$ span $0 \text{ to } 0.4741$, or $0 \text{ to } 45,040$ NZD at the $95,000$ NZD base scale). However, when the early childhood investment decision grid `d_grid_ic` ($n_{ic} = 7$ points on $[0, 0.50]$) is spaced linearly (`linspace(0, 0.50, 7)'`), the first positive investment rung sits at $ic_2 = 0.0833$ ($\approx 7,917\text{ NZD/yr}$ of private out-of-pocket expenditure).
+
+For households in **Node 2 (Residual AHC Squeeze & Paper Support)** whose optimal private cash investment lies between $1,500 \text{ to } 5,000 \text{ NZD/yr}$ ($ic \in [0.015, 0.055]$), a linear decision grid offers no interior point between $0$ and $0.0833$, artificially rounding their policy choice down to the $ic = 0$ corner. Replacing linear spacing with a convex power grid of identical dimension ($n_{ic} = 7$, incurring zero additional GPU memory or Bellman iteration cost):
+
+$$d_{\text{grid,ic}} = 0.50 \times \left(\text{linspace}(0, 1, 7)\right)^{1.8} = [0, 0.0203, 0.0706, 0.1460, 0.2456, 0.3649, 0.5000]^{\top}$$
+
+introduces an accessible first positive rung at $ic_2 = 0.0203$ ($\approx 1,929\text{ NZD/yr}$) and second rung at $ic_3 = 0.0706$ ($\approx 6,707\text{ NZD/yr}$). This allows squeezed working families in Node 2 to register modest positive investments rather than pooling synthetically at $ic = 0$.
+
+#### 3.2.2 Continuous Sub-Grid Cell Interpolation for Regional Housing Thresholds
+Because regional housing price multipliers $Q_{\text{reg}}(k)$ span a threefold range (`Rural` $= 1.05$ to `Auckland` $= 3.10$), hard boolean asset cutoffs such as $a < \tau_1 Q_{\text{reg}}$ can fall near a grid node boundary in one region while sitting mid-interval in another. To prevent step-function discretization jumps when housing supply reforms ($Q_{\text{mult}}$) shift $Q_{\text{reg}}$, the 18-node Sankey aggregation evaluates continuous linear cell-fraction weights over the cubic asset grid $a_1 < a_2 < \dots < a_{61}$:
+
+$$w_{\text{cell}}(a_i; \tau Q_{\text{reg}}) = \min\left(1, \max\left(0, \frac{\tau Q_{\text{reg}} - a_{i-1}}{a_i - a_{i-1}}\right)\right)$$
+
+with $a_0 \equiv a_1 - (a_2 - a_1)$. This ensures that marginal changes in regional housing costs ($Q_{\text{reg}}$) and alloparental buffering ($K_{\text{whānau}}$) map smoothly into cohort population shares across all four regions.
 
 ---
 
@@ -126,7 +151,9 @@ $$
 
 Because Stage 2 exhibits strong dynamic complementarity ($`\sigma_2 = \frac{1}{1 - \varphi_2} = 0.51 < 1`$) and unbanked gain depreciation $`\delta_{\theta,\mathrm{fade}} > 0`$ (Bailey et al., 2017; Rea & Burton, 2019; Lillard, 2005), early skill gains erode during middle childhood and early adolescence (`J = 5`, child ages 12–14) if children transition into passive factory-model schooling or if Stage-2 socio-emotional stability collapses. We formalize two countervailing mechanisms operating at this gate:
 
-**1. Observable Family Unemployment & Housing Distress Shock ($`\psi_{\mathrm{unemp}}`$):** Following the empirical job-displacement and *Family Stress Model* literature (Conger et al., 1992; Rege, Telle, & Votruba, 2011; Coelli, 2011; *Growing Up in New Zealand* "Now We Are 12", Morton et al., 2024), when a parent in region *k* experiences an adverse labor-market productivity or unemployment realization $`z_p \in \mathcal{Z}_{\mathrm{distress}}`$ (specifically $`z_p = z_1`$, or $`z_p = z_2`$ combined with housing hardship $`a_p < 0.08 Q_k`$) during the child's adolescent window, household psychological stress and reduced parental bandwidth impose a non-cognitive skill penalty $`-\psi_{\mathrm{unemp}} < 0`$.
+*1. Compounded Family Unemployment & Adolescent Psychosocial Morbidity Shock ($\psi_{\text{unemp}}, \lambda_{\text{psy}}$):* Following the empirical job-displacement and *Family Stress Model* literature (Conger et al., 1992; Coelli, 2011) alongside contemporary Aotearoa longitudinal evidence on early-adolescent peer victimization, algorithmic compulsion, sexual harm, and depressive escalation (*Growing Up in New Zealand* "Now We Are Twelve", Morton et al., 2023/2024; *Youth19*, Fleming et al., 2020; ACC ISSC actuarial valuations), disengagement at the ages 12–14 gate ($J = 5$, **Node 7**) is driven by two interacting channels: (i) household unemployment or severe AHC distress $z_p \in Z_{\text{distress}}$, and (ii) a cross-income psychosocial relational hazard $\lambda_{\text{psy}}(M_{\text{mentor}}, K_{\text{whānau}})$ that erodes executive function across all socioeconomic tiers while compounding multiplicatively when household buffers are depleted. In the adolescent net skill shift $\Psi_{J=5}$, active *Tuakana–Teina* / *Erdkinder* mentoring ($M_{\text{mentor}}$) and extended *whānau* connection ($K_{\text{whānau}}^{\text{eff}}(k)$) operate both to lower primary incidence $\lambda_{\text{psy}}$ (via critical-thinking cognitive inoculation and *KiVa*/*Planet Youth* peer-norm restructuring) and to insulate exposed adolescents against permanent detachment (retaining a conservative 38% clinical persistence residual for acute trauma requiring specialized CAMHS/ACC care):
+
+$$\Psi_{J=5}(z_p, a_p, M_{\text{mentor}}, K_{\text{whānau}}) = -ψ_{\text{unemp}} \left[ I(z_p \in Z_{\text{distress}}) + λ_{\text{psy}}(M_{\text{mentor}}) \right] (1 - \zeta_{\text{buf}} M_{\text{mentor}})(1 - 0.55 K_{\text{whānau}}^{\text{eff}}(k)) + \kappa_{\text{up}} M_{\text{mentor}}$$
 
 **2. Bidirectional Montessori / *Tuakana–Teina* Cross-Age Mentoring ($`M_{\mathrm{mentor}} \in [0, 1]`$):** While Stage 2 cognitive investment productivity is low ($`\gamma_{2,C,3} = 0.044`$), non-cognitive malleability remains more than twice as high ($`\gamma_{2,N,3} = 0.104`$, Cunha et al., 2010). Synthesizing indigenous *Tuakana–Teina* and *Ako* reciprocal whānau in *Kura Kaupapa Māori* and bilingual units, the Graeme Dingle Foundation's *Stars / Te Kāhui Whetū* and *Project K* peer-mentoring programs, high-agency vertical-*whānau* state schools, and Montessori's multi-age *Erdkinder* pedagogy (Lillard, 2005; Lillard & Else-Quest, 2006; Agostinelli, Saharkhiz, & Wiswall, 2024; Resnjanskij et al., 2024), structured cross-age mentoring where adolescents at `J = 5` mentor younger children at $J = 2\text{--}3$ generates a **two-way intra-generational spillover** without adding an endogenous state variable:
 - *Downward Scaffolding Multiplier on Stage 1 ($`\kappa_{\mathrm{down}} > 0`$):* Near-peer tutoring and role-modeling by the *tuakana* adolescent cohort (with mean skill $`\bar{\theta}_{J=5}`$) augment the effective productivity of public early childhood and primary investments for younger *teina*:
@@ -137,15 +164,11 @@ $$
 
 - *Upward "Protégé Effect", Zero Fade-Out, & Stress Buffer on Stage 2 ($`\kappa_{\mathrm{up}} > 0`$):* Serving as a high-agency *tuakana* mentor builds adolescent executive function, self-regulation, and *mana*, eliminating unbanked Stage-1 skill fade-out ($`(1 - M_{\mathrm{mentor}})\delta_{\theta,\mathrm{fade}} \to 0`$) and directly buffering the family unemployment shock via the adolescent net shift $`\Psi_{J=5}`$:
 
-$$
-\Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}}) = -\psi_{\mathrm{unemp}} \mathbb{I}(z_p \in \mathcal{Z}_{\mathrm{distress}}) (1 - \zeta_{\mathrm{buf}} M_{\mathrm{mentor}}) + \kappa_{\mathrm{up}} M_{\mathrm{mentor}}
-$$
+See definition of $\Psi_{J=5}$ above.
 
-- *Compact 4D Log-Skill Projection:* In `Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_SSankey.m`, this induces the unified anchored log-skill transition mean across the 7-point adult human capital grid $h_{\mathrm{child}} \in \mathcal{H}$:
+- *Compact 4D Log-Skill Projection & Vectorized Sub-Grid Crowding Operator:* Defining the threshold vector $\tau_{\text{cuts}} = [0.025, 0.050, 0.080, 0.160]$ and the $[n_{a1} \times 4]$ sub-grid weight matrix $W_{\text{cell}}(a_i; \tau_{\text{cuts}} Q_k) = \min(1, \max(0, (Q_k \tau_{\text{cuts}} - a_{i-1}) / \Delta a_i))$, `Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_SSankey.m` evaluate the two-tier Waring-buffered housing crowding vector $`\text{crowd}_{1D}(a_p; k) = W_{\text{cell},3} \psi_{\text{crowd,sev}} + (W_{\text{cell},4} - W_{\text{cell},3})(0.35 \psi_{\text{crowd,ahc}})`$ and induce the anchored log-skill transition mean across the 7-point adult human capital grid $h_{\text{child}} \in H$:
 
-$$
-\mu_{\ln h}(h_p, i_c, z_p, a_p; k) = \rho_{hc} \ln(h_p) + \gamma_{ic} \ln\left(\frac{i_c + G_{\mathrm{ECE},1}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}}{\bar{i}_c + G_{\mathrm{ECE,base}} + \bar{g}_{\mathrm{ECE}}}\right) - \psi_{\mathrm{crowd}} \ln(\max(1, Q_k)) \mathbb{I}(a_p < 0.08 Q_k) + \Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}}) + \alpha_{\mathrm{grid}}
-$$
+$$\mu_{\ln h}(h_p, i_c, z_p, a_p; k) = \rho_{hc} \ln(h_p^{\text{eff}}) + \gamma_{ic} \ln\left(\frac{i_c^{\text{eff}} + G_{\text{ECE},1}^{\text{eff}} + \bar{g}_{\text{ECE}}}{\bar{i}_c + G_{\text{ECE,base}} + \bar{g}_{\text{ECE}}}\right) - \text{crowd}_{1D}(a_p; k) + \Psi_{J=5}(z_p, i_c, M_{\text{mentor}}, K_{\text{whānau}}) + \alpha_{\text{grid}}$$
 
 **3. The Endogenous Pension–*Whānau* Coupling Operator ($`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)`$):** To make New Zealand Superannuation parameters ($`A_{\mathrm{super}}, p_{\mathrm{super}}`$) and regional housing user costs (*Q_k*) endogenously legible to the younger parenting generation without expanding the 4D GPU state vector $(a, h, z, j)$, `HumanCapital_Lifecycle_aprimeFn.m`, `ReturnFn_SpatialHH_Compact4D.m`, and `Build_IntergenTransitionMatrix.m` evaluate effective regional *whānau* capacity $`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k) = K_{\mathrm{wh\bar{a}nau},0}(k) \cdot \Phi_{\mathrm{super}}(k)`$ from baseline proximity $`K_{\mathrm{wh\bar{a}nau},0} = [0.42, 0.38, 0.32, 0.28]`$ (`[Rural, Small, Large, Auckland]`) and the **Elder Time & Housing Stability Factor** $`\Phi_{\mathrm{super}}(k) \in [0.45, 1.25]`$:
 
