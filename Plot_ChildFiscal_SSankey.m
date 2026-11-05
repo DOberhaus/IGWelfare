@@ -149,6 +149,13 @@ else
     pop_weights = 1.0;
 end
 
+reg_pop_share = sum(all_w(ismember(avail_r, reg_list)));
+if strcmpi(reg_choice, 'National')
+    reg_tag = 'NZ';
+else
+    reg_tag = reg_choice;
+end
+
 ref_type = ['HH_', avail_r{1}];
 n_a1     = n_a.(ref_type)(1);
 n_h      = n_a.(ref_type)(2);
@@ -681,7 +688,7 @@ Reinvest_50    = 0.50 * Surplus_Adult;
 
 r_gov_bond   = 0.042;
 mu_infra_div = 1.65;
-Cohort_N     = 60.0;
+Cohort_N     = 60.0 * reg_pop_share;
 
 % Save exact 29-node population & monetary vectors into output Ledger struct
 Ledger.Pop_S1_Birth                     = Pop_S1_Birth(:);
@@ -735,26 +742,28 @@ Nodes_S5 = {sprintf('17. Chronic Adversity & Benefit Trap\n       (%.1f%% pop | 
     sprintf('20. Productive Enterprise Builders [z_h]\n       (%.1f%% pop | %.1f kNZD/yr)',100*Pop_S5_Career(4), S5_Totals(4)), ...
     sprintf('21. Emigrated Abroad [Brain Drain]\n       (%.1f%% pop | %.1f kNZD/yr)',    100*Pop_S5_Career(5), S5_Totals(5))};
 
-% Gate 6 (Nodes 22..29): Ordered strictly Exit 1 (Bottom) -> Exit 2 -> Exit 3 -> Exit 4 -> Infra/Super -> GST/Cap -> PAYE -> Abroad (Top)!
-if is_reform_panel && Surplus_Adult > 0.05
-    lbl_27 = sprintf('27. GST, z_h Cap & Estate Tax\n       (%.1f kNZD/yr | 50%% Reinvest: +%.1fk)', S6_Totals(6), Reinvest_50);
-    lbl_28 = sprintf('28. Working-Age Builder PAYE Tax\n       (%.1f kNZD/yr | 50%% Debt Sink: +%.1fk)', S6_Totals(7), DebtSink_50);
+% Gate 6 (Nodes 22..29): Pure gross credit labels on Nodes 27 & 28 (no embedded 50/50 split text)
+ret_pop_pct = 100 * (1.0 - Pop_S5_Career(5));
+if is_reform_panel
+    lbl_27 = sprintf('27. GST, z_h Cap & Estate Tax\n       (%.1f%% pop | %.1f kNZD/yr)', ret_pop_pct, S6_Totals(6));
+    lbl_28 = sprintf('28. Working-Age Builder PAYE Tax\n       (%.1f%% pop | %.1f kNZD/yr)', ret_pop_pct, S6_Totals(7));
 else
-    lbl_27 = sprintf('27. GST, Cap & Estate Pool [z_l Skew]\n       (%.1f kNZD/yr)', S6_Totals(6));
-    lbl_28 = sprintf('28. Working-Age PAYE Income Tax\n       (%.1f kNZD/yr)',       S6_Totals(7));
+    lbl_27 = sprintf('27. GST, Cap & Estate Pool [z_l Skew]\n       (%.1f%% pop | %.1f kNZD/yr)', ret_pop_pct, S6_Totals(6));
+    lbl_28 = sprintf('28. Working-Age PAYE Income Tax\n       (%.1f%% pop | %.1f kNZD/yr)',       ret_pop_pct, S6_Totals(7));
 end
 
-scale_tag = {'', ' — ribbon not to scale'};
+scale_tag = {'', ' — not to scale'};
 Nodes_S6 = {sprintf('22. Exit 1: State Care Legacy (%.2f%% pop | %.2f kNZD/yr%s)', ...
     Exit_Pop_Pct(1), S6_Totals(1), scale_tag{1 + is_floored_ex(1)}), ...
     sprintf('23. Exit 2: Avoidable Hosp & CAMHS (%.1f%% pop | %.1f kNZD/yr%s)', ...
     Exit_Pop_Pct(2), S6_Totals(2), scale_tag{1 + is_floored_ex(2)}), ...
     sprintf('24. Exit 3: Lower-Skill Lost Tax (%.1f%% pop | %.1f kNZD/yr%s)', ...
     Exit_Pop_Pct(3), S6_Totals(3), scale_tag{1 + is_floored_ex(3)}), ...
-    sprintf('25. Exit 4: Benefit, LOPE & Justice\n       (%.1f%% pop | %.1f kNZD/yr%s)', ...
+    sprintf('25. Exit 4: Benefit, LOPE & Justice (%.1f%% pop | %.1f kNZD/yr%s)', ...
     Exit_Pop_Pct(4), S6_Totals(4), scale_tag{1 + is_floored_ex(4)}), ...
-    sprintf('26. Base Infra, Health & NZ Super\n       (%.1f%% pop | %.1f kNZD/yr)', ...
-    100*(1 - Pop_S5_Career(5)), S6_Totals(5)), ...
+    sprintf('26. Base Infra, Health & NZ Super\n       (%.1f%% pop @ %.1fk/adult = %.1f kNZD/yr)\n       [Gross: %.2f BNZD/yr cohort | %.1f BNZD/yr %s]', ...
+    ret_pop_pct, S6_Totals(5) / max(1e-4, 1 - Pop_S5_Career(5)), S6_Totals(5), ...
+    0.060 * reg_pop_share * S6_Totals(5), 4.0 * reg_pop_share * S6_Totals(5), reg_tag), ...
     lbl_27, ...
     lbl_28, ...
     sprintf('29. Abroad Brain-Drain Lost Tax\n       (%.1f%% pop | %.1f kNZD/yr)', ...
@@ -881,13 +890,53 @@ end
 SK.draw();
 set(ax, 'YDir', 'normal');
 curr_xlim = xlim(ax);
-xlim(ax, [curr_xlim(1) - 0.16, curr_xlim(2) + 1.15]);
+xlim(ax, [curr_xlim(1) - 0.16, curr_xlim(2) + 1.18]);
 curr_ylim = ylim(ax);
 y_span    = diff(curr_ylim);
 ylim(ax, [curr_ylim(1) - 0.24 * y_span, curr_ylim(2) + 0.12 * y_span]);
 
+txt_all = findall(ax, 'Type', 'text');
 set(ax, 'FontName', 'Helvetica');
-set(findall(ax, 'Type', 'text'), 'FontName', 'Helvetica', 'FontSize', 8.5);
+set(txt_all, 'FontName', 'Helvetica', 'FontSize', 8.4);
+
+% --- VERTICAL ANTI-OVERLAP DE-CROWDING FOR SANKEY NODE LABELS ACROSS COLUMNS 1..6 ---
+% Scans rendered text labels in each column, sorts bottom-to-top, and enforces minimum
+% vertical spacing (scaled by line count) so compressed bottom nodes never collide!
+for c_col = 1:6
+    c_txts = [];
+    c_ypos = [];
+    c_nlin = [];
+    for k_t = 1:numel(txt_all)
+        pos_t = get(txt_all(k_t), 'Position');
+        str_t = get(txt_all(k_t), 'String');
+        if abs(pos_t(1) - c_col) < 0.48 && ~isempty(str_t)
+            c_txts(end+1) = txt_all(k_t); %#ok<AGROW>
+            c_ypos(end+1) = pos_t(2);     %#ok<AGROW>
+            if iscell(str_t)
+                c_nlin(end+1) = numel(str_t); %#ok<AGROW>
+            else
+                c_nlin(end+1) = size(char(str_t), 1); %#ok<AGROW>
+            end
+        end
+    end
+    if numel(c_txts) >= 2
+        [c_ypos, ord_y] = sort(c_ypos, 'ascend');
+        c_txts          = c_txts(ord_y);
+        c_nlin          = c_nlin(ord_y);
+        % Allow bottom label to sit slightly below the bottom bar edge so thin Exit 1..4 labels fan out cleanly:
+        c_ypos(1) = max(curr_ylim(1) - 0.025 * y_span, c_ypos(1) - 0.018 * y_span * (c_col == 6));
+        for j_t = 2:numel(c_txts)
+            min_gap = (0.024 + 0.013 * (0.5 * (c_nlin(j_t-1) + c_nlin(j_t)) - 1)) * y_span;
+            if c_ypos(j_t) - c_ypos(j_t-1) < min_gap
+                c_ypos(j_t) = c_ypos(j_t-1) + min_gap;
+            end
+        end
+        for j_t = 1:numel(c_txts)
+            old_p = get(c_txts(j_t), 'Position');
+            set(c_txts(j_t), 'Position', [old_p(1), c_ypos(j_t), old_p(3)]);
+        end
+    end
+end
 
 %% DRAW 6-GATE HORIZONTAL "J" AXIS CENTERED ON EACH BAR
 y_axis_line  = curr_ylim(1) - 0.09 * y_span;
@@ -992,10 +1041,9 @@ if size(col6_boxes, 1) >= (n_bad_vis + 2)
     y_bot_good = good_boxes(1, 3);
     y_origin   = 0.5 * (y_top_bad + y_bot_good);
     y_zero_c6  = y_origin;
-    y_split_50 = nan;
 
     if net_fisc > 0
-        f_surplus = net_fisc / max(1e-8, Good_Adult);
+        f_surplus = min(1.0, net_fisc / max(1e-8, Good_Adult));
         g_heights = good_boxes(:, 4) - good_boxes(:, 3);
         target_h  = f_surplus * sum(g_heights);
         cum_h     = 0;
@@ -1006,19 +1054,8 @@ if size(col6_boxes, 1) >= (n_bad_vis + 2)
             end
             cum_h = cum_h + g_heights(g_k);
         end
-        if is_reform_panel
-            target_h_50 = 0.50 * target_h;
-            cum_h50     = 0;
-            for g_k = 1:size(good_boxes, 1)
-                if cum_h50 + g_heights(g_k) >= target_h_50 || g_k == size(good_boxes, 1)
-                    y_split_50 = good_boxes(g_k, 3) + max(0, target_h_50 - cum_h50);
-                    break;
-                end
-                cum_h50 = cum_h50 + g_heights(g_k);
-            end
-        end
     elseif net_fisc < 0
-        f_deficit = (Bad_Adult - Good_Adult) / max(1e-8, Bad_Adult);
+        f_deficit = min(1.0, (Bad_Adult - Good_Adult) / max(1e-8, Bad_Adult));
         b_heights = bad_boxes(:, 4) - bad_boxes(:, 3);
         target_d  = f_deficit * sum(b_heights);
         cum_d     = 0;
@@ -1031,27 +1068,42 @@ if size(col6_boxes, 1) >= (n_bad_vis + 2)
         end
     end
 
-    plot(ax, [x_left_c6 - 0.030, x_rght_c6 + 0.030], [y_origin, y_origin], ':', 'Color', [0.45, 0.45, 0.45], 'LineWidth', 1.3);
-    plot(ax, [x_left_c6 - 0.040, x_rght_c6 + 0.040], [y_zero_c6, y_zero_c6], '-', 'Color', [0.10, 0.10, 0.10], 'LineWidth', 2.8);
-    plot(ax, x_cent_c6, y_zero_c6, 'o', 'MarkerSize', 6.5, 'MarkerFaceColor', [0.98, 0.82, 0.18], 'MarkerEdgeColor', [0.10, 0.10, 0.10]);
+    % 1. Dotted Debit/Credit boundary line at y_origin (between Node 26 Outlays and Node 27 Tax Credits):
+    plot(ax, [x_left_c6 - 0.030, x_rght_c6 + 0.030], [y_origin, y_origin], ':', ...
+        'Color', [0.45, 0.45, 0.45], 'LineWidth', 1.3);
 
-    if is_reform_panel && ~isnan(y_split_50) && net_fisc > 0.5
-        plot(ax, [x_left_c6 - 0.035, x_rght_c6 + 0.035], [y_split_50, y_split_50], '-', 'Color', [0.05, 0.42, 0.35], 'LineWidth', 2.2);
-        plot(ax, x_cent_c6, y_split_50, 's', 'MarkerSize', 5.5, 'MarkerFaceColor', [0.20, 0.80, 0.65], 'MarkerEdgeColor', [0.05, 0.35, 0.28]);
-        text(ax, x_rght_c6 + 0.04, y_zero_c6, ...
+    % 2. Single topline Net Fiscal Balance / Surplus marker at y_zero_c6 (Black line with Gold dot):
+    plot(ax, [x_left_c6 - 0.040, x_rght_c6 + 0.040], [y_zero_c6, y_zero_c6], '-', ...
+        'Color', [0.10, 0.10, 0.10], 'LineWidth', 2.8);
+    plot(ax, x_cent_c6, y_zero_c6, 'o', 'MarkerSize', 6.5, ...
+        'MarkerFaceColor', [0.98, 0.82, 0.18], 'MarkerEdgeColor', [0.10, 0.10, 0.10]);
+
+    % 3. Center the 3-line summary callout in the open gap between max(Node 27) and min(Node 28):
+    if size(good_boxes, 1) >= 2
+        y_badge_c6 = 0.5 * (good_boxes(1, 4) + good_boxes(2, 3));
+    else
+        y_badge_c6 = good_boxes(1, 4);
+    end
+    x_badge_c6 = x_rght_c6 + 0.04;
+    plot(ax, [x_rght_c6 + 0.010, x_badge_c6], [y_zero_c6, y_badge_c6], '--', ...
+        'Color', [0.25, 0.25, 0.25], 'LineWidth', 1.1);
+
+    if is_reform_panel && net_fisc > 0.5
+        text(ax, x_badge_c6, y_badge_c6, ...
             sprintf('Net Fiscal Surplus: +%.1f kNZD/yr\n  • 50%% 2050 Debt Sinking: +%.1f kNZD/yr\n  • 50%% Reinvest (Infra/NZSF): +%.1f kNZD/yr', ...
             net_fisc, DebtSink_50, Reinvest_50), ...
-            'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', ...
-            'FontName', 'Helvetica', 'FontSize', 8.0, 'FontWeight', 'bold', ...
-            'Color', [0.10, 0.10, 0.10], 'BackgroundColor', [0.96, 1.00, 0.96], ...
-            'EdgeColor', [0.15, 0.55, 0.45], 'Margin', 2.5);
-    else
-        text(ax, x_rght_c6 + 0.04, y_zero_c6, ...
-            sprintf('Net Fiscal Balance: %+.1f kNZD/yr\n(Good Taxes: %.1fk - Outlays: %.1fk)', net_fisc, Good_Adult, Bad_Adult), ...
             'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle', ...
-            'FontName', 'Helvetica', 'FontSize', 8.3, 'FontWeight', 'bold', ...
+            'FontName', 'Helvetica', 'FontSize', 7.8, 'FontWeight', 'bold', ...
+            'Color', [0.08, 0.22, 0.18], 'BackgroundColor', [0.95, 1.00, 0.96], ...
+            'EdgeColor', [0.15, 0.55, 0.45], 'Margin', 2.0);
+    else
+        text(ax, x_badge_c6, y_badge_c6, ...
+            sprintf('Net Fiscal Balance: %+.1f kNZD/yr\n  • Good Taxes (27+28): %.1f kNZD/yr\n  • Crown Outlays (22..26): %.1f kNZD/yr', ...
+            net_fisc, Good_Adult, Bad_Adult), ...
+            'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle', ...
+            'FontName', 'Helvetica', 'FontSize', 7.8, 'FontWeight', 'bold', ...
             'Color', [0.12, 0.12, 0.12], 'BackgroundColor', [1.0, 0.98, 0.90], ...
-            'EdgeColor', [0.4, 0.4, 0.4], 'Margin', 2);
+            'EdgeColor', [0.45, 0.45, 0.45], 'Margin', 2.0);
     end
 end
 
