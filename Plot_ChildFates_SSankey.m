@@ -404,7 +404,7 @@ Nodes_S4 = {sprintf('10. Struggling Tier h1-h2 (%.1f%%)', S4_Pct(1)), ...
 % plus a visual-legibility floor (0.50% plot height) and "[ribbon not to scale]" note when compressed:
 minExit_Vis_Pct = 0.50;
 if S5_Pct(1) < minExit_Vis_Pct
-    lbl_13 = sprintf('13. Exit 1: State Care (%.2f%% — ribbon not to scale)', S5_Pct(1));
+    lbl_13 = sprintf('13. Exit 1: State Care (%.2f%% — not to scale)', S5_Pct(1));
 else
     lbl_13 = sprintf('13. Exit 1: State Care (%.1f%%)', S5_Pct(1));
 end
