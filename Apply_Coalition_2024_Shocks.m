@@ -70,12 +70,12 @@ if strcmpi(Mode, 'reanchor_2023')
     Params_Out.tau_a                = 0.000;  % No book-value land/wealth tax in 2023
     Params_Out.tau_b                = 0.000;  % No estate tax in 2023
     Params_Out.lambda_col           = 1.800;  % Baseline Guvenen firm collateral multiplier
-    
+
     % Pre-Coalition property rules (Interest deductibility phase-out active)
     Params_Out.upsilon_h            = 0.0095;
     Params_Out.Q_k_vec              = [1.03, 1.37, 2.00, 3.02];
     Params_Out.Q_reg_base_vec       = [1.03, 1.37, 2.00, 3.02]; % Immutable SS0 reference for Kaiako deflator
-    
+
     % Pre-Cut Science, ECE, & Infrastructure Baseline
     Params_Out.G_ECE_1              = 0.045;
     Params_Out.G_ECE_2              = 0.065;
@@ -83,13 +83,13 @@ if strcmpi(Mode, 'reanchor_2023')
     Params_Out.YouthGrant           = 0.030;
     Params_Out.M_mentor             = 0.150;
     Params_Out.nu_kaiako            = 0.350;  % Kaiako housing-affordability supply elasticity
-    
+
     % Firm Productivity Ceilings [z_l, z_h] Before Callaghan/Marsden/iReX Cuts
     Params_Out.z_f_Rural            = [0.70, 1.15];
     Params_Out.z_f_Small            = [0.75, 1.28];
     Params_Out.z_f_Large            = [0.83, 1.50];
     Params_Out.z_f_Auckland         = [0.90, 1.75];
-    
+
     Params_Out = sync_regional_fields(Params_Out, Regions);
     return;
 end
@@ -111,17 +111,17 @@ end
 if ShockOpts.ScienceCallaghanCuts
     zh_mult_science = 1 - s * [0.015, 0.025, 0.075, 0.068];
     zl_mult_land    = 1 + s * [0.020, 0.025, 0.035, 0.045];
-    
+
     zf_R = getfield_def(Params_Out, 'z_f_Rural',    [0.70, 1.15]);
     zf_S = getfield_def(Params_Out, 'z_f_Small',    [0.75, 1.28]);
     zf_L = getfield_def(Params_Out, 'z_f_Large',    [0.83, 1.50]);
     zf_A = getfield_def(Params_Out, 'z_f_Auckland', [0.90, 1.75]);
-    
+
     Params_Out.z_f_Rural    = [zf_R(1)*zl_mult_land(1), zf_R(2)*zh_mult_science(1)];
     Params_Out.z_f_Small    = [zf_S(1)*zl_mult_land(2), zf_S(2)*zh_mult_science(2)];
     Params_Out.z_f_Large    = [zf_L(1)*zl_mult_land(3), zf_L(2)*zh_mult_science(3)];
     Params_Out.z_f_Auckland = [zf_A(1)*zl_mult_land(4), zf_A(2)*zh_mult_science(4)];
-    
+
     Params_Out.V_Abroad_SkillPrem_Shift = getfield_def(Params_Out, 'V_Abroad_SkillPrem_Shift', 0.0) + s * 0.085;
 end
 
@@ -213,7 +213,7 @@ if ShockOpts.ActiveInvestorVisa
     Params_Out.lambda_col = getfield_def(Params_Out, 'lambda_col', 1.800) + s * 0.045;
     Q_curr                = getfield_def(Params_Out, 'Q_k_vec', [1.03, 1.37, 2.00, 3.02]);
     Params_Out.Q_k_vec    = Q_curr .* (1 + s * [0.012, 0.010, 0.008, 0.018]);
-    
+
     % Modest lift to upper firm ceiling in Auckland/Large from Growth Visa venture funds
     zf_L = getfield_def(Params_Out, 'z_f_Large',    [0.83, 1.50]);
     zf_A = getfield_def(Params_Out, 'z_f_Auckland', [0.90, 1.75]);
@@ -244,40 +244,42 @@ end
 %  LOCAL HELPER FUNCTIONS
 %  ========================================================================
 function S = set_default_opt(S, fname, val)
-    if ~isfield(S, fname) || isempty(S.(fname))
-        S.(fname) = val;
-    end
+if ~isfield(S, fname) || isempty(S.(fname))
+    S.(fname) = val;
+end
 end
 
 function val = getfield_def(S, fname, defval)
-    if isstruct(S) && isfield(S, fname) && ~isempty(S.(fname))
-        val = S.(fname);
-    else
-        val = defval;
-    end
+if isstruct(S) && isfield(S, fname) && ~isempty(S.(fname))
+    val = S.(fname);
+else
+    val = defval;
+end
 end
 
 function P = sync_regional_fields(P, Regions)
-    Q_vec    = getfield_def(P, 'Q_k_vec',    [1.03, 1.37, 2.00, 3.02]);
-    w_vec    = getfield_def(P, 'w_k_vec',    [0.85, 0.93, 1.05, 1.18]);
-    ebar_vec = getfield_def(P, 'ebar_k_vec', [0.048, 0.036, 0.022, 0.016]);
-    k_defl   = getfield_def(P, 'Kaiako_Deflator_Vec', [1, 1, 1, 1]);
-    
-    for k = 1:4
-        reg     = Regions{k};
-        hh_tp   = ['HH_', reg];
-        firm_tp = ['Firm_', reg];
-        
-        P.Q_reg.(hh_tp)       = Q_vec(k);
-        P.w_reg.(hh_tp)       = w_vec(k);
-        P.w_reg.(firm_tp)     = w_vec(k);
-        P.ebar_energy.(hh_tp) = ebar_vec(k);
-        P.G_ECE_1_eff.(hh_tp) = P.G_ECE_1 * k_defl(k);
-        P.G_ECE_2_eff.(hh_tp) = P.G_ECE_2 * k_defl(k);
-        
-        zf_field = ['z_f_', reg];
-        if isfield(P, zf_field)
-            P.z_f_grid.(firm_tp) = P.(zf_field)(:);
-        end
+Q_vec    = getfield_def(P, 'Q_k_vec',    [1.03, 1.37, 2.00, 3.02]);
+w_vec    = getfield_def(P, 'w_k_vec',    [0.85, 0.93, 1.05, 1.18]);
+ebar_vec = getfield_def(P, 'ebar_k_vec', [0.048, 0.036, 0.022, 0.016]);
+k_defl   = getfield_def(P, 'Kaiako_Deflator_Vec', [1, 1, 1, 1]);
+
+for k = 1:4
+    reg     = Regions{k};
+    hh_tp   = ['HH_', reg];
+    firm_tp = ['Firm_', reg];
+
+    P.Q_reg.(hh_tp)       = Q_vec(k);
+    P.w_reg.(hh_tp)       = w_vec(k);
+    P.w_reg.(firm_tp)     = w_vec(k);
+    P.ebar_energy.(hh_tp) = ebar_vec(k);
+    P.G_ECE_1_eff.(hh_tp) = P.G_ECE_1 * k_defl(k);
+    P.G_ECE_2_eff.(hh_tp) = P.G_ECE_2 * k_defl(k);
+
+    zf_field = ['z_f_', reg];
+    if isfield(P, zf_field)
+        P.z_f_grid.(firm_tp) = P.(zf_field)(:);
     end
+end
+
+
 end
