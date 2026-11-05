@@ -166,11 +166,9 @@ $$
 
 See definition of $\Psi_{J=5}$ above.
 
-- *Compact 4D Log-Skill Projection:* In `Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_SSankey.m`, this induces the unified anchored log-skill transition mean across the 7-point adult human capital grid $h_{\mathrm{child}} \in \mathcal{H}$:
+- *Compact 4D Log-Skill Projection & Vectorized Sub-Grid Crowding Operator:* Defining the threshold vector $\tau_{\text{cuts}} = [0.025, 0.050, 0.080, 0.160]$ and the $[n_{a1} \times 4]$ sub-grid weight matrix $W_{\text{cell}}(a_i; \tau_{\text{cuts}} Q_k) = \min(1, \max(0, (Q_k \tau_{\text{cuts}} - a_{i-1}) / \Delta a_i))$, `Build_IntergenTransitionMatrix.m` and `Plot_ChildFates_SSankey.m` evaluate the two-tier Waring-buffered housing crowding vector $\text{crowd}_{1D}(a_p; k) = W_{\text{cell},3} \psi_{\text{crowd,sev}} + (W_{\text{cell},4} - W_{\text{cell},3})(0.35 \psi_{\text{crowd,ahc}})$ and induce the anchored log-skill transition mean across the 7-point adult human capital grid $h_{\text{child}} \in H$:
 
-$$
-\mu_{\ln h}(h_p, i_c, z_p, a_p; k) = \rho_{hc} \ln(h_p) + \gamma_{ic} \ln\left(\frac{i_c + G_{\mathrm{ECE},1}^{\mathrm{eff}} + \bar{g}_{\mathrm{ECE}}}{\bar{i}_c + G_{\mathrm{ECE,base}} + \bar{g}_{\mathrm{ECE}}}\right) - \psi_{\mathrm{crowd}} \ln(\max(1, Q_k)) \mathbb{I}(a_p < 0.08 Q_k) + \Psi_{J=5}(z_p, a_p, M_{\mathrm{mentor}}) + \alpha_{\mathrm{grid}}
-$$
+$$\mu_{\ln h}(h_p, i_c, z_p, a_p; k) = \rho_{hc} \ln(h_p^{\text{eff}}) + \gamma_{ic} \ln\left(\frac{i_c^{\text{eff}} + G_{\text{ECE},1}^{\text{eff}} + \bar{g}_{\text{ECE}}}{\bar{i}_c + G_{\text{ECE,base}} + \bar{g}_{\text{ECE}}}\right) - \text{crowd}_{1D}(a_p; k) + \Psi_{J=5}(z_p, i_c, M_{\text{mentor}}, K_{\text{whānau}}) + \alpha_{\text{grid}}$$
 
 **3. The Endogenous Pension–*Whānau* Coupling Operator ($`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k)`$):** To make New Zealand Superannuation parameters ($`A_{\mathrm{super}}, p_{\mathrm{super}}`$) and regional housing user costs (*Q_k*) endogenously legible to the younger parenting generation without expanding the 4D GPU state vector $(a, h, z, j)$, `HumanCapital_Lifecycle_aprimeFn.m`, `ReturnFn_SpatialHH_Compact4D.m`, and `Build_IntergenTransitionMatrix.m` evaluate effective regional *whānau* capacity $`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k) = K_{\mathrm{wh\bar{a}nau},0}(k) \cdot \Phi_{\mathrm{super}}(k)`$ from baseline proximity $`K_{\mathrm{wh\bar{a}nau},0} = [0.42, 0.38, 0.32, 0.28]`$ (`[Rural, Small, Large, Auckland]`) and the **Elder Time & Housing Stability Factor** $`\Phi_{\mathrm{super}}(k) \in [0.45, 1.25]`$:
 

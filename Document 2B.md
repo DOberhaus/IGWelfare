@@ -11,42 +11,44 @@
 
 ## 5. Post-Hoc Lifecycle Operators: The 6-Gate Fiscal Ledger, Statutory Fiscal Rules, Fertility Bargaining, & 10-Tier Wealth Incidence
 
-### 5.1 The 6-Gate (26-Node) Lifecycle Fiscal Ledger Operator (`Plot_ChildFiscal_SSankey.m`)
+### 5.1 The 6-Gate (29-Node) Lifecycle Fiscal Ledger & Cohort-to-Ledger Operator (`Plot_ChildFiscal_SSankey.m`)
 
-To map all private parental commitments and public fiscal flows from Birth (`J = 1`) to Retirement (`J = 16`) without expanding the VFI state space, `Plot_ChildFiscal_SSankey.m` defines linear integral operators over the solved stationary distribution $\mu_k\left(a, h, z, j\right)$ and policy functions `Policy`:
+To map all private parental commitments, unpaid *whānau* care, adult occupational sorting ($z_l$ vs. $z_h$), and public fiscal flows from Birth ($J = 1$) to Retirement ($J = 16$) without cross-account ontological distortion, `Plot_ChildFiscal_SSankey.m` defines vectorized linear integral operators over the solved stationary distribution $\mu_k(a, h, z, j)$ and policy arrays `Policy`:
 
-* **Cohort-Weighted Ribbon Width Identity:** Every node $i \in \{1, \dots, 26\}$ at Gate $g \in \{1, \dots, 6\}$ has ribbon thickness strictly equal to its cohort-weighted annual monetary flow (in real 2025 NZD thousands per year per cohort birth):
+1. *Cohort-Weighted Ribbon Width Identity Across 29 Nodes:* Every node $i \in \{1, \dots, 29\}$ across Gates $g \in \{1, \dots, 6\}$ has ribbon thickness equal to its cohort-weighted annual monetary flow (in real 2025 NZD thousands per year per cohort birth, where $1.0\text{ model unit} = 95.0\text{ kNZD/yr}$):
 
-$$
-\mathrm{Flow}_{g,i}^{\mathrm{cohort}} = p_{g,i} \times c_{g,i}^{\mathrm{cond}}
-$$
+$$\text{Flow}_{g,i}^{\text{cohort}} = p_{g,i} \times c_{g,i}^{\text{cond}}, \qquad p_{g,i} = \int_{S_{g,i}} d\mu_k$$
 
-  where $`p_{g,i} = \int_{\mathcal{S}_{g,i}} d\mu_k`$ is the fraction of the cohort in node $`\mathcal{S}_{g,i}`$ and $`c_{g,i}^{\mathrm{cond}}`$ is the conditional annual dollar flow per person in that node.
-* **4-Block Childhood Split at Gate 2 ($J = 2\text{--}3$) and Gate 3 (`J = 5`):** Separates childhood resource flows into four orthogonal accounting lanes:
-  1. *Lane A (`LaneA_Priv_Cash_kNZD`):* Out-of-pocket parental cash $\left(1 - s_{\mathrm{sub}}\right)i_c + \theta_{\mathrm{child}}\left(c_{nd} + r_{h,k} c_H\right)$.
-  2. *Lane B (`LaneB_Priv_Time_kNZD`):* Imputed parental care and mentoring time $w_k z_p h_p \ell_{\mathrm{child}}$.
-  3. *Lane C (`LaneC_Pub_DevInv_kNZD`):* Universal PPL/BestStart, public wraparound ECE $`G_{\mathrm{ECE},1}`$, public schooling $`d_2`$, and Montessori / *Tuakana–Teina* & Graeme Dingle Foundation mentoring $`G_{\mathrm{ECE},2}`$.
-  4. *Lane D (`LaneD_Pub_Remed_kNZD`):* Means-tested hardship transfers *T_k* and in-childhood acute Exits 1, 2, and 4.
+2. *Gates 1–3 Childhood 4-Lane Decomposition (Nodes 1–13):* Separates childhood resource flows into four orthogonal accounting lanes exported in `Table14_FiscalLedger_6Gate_Decomp_<Region>.csv`:
+   - *Lane A (`LaneA_PrivCash_kNZD`):* Out-of-pocket parental cash $(1 - s_{\text{sub}})i_c + \theta_{\text{child}}(c_{nd} + r_{h,k} c_H)$ (**Nodes 4, 8, 13**).
+   - *Lane B (`LaneB_WhanauTime_kNZD`):* Imputed parental care and mentoring time $w_k z_p h_p \ell_{\text{child}}$ (**Nodes 4, 8, 13**) plus Marilyn Waring's uncounted alloparental *whānau* care buffer $0.085 K_{\text{whānau}}(k) w_k z_p h_p$ rescuing squeezed families in **Node 2** [Ref 47].
+   - *Lane C (`LaneC_PubDev_kNZD`):* Universal PPL/BestStart (**Node 3**), public wraparound ECE $G_{\text{ECE},1}$ (**Nodes 6–7**), public schooling $d_2$ (**Node 11**), and Montessori / *Tuakana–Teina* mentoring $G_{\text{ECE},2}$ (**Node 12**).
+   - *Lane D (`LaneD_RemedRent_kNZD`):* Tier 3 acute hardship support (**Node 1**), Accommodation Supplement landlord rent capture in **Node 2**, ECE corner benefit need (**Node 5**), household unemployment/truancy remediation (**Node 9**), and cross-income psychosocial CAMHS & ACC ISSC trauma care (**Node 10**, generated via the $[3 \times 4]$ split operator $\text{Split}_{3\to 4}$ with a 38% clinical persistence floor [Ref 19, 38]).
 
-### 5.2 Net Fiscal Balance ($\Omega_{\mathrm{fiscal}}$), The 2050 Sovereign Debt-Sinking Protocol, & New Zealand Statutory Law
+3. *Gate 4 $\to$ Gate 5 Occupational & Enterprise Sorting Operator ($P_{G4 \to G5}$, Nodes 14–16 $\to$ Nodes 17–21):* Rather than connecting two separate adult fiscal columns (which would conflate working-age infrastructure outlays with retirement tax credits), Gate 4 maps the three Age-20 launch skill tiers ($p_{G4} \in \mathbb{R}^{1 \times 3}$, flattened from 7-point $h$ via the $[7 \times 3]$ projection matrix `Tier_Map`) into **five human adult career and enterprise strata at Gate 5 ($J = 8\text{–}11$, Ages 30–54, left of the vertical regime-break wave)** via the $[3 \times 5]$ row-stochastic Guvenen / Murphy-Shleifer-Vishny sorting matrix $P_{G4 \to G5} = [(1 - \text{emig}_t) \odot P_{\text{Ret},3\times 4}, \, \text{emig}_t]$ [Ref 2, 7]:
+   - **Node 17:** Chronic Adversity & Benefit/NEET Trap
+   - **Node 18:** Domestic Core Workforce & Skilled Trades
+   - **Node 19:** Passive Land & Rent Speculation [$z_l$ Skew] *(61% of retained top talent in SS0 $\to$ 14% in SS1 and 6% in SS2)*
+   - **Node 20:** Productive Enterprise Builders [$z_h$ Innovators] *(29% of retained top talent in SS0 $\to$ 78% in SS1 and 88% in SS2)*
+   - **Node 21:** Emigrated Abroad [Trans-Tasman Brain Drain]
 
-At **Gate 5 (Age 30,** `J = 10` **)** and **Gate 6 (Career to Retirement,** $J = 11\text{--}16$ **)**, the cohort-weighted **Net Fiscal Balance** $\Omega_{\mathrm{fiscal},g}$ is:
+4. *Gate 5 $\to$ Gate 6 Exact Fiscal Incidence Matrix (`Flow_S5_to_S6`, $[5 \times 8]$, Nodes 17–21 $\to$ Nodes 22–29):* Across the vertical regime-break wave at $X = 5.0$, the five Gate 5 human career strata map directly—without rescaling—into the **eight annualized adult fiscal accounts at Gate 6 ($J = 10\text{–}16$)**, ordered bottom-to-top to match the Fates Sankey:
+   - **Bottom 4 Adversarial Exits (Nodes 22–25):** **Node 22** (`Exit 1: State Care Legacy`), **Node 23** (`Exit 2: Avoidable Hosp & CAMHS`), **Node 24** (`Exit 3: Lower-Skill Lost Tax`), and **Node 25** (`Exit 4: Benefit, LOPE & Justice`). When an Exit compresses below $0.45\text{ kNZD/yr}$ in **SS1/SS2**, a vectorized visual floor (`minExit_Vis_kNZD = 0.45`) preserves the block and ribbon at the bottom with exact unfloored percentages and dollar values labeled `— not to scale`.
+   - **Middle Base Outlay vs. Good Tax Credits (Nodes 26–28) & Top Emigration Loss (Node 29):** **Node 26** (`Base Infra, Health & NZ Super`, attributing $10.2\text{ kNZD/yr}$ per retained adult and scaling gross `BNZD/yr` cohort and stock figures by the regional population share $\omega_{\text{reg}} = \text{reg\_pop\_share}$), **Node 27** (`GST, Cap & Estate Tax Pool`), **Node 28** (`Working-Age PAYE Income Tax`), and **Node 29** (`Abroad Brain-Drain Lost Tax`).
 
-$$
-\Omega_{\mathrm{fiscal},g} = \underbrace{\left(\mathrm{Tax}_{\mathrm{PAYE},g} + \mathrm{Tax}_{\mathrm{GST+Cap+Beq},g}\right)}_{\text{Good Taxes Collected}} - \underbrace{\left(\mathrm{Burden}_{\mathrm{Exits},1,2,4,g} + \mathrm{Outlay}_{\mathrm{Infra+Health+Super},g}\right)}_{\text{Direct Public Outlays}}
-$$
+### 5.2 Net Fiscal Balance ($\Omega_{\text{fiscal}}$), The 2050 Sovereign Debt-Sinking Protocol, & New Zealand Statutory Law
 
-Under the **2050 Sovereign Debt-Sinking & Public Reinvestment Protocol** (`Build_Custom_Protocol_2050_Table`), any positive net fiscal surplus $\Omega_{\mathrm{reform},g} = \max\left(0, \Omega_{\mathrm{fiscal},g}\right)$ is partitioned 50/50:
+At *Gate 6 (the Annualized Adult Fiscal Ledger, $J = 10\text{–}16$, Nodes 22–29)*, the cohort-weighted *Net Fiscal Balance* $\Omega_{\text{fiscal}}$ (indicated visually by the single black breakeven bar with gold marker measured upward from the dotted Debit/Credit boundary between **Node 26** and **Node 27**) is:
 
-$$
-\Omega_{\mathrm{debt},g} = 0.50 \Omega_{\mathrm{reform},g}, \qquad \Omega_{\mathrm{reinv},g} = 0.50 \Omega_{\mathrm{reform},g}
-$$
+$$\Omega_{\text{fiscal}} = \underbrace{(\text{Tax}_{\text{GST+Cap+Beq},27} + \text{Tax}_{\text{PAYE},28})}_{\text{Good Tax Credits Collected (Nodes 27+28)}} - \underbrace{(\text{Burden}_{\text{Exits } 1,2,4 \text{ (Nodes 22,23,25)}} + \text{Outlay}_{\text{Infra+Health+Super},26})}_{\text{Direct Crown Outlay Debits (Nodes 22,23,25,26)}}$$
 
-$$
-\Delta D_{2050,g} = N_{\mathrm{births}} \Omega_{\mathrm{debt},g} \sum_{\tau=1}^{25} \left(1 + r_{\mathrm{bond}}\right)^{\tau - 1}, \qquad S_{\mathrm{reinv},g} = \mu_{\mathrm{infra}} \Omega_{\mathrm{reinv},g}
-$$
+Under the *2050 Sovereign Debt-Sinking & Public Reinvestment Protocol* (`Build_Multiphase_2050_Protocol_Table`), any positive net fiscal surplus $\Omega_{\text{reform}} = \max(0, \Omega_{\text{fiscal}})$ is partitioned 50/50 in the centered callout badge between Nodes 27 and 28:
 
-with $`N_{\mathrm{births}} = 60,000/\mathrm{yr}`$, sovereign bond yield $`r_{\mathrm{bond}} = 0.042`$, and public infrastructure multiplier $`\mu_{\mathrm{infra}} = 1.65`$.
+$$\Omega_{\text{debt}} = 0.50 \, \Omega_{\text{reform}}, \qquad \Omega_{\text{reinv}} = 0.50 \, \Omega_{\text{reform}}$$
+
+$$\Delta D_{2050}(\text{reg}) = (\omega_{\text{reg}} N_{\text{births}}) \, \Omega_{\text{debt}} \sum_{\tau=1}^{25} (1 + r_{\text{bond}})^{\tau - 1}, \qquad S_{\text{reinv}} = \mu_{\text{infra}} \, \Omega_{\text{reinv}}$$
+
+with national cohort births $N_{\text{births}} = 60,000/\text{yr}$ scaled by the regional population share $\omega_{\text{reg}} \in (0, 1]$ (`reg_pop_share`), sovereign bond yield $r_{\text{bond}} = 0.042$, and public infrastructure multiplier $\mu_{\text{infra}} = 1.65$.
 
 * **Statutory & Legal Integration Under New Zealand Public Finance Law:**
   1. *Public Finance Act 1989 (Part 2, Sections 26G–26Z — Principles of Responsible Fiscal Management):* Section 26G(1)(a)–(e) mandates that the Crown must *"reduce total debt to prudent levels"* and *"have regard to the likely impact of fiscal strategy on present and future generations."* Under the status quo documented in the Treasury's *He Tirohanga Mokopuna 2025* and March 2026 background papers (*AN 26/01* and *WP 26/01*, where long-run labour productivity growth is downgraded to 0.9%/yr and net core Crown debt reaches ~200% of GDP by 2065 unless average labour tax or GST rises to 32%), the Crown violates intergenerational fiscal prudence on a cash-flow basis. Embedding the **Actuarial Continuation Valuation** ($`\mathcal{V}_{k,t_0}^{(\mathrm{Fiscal})}`$) alongside the *OBEGAL (Operating Balance Before Gains and Losses)* note disclosures and locking 50% of post-breakeven surpluses into $`\Omega_{\mathrm{debt},g}`$ operationalizes Section 26G(1)(e) in statutory Crown accounts.
@@ -54,7 +56,7 @@ with $`N_{\mathrm{births}} = 60,000/\mathrm{yr}`$, sovereign bond yield $`r_{\ma
   3. *Preventative Infrastructure Stewardship (Local Government (Water Services) / Te Waihanga National Infrastructure Plan & The 2026 Moa Point Review):* As documented in the *Independent Crown Review into the Moa Point Wastewater Treatment Plant Failure* (Jaduram et al., Sept 2026), deferring preventative maintenance creates an unsustainable escalation in reactive remediation costs. Ring-fencing $\Omega_{\mathrm{reinv},g} = 0.50 \Omega_{\mathrm{reform},g}$ into a statutory Infrastructure & Core Health Endowment prevents short-term operating budgets from raiding capital maintenance.
   4. *New Zealand Superannuation and Retirement Income Act 2001 (Part 1 & Part 2) & Te Tiriti o Waitangi Jurisprudence:* Preserving universal entitlement at Age 65 (`Jr`, and lowering to Age 64 in *SS2*) avoids the severe disparate impact on Māori and Pasifika life-expectancy cohorts that would result from raising the statutory age to 67 or 70, while honoring the *Te Tiriti o Waitangi* principles of active protection (*kaitiakitanga*) and equity across *mokopuna* cohorts (Waitangi Tribunal *Wai 2575 Hauora* and *Wai 2915 Oranga Tamariki* reports).
 
-## 5.3 Cooperative Childcare Bargaining, Hyperbolic Fertility (`FertilityBargaining_Module.m`), & Cao & Li's (2022) Intended-vs.-Realized Fertility Wedge
+### 5.3 Cooperative Childcare Bargaining, Hyperbolic Fertility (`FertilityBargaining_Module.m`), & Cao & Li's (2022) Intended-vs.-Realized Fertility Wedge
 
 Following Doepke, Hannusch, Kindermann, and Tertilt (2022) and Cao and Li (2022, *Journal of Population Economics*), couples in fertile brackets
 $j \in \lbrace 2, 3, 4 \rbrace$
@@ -401,8 +403,8 @@ Because the vertical thickness at every horizontal station $\tau \in \left\lbrac
 | **12** | `Counterfactuals_LeeSeshadri_4Region.m` | Multi-stage counterfactual suite (`BM`, `P0_Early`, `P1P2_Late`, `BN_FrontLoad`, `P0_Plus_GrantE`) exporting Tables 4–6 & 12A–C |
 | **13** | `FertilityBargaining_Module.m` | Cooperative childcare bargaining, hyperbolic fertility ($\beta_{\mathrm{hyp}} = 0.72$), and NZ Super solvency tax module (Tables 7–8) |
 | **14** | `TransPath_4Region_Master.m` | 60-year multiphase shooting algorithm with dynamic `PTypeWeights_path`, credibility blending $\lambda_{\mathrm{cred}}\left(t\right)$, and Figs 1–3 |
-| **15** | `Plot_ChildFates_SSankey.m` | $N$-panel GPU 5-Stage (18-Node) Population Cohort Fates Sankey & `Table15_ChildFates_5Stage_Decomp_<Region>.csv` |
-| **16** | `Plot_ChildFiscal_SSankey.m` | $N$-panel GPU 6-Gate (26-Node) Lifecycle Fiscal Sankey, 4-lane split (`Table14`), and 2050 Debt-Sinking Protocol |
+| **15** | `Plot_ChildFates_SSankey.m` | *N*-panel GPU 5-Stage (18-Node) Population Cohort Fates Sankey & `Table15_ChildFates_5Stage_Decomp_<Region>.csv` |
+| **16** | `Plot_ChildFiscal_SSankey.m` | *N*-panel GPU 6-Gate (29-Node) Lifecycle Fiscal Sankey (Gate 5 $z_l / z_h$ Career Sorting $\to$ Gate 6 Exact Fiscal Ledger), 4-lane Waring/Landlord split ( Table14 ), regional BNZD scaling, and 2050 Debt-Sinking Protocol |
 | **17** | `Plot_CumulativeTransitionPayoffs.m`, `Plot_ActuarialContinuationValuation.m`, & `Audit_GUiNZ_vs_Dunedin_4Region.m` | Integrates 60-year transition payoffs, ACC-style 25-year Actuarial Continuation Valuation ($V_{k,t_0}^{(L)}$ at 2% & 8% real), and stationary measure re-weighting between the 1972 `Dunedin_22` (3.84x) and 2010 `MetroSqueeze_GUiNZ` (4.26x–4.45x) cohorts |
 | **18** | `Plot_Fertility_SuperSolvency_2Panel.m` | Generates the 2-panel Fertility Recovery & NZ Super Solvency comparison (`Keep Age 65` vs. `Raise Age to 67 or 70`, modeling the 38%–45% disability/hardship fiscal substitution leak; Doepke et al. 2022, Cao & Li 2022, Fan, Seshadri, & Taber 2022, and NZ Treasury 2024) |
 | **19** | `Plot_Counterfactuals_And_MirrorInvestments.m` | Constructive 11-Layer Supermodular Synergy Attribution (7 Isolated Factors + 4 Synergy Wedges, `Table 19`, `Fig_Counterfactual_8Scenarios_*`) & Mirror-Image Annual Investment Ledger (`Table 20`, `Fig_7Segment_Welfare_And_MirrorInvestments_*`) |
