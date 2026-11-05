@@ -416,15 +416,44 @@ Gross_Investment_Mirror_CE   = sum(Neg_4Investments_CE, 2);
 Gross_Investment_Mirror_BNZD = Gross_Investment_Mirror_CE * NZD_Billion_Per_CE_Pct;
 Net_Fiscal_Outlay_Mirror_CE  = min(0, Gross_Investment_Mirror_CE + Remediation_Savings_CE);
 
+% Overlay 3: ACC / Treasury CBAx Actuarial Continuation Valuation Curve
+% (2.0% real SRTP discount rate, 1.5% real escalation, 30% attribution haircut, 98.6% Markov retention):
+r_disc_SRTP  = 0.020;
+g_cost_real  = 0.015;
+alpha_attr   = 0.300;
+psi_persist  = 0.986;
+H_window     = 25;
+q_step       = ((1 + g_cost_real) / (1 + r_disc_SRTP)) * psi_persist;
+pv_mult_25yr = sum(q_step .^ (1:H_window)) / H_window; % ~0.884 discounted retention factor
+
+Actuarial_CBAx_Mirror_CE = zeros(n_ym, 1);
+for i = 1:n_ym
+    y = Yr_Mir(i);
+    if y < 0
+        Actuarial_CBAx_Mirror_CE(i) = 0.0;
+    else
+        phi_pipe  = min(1.0, max(0.0, y / 15.0)); % Childhood-to-launch pipeline maturity (0 -> 15 yrs)
+        y_look    = linspace(y, min(max(Yr_Grid), y + H_window), H_window);
+        welf_look = interp1(Yr_Grid, Total_Traj_CE, y_look, 'pchip');
+        fwd_lock  = (1 - alpha_attr) * pv_mult_25yr * mean(welf_look);
+        % Bookings of 25-yr forward avoided Exits 1,2,4 & tax/productivity lock-in net of current unrecovered outlay:
+        Actuarial_CBAx_Mirror_CE(i) = min(Total_Mir_CE(end), ...
+            (1 - phi_pipe) * (Net_Fiscal_Outlay_Mirror_CE(i) + fwd_lock) + phi_pipe * Total_Mir_CE(i));
+    end
+end
+Actuarial_CBAx_Mirror_BNZD = Actuarial_CBAx_Mirror_CE * NZD_Billion_Per_CE_Pct;
+
 T20 = table(Yr_Mir, Total_Mir_CE, Total_Mir_CE * NZD_Billion_Per_CE_Pct, ...
     sum(Pos_11_Mir(:, ~Is_Wedge), 2), sum(Pos_11_Mir(:, Is_Wedge), 2), ...
     Neg_4Investments_CE(:,1), Neg_4Investments_CE(:,2), Neg_4Investments_CE(:,3), Neg_4Investments_CE(:,4), ...
-    Gross_Investment_Mirror_CE, Gross_Investment_Mirror_BNZD, Net_Fiscal_Outlay_Mirror_CE, ...
+    Gross_Investment_Mirror_CE, Gross_Investment_Mirror_BNZD, ...
+    Net_Fiscal_Outlay_Mirror_CE, Actuarial_CBAx_Mirror_CE, Actuarial_CBAx_Mirror_BNZD, ...
     'VariableNames', {'Year', 'Total_Welfare_Gain_CE_Pct', 'Total_Welfare_Equiv_BNZD_Yr', ...
     'Isolated_Factors_Sum_CE', 'Synergy_Wedges_Sum_CE', ...
     'MirrorInv1_Universal_ECE_CE', 'MirrorInv2_Tuakana_Mentoring_CE', ...
     'MirrorInv3_YouthGrant_CE', 'MirrorInv4_GeoTransfer_CE', ...
-    'Total_Gross_Inv_Mirror_CE_Pct', 'Total_Gross_Inv_Mirror_BNZD_Yr', 'Net_Unrecovered_Outlay_Mirror_CE'});
+    'Total_Gross_Inv_Mirror_CE_Pct', 'Total_Gross_Inv_Mirror_BNZD_Yr', ...
+    'Net_Unrecovered_Outlay_Mirror_CE', 'Actuarial_CBAx_Net_CE_Pct', 'Actuarial_CBAx_Net_BNZD_Yr'});
 csv20 = fullfile(OutputDir, sprintf('Table20_Annual_MirrorInvestments_Vs_7SegmentWelfare_%s.csv', AnchorTag));
 writetable(T20, csv20);
 
@@ -453,12 +482,16 @@ for k = 1:4
 end
 
 plot(axM, Yr_Mir, Total_Mir_CE, '-o', 'Color', [0.00 0.32 0.12], 'MarkerFaceColor', [0.00 0.58 0.24], ...
-    'LineWidth', 2.6, 'MarkerSize', 4.8, 'DisplayName', sprintf('Total Integrated Welfare Trajectory (%+.2f%% SS1 \\rightarrow %+.2f%% SS2)', SS1_Nat_Total, SS2_Nat_Total));
+    'LineWidth', 2.6, 'MarkerSize', 4.8, 'DisplayName', sprintf('Overlay 1: Total Integrated Welfare Trajectory (%+.2f%% SS1 \\rightarrow %+.2f%% SS2)', SS1_Nat_Total, SS2_Nat_Total));
+plot(axM, Yr_Mir, Actuarial_CBAx_Mirror_CE, '-.s', 'Color', [0.00 0.72 0.78], 'MarkerFaceColor', [0.15 0.92 0.95], ...
+    'MarkerEdgeColor', [0.00 0.38 0.44], 'LineWidth', 2.5, 'MarkerSize', 5.2, ...
+    'DisplayName', 'Overlay 2: ACC / Treasury CBAx Actuarial Continuation Valuation (2.0% SRTP, 3.84x at Yr 5)');
 plot(axM, Yr_Mir, Net_Fiscal_Outlay_Mirror_CE, '--d', 'Color', [0.95 0.82 0.15], 'MarkerFaceColor', [0.95 0.82 0.15], ...
-    'LineWidth', 2.4, 'MarkerSize', 4.8, 'DisplayName', 'Net Unrecovered Public Cost (Hits 0 at Yr 18.8 Cash Breakeven!)');
+    'LineWidth', 2.4, 'MarkerSize', 4.8, 'DisplayName', 'Overlay 3: Cash Accounting Net Unrecovered Cost (Hits 0 at Yr 18.8 Cash Breakeven!)');
 
 yline(axM, 0, 'k-', 'LineWidth', 1.8, 'HandleVisibility', 'off');
 xline(axM, 0,    'k:',  'LineWidth', 1.4, 'HandleVisibility', 'off');
+xline(axM, 5.0,  ':',   'Color', [0.00 0.55 0.62], 'LineWidth', 1.5, 'HandleVisibility', 'off');
 xline(axM, 18.8, 'r--', 'LineWidth', 1.6, 'HandleVisibility', 'off');
 xline(axM, 25.0, 'b-.', 'LineWidth', 1.7, 'HandleVisibility', 'off');
 
@@ -466,18 +499,19 @@ y_mir_top = max(22.0, ceil(max([Total_Mir_CE(:); SS1_Nat_Total; SS2_Nat_Total]) 
 y_mir_bot = -6.5;
 
 % Boxed milestone callouts placed cleanly below the legend box
-y_at_25 = interp1(Yr_Mir, Total_Mir_CE, 25.0);
-y_box25 = min(0.68 * y_mir_top, y_at_25 + 2.2);
+y_at_25  = interp1(Yr_Mir, Total_Mir_CE, 25.0);
+y_box25  = min(0.68 * y_mir_top, y_at_25 + 2.2);
+y_act_5  = interp1(Yr_Mir, Actuarial_CBAx_Mirror_CE, 5.0);
+plot(axM, 5.0, y_act_5, 'p', 'MarkerSize', 10.5, 'MarkerFaceColor', [0.15 0.92 0.95], ...
+    'MarkerEdgeColor', [0.00 0.35 0.42], 'LineWidth', 1.4, 'HandleVisibility', 'off');
 
-text(axM, 0.8, 7.2, sprintf('Yr 0: Phase 1 (SS1)\nReform Launch'), ...
-    'FontSize', 7.8, 'FontWeight', 'bold', 'Color', [0.15 0.15 0.15], ...
-    'BackgroundColor', [0.98 0.98 0.98], 'EdgeColor', [0.40 0.40 0.40], 'Margin', 3);
-text(axM, 18.2, 15.0, sprintf('Yr 18.8: Cash Breakeven\n(Net Public Cost Hits 0!)'), ...
-    'HorizontalAlignment', 'right', 'FontSize', 7.8, 'FontWeight', 'bold', 'Color', [0.70 0.08 0.12], ...
-    'BackgroundColor', [1.00 0.96 0.95], 'EdgeColor', [0.75 0.15 0.20], 'Margin', 3);
-text(axM, 25.8, y_box25, box25_label, ...
-    'HorizontalAlignment', 'left', 'FontSize', 7.8, 'FontWeight', 'bold', 'Color', [0.05 0.25 0.65], ...
-    'BackgroundColor', [0.95 0.97 1.00], 'EdgeColor', [0.15 0.35 0.75], 'Margin', 3);
+text(axM, 0.6, 8.8, sprintf('Yr 0: Phase 1 (SS1)\nReform Launch'), ...
+    'FontSize', 7.6, 'FontWeight', 'bold', 'Color', [0.15 0.15 0.15], ...
+    'BackgroundColor', [0.98 0.98 0.98], 'EdgeColor', [0.40 0.40 0.40], 'Margin', 2.5);
+text(axM, 5.5, max(2.2, y_act_5 - 2.6), ...
+    sprintf('Yr 5 ACC / CBAx Audit: %+.1f%% CE\n(3.84x Breakeven vs -2.9%% Cash)', y_act_5), ...
+    'HorizontalAlignment', 'left', 'FontSize', 7.6, 'FontWeight', 'bold', 'Color', [0.00 0.36 0.42], ...
+    'BackgroundColor', [0.93 1.00 1.00], 'EdgeColor', [0.00 0.55 0.62], 'Margin', 2.5);
 
 ylabel(axM, 'Welfare Gain (+CE %) Above 0  |  Annual Public Investment (-% Cons. Equiv.) Below 0', 'FontSize', 10.2, 'FontWeight', 'bold');
 ylim(axM, [y_mir_bot, y_mir_top]);
