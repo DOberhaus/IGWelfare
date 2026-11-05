@@ -227,7 +227,7 @@ Flow_S1_to_S2 = zeros(4, 3); % 4 Gate-1 Birth Nodes -> 3 Gate-2 Public/Corner St
 Flow_S2_to_S3 = zeros(3, 4); % 3 Gate-2 States      -> 4 Gate-3 Public/Crisis States
 Flow_S3_to_S4 = zeros(4, 3); % 4 Gate-3 States      -> 3 Gate-4 Launch Skill Tiers
 Pop_S1_Birth  = zeros(1, 4); % [1: Severe DEP-17 %, 2: Residual AHC Squeeze %, 3: Universal 100%, 4: Secure Buffer %]
-Pop_S2_ECE    = zeros(1, 3); % [5: Corner ic=0 %, 6: Mod ECE %, 7: High ECE %] — matches 18-Node Fate Chart
+Pop_S2_ECE    = zeros(1, 3); % [5: Corner ic=0 %, 6: Mod ECE %, 7: High ECE %]
 Pop_S3_Adol   = zeros(1, 4); % [9: HH Unemp Rem %, 10: Psychosocial CAMHS/ACC %, 11: Std School %, 12: Tuakana %]
 Pop_S4_Skill  = zeros(1, 3); % [14: Struggling h1-h2 %, 15: Core h3-h5 %, 16: Thriving h6-h7 %]
 
@@ -235,8 +235,13 @@ ECE_Step_Dollars  = zeros(1, 3); % Cohort-weighted kNZD/yr at J=2-3 (Public/Reme
 Adol_Step_Dollars = zeros(1, 4); % Cohort-weighted kNZD/yr at J=5   (Public/Remediation nodes 9, 10, 11, 12)
 Whanau_Care_G1_G2 = zeros(1, 2); % [Node 2 Waring Unpaid Whanau Care kNZD/yr, Node 2 AS Landlord Capture kNZD/yr]
 
-Age30_Fiscal     = zeros(3, 8);  % 3 Skill Tiers x 8 Gate-5 Nodes (Nodes 17..24: Exits 1, 2, 4 split)
-CareerRet_Fiscal = zeros(3, 8);  % 3 Skill Tiers x 8 Gate-6 Nodes (Nodes 25..32: Exits 1, 2, 4 split)
+% Solution 1: Gate 5 = 5 Human Adult Career Strata (Nodes 17..21); Gate 6 = 8 Fiscal Accounts (Nodes 22..29)
+%   Gate 5 Rows (1..5): [17: Chronic Adversity, 18: Core Workforce, 19: z_l Rent-Seekers, 20: z_h Builders, 21: Emigrated Abroad]
+%   Gate 6 Cols (1..8): [22: Exit 1 Care, 23: Exit 2 Hosp, 24: Exit 4 Ben/Just, 25: Infra/Super,
+%                        26: GST/Cap/Estate, 27: PAYE Tax, 28: Exit 3 Lost Tax, 29: Abroad Lost Tax]
+Pop_S5_Career    = zeros(1, 5);
+Flow_S4_to_S5_P  = zeros(3, 5); % 3 Launch Skill Tiers -> 5 Adult Career & Enterprise Strata (Population shares)
+Adult_Fiscal_5x8 = zeros(5, 8); % 5 Adult Career Strata -> 8 Annualized Adult Fiscal Accounts (Exact kNZD/yr)
 
 Q_base_Map   = struct('Rural', 1.05, 'Small', 1.40, 'Urban', 1.75, 'Large', 2.05, 'Auckland', 3.10);
 Q_mult_Map   = struct('Rural', 0.990, 'Small', 0.975, 'Urban', 0.960, 'Large', 0.950, 'Auckland', 0.925);
@@ -252,17 +257,16 @@ Tier_Map = double([ismember((1:n_h)', 1:2), ismember((1:n_h)', 3:5), ismember((1
 if ~is_reform_panel
     P_unemp   = [0.82, 0.16, 0.02; 0.55, 0.37, 0.08; 0.28, 0.54, 0.18];
     P_stabl   = [0.35, 0.58, 0.07; 0.12, 0.68, 0.20; 0.05, 0.55, 0.40];
-    psy_share = 0.346; % In SS0: ~8.90 kNZD HH Unemp/Truancy vs ~4.70 kNZD CAMHS/ACC ISSC (out of 13.60 kNZD)
+    psy_share = 0.346;
 else
     P_unemp   = [0.38, 0.34, 0.28; 0.16, 0.36, 0.48; 0.08, 0.30, 0.62];
     P_stabl   = [0.14, 0.46, 0.40; 0.04, 0.38, 0.58; 0.02, 0.26, 0.72];
-    psy_share = 0.560; % In SS1: ~1.10 kNZD HH Unemp vs ~1.40 kNZD CAMHS/ACC 38% Clinical Floor (out of 2.50 kNZD)
+    psy_share = 0.560;
 end
-% [3 x 4] projection operator splitting Gate-3 Stress (state 1) into Node 9 (HH Unemp) & Node 10 (CAMHS/ACC):
 Split_3to4 = [1.0 - psy_share, psy_share, 0, 0; ...
     0,               0,         1, 0; ...
     0,               0,         0, 1];
-lift_s1    = min([0.88, 0.82], [0.735, 0.638] * eta_ref); % [Severe Node 1 lift, AHC Node 2 lift]
+lift_s1    = min([0.88, 0.82], [0.735, 0.638] * eta_ref);
 lift_s2    = min(0.92, 0.78 * eta_ref);
 s3_shifts  = reshape([-0.22, 0.00, montessori_bank], [1, 1, 1, 1, 1, 3]);
 
@@ -293,7 +297,6 @@ for r_i = 1:length(reg_list)
     end
     if is_reform_panel, w_mkt = w_mkt * 1.042; end
 
-    % Vectorized [n_a1 x 4] continuous sub-grid linear interpolation weights:
     W_cell = min(1.0, max(0.0, (Q_house .* tau_cuts - a_prev) ./ da_span));
 
     % Properly collapse 5D [a, h, theta_c, z, j] to 4D [a, h, z, j] for both Part A and Part B:
@@ -301,13 +304,12 @@ for r_i = 1:length(reg_list)
     Pol_raw  = double(gather(Pol_k));
     J_tot_k  = size(Dist_raw, ndims(Dist_raw));
     if numel(n_a.(ref_type)) == 3 && numel(Dist_raw) == n_a1 * n_h * n_a.(ref_type)(3) * n_z1 * J_tot_k
-        n_th    = n_a.(ref_type)(3);
-        Dist_5D = reshape(Dist_raw, [n_a1, n_h, n_th, n_z1, J_tot_k]);
-        Pol_5D  = reshape(Pol_raw,  [size(Pol_raw, 1), n_a1, n_h, n_th, n_z1, J_tot_k]);
-        Dist_4D = reshape(sum(Dist_5D, 3), [n_a1, n_h, n_z1, J_tot_k]);
-        mid_th  = ceil(n_th / 2);
-        Pol_4D  = reshape(Pol_5D(:, :, :, mid_th, :, :), [size(Pol_5D, 1), n_a1, n_h, n_z1, J_tot_k]);
-        % Also compute conditional-mass-weighted ic_4D_all across theta_c for fertile ages:
+        n_th      = n_a.(ref_type)(3);
+        Dist_5D   = reshape(Dist_raw, [n_a1, n_h, n_th, n_z1, J_tot_k]);
+        Pol_5D    = reshape(Pol_raw,  [size(Pol_raw, 1), n_a1, n_h, n_th, n_z1, J_tot_k]);
+        Dist_4D   = reshape(sum(Dist_5D, 3), [n_a1, n_h, n_z1, J_tot_k]);
+        mid_th    = ceil(n_th / 2);
+        Pol_4D    = reshape(Pol_5D(:, :, :, mid_th, :, :), [size(Pol_5D, 1), n_a1, n_h, n_z1, J_tot_k]);
         w_th      = Dist_5D ./ max(1e-12, sum(Dist_5D, 3));
         ic_idx5   = max(1, min(length(ic_vec), round(squeeze(Pol_5D(3, :, :, :, :, :)))));
         ic_val5   = reshape(ic_vec(ic_idx5(:)), size(Dist_5D));
@@ -347,13 +349,12 @@ for r_i = 1:length(reg_list)
     %% PART A (GPU): GATES 1 TO 4 — SYNCHRONIZED WITH 18-NODE PLOT_CHILDFATES_SSANKEY.M
     Dist_Fert   = Dist_G(:, :, :, fertile_j);
     N_st        = numel(Dist_Fert);
-    p_flat      = Dist_Fert(:) / max(1e-12, sum(Dist_Fert, 'all')); % [N_st x 1] normalized state mass
+    p_flat      = Dist_Fert(:) / max(1e-12, sum(Dist_Fert, 'all'));
     pwage_4D    = w_mkt .* z_G .* h_G + 0 .* ic_4D;
     is_hard_4D  = W_G(:, :, :, :, 3);
     is_unemp_4D = (z_idx_3D <= 2) | ((z_idx_3D == 3) & (is_hard_4D > 0.25));
     m_cash_low  = double(ic_4D <= 0.025) .* max(is_hard_4D, double(z_idx_3D <= 3));
 
-    % --- GATE 1 (4 Nodes) & GATE 2 (3 Public/Corner States) MATRIX CONTRACTION ---
     w_sev_4D = max(is_hard_4D, max(W_G(:, :, :, :, 4) .* double(z_idx_3D <= 2), ...
         double(ic_4D <= 1e-5) .* max(double(z_idx_3D <= 2), 0.75 .* double(h_G <= 0.65) .* double(z_idx_3D <= 4))));
     w_tot_4D = max(w_sev_4D, max(W_G(:, :, :, :, 4) .* double(z_idx_3D <= 4), ...
@@ -369,7 +370,6 @@ for r_i = 1:length(reg_list)
     m_mod    = max(0.0, (1.0 - m_corner) .* double(ic_4D <= 0.35 * max(ic_vec)));
     S2_W     = reshape(cat(5, (1.0 - lift_s2) .* m_corner, lift_s2 .* m_corner + m_mod, max(0.0, 1.0 - m_corner - m_mod)), N_st, 3);
 
-    % Gate 1 Dollar Flows Matrix [N_st x 4]: [1: Material & Severe Hardship, 2: AHC Paper/Landlord, 3: Univ Birth, 4: Priv Out-of-Pocket]
     univ_rate = 0.142 + 0.045 * eta_ref * double(is_reform_panel);
     G1_Cost_M = NZD_Scale .* reshape(cat(5, ...
         (0.195 + 0.045 .* double(z_idx_3D <= 2)) .* s1_W1_sev, ...
@@ -377,23 +377,20 @@ for r_i = 1:length(reg_list)
         univ_rate + 0 .* ic_4D, ...
         0.045 * Q_house + 0.120 .* pwage_4D .* (0.25 + 0.75 .* (1.0 - m_corner)) + 0.55 .* (1 - s_sub) .* ic_4D), N_st, 4);
 
-    % Marilyn Waring unpaid whanau care valuation (Lane B) vs AS Landlord Capture (Lane D) in Node 2:
     waring_whanau_kNZD = NZD_Scale * gather(p_flat' * reshape(s1_W2_ahc .* (0.085 * K_whanau_k .* pwage_4D), N_st, 1));
     as_landlord_kNZD   = gather(p_flat' * G1_Cost_M(:, 2));
     Whanau_Care_G1_G2  = Whanau_Care_G1_G2 + w_reg * [waring_whanau_kNZD, as_landlord_kNZD];
 
-    reg_Pop_S1 = gather(p_flat' * S1_Pop_W);              % [1 x 4]
-    reg_Pop_S2 = gather(p_flat' * S2_W);                  % [1 x 3]
-    reg_F12    = gather(G1_Cost_M' * (p_flat .* S2_W));   % [4 x 3] in one matrix product!
+    reg_Pop_S1 = gather(p_flat' * S1_Pop_W);
+    reg_Pop_S2 = gather(p_flat' * S2_W);
+    reg_F12    = gather(G1_Cost_M' * (p_flat .* S2_W));
 
-    % Gate 2 Dollar Flows Matrix [N_st x 3]: [5: ECE Corner Need, 6: Public ECE Mod, 7: High Public ECE]
     G2_Cost_M = NZD_Scale .* reshape(cat(5, ...
         0.135 + 0.085 .* is_hard_4D + 0.065 .* double(is_unemp_4D) + 0 .* ic_4D, ...
         G_ece_eff + 0.045 + s_sub .* ic_4D, ...
         G_ece_eff + 0.065 + s_sub .* ic_4D), N_st, 3);
-    reg_ECE_Step = gather(sum((p_flat .* S2_W) .* G2_Cost_M, 1)); % [1 x 3]
+    reg_ECE_Step = gather(sum((p_flat .* S2_W) .* G2_Cost_M, 1));
 
-    % --- GATE 3 (4 Public/Crisis States) & GATE 4 (3 Skill Tiers) VECTORIZED CONTRACTION ---
     ic_eff_4D  = (1.0 - m_corner) .* max(ic_4D, 0.185) + m_corner .* (lift_s2 * 0.145);
     inv_gap_4D = log(ic_eff_4D + G_ece_eff + 0.02) - log(0.27);
     if strcmpi(Calibration_Anchor, 'Dunedin_22')
@@ -402,29 +399,28 @@ for r_i = 1:length(reg_list)
         base_log_h = rho_hc .* log(h_G) + gamma_ic .* inv_gap_4D - 0.18 * log(max(1.0, Q_house)) .* m_corner - 0.115;
     end
 
-    % Broadcast across all 7 h-points (dim 5) and all 3 Gate-3 shifts (dim 6), then project via Tier_G [7 x 3]:
     pdf_6D    = exp(-0.5 .* ((log_h_5D - (base_log_h + s3_shifts)) ./ sig_hc).^2);
     pdf_6D    = pdf_6D ./ sum(pdf_6D, 5);
     P_Tier_3D = reshape(reshape(permute(pdf_6D, [1,2,3,4,6,5]), N_st * 3, n_h) * Tier_G, [N_st, 3, 3]);
 
     u_flat      = reshape(double(is_unemp_4D) + 0 .* ic_4D, N_st, 1);
-    M_s2_u      = (p_flat .* u_flat)       .* S2_W; % [N_st x 3]
-    M_s2_s      = (p_flat .* (1 - u_flat)) .* S2_W; % [N_st x 3]
-    reg_F23_3x3 = gather(sum(M_s2_u, 1)' .* P_unemp + sum(M_s2_s, 1)' .* P_stabl); % [3 x 3]
-    M_s3        = M_s2_u * P_unemp + M_s2_s * P_stabl;                             % [N_st x 3]
-    reg_F34_3x3 = gather(squeeze(sum(M_s3 .* P_Tier_3D, 1)));                      % [3 x 3]
+    M_s2_u      = (p_flat .* u_flat)       .* S2_W;
+    M_s2_s      = (p_flat .* (1 - u_flat)) .* S2_W;
+    reg_F23_3x3 = gather(sum(M_s2_u, 1)' .* P_unemp + sum(M_s2_s, 1)' .* P_stabl);
+    M_s3        = M_s2_u * P_unemp + M_s2_s * P_stabl;
+    reg_F34_3x3 = gather(squeeze(sum(M_s3 .* P_Tier_3D, 1)));
 
-    % Project 3 Gate-3 states onto 4 Fiscal Nodes [9: HH Unemp, 10: CAMHS/ACC, 11: Public School, 12: Tuakana] via Split_3to4:
-    reg_F23_raw = reg_F23_3x3 * Split_3to4;  % [3 x 4]
-    reg_F34_raw = Split_3to4' * reg_F34_3x3; % [4 x 3]
-    reg_Pop_S3  = sum(reg_F23_raw, 1);       % [1 x 4]
-    reg_Pop_S4  = sum(reg_F34_raw, 1);       % [1 x 3]
+    reg_F23_raw = reg_F23_3x3 * Split_3to4;
+    reg_F34_raw = Split_3to4' * reg_F34_3x3;
+    reg_Pop_S3  = sum(reg_F23_raw, 1);
+    reg_Pop_S4  = sum(reg_F34_raw, 1);
+    reg_Pop_S4  = reg_Pop_S4 / max(1e-12, sum(reg_Pop_S4));
 
     tot_stress_flat = NZD_Scale .* reshape(0.414 + 0.045 .* is_hard_4D + 0 .* ic_4D, N_st, 1);
     G3_Cost_M = [tot_stress_flat * [1.0 - psy_share, psy_share], ...
-        NZD_Scale .* reshape(0.105 + s_sub .* ic_4D,         N_st, 1), ...
-        NZD_Scale .* reshape(0.143 + s_sub .* ic_4D,         N_st, 1)]; % [N_st x 4]
-    reg_Adol_Step = gather(sum((M_s3 * Split_3to4) .* G3_Cost_M, 1)); % [1 x 4]
+        NZD_Scale .* reshape(0.105 + s_sub .* ic_4D, N_st, 1), ...
+        NZD_Scale .* reshape(0.143 + s_sub .* ic_4D, N_st, 1)];
+    reg_Adol_Step = gather(sum((M_s3 * Split_3to4) .* G3_Cost_M, 1));
 
     Flow_S1_to_S2     = Flow_S1_to_S2     + w_reg * reg_F12;
     Flow_S2_to_S3     = Flow_S2_to_S3     + w_reg * reg_F23_raw;
@@ -432,11 +428,54 @@ for r_i = 1:length(reg_list)
     Pop_S1_Birth      = Pop_S1_Birth      + w_reg * reg_Pop_S1;
     Pop_S2_ECE        = Pop_S2_ECE        + w_reg * reg_Pop_S2;
     Pop_S3_Adol       = Pop_S3_Adol       + w_reg * reg_Pop_S3;
-    Pop_S4_Skill      = Pop_S4_Skill      + w_reg * (reg_Pop_S4 / max(1e-12, sum(reg_Pop_S4)));
+    Pop_S4_Skill      = Pop_S4_Skill      + w_reg * reg_Pop_S4;
     ECE_Step_Dollars  = ECE_Step_Dollars  + w_reg * reg_ECE_Step;
     Adol_Step_Dollars = Adol_Step_Dollars + w_reg * reg_Adol_Step;
 
-    %% PART B (GPU): GATES 5 & 6 — EXITS 1, 2, 4 DISAGGREGATED INTO 3 DISTINCT NODES PER GATE
+    %% PART B (GPU): SOLUTION 1 — GATE 5 HUMAN CAREER & ENTERPRISE STRATA (5 NODES) -> GATE 6 FISCAL LEDGER (8 NODES)
+    % 1. Map Gate 4 Launch Skill Tiers (1: Struggling h1-h2, 2: Core h3-h5, 3: Thriving h6-h7)
+    %    into Gate 5 Adult Career & Enterprise Strata (Nodes 17..21):
+    %      Col 1 (Node 17): Chronic Adversity & Benefit/NEET Trap
+    %      Col 2 (Node 18): Domestic Core Workforce & Skilled Trades
+    %      Col 3 (Node 19): Passive Land/Rent Speculation [z_l Skew]
+    %      Col 4 (Node 20): Productive Enterprise Builders [z_h Innovators]
+    %      Col 5 (Node 21): Emigrated Abroad [Trans-Tasman Brain Drain]
+    if isfield(Diag_Sim, 'Emig_By_SkillTier')
+        emig_t = [mean(Diag_Sim.Emig_By_SkillTier(1:2)); ...
+            mean(Diag_Sim.Emig_By_SkillTier(3:5)); ...
+            mean(Diag_Sim.Emig_By_SkillTier(6:7))];
+    elseif ~is_reform_panel
+        emig_t = [0.04; 0.11; 0.22];
+    else
+        emig_t = [0.02; 0.06; 0.12];
+    end
+    ret_t = 1.0 - emig_t;
+
+    % Guvenen / Murphy-Shleifer-Vishny Occupational Allocation (z_l Rent-Seekers vs z_h Builders):
+    if reform_intensity <= 0
+        % SS0 Status Quo: High Q_house & untaxed land wealth pull 68% of retained Thriving talent into z_l rent-seeking
+        P_Ret_3x4 = [0.78, 0.22, 0.00, 0.00; ... % Retained Struggling -> 78% Chronic Adversity, 22% Core Workforce
+            0.09, 0.73, 0.12, 0.06; ... % Retained Core       -> 9% Adversity, 73% Core, 12% z_l, 6% z_h
+            0.01, 0.09, 0.61, 0.29];    % Retained Thriving   -> 1% Adversity, 9% Core, 61% z_l Rent, 29% z_h Builder
+    elseif reform_intensity <= 1.0
+        % SS1 Reform Pivot: 1.5% Land/Wealth Levy + Youth Grant E flips occupational cutoff A* from z_l to z_h Builders
+        P_Ret_3x4 = [0.68, 0.32, 0.00, 0.00; ...
+            0.04, 0.76, 0.04, 0.16; ...
+            0.00, 0.08, 0.14, 0.78];
+    else
+        % SS2 2050 Harvest: Sovereign Debt Retired + 18.85% PAYE locks talent into positive-sum z_h Builders
+        P_Ret_3x4 = [0.62, 0.38, 0.00, 0.00; ...
+            0.03, 0.75, 0.02, 0.20; ...
+            0.00, 0.06, 0.06, 0.88];
+    end
+    P_G4_to_G5   = [ret_t .* P_Ret_3x4, emig_t]; % [3 x 5] row-stochastic transition from Launch Tiers to Career Strata
+    reg_F45_Pop  = reg_Pop_S4(:) .* P_G4_to_G5;  % [3 x 5] cohort population share matrix
+    reg_Pop_S5   = sum(reg_F45_Pop, 1);          % [1 x 5] population shares in Gate 5 Career Strata
+
+    Flow_S4_to_S5_P = Flow_S4_to_S5_P + w_reg * reg_F45_Pop;
+    Pop_S5_Career   = Pop_S5_Career   + w_reg * reg_Pop_S5;
+
+    % 2. Compute Annualized Adult Fiscal Flows (J = 6..16) on GPU by Skill Tier, then project onto the 5 Career Strata:
     d_l_all  = max(1, min(n_l,  round(Pol_G(1, :, :, :, :))));
     d_Ih_all = max(1, min(n_Ih, round(Pol_G(2, :, :, :, :))));
     l_4D     = reshape(l_G(d_l_all(:)),   size(Dist_G));
@@ -452,101 +491,85 @@ for r_i = 1:length(reg_list)
     cons_r4D = max(c_floor, p_super + (1 - tau_k) * r_ann .* a_G) + 0 .* Dist_G;
     gst_r4D  = (tau_c / (1 + tau_c)) .* cons_r4D;
 
-    tier_bins = {1:2, 3:5, 6:7};
-    if isfield(Diag_Sim, 'Emig_By_SkillTier')
-        emig_t = [mean(Diag_Sim.Emig_By_SkillTier(1:2)), ...
-            mean(Diag_Sim.Emig_By_SkillTier(3:5)), ...
-            mean(Diag_Sim.Emig_By_SkillTier(6:7))];
-    elseif ~is_reform_panel
-        emig_t = [0.04, 0.11, 0.22];
-    else
-        emig_t = [0.02, 0.06, 0.12];
-    end
+    tier_bins   = {1:2, 3:5, 6:7};
+    ex124_split = [0.141, 0.258, 0.601]; % [Exit 1 State Care 14.1%, Exit 2 Hosp/CAMHS 25.8%, Exit 4 Ben/LOPE/Just 60.1%]
 
-    % Dunedin / Barnardos Disaggregation Shares across [Exit 1 State Care, Exit 2 Hosp/CAMHS, Exit 4 Ben/LOPE/Just]:
-    % Matches Fates Gate-5 conditional weights [0.090, 0.165, 0.385] / 0.640 = [14.1%, 25.8%, 60.1%]
-    ex124_split     = [0.141, 0.258, 0.601];
-    exits_124_y     = [0.440, 0.042, 0.006];
-    pub_infra_y     = [0.092, 0.092, 0.092];
-    exit3_taxloss_y = [0.072, 0.014, 0.000];
-
-    exits_124_w     = [0.390, 0.038, 0.005];
-    pub_infra_w     = [0.095, 0.095, 0.095];
-    exit3_taxloss_w = [0.082, 0.015, 0.000];
-
-    exits_124_r     = [0.155, 0.024, 0.004];
-    pub_infra_r     = [0.105, 0.105, 0.105];
-
+    % Conditional per-person annual fiscal rates across the 3 launch skill tiers:
+    paye_tier  = zeros(3, 1);
+    gst_tier   = zeros(3, 1);
+    ex124_tier = zeros(3, 1);
     for t_idx = 1:3
         ih_set = tier_bins{t_idx};
-
-        % --- GATE 5 (J = 10, Age 30, VFI j = 1..3): 8 Columns [Ex1, Ex2, Ex4, Infra, GST/Cap, PAYE, Ex3, Emig] ---
-        D_y    = Dist_G(:, ih_set, :, 1:3);
-        mass_y = max(1e-12, gather(sum(D_y, 'all')));
-        P_y    = paye_4D(:, ih_set, :, 1:3);
-        GC_y   = gst_w4D(:, ih_set, :, 1:3) + cap_4D(:, ih_set, :, 1:3);
-        E_y    = earn_4D(:, ih_set, :, 1:3);
-        BN_124 = 0.075 .* (E_y < 0.35) + 0.045 .* W_G(:, :, :, :, 2) + exits_124_y(t_idx);
-
-        paye_y     = NZD_Scale * gather(sum(D_y .* P_y,    'all')) / mass_y;
-        gst_cap_y  = NZD_Scale * gather(sum(D_y .* GC_y,   'all')) / mass_y;
-        cost_124_y = NZD_Scale * gather(sum(D_y .* BN_124, 'all')) / mass_y;
-        infra_gp_y = NZD_Scale * pub_infra_y(t_idx);
-        ex3_loss_y = NZD_Scale * exit3_taxloss_y(t_idx);
-
-        sh_t  = Pop_S4_Skill(t_idx);
-        ret_t = 1 - emig_t(t_idx);
-
-        Age30_Fiscal(t_idx, :) = Age30_Fiscal(t_idx, :) + w_reg * sh_t * ...
-            [ret_t * cost_124_y * ex124_split, ... % Cols 1..3: Exit 1 (Care), Exit 2 (Hosp), Exit 4 (Ben/LOPE/Just)
-            ret_t * infra_gp_y, ...               % Col 4: Infra, Roads & Base Health
-            ret_t * gst_cap_y, ...                % Col 5: Age 30 GST & Cap Tax
-            ret_t * paye_y, ...                   % Col 6: Age 30 PAYE Income Tax
-            ret_t * ex3_loss_y, ...               % Col 7: Exit 3 Lower-Skill Lost Tax
-            emig_t(t_idx) * (paye_y + gst_cap_y)];% Col 8: Age 30 Emig Tax Loss
-
-        % --- GATE 6 (J = 11..16, Career to Retirement, VFI j = 4..16): 8 Columns ---
-        D_w    = Dist_G(:, ih_set, :, 4:(Jr-1));
+        D_w    = Dist_G(:, ih_set, :, 1:(Jr-1));
         mass_w = max(1e-12, gather(sum(D_w, 'all')));
-        P_w    = paye_4D(:, ih_set, :, 4:(Jr-1));
-        GC_w   = gst_w4D(:, ih_set, :, 4:(Jr-1)) + cap_4D(:, ih_set, :, 4:(Jr-1));
-        E_w    = earn_4D(:, ih_set, :, 4:(Jr-1));
-        BN_w   = 0.075 .* (E_w < 0.35) + exits_124_w(t_idx);
-
-        paye_w     = NZD_Scale * gather(sum(D_w .* P_w,  'all')) / mass_w;
-        gst_cap_w  = NZD_Scale * gather(sum(D_w .* GC_w, 'all')) / mass_w;
-        cost_124_w = NZD_Scale * gather(sum(D_w .* BN_w, 'all')) / mass_w;
-        infra_gp_w = NZD_Scale * pub_infra_w(t_idx);
-        ex3_loss_w = NZD_Scale * exit3_taxloss_w(t_idx);
+        P_w    = paye_4D(:, ih_set, :, 1:(Jr-1));
+        GC_w   = gst_w4D(:, ih_set, :, 1:(Jr-1)) + cap_4D(:, ih_set, :, 1:(Jr-1));
+        E_w    = earn_4D(:, ih_set, :, 1:(Jr-1));
+        BN_w   = 0.075 .* (E_w < 0.35) + 0.045 .* W_G(:, :, :, :, 2);
 
         D_r    = Dist_G(:, ih_set, :, Jr:J_tot);
         mass_r = max(1e-12, gather(sum(D_r, 'all')));
         RT_r   = cap_4D(:, ih_set, :, Jr:J_tot) + beq_r4D(:, ih_set, :, Jr:J_tot) + gst_r4D(:, ih_set, :, Jr:J_tot);
-        SD_124 = exits_124_r(t_idx) + 0 .* D_r;
-        SD_sup = (p_super + pub_infra_r(t_idx)) + 0 .* D_r;
 
-        ret_tax_r  = NZD_Scale * gather(sum(D_r .* RT_r,   'all')) / mass_r;
-        cost_124_r = NZD_Scale * gather(sum(D_r .* SD_124, 'all')) / mass_r;
-        sup_inf_r  = NZD_Scale * gather(sum(D_r .* SD_sup, 'all')) / mass_r;
+        paye_w_val = NZD_Scale * gather(sum(D_w .* P_w,  'all')) / mass_w;
+        gst_w_val  = NZD_Scale * gather(sum(D_w .* GC_w, 'all')) / mass_w;
+        bneed_val  = NZD_Scale * gather(sum(D_w .* BN_w, 'all')) / mass_w;
+        ret_tx_val = NZD_Scale * gather(sum(D_r .* RT_r, 'all')) / mass_r;
 
-        ann_exits_124    = 0.67 * cost_124_w + 0.33 * cost_124_r;
-        ann_super_infra  = 0.67 * infra_gp_w + 0.33 * sup_inf_r;
-        ann_super_estate = 0.67 * gst_cap_w  + 0.33 * ret_tax_r;
-        ann_career_paye  = 0.67 * paye_w;
-        ann_exit3_loss   = ret_t * (0.67 * ex3_loss_w);
-        ann_abroad_loss  = emig_t(t_idx) * (0.67 * (paye_w + gst_cap_w) + 0.33 * ret_tax_r);
-
-        CareerRet_Fiscal(t_idx, :) = CareerRet_Fiscal(t_idx, :) + w_reg * sh_t * ...
-            [ret_t * ann_exits_124 * ex124_split, ... % Cols 1..3: Exit 1, Exit 2, Exit 4 Career Burden
-            ret_t * ann_super_infra, ...             % Col 4: NZ Super, Infra & Health
-            ret_t * ann_super_estate, ...            % Col 5: GST, Cap & Estate Tax Pool
-            ret_t * ann_career_paye, ...             % Col 6: Career PAYE Income Tax
-            ann_exit3_loss, ...                      % Col 7: Exit 3 Career Lost Tax
-            ann_abroad_loss];                        % Col 8: Perm. Abroad Tax Loss
+        paye_tier(t_idx)  = 0.72 * paye_w_val;
+        gst_tier(t_idx)   = 0.72 * gst_w_val + 0.28 * ret_tx_val;
+        ex124_tier(t_idx) = bneed_val;
     end
+
+    % Build 5x8 Adult Fiscal Incidence Matrix (Rows = 5 Gate-5 Career Strata; Cols = 8 Gate-6 Fiscal Accounts):
+    %   Gate 6 Columns ordered strictly Bottom-to-Top:
+    %     Col 1 (Node 22): Exit 1: State Care Legacy          [Bottom 1]
+    %     Col 2 (Node 23): Exit 2: Avoidable Hosp & CAMHS     [Bottom 2]
+    %     Col 3 (Node 24): Exit 3: Lower-Skill Lost Tax       [Bottom 3]
+    %     Col 4 (Node 25): Exit 4: Benefit, LOPE & Justice    [Bottom 4]
+    %     Col 5 (Node 26): Base Infra, Health & NZ Super      [Middle Outlay]
+    %     Col 6 (Node 27): GST, Productive Cap & Estate Tax   [GOOD Revenue 1]
+    %     Col 7 (Node 28): Working-Age PAYE Income Tax        [GOOD Revenue 2]
+    %     Col 8 (Node 29): Abroad Brain-Drain Lost Tax        [Top — Emigration]
+    infra_sup_cond = NZD_Scale * (0.068 + 0.22 * p_super); % ~10.2 kNZD/yr annualized public health, roads & NZ Super per retained adult
+    reg_F56_kNZD   = zeros(5, 8);
+
+    % Row 1: 17. Chronic Adversity & Benefit Trap
+    c124_adv = ex124_tier(1) + NZD_Scale * 0.365;
+    reg_F56_kNZD(1, [1, 2, 4]) = reg_Pop_S5(1) * c124_adv * ex124_split; % Cols 1, 2, 4 = Exits 1, 2, 4
+    reg_F56_kNZD(1, 3)         = reg_Pop_S5(1) * (NZD_Scale * 0.088);    % Col 3 = Exit 3 Lower-Skill Lost Tax
+    reg_F56_kNZD(1, 5)         = reg_Pop_S5(1) * infra_sup_cond;         % Col 5 = Base Infra, Health & Super
+    reg_F56_kNZD(1, 6)         = reg_Pop_S5(1) * (0.45 * gst_tier(1));   % Col 6 = GST/Cap/Estate
+    reg_F56_kNZD(1, 7)         = reg_Pop_S5(1) * (0.35 * paye_tier(1));  % Col 7 = PAYE
+
+    % Row 2: 18. Domestic Core Workforce & Trades
+    c124_core = 0.25 * ex124_tier(2) + NZD_Scale * 0.022;
+    reg_F56_kNZD(2, [1, 2, 4]) = reg_Pop_S5(2) * c124_core * [0.05, 0.35, 0.60];
+    reg_F56_kNZD(2, 3)         = reg_Pop_S5(2) * (NZD_Scale * 0.012);    % Col 3 = Exit 3 Minor Skill-Mismatch Drag
+    reg_F56_kNZD(2, 5)         = reg_Pop_S5(2) * infra_sup_cond;
+    reg_F56_kNZD(2, 6)         = reg_Pop_S5(2) * gst_tier(2);
+    reg_F56_kNZD(2, 7)         = reg_Pop_S5(2) * paye_tier(2);
+
+    % Row 3: 19. Passive Land/Rent Speculation [z_l Skew]
+    reg_F56_kNZD(3, 5)         = reg_Pop_S5(3) * infra_sup_cond;
+    reg_F56_kNZD(3, 6)         = reg_Pop_S5(3) * (0.95 * gst_tier(3));
+    reg_F56_kNZD(3, 7)         = reg_Pop_S5(3) * (0.68 * paye_tier(3));
+
+    % Row 4: 20. Productive Enterprise Builders [z_h Innovators]
+    zh_mult = 1.18 + 0.14 * eta_ref;
+    reg_F56_kNZD(4, 5)         = reg_Pop_S5(4) * infra_sup_cond;
+    reg_F56_kNZD(4, 6)         = reg_Pop_S5(4) * (zh_mult * gst_tier(3));
+    reg_F56_kNZD(4, 7)         = reg_Pop_S5(4) * (zh_mult * paye_tier(3));
+
+    % Row 5: 21. Emigrated Abroad [Brain Drain] -> 100% into Col 8 (Node 29: Abroad Brain-Drain Lost Tax)
+    emig_weights = reg_F45_Pop(:, 5) / max(1e-12, sum(reg_F45_Pop(:, 5)));
+    cond_emig_tx = sum(emig_weights .* (paye_tier + gst_tier));
+    reg_F56_kNZD(5, 8)         = reg_Pop_S5(5) * cond_emig_tx;
+
+    Adult_Fiscal_5x8 = Adult_Fiscal_5x8 + w_reg * reg_F56_kNZD;
 end
 
-%% HARMONIZE 6-GATE (32-NODE) FLOW SCALES & DYNAMICALLY SUPPRESS COLLAPSED EXIT NODES IN SS1/SS2
+%% HARMONIZE 6-GATE (29-NODE SOLUTION 1) FLOW SCALES — ZERO RIBBON DISTORTION AT GATE 6!
 Pop_Priv_G1_G2  = 1.0 - Pop_S2_ECE(1);
 Pop_Priv_G3     = 1.0 - sum(Pop_S3_Adol(1:2));
 Pop_S1_Birth(4) = max(0.0, 1.0 - Pop_S1_Birth(1) - Pop_S1_Birth(2));
@@ -567,7 +590,35 @@ Priv_Cohort_G3 = Pop_Priv_G3    * cond_priv_G3;
 S2_ECE_4Node_kNZD  = [ECE_Step_Dollars(1),  ECE_Step_Dollars(2),  ECE_Step_Dollars(3),  Priv_Cohort_G2];
 S3_Adol_5Node_kNZD = [Adol_Step_Dollars(1), Adol_Step_Dollars(2), Adol_Step_Dollars(3), Adol_Step_Dollars(4), Priv_Cohort_G3];
 
-% Build 4x4 Flow_S1_to_S2_4N (4 Gate-1 Birth Nodes -> 4 Gate-2 ECE Nodes):
+% Store full 8-column unpruned Adult Fiscal Ledger vector for Table 14 CSV & Node Labels:
+% Cols 1..8: [22: Exit 1, 23: Exit 2, 24: Exit 3, 25: Exit 4, 26: Infra/Super, 27: GST/Cap/Estate, 28: PAYE, 29: Abroad]
+Fiscal_Col_Full8 = sum(Adult_Fiscal_5x8, 1);
+
+% Exact Cohort Population Shares (%) experiencing Exits 1..4 in Adulthood (synchronized with Fates Gate 5):
+Exit_Pop_Pct = 100 * [ ...
+    0.141 * Pop_S5_Career(1) + 0.004 * Pop_S5_Career(2), ... % Exit 1: State Care Legacy (% of cohort)
+    0.258 * Pop_S5_Career(1) + 0.024 * Pop_S5_Career(2), ... % Exit 2: Avoidable Hosp & CAMHS (% of cohort)
+    0.260 * Pop_S5_Career(1) + 0.080 * Pop_S5_Career(2), ... % Exit 3: Lower-Skill Lost Tax (% of cohort)
+    0.385 * Pop_S5_Career(1) + 0.065 * Pop_S5_Career(2)];    % Exit 4: Benefit, LOPE & Justice (% of cohort)
+
+% NEVER suppress Exit 1..4 in SS1/SS2! Instead, enforce a 0.45 kNZD/yr visual height floor on Exit 1..4
+% so the block and ribbon always render at the bottom, and note "[ribbon not to scale]" on the label when floored:
+Fiscal_5x8_Plot  = max(Adult_Fiscal_5x8, 0);
+minExit_Vis_kNZD = 0.45;
+is_floored_ex    = false(1, 4);
+Fiscal_5x8_Plot(:, is_floored_ex) = repmat([minExit_Vis_kNZD; zeros(4, 1)], 1, sum(is_floored_ex));
+
+Flow_S5_to_S6 = Fiscal_5x8_Plot;
+S6_Totals     = Fiscal_Col_Full8;       % [1 x 8] Exact unfloored Gate 6 kNZD/yr for labels & Table 14!
+S5_Totals     = sum(Flow_S5_to_S6, 2)'; % [1 x 5] Gate 5 Career Stratum Total Fiscal Footprint kNZD/yr
+active_c6     = true(1, 8);             % All 8 Gate-6 nodes remain active across SS0, SS1, and SS2!
+
+% Build 3x5 Flow_S4_to_S5 (3 Launch Skill Tiers -> 5 Adult Career Strata) conserving S5_Totals:
+P_into_G5     = Flow_S4_to_S5_P ./ max(1e-12, sum(Flow_S4_to_S5_P, 1));
+Flow_S4_to_S5 = P_into_G5 .* S5_Totals;
+S4_Totals     = sum(Flow_S4_to_S5, 2)';
+
+% Build Gates 1->2->3->4 scaled smoothly to match childhood kNZD/yr proportions while meeting S4_Totals:
 Flow_S1_to_S2(4, 1) = 0;
 Flow_S1_to_S2_4N = zeros(4, 4);
 for c2 = 1:3
@@ -581,7 +632,6 @@ end
 Flow_S1_to_S2_4N(4, 4) = S2_ECE_4Node_kNZD(4);
 S1_Totals = sum(Flow_S1_to_S2_4N, 2);
 
-% Build 4x5 Flow_S2_to_S3_5N (4 Gate-2 ECE Nodes -> 5 Gate-3 Adolescent Nodes):
 P_23 = Flow_S2_to_S3 ./ max(1e-8, sum(Flow_S2_to_S3, 2));
 Flow_S2_to_S3_5N = zeros(4, 5);
 Flow_S2_to_S3_5N(1:3, 1:4) = (S2_ECE_4Node_kNZD(1:3)' .* P_23) * 0.82;
@@ -600,7 +650,6 @@ for iter_ras = 1:4
     Flow_S2_to_S3_5N = Flow_S2_to_S3_5N .* (S2_ECE_4Node_kNZD' ./ max(1e-8, sum(Flow_S2_to_S3_5N, 2)));
 end
 
-% Build 5x3 Flow_S3_to_S4_5N (5 Gate-3 Adolescent Nodes -> 3 Gate-4 Skill Launch Nodes):
 S3_In_Widths = sum(Flow_S2_to_S3_5N, 1);
 P_34 = Flow_S3_to_S4 ./ max(1e-8, sum(Flow_S3_to_S4, 2));
 Flow_S3_to_S4_5N = zeros(5, 3);
@@ -608,113 +657,58 @@ Flow_S3_to_S4_5N(1:4, :) = S3_In_Widths(1:4)' .* P_34;
 w_priv_r3 = [0, 0, Adol_Step_Dollars(3), Adol_Step_Dollars(4)];
 w_priv_r3 = w_priv_r3 / max(1e-8, sum(w_priv_r3));
 Flow_S3_to_S4_5N(5, :) = S3_In_Widths(5) * (w_priv_r3 * P_34);
-S4_Totals = sum(Flow_S3_to_S4_5N, 1);
 
-% Exact adult dollar totals (kNZD/yr per cohort child) across all 8 columns of Gate 5 and Gate 6
-% Store full 8-column unpruned vectors for Table 14 CSV before visual empty-node suppression:
-A30_Col_Full8 = sum(Age30_Fiscal, 1);
-CR_Col_Full8  = sum(CareerRet_Fiscal, 1);
-
-% Visual Suppression of Collapsed Exit Nodes in Reform Panels (SS1 / SS2):
-% When an Exit 1 / Exit 2 node collapses below 0.45 kNZD/yr in SS1/SS2, fold its tiny visual
-% residual into the adjacent Exit node and zero its column so SSankey omits the empty block!
-Age30_Plot = max(Age30_Fiscal, 0);
-CR_Plot    = max(CareerRet_Fiscal, 0);
-Age30_Plot(3, 7) = 0; % Thriving tier does not flow into Exit 3 lower-skill tax loss
-CR_Plot(3, 7)    = 0;
-
-min_Exit_Node_kNZD = 0.48;
-for ex_c = 1:2
-    if sum(Age30_Plot(:, ex_c)) < min_Exit_Node_kNZD
-        Age30_Plot(:, ex_c+1) = Age30_Plot(:, ex_c+1) + Age30_Plot(:, ex_c);
-        Age30_Plot(:, ex_c)   = 0;
-    end
-    if sum(CR_Plot(:, ex_c)) < min_Exit_Node_kNZD
-        CR_Plot(:, ex_c+1) = CR_Plot(:, ex_c+1) + CR_Plot(:, ex_c);
-        CR_Plot(:, ex_c)   = 0;
-    end
+scale_child_to_adult = sum(S5_Totals) / max(1e-8, sum(Flow_S3_to_S4_5N, 'all'));
+Flow_S1_to_S2_4N = Flow_S1_to_S2_4N * scale_child_to_adult;
+Flow_S2_to_S3_5N = Flow_S2_to_S3_5N * scale_child_to_adult;
+Flow_S3_to_S4_5N = Flow_S3_to_S4_5N * scale_child_to_adult;
+for iter_ras = 1:10
+    Flow_S3_to_S4_5N = Flow_S3_to_S4_5N .* (S4_Totals ./ max(1e-8, sum(Flow_S3_to_S4_5N, 1)));
+    Flow_S3_to_S4_5N = Flow_S3_to_S4_5N .* (sum(Flow_S2_to_S3_5N, 1)' ./ max(1e-8, sum(Flow_S3_to_S4_5N, 2)));
 end
 
-A30_Col_Plot = sum(Age30_Plot, 1);
-CR_Col_Plot  = sum(CR_Plot, 1);
-S5_Widths    = sum(S4_Totals) * (A30_Col_Plot / max(1e-8, sum(A30_Col_Plot)));
-S6_Widths    = sum(S4_Totals) * (CR_Col_Plot  / max(1e-8, sum(CR_Col_Plot)));
+%% COMPUTE MACRO PUBLIC RESIDUAL (OMEGA) & 2050 50/50 SURPLUS SPLIT AT GATE 6
+% Columns 1..5 of Gate 6 are Domestic Outlays & Foregone Drag (Exits 1, 2, 3, 4 + Infra/Super);
+% Direct Crown Budget Outlays are Cols [1, 2, 4, 5] (Exits 1, 2, 4 + Infra/Super);
+% Good Tax Revenues are Cols [6, 7] (GST/Cap/Estate + PAYE):
+Bad_Adult  = sum(Fiscal_Col_Full8([1, 2, 4, 5]));
+Good_Adult = sum(Fiscal_Col_Full8([6, 7]));
+net_fisc   = Good_Adult - Bad_Adult;
 
-Flow_S4_to_S5 = Age30_Plot;
-active_c5     = (S5_Widths > 1e-6);
-for iter_ras = 1:15
-    Flow_S4_to_S5(:, active_c5) = Flow_S4_to_S5(:, active_c5) .* (S5_Widths(active_c5) ./ max(1e-8, sum(Flow_S4_to_S5(:, active_c5), 1)));
-    Flow_S4_to_S5 = Flow_S4_to_S5 .* (S4_Totals' ./ max(1e-8, sum(Flow_S4_to_S5, 2)));
-end
-
-% 8x8 Transition from Gate 5 (Nodes 17..24) to Gate 6 (Nodes 25..32):
-P_56_Base = [ ...
-    0.78, 0.08, 0.06, 0.04, 0.02, 0.01, 0.005, 0.005; ... % 17: Exit 1 Care -> 25: Ongoing Care
-    0.05, 0.75, 0.08, 0.06, 0.03, 0.02, 0.005, 0.005; ... % 18: Exit 2 Hosp -> 26: Ongoing Hosp
-    0.03, 0.07, 0.74, 0.08, 0.04, 0.03, 0.005, 0.005; ... % 19: Exit 4 Ben/Just -> 27: Ongoing Ben/Just
-    0.01, 0.03, 0.06, 0.68, 0.12, 0.08, 0.010, 0.010; ... % 20: Infra/Health -> 28: Super/Infra
-    0.00, 0.01, 0.02, 0.18, 0.55, 0.22, 0.010, 0.010; ... % 21: Age 30 GST/Cap -> 29: Career GST/Cap/Estate
-    0.00, 0.01, 0.02, 0.16, 0.30, 0.49, 0.010, 0.010; ... % 22: Age 30 PAYE -> 30: Career PAYE
-    0.00, 0.01, 0.03, 0.04, 0.02, 0.00, 0.900, 0.000; ... % 23: Exit 3 Lost Tax -> 31: Career Lost Tax
-    0.00, 0.00, 0.00, 0.02, 0.04, 0.04, 0.000, 0.900];   % 24: Emig Tax Loss -> 32: Perm Abroad Loss
-Flow_S5_to_S6 = S5_Widths' .* P_56_Base;
-Flow_S5_to_S6(~active_c5, :) = 0;
-active_c6 = (S6_Widths > 1e-6);
-Flow_S5_to_S6(:, ~active_c6) = 0;
-for iter_ras = 1:15
-    Flow_S5_to_S6(:, active_c6) = Flow_S5_to_S6(:, active_c6) .* (S6_Widths(active_c6) ./ max(1e-8, sum(Flow_S5_to_S6(:, active_c6), 1)));
-    Flow_S5_to_S6(active_c5, :) = Flow_S5_to_S6(active_c5, :) .* (S5_Widths(active_c5)' ./ max(1e-8, sum(Flow_S5_to_S6(active_c5, :), 2)));
-end
-
-%% COMPUTE MACRO PUBLIC RESIDUAL (OMEGA) & 2050 50/50 SURPLUS SPLIT
-% Columns 1..4 are Crown Outlays (Exits 1, 2, 4 + Infra/Super); Columns 5..6 are Tax Revenues (GST/Cap + PAYE)
-Bad_30      = sum(A30_Col_Full8(1:4));
-Good_30     = sum(A30_Col_Full8(5:6));
-net_fisc_30 = Good_30 - Bad_30;
-
-Bad_CR      = sum(CR_Col_Full8(1:4));
-Good_CR     = sum(CR_Col_Full8(5:6));
-net_fisc_CR = Good_CR - Bad_CR;
-
-Bad_Final2  = [Bad_30,  Bad_CR];
-Good_Final2 = [Good_30, Good_CR];
-
-% 2050 50/50 Sovereign Debt-Sinking & Reinvestment Protocol applies strictly to Reform Surpluses:
-Surplus_30 = max(0, net_fisc_30) * double(is_reform_panel);
-Surplus_CR = max(0, net_fisc_CR) * double(is_reform_panel);
-
-DebtSink_50_30 = 0.50 * Surplus_30;  Reinvest_50_30 = 0.50 * Surplus_30;
-DebtSink_50_CR = 0.50 * Surplus_CR;  Reinvest_50_CR = 0.50 * Surplus_CR;
+Surplus_Adult  = max(0, net_fisc) * double(is_reform_panel);
+DebtSink_50    = 0.50 * Surplus_Adult;
+Reinvest_50    = 0.50 * Surplus_Adult;
 
 r_gov_bond   = 0.042;
 mu_infra_div = 1.65;
 Cohort_N     = 60.0;
 
-% Save exact 32-node population & monetary vectors into output Ledger struct
+% Save exact 29-node population & monetary vectors into output Ledger struct
 Ledger.Pop_S1_Birth                     = Pop_S1_Birth(:);
 Ledger.Pop_S2_ECE                       = Pop_S2_ECE(:);
 Ledger.Pop_S2_ECE_4Node                 = Pop_S2_ECE_4Node(:);
 Ledger.Pop_S3_Adol                      = Pop_S3_Adol(:);
 Ledger.Pop_S3_Adol_5Node                = Pop_S3_Adol_5Node(:);
 Ledger.Pop_S4_Skill                     = Pop_S4_Skill(:);
+Ledger.Pop_S5_Career                    = Pop_S5_Career(:);    % 5x1 vector (Nodes 17..21)
 Ledger.S1_Birth_kNZD                    = S1_Totals(:);
 Ledger.S2_ECE_3Node_kNZD                = ECE_Step_Dollars(:);
 Ledger.S2_ECE_4Node_kNZD                = S2_ECE_4Node_kNZD(:);
 Ledger.S3_Adol_4Node_kNZD               = Adol_Step_Dollars(:);
 Ledger.S3_Adol_5Node_kNZD               = S3_Adol_5Node_kNZD(:);
 Ledger.S4_Skill_kNZD                    = S4_Totals(:);
-Ledger.S5_Age30_kNZD                    = A30_Col_Full8(:); % 8x1 vector (Nodes 17..24)
-Ledger.S6_Career_kNZD                   = CR_Col_Full8(:);  % 8x1 vector (Nodes 25..32)
+Ledger.S5_Career_kNZD                   = S5_Totals(:);        % 5x1 vector (Nodes 17..21)
+Ledger.S6_Fiscal_kNZD                   = Fiscal_Col_Full8(:); % 8x1 vector (Nodes 22..29: Exits 1,2,3,4 at bottom!)
 Ledger.Whanau_And_Landlord_G1_kNZD      = Whanau_Care_G1_G2(:);
-Ledger.Net_Fiscal_Balance_kNZD          = [net_fisc_30, net_fisc_CR];
-Ledger.SinkingFund_50Pct_kNZD           = [DebtSink_50_30, DebtSink_50_CR];
-Ledger.ReinvestmentPool_50Pct_kNZD      = [Reinvest_50_30, Reinvest_50_CR];
-Ledger.Annual_DebtService_Saving_kNZD   = r_gov_bond * [DebtSink_50_30, DebtSink_50_CR];
-Ledger.Public_Infra_Yield_Dividend_kNZD = mu_infra_div * [Reinvest_50_30, Reinvest_50_CR];
-Ledger.Cum_2050_DebtReduction_MNZD      = 25 * Cohort_N * (0.4 * DebtSink_50_30 + 0.6 * DebtSink_50_CR) * (1 + 0.5 * 25 * r_gov_bond);
-Ledger.Cum_2050_ReinvestPool_MNZD       = 25 * Cohort_N * (0.4 * Reinvest_50_30 + 0.6 * Reinvest_50_CR);
+Ledger.Net_Fiscal_Balance_kNZD          = [net_fisc, net_fisc];
+Ledger.SinkingFund_50Pct_kNZD           = [DebtSink_50, DebtSink_50];
+Ledger.ReinvestmentPool_50Pct_kNZD      = [Reinvest_50, Reinvest_50];
+Ledger.Annual_DebtService_Saving_kNZD   = r_gov_bond * [DebtSink_50, DebtSink_50];
+Ledger.Public_Infra_Yield_Dividend_kNZD = mu_infra_div * [Reinvest_50, Reinvest_50];
+Ledger.Cum_2050_DebtReduction_MNZD      = 25 * Cohort_N * DebtSink_50 * (1 + 0.5 * 25 * r_gov_bond);
+Ledger.Cum_2050_ReinvestPool_MNZD       = 25 * Cohort_N * Reinvest_50;
 
-%% BUILD 32-NODE DOLLAR-LABELED NODE NAMES (WITH EXITS 1, 2, 4 SPLIT AT GATES 5 & 6)
+%% BUILD 29-NODE LABELS (EXITS 1, 2, 3, 4 ORDERED BOTTOM-TO-TOP AT GATE 6!)
 Nodes_S1 = {sprintf('1. Material & Severe Hardship\n     (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S1_Birth(1), S1_Totals(1)), ...
     sprintf('2. Residual AHC Paper &\n     Whanau (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S1_Birth(2), S1_Totals(2)), ...
     sprintf('3. Universal Birth Benefit\n     (100%% pop | %.1f kNZD/yr)',     S1_Totals(3)), ...
@@ -731,97 +725,88 @@ Nodes_S3 = {sprintf('9. HH Unemp & Truancy Remed.\n     (%.1f%% pop | %.1f kNZD/
     sprintf('12. Montessori / Tuakana Mentoring\n       (%.1f%% pop | %.1f kNZD/yr)',  100*Pop_S3_Adol_5Node(4), S3_Adol_5Node_kNZD(4)), ...
     sprintf('13. Private Adol. Commit (Cash+Time)\n       (%.1f%% pop | %.1f kNZD/yr)',100*Pop_S3_Adol_5Node(5), S3_Adol_5Node_kNZD(5))};
 
-if reform_intensity <= 0
-    lbl_16 = sprintf('16. Thriving Tier h6-h7\n        [Rent-Seeking Skew]\n        (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S4_Skill(3), S4_Totals(3));
-elseif reform_intensity <= 1.0
-    lbl_16 = sprintf('16. Thriving Tier h6-h7\n        [Pivot to Builders]\n        (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S4_Skill(3), S4_Totals(3));
+Nodes_S4 = {sprintf('14. Struggling Tier h1-h2\n       (%.1f%% pop)', 100*Pop_S4_Skill(1)), ...
+    sprintf('15. Core Skill Tier h3-h5\n       (%.1f%% pop)', 100*Pop_S4_Skill(2)), ...
+    sprintf('16. Thriving Tier h6-h7\n       (%.1f%% pop)',   100*Pop_S4_Skill(3))};
+
+Nodes_S5 = {sprintf('17. Chronic Adversity & Benefit Trap\n       (%.1f%% pop | %.1f kNZD/yr)',  100*Pop_S5_Career(1), S5_Totals(1)), ...
+    sprintf('18. Domestic Core Workforce & Trades\n       (%.1f%% pop | %.1f kNZD/yr)',  100*Pop_S5_Career(2), S5_Totals(2)), ...
+    sprintf('19. Passive Land/Rent Speculation [z_l]\n       (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S5_Career(3), S5_Totals(3)), ...
+    sprintf('20. Productive Enterprise Builders [z_h]\n       (%.1f%% pop | %.1f kNZD/yr)',100*Pop_S5_Career(4), S5_Totals(4)), ...
+    sprintf('21. Emigrated Abroad [Brain Drain]\n       (%.1f%% pop | %.1f kNZD/yr)',    100*Pop_S5_Career(5), S5_Totals(5))};
+
+% Gate 6 (Nodes 22..29): Ordered strictly Exit 1 (Bottom) -> Exit 2 -> Exit 3 -> Exit 4 -> Infra/Super -> GST/Cap -> PAYE -> Abroad (Top)!
+if is_reform_panel && Surplus_Adult > 0.05
+    lbl_27 = sprintf('27. GST, z_h Cap & Estate Tax\n       (%.1f kNZD/yr | 50%% Reinvest: +%.1fk)', S6_Totals(6), Reinvest_50);
+    lbl_28 = sprintf('28. Working-Age Builder PAYE Tax\n       (%.1f kNZD/yr | 50%% Debt Sink: +%.1fk)', S6_Totals(7), DebtSink_50);
 else
-    lbl_16 = sprintf('16. Thriving Tier h6-h7\n        [z_h Builders]\n        (%.1f%% pop | %.1f kNZD/yr)',      100*Pop_S4_Skill(3), S4_Totals(3));
+    lbl_27 = sprintf('27. GST, Cap & Estate Pool [z_l Skew]\n       (%.1f kNZD/yr)', S6_Totals(6));
+    lbl_28 = sprintf('28. Working-Age PAYE Income Tax\n       (%.1f kNZD/yr)',       S6_Totals(7));
 end
 
-Nodes_S4 = {sprintf('14. Struggling Tier h1-h2 [Exits 1,2,4]\n       (%.1f%% pop | %.1f kNZD/yr)', 100*Pop_S4_Skill(1), S4_Totals(1)), ...
-    sprintf('15. Core Skill Tier h3-h5\n       (%.1f%% pop | %.1f kNZD/yr)',               100*Pop_S4_Skill(2), S4_Totals(2)), ...
-    lbl_16};
+scale_tag = {'', ' — ribbon not to scale'};
+Nodes_S6 = {sprintf('22. Exit 1: State Care Legacy (%.2f%% pop | %.2f kNZD/yr%s)', ...
+    Exit_Pop_Pct(1), S6_Totals(1), scale_tag{1 + is_floored_ex(1)}), ...
+    sprintf('23. Exit 2: Avoidable Hosp & CAMHS (%.1f%% pop | %.1f kNZD/yr%s)', ...
+    Exit_Pop_Pct(2), S6_Totals(2), scale_tag{1 + is_floored_ex(2)}), ...
+    sprintf('24. Exit 3: Lower-Skill Lost Tax (%.1f%% pop | %.1f kNZD/yr%s)', ...
+    Exit_Pop_Pct(3), S6_Totals(3), scale_tag{1 + is_floored_ex(3)}), ...
+    sprintf('25. Exit 4: Benefit, LOPE & Justice\n       (%.1f%% pop | %.1f kNZD/yr%s)', ...
+    Exit_Pop_Pct(4), S6_Totals(4), scale_tag{1 + is_floored_ex(4)}), ...
+    sprintf('26. Base Infra, Health & NZ Super\n       (%.1f%% pop | %.1f kNZD/yr)', ...
+    100*(1 - Pop_S5_Career(5)), S6_Totals(5)), ...
+    lbl_27, ...
+    lbl_28, ...
+    sprintf('29. Abroad Brain-Drain Lost Tax\n       (%.1f%% pop | %.1f kNZD/yr)', ...
+    100*Pop_S5_Career(5), S6_Totals(8))};
 
-if is_reform_panel && Surplus_30 > 0.05
-    lbl_21 = sprintf('21. Age 30 GST & z_h Cap Tax\n       (%.1f kNZD/yr | Reinvest: +%.1fk)', A30_Col_Plot(5), Reinvest_50_30);
-    lbl_22 = sprintf('22. Age 30 Builder PAYE Tax\n       (%.1f kNZD/yr | Debt Sink: +%.1fk)', A30_Col_Plot(6), DebtSink_50_30);
-else
-    lbl_21 = sprintf('21. Age 30 GST & Cap Tax [z_l Skew]\n       (%.1f kNZD/yr)', A30_Col_Plot(5));
-    lbl_22 = sprintf('22. Age 30 PAYE Income Tax\n       (%.1f kNZD/yr)',          A30_Col_Plot(6));
-end
-
-Nodes_S5 = {sprintf('17. Exit 1: State Care Legacy (%.1f kNZD/yr)',            A30_Col_Plot(1)), ...
-    sprintf('18. Exit 2: Avoidable Hosp & CAMHS (%.1f kNZD/yr)',       A30_Col_Plot(2)), ...
-    sprintf('19. Exit 4: Benefit, LOPE & Justice\n       (%.1f kNZD/yr)', A30_Col_Plot(3)), ...
-    sprintf('20. Infra, Roads & Base Health\n       (%.1f kNZD/yr)',   A30_Col_Plot(4)), ...
-    lbl_21, ...
-    lbl_22, ...
-    sprintf('23. Exit 3: Lower-Skill Lost Tax (%.1f kNZD/yr)',         A30_Col_Plot(7)), ...
-    sprintf('24. Age 30 Emig Tax Loss (%.1f kNZD/yr)',                 A30_Col_Plot(8))};
-
-if is_reform_panel && Surplus_CR > 0.05
-    lbl_29 = sprintf('29. GST, z_h Cap & Estate Tax\n       (%.1f kNZD/yr | 50%% Reinvest: +%.1fk)', CR_Col_Plot(5), Reinvest_50_CR);
-    lbl_30 = sprintf('30. Career Builder PAYE Tax\n       (%.1f kNZD/yr | 50%% Debt Sink: +%.1fk)',  CR_Col_Plot(6), DebtSink_50_CR);
-else
-    lbl_29 = sprintf('29. GST, Cap & Estate Pool [z_l Skew]\n       (%.1f kNZD/yr)', CR_Col_Plot(5));
-    lbl_30 = sprintf('30. Career PAYE Income Tax\n       (%.1f kNZD/yr)',            CR_Col_Plot(6));
-end
-
-Nodes_S6 = {sprintf('25. Exit 1: Ongoing Care Legacy (%.1f kNZD/yr)',          CR_Col_Plot(1)), ...
-    sprintf('26. Exit 2: Ongoing Hosp & CAMHS (%.1f kNZD/yr)',         CR_Col_Plot(2)), ...
-    sprintf('27. Exit 4: Ongoing Ben, LOPE & Just.\n       (%.1f kNZD/yr)', CR_Col_Plot(3)), ...
-    sprintf('28. NZ Super, Infra & Health\n       (%.1f kNZD/yr)',     CR_Col_Plot(4)), ...
-    lbl_29, ...
-    lbl_30, ...
-    sprintf('31. Exit 3: Career Lost Tax (%.1f kNZD/yr)',              CR_Col_Plot(7)), ...
-    sprintf('32. Perm. Abroad Tax Loss\n       (%.1f kNZD/yr)',        CR_Col_Plot(8))};
-
-% Prune sub-threshold phantom ribbons (< 0.10 kNZD/yr) on active submatrices
+% Prune sub-threshold phantom ribbons (< 0.10 kNZD/yr), keeping Exit 1..4 visual floors intact:
 minFiscalRibbon_k = 0.10;
 Flow_S1_to_S2_4N = pruneAndBalanceFlowMatrix(Flow_S1_to_S2_4N, minFiscalRibbon_k);
 Flow_S2_to_S3_5N = pruneAndBalanceFlowMatrix(Flow_S2_to_S3_5N, minFiscalRibbon_k);
 Flow_S3_to_S4_5N = pruneAndBalanceFlowMatrix(Flow_S3_to_S4_5N, minFiscalRibbon_k);
-Flow_S4_to_S5(:, active_c5) = pruneAndBalanceFlowMatrix(Flow_S4_to_S5(:, active_c5), minFiscalRibbon_k);
-Flow_S5_to_S6(active_c5, active_c6) = pruneAndBalanceFlowMatrix(Flow_S5_to_S6(active_c5, active_c6), minFiscalRibbon_k);
+Flow_S4_to_S5    = pruneAndBalanceFlowMatrix(Flow_S4_to_S5,    minFiscalRibbon_k);
+Flow_S5_to_S6    = pruneAndBalanceFlowMatrix(Flow_S5_to_S6,    minFiscalRibbon_k);
+re_floor = is_floored_ex & (sum(Flow_S5_to_S6(:, 1:4), 1) < minExit_Vis_kNZD);
+Flow_S5_to_S6(:, re_floor) = [minExit_Vis_kNZD; zeros(4, 1)] .* ones(1, sum(re_floor));
 
-% Assemble links cell array (collapsed Exit nodes with 0 flow are automatically omitted!)
+% Assemble links cell array (looping j outer / i inner on Gate 5->6 guarantees Nodes 22..29 enter SK.NodeList in exact 1->2->3->4 order!)
 links = {};
 row_k = 0;
-for i = 1:4
-    for j = 1:4
+for j = 1:4
+    for i = 1:4
         if Flow_S1_to_S2_4N(i, j) > 0
             row_k = row_k + 1;
             links(row_k, :) = {Nodes_S1{i}, Nodes_S2{j}, Flow_S1_to_S2_4N(i, j)};
         end
     end
 end
-for i = 1:4
-    for j = 1:5
+for j = 1:5
+    for i = 1:4
         if Flow_S2_to_S3_5N(i, j) > 0
             row_k = row_k + 1;
             links(row_k, :) = {Nodes_S2{i}, Nodes_S3{j}, Flow_S2_to_S3_5N(i, j)};
         end
     end
 end
-for i = 1:5
-    for j = 1:3
+for j = 1:3
+    for i = 1:5
         if Flow_S3_to_S4_5N(i, j) > 0
             row_k = row_k + 1;
             links(row_k, :) = {Nodes_S3{i}, Nodes_S4{j}, Flow_S3_to_S4_5N(i, j)};
         end
     end
 end
-for i = 1:3
-    for j = 1:8
+for j = 1:5
+    for i = 1:3
         if Flow_S4_to_S5(i, j) > 0
             row_k = row_k + 1;
             links(row_k, :) = {Nodes_S4{i}, Nodes_S5{j}, Flow_S4_to_S5(i, j)};
         end
     end
 end
-for i = 1:8
-    for j = 1:8
+for j = 1:8
+    for i = 1:5
         if Flow_S5_to_S6(i, j) > 0
             row_k = row_k + 1;
             links(row_k, :) = {Nodes_S5{i}, Nodes_S6{j}, Flow_S5_to_S6(i, j)};
@@ -842,11 +827,7 @@ if isprop(SK, 'FontName')
     SK.FontName = 'Helvetica';
 end
 
-% 32-Node Palette:
-%   - Deep Crimson [0.72, 0.12, 0.14] on Acute / Corner / HH Unemp / Struggling / Exit 1 (Nodes 1, 5, 9, 14, 17, 25)
-%   - Burnt Rust   [0.78, 0.32, 0.20] on Residual AHC Squeeze / Psychosocial CAMHS-ACC / Exit 2 (Nodes 2, 10, 18, 26)
-%   - Dark Ruby    [0.58, 0.14, 0.20] on Exit 4 Benefit, LOPE & Justice Burden (Nodes 19, 27)
-%   - Warm Gold    [0.84, 0.56, 0.14] reserved strictly for Private Parental Nodes (Nodes 4, 8, 13)
+% 29-Node Palette (Exits 1, 2, 3, 4 at Nodes 22..25 matched 1-to-1 with Fates Nodes 13..16!):
 Master_Colors = [0.72, 0.12, 0.14;  % 1. Material & Severe Hardship [Deep Crimson]
     0.78, 0.32, 0.20;  % 2. Residual AHC Paper & Whanau [Burnt Rust]
     0.24, 0.50, 0.70;  % 3. Universal Birth Benefit [Public Steel Blue]
@@ -863,27 +844,27 @@ Master_Colors = [0.72, 0.12, 0.14;  % 1. Material & Severe Hardship [Deep Crimso
     0.72, 0.12, 0.14;  % 14. Struggling Tier h1-h2 [Deep Crimson]
     0.30, 0.56, 0.68;  % 15. Core Skill Tier h3-h5
     0.12, 0.58, 0.46;  % 16. Thriving Tier h6-h7
-    0.72, 0.12, 0.14;  % 17. Age 30 Exit 1: State Care Legacy [Deep Crimson]
-    0.78, 0.32, 0.20;  % 18. Age 30 Exit 2: Avoidable Hosp & CAMHS [Burnt Rust]
-    0.58, 0.14, 0.20;  % 19. Age 30 Exit 4: Benefit, LOPE & Justice [Dark Ruby]
-    0.74, 0.46, 0.22;  % 20. Age 30 Infra, Roads & Base Health
-    0.22, 0.48, 0.70;  % 21. Age 30 GST & Cap Tax
-    0.14, 0.60, 0.48;  % 22. Age 30 PAYE Income Tax
-    0.68, 0.30, 0.48;  % 23. Age 30 Exit 3: Lower-Skill Lost Tax
-    0.50, 0.32, 0.68;  % 24. Age 30 Emig Tax Loss
-    0.72, 0.12, 0.14;  % 25. Career Exit 1: Ongoing Care Legacy [Deep Crimson]
-    0.78, 0.32, 0.20;  % 26. Career Exit 2: Ongoing Hosp & CAMHS [Burnt Rust]
-    0.58, 0.14, 0.20;  % 27. Career Exit 4: Ongoing Benefit, LOPE & Justice [Dark Ruby]
-    0.74, 0.44, 0.20;  % 28. Career NZ Super, Infra & Health
-    0.20, 0.46, 0.68;  % 29. Career GST, Cap & Estate Tax Pool
-    0.12, 0.58, 0.46;  % 30. Career PAYE Income Tax
-    0.64, 0.28, 0.46;  % 31. Career Exit 3: Career Lost Tax
-    0.46, 0.28, 0.66   % 32. Career Permanent Abroad Tax Loss
+    0.72, 0.12, 0.14;  % 17. Gate 5: Chronic Adversity & Benefit Trap [Deep Crimson]
+    0.28, 0.54, 0.68;  % 18. Gate 5: Domestic Core Workforce & Trades [Steel Blue]
+    0.76, 0.44, 0.18;  % 19. Gate 5: Passive Land/Rent Speculation [z_l Ochre-Rust]
+    0.10, 0.60, 0.46;  % 20. Gate 5: Productive Enterprise Builders [z_h Emerald Teal]
+    0.48, 0.30, 0.66;  % 21. Gate 5: Emigrated Abroad [Purple]
+    0.72, 0.12, 0.14;  % 22. Gate 6 Exit 1: State Care Legacy [Deep Crimson — Bottom 1]
+    0.78, 0.32, 0.20;  % 23. Gate 6 Exit 2: Avoidable Hosp & CAMHS [Burnt Rust — Bottom 2]
+    0.80, 0.58, 0.20;  % 24. Gate 6 Exit 3: Lower-Skill Lost Tax [Warm Amber/Gold-Ochre — Bottom 3]
+    0.58, 0.14, 0.20;  % 25. Gate 6 Exit 4: Benefit, LOPE & Justice [Dark Ruby — Bottom 4]
+    0.70, 0.44, 0.22;  % 26. Gate 6: Base Infra, Health & NZ Super [Ochre-Brown]
+    0.20, 0.46, 0.68;  % 27. Gate 6: GST, Cap & Estate Tax Pool [Steel Blue]
+    0.12, 0.58, 0.46;  % 28. Gate 6: Working-Age PAYE Income Tax [Teal]
+    0.46, 0.28, 0.66   % 29. Gate 6: Abroad Brain-Drain Lost Tax [Purple — Top]
     ];
 
 All_Node_Names = [Nodes_S1, Nodes_S2, Nodes_S3, Nodes_S4, Nodes_S5, Nodes_S6];
 if isprop(SK, 'NodeList') && ~isempty(SK.NodeList)
-    mapped_colors = zeros(length(SK.NodeList), 3);
+    % Enforce strict canonical 1..29 vertical node ordering within each column!
+    active_canonical = All_Node_Names(ismember(All_Node_Names, SK.NodeList));
+    SK.NodeList      = active_canonical(:);
+    mapped_colors    = zeros(length(SK.NodeList), 3);
     for n_i = 1:length(SK.NodeList)
         idx_match = find(strcmp(SK.NodeList{n_i}, All_Node_Names), 1);
         if ~isempty(idx_match)
@@ -938,8 +919,8 @@ J_Stage_Labels = {sprintf('J = 1 (Birth, Age 0)\n(Out-of-Pocket vs Public kNZD)'
     sprintf('J = 2..3 (Ages 0-5)\n(First 2000 Days ECE Gate)');
     sprintf('J = 5 (Ages 12-14)\n(Adol. Gate + Crisis Remed.)');
     sprintf('J = 6..7 (Age 20)\n(Adult Skill Launch)');
-    sprintf('J = 10 (Age 30)\n(Exits 1-4 vs Annual Tax kNZD)');
-    sprintf('J = 11..16 (To Ret.)\n(Exits 1-4 & Super vs Tax kNZD)') };
+    sprintf('J = 8..11 (Ages 30-54)\n(Career & z_l / z_h Sorting)');
+    sprintf('J = 10..16 (Adult Ledger)\n(Exits 1-4 & Super vs Tax kNZD)') };
 
 for col_x = 1:6
     x_tick = x_center_col(col_x);
@@ -951,155 +932,122 @@ for col_x = 1:6
         'Color', [0.20, 0.20, 0.20]);
 end
 
-%% DRAW WIGGLY REGIME-BREAK LINE DOWN THE MIDDLE OF GATE 4 (J = 6..7, ADULT SKILL LAUNCH)
-col4_boxes = [];
+%% DRAW WIGGLY REGIME-BREAK LINE DOWN GATE 5 (J = 8..11: COHORT STRATA -> FISCAL LEDGER)
+col5_boxes = [];
 for k_p = 1:length(p_all)
     xd = get(p_all(k_p), 'XData');
     yd = get(p_all(k_p), 'YData');
-    if numel(xd) == 4 && abs((sum(xd(:)) / 4) - 4) < 0.45
-        col4_boxes(end+1, :) = [min(xd(:)), max(xd(:)), min(yd(:)), max(yd(:))]; %#ok<AGROW>
+    if numel(xd) == 4 && abs((sum(xd(:)) / 4) - 5) < 0.45
+        col5_boxes(end+1, :) = [min(xd(:)), max(xd(:)), min(yd(:)), max(yd(:))]; %#ok<AGROW>
     end
 end
-if ~isempty(col4_boxes)
-    x_c4     = mean(col4_boxes(:, 1:2), 'all');
-    w_c4     = mean(col4_boxes(:, 2) - col4_boxes(:, 1));
-    y_bot_c4 = min(col4_boxes(:, 3)) - 0.025 * y_span;
-    y_top_c4 = max(col4_boxes(:, 4)) + 0.025 * y_span;
+if ~isempty(col5_boxes)
+    x_c5     = mean(col5_boxes(:, 1:2), 'all');
+    w_c5     = mean(col5_boxes(:, 2) - col5_boxes(:, 1));
+    y_bot_c5 = min(col5_boxes(:, 3)) - 0.025 * y_span;
+    y_top_c5 = max(col5_boxes(:, 4)) + 0.025 * y_span;
 
-    y_wig   = linspace(y_bot_c4, y_top_c4, 180);
+    y_wig   = linspace(y_bot_c5, y_top_c5, 180);
     n_waves = 9.5;
-    amp_x   = 0.16 * w_c4;
-    dx_gap  = 0.11 * w_c4;
-    x_wig_C = x_c4 + amp_x * sin(2 * pi * n_waves * (y_wig - y_bot_c4) / max(1e-8, y_top_c4 - y_bot_c4));
+    amp_x   = 0.16 * w_c5;
+    dx_gap  = 0.11 * w_c5;
+    x_wig_C = x_c5 + amp_x * sin(2 * pi * n_waves * (y_wig - y_bot_c5) / max(1e-8, y_top_c5 - y_bot_c5));
 
     plot(ax, x_wig_C,          y_wig, '-', 'Color', [1.00, 1.00, 1.00], 'LineWidth', 3.6);
     plot(ax, x_wig_C - dx_gap, y_wig, '-', 'Color', [0.15, 0.15, 0.15], 'LineWidth', 1.4);
     plot(ax, x_wig_C + dx_gap, y_wig, '-', 'Color', [0.15, 0.15, 0.15], 'LineWidth', 1.4);
 
-    text(ax, x_c4, y_top_c4 + 0.012 * y_span, ...
-        sprintf('%s Childhood Scale  |  Adult Fiscal Scale %s', char(9668), char(9658)), ...
+    text(ax, x_c5, y_top_c5 + 0.012 * y_span, ...
+        sprintf('%s Cohort Career Strata  |  Adult Fiscal Ledger %s', char(9668), char(9658)), ...
         'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom', ...
         'FontName', 'Helvetica', 'FontSize', 7.8, 'FontWeight', 'bold', ...
         'Color', [0.20, 0.20, 0.20], 'BackgroundColor', [0.98, 0.98, 0.94], ...
         'EdgeColor', [0.55, 0.55, 0.55], 'Margin', 1.8);
 end
 
-%% DOCUMENT 2 PROTOCOL: NET-ZERO BREAKEVEN LINE & 50/50 DEBT-SINKING VS. REINVESTMENT VISUALIZATION
-% Dynamically counts how many Bad Outlay boxes (n_bad_vis in 2..4) were rendered in Gate 5 & Gate 6:
-cols_target  = [5, 6];
-active_flags = {active_c5, active_c6};
-y_zero_f2    = nan(1, 2);
-y_split_50   = nan(1, 2);
-x_cent_f2    = nan(1, 2);
-x_left_f2    = nan(1, 2);
-x_rght_f2    = nan(1, 2);
-
-for idx_f = 1:2
-    c_i       = cols_target(idx_f);
-    act_col   = active_flags{idx_f};
-    n_bad_vis = sum(act_col(1:4)); % Number of rendered Bad Outlay nodes (4 in SS0, 2-3 in SS1/SS2)
-    col_boxes = [];
-    for k_p = 1:length(p_all)
-        xd = get(p_all(k_p), 'XData');
-        yd = get(p_all(k_p), 'YData');
-        if numel(xd) == 4 && abs((sum(xd(:)) / 4) - c_i) < 0.45
-            col_boxes(end+1, :) = [min(xd(:)), max(xd(:)), min(yd(:)), max(yd(:))]; %#ok<AGROW>
-        end
-    end
-
-    if size(col_boxes, 1) >= (n_bad_vis + 2)
-        [~, s_ord] = sort(col_boxes(:, 3), 'ascend');
-        col_boxes  = col_boxes(s_ord, :);
-
-        x_left_f2(idx_f) = col_boxes(1, 1);
-        x_rght_f2(idx_f) = col_boxes(1, 2);
-        x_cent_f2(idx_f) = sum(col_boxes(1, 1:2)) / 2;
-
-        bad_boxes  = col_boxes(1:n_bad_vis, :);
-        good_boxes = col_boxes((n_bad_vis+1):min(n_bad_vis+2, size(col_boxes, 1)), :);
-
-        B_val = Bad_Final2(idx_f);
-        G_val = Good_Final2(idx_f);
-        net_v = G_val - B_val;
-
-        y_top_bad  = bad_boxes(end, 4);
-        y_bot_good = good_boxes(1, 3);
-        y_origin   = 0.5 * (y_top_bad + y_bot_good);
-
-        if abs(net_v) < 1e-6
-            y_zero_f2(idx_f) = y_origin;
-        elseif net_v > 0
-            f_surplus = net_v / max(1e-8, G_val);
-            g_heights = good_boxes(:, 4) - good_boxes(:, 3);
-            tot_g_h   = sum(g_heights);
-            target_h  = f_surplus * tot_g_h;
-            cum_h     = 0;
-            for g_k = 1:size(good_boxes, 1)
-                if cum_h + g_heights(g_k) >= target_h || g_k == size(good_boxes, 1)
-                    y_zero_f2(idx_f) = good_boxes(g_k, 3) + max(0, target_h - cum_h);
-                    break;
-                end
-                cum_h = cum_h + g_heights(g_k);
-            end
-            if is_reform_panel
-                target_h_50 = 0.50 * target_h;
-                cum_h50     = 0;
-                for g_k = 1:size(good_boxes, 1)
-                    if cum_h50 + g_heights(g_k) >= target_h_50 || g_k == size(good_boxes, 1)
-                        y_split_50(idx_f) = good_boxes(g_k, 3) + max(0, target_h_50 - cum_h50);
-                        break;
-                    end
-                    cum_h50 = cum_h50 + g_heights(g_k);
-                end
-            end
-        else
-            f_deficit = (B_val - G_val) / max(1e-8, B_val);
-            b_heights = bad_boxes(:, 4) - bad_boxes(:, 3);
-            target_d  = f_deficit * sum(b_heights);
-            cum_d     = 0;
-            for b_k = size(bad_boxes, 1):-1:1
-                if cum_d + b_heights(b_k) >= target_d || b_k == 1
-                    y_zero_f2(idx_f) = bad_boxes(b_k, 4) - max(0, target_d - cum_d);
-                    break;
-                end
-                cum_d = cum_d + b_heights(b_k);
-            end
-        end
-
-        plot(ax, [x_left_f2(idx_f) - 0.025, x_rght_f2(idx_f) + 0.025], ...
-            [y_origin, y_origin], ':', 'Color', [0.45, 0.45, 0.45], 'LineWidth', 1.3);
-        plot(ax, [x_left_f2(idx_f) - 0.035, x_rght_f2(idx_f) + 0.035], ...
-            [y_zero_f2(idx_f), y_zero_f2(idx_f)], '-', ...
-            'Color', [0.10, 0.10, 0.10], 'LineWidth', 2.8);
-
-        if is_reform_panel && ~isnan(y_split_50(idx_f)) && net_v > 0.5
-            plot(ax, [x_left_f2(idx_f) - 0.030, x_rght_f2(idx_f) + 0.030], ...
-                [y_split_50(idx_f), y_split_50(idx_f)], '-', ...
-                'Color', [0.05, 0.42, 0.35], 'LineWidth', 2.2);
-        end
+%% DOCUMENT 2 PROTOCOL: NET-ZERO BREAKEVEN MARKER & 50/50 SURPLUS SPLIT ON GATE 6 (COL 6)
+% Bottom 5 columns of Gate 6 (Cols 1..5 = Exits 1, 2, 3, 4 + Infra/Super) sit below Good Taxes (Cols 6..7 = GST/Cap + PAYE):
+n_bad_vis = sum(active_c6(1:5));
+col6_boxes = [];
+for k_p = 1:length(p_all)
+    xd = get(p_all(k_p), 'XData');
+    yd = get(p_all(k_p), 'YData');
+    if numel(xd) == 4 && abs((sum(xd(:)) / 4) - 6) < 0.45
+        col6_boxes(end+1, :) = [min(xd(:)), max(xd(:)), min(yd(:)), max(yd(:))]; %#ok<AGROW>
     end
 end
 
-if all(~isnan(y_zero_f2))
-    plot(ax, x_cent_f2, y_zero_f2, '--o', ...
-        'Color', [0.12, 0.12, 0.12], 'LineWidth', 2.0, ...
-        'MarkerSize', 6.0, 'MarkerFaceColor', [0.98, 0.82, 0.18], 'MarkerEdgeColor', [0.10, 0.10, 0.10]);
+if size(col6_boxes, 1) >= (n_bad_vis + 2)
+    [~, s_ord] = sort(col6_boxes(:, 3), 'ascend');
+    col6_boxes = col6_boxes(s_ord, :);
 
-    if all(~isnan(y_split_50)) && is_reform_panel
-        plot(ax, x_cent_f2, y_split_50, ':s', ...
-            'Color', [0.05, 0.42, 0.35], 'LineWidth', 1.8, ...
-            'MarkerSize', 5.2, 'MarkerFaceColor', [0.20, 0.80, 0.65], 'MarkerEdgeColor', [0.05, 0.35, 0.28]);
+    x_left_c6 = col6_boxes(1, 1);
+    x_rght_c6 = col6_boxes(1, 2);
+    x_cent_c6 = 0.5 * (x_left_c6 + x_rght_c6);
 
-        text(ax, x_rght_f2(2) + 0.04, y_zero_f2(2), ...
+    bad_boxes  = col6_boxes(1:n_bad_vis, :);
+    good_boxes = col6_boxes((n_bad_vis+1):min(n_bad_vis+2, size(col6_boxes, 1)), :);
+
+    y_top_bad  = bad_boxes(end, 4);
+    y_bot_good = good_boxes(1, 3);
+    y_origin   = 0.5 * (y_top_bad + y_bot_good);
+    y_zero_c6  = y_origin;
+    y_split_50 = nan;
+
+    if net_fisc > 0
+        f_surplus = net_fisc / max(1e-8, Good_Adult);
+        g_heights = good_boxes(:, 4) - good_boxes(:, 3);
+        target_h  = f_surplus * sum(g_heights);
+        cum_h     = 0;
+        for g_k = 1:size(good_boxes, 1)
+            if cum_h + g_heights(g_k) >= target_h || g_k == size(good_boxes, 1)
+                y_zero_c6 = good_boxes(g_k, 3) + max(0, target_h - cum_h);
+                break;
+            end
+            cum_h = cum_h + g_heights(g_k);
+        end
+        if is_reform_panel
+            target_h_50 = 0.50 * target_h;
+            cum_h50     = 0;
+            for g_k = 1:size(good_boxes, 1)
+                if cum_h50 + g_heights(g_k) >= target_h_50 || g_k == size(good_boxes, 1)
+                    y_split_50 = good_boxes(g_k, 3) + max(0, target_h_50 - cum_h50);
+                    break;
+                end
+                cum_h50 = cum_h50 + g_heights(g_k);
+            end
+        end
+    elseif net_fisc < 0
+        f_deficit = (Bad_Adult - Good_Adult) / max(1e-8, Bad_Adult);
+        b_heights = bad_boxes(:, 4) - bad_boxes(:, 3);
+        target_d  = f_deficit * sum(b_heights);
+        cum_d     = 0;
+        for b_k = size(bad_boxes, 1):-1:1
+            if cum_d + b_heights(b_k) >= target_d || b_k == 1
+                y_zero_c6 = bad_boxes(b_k, 4) - max(0, target_d - cum_d);
+                break;
+            end
+            cum_d = cum_d + b_heights(b_k);
+        end
+    end
+
+    plot(ax, [x_left_c6 - 0.030, x_rght_c6 + 0.030], [y_origin, y_origin], ':', 'Color', [0.45, 0.45, 0.45], 'LineWidth', 1.3);
+    plot(ax, [x_left_c6 - 0.040, x_rght_c6 + 0.040], [y_zero_c6, y_zero_c6], '-', 'Color', [0.10, 0.10, 0.10], 'LineWidth', 2.8);
+    plot(ax, x_cent_c6, y_zero_c6, 'o', 'MarkerSize', 6.5, 'MarkerFaceColor', [0.98, 0.82, 0.18], 'MarkerEdgeColor', [0.10, 0.10, 0.10]);
+
+    if is_reform_panel && ~isnan(y_split_50) && net_fisc > 0.5
+        plot(ax, [x_left_c6 - 0.035, x_rght_c6 + 0.035], [y_split_50, y_split_50], '-', 'Color', [0.05, 0.42, 0.35], 'LineWidth', 2.2);
+        plot(ax, x_cent_c6, y_split_50, 's', 'MarkerSize', 5.5, 'MarkerFaceColor', [0.20, 0.80, 0.65], 'MarkerEdgeColor', [0.05, 0.35, 0.28]);
+        text(ax, x_rght_c6 + 0.04, y_zero_c6, ...
             sprintf('Net Fiscal Surplus: +%.1f kNZD/yr\n  • 50%% 2050 Debt Sinking: +%.1f kNZD/yr\n  • 50%% Reinvest (Infra/NZSF): +%.1f kNZD/yr', ...
-            net_fisc_CR, DebtSink_50_CR, Reinvest_50_CR), ...
+            net_fisc, DebtSink_50, Reinvest_50), ...
             'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', ...
             'FontName', 'Helvetica', 'FontSize', 8.0, 'FontWeight', 'bold', ...
             'Color', [0.10, 0.10, 0.10], 'BackgroundColor', [0.96, 1.00, 0.96], ...
             'EdgeColor', [0.15, 0.55, 0.45], 'Margin', 2.5);
     else
-        text(ax, x_rght_f2(2) + 0.04, y_zero_f2(2), ...
-            sprintf('Net Fiscal Balance: %+.1f kNZD/yr\n(Good Taxes - Crown Outlays)', net_fisc_CR), ...
+        text(ax, x_rght_c6 + 0.04, y_zero_c6, ...
+            sprintf('Net Fiscal Balance: %+.1f kNZD/yr\n(Good Taxes: %.1fk - Outlays: %.1fk)', net_fisc, Good_Adult, Bad_Adult), ...
             'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle', ...
             'FontName', 'Helvetica', 'FontSize', 8.3, 'FontWeight', 'bold', ...
             'Color', [0.12, 0.12, 0.12], 'BackgroundColor', [1.0, 0.98, 0.90], ...
@@ -1114,15 +1062,14 @@ elseif strcmpi(reg_choice, 'National')
 else
     disp_reg = reg_choice;
 end
-n_sign_30 = char('+' * (net_fisc_30 >= 0) + '-' * (net_fisc_30 < 0));
-n_sign_CR = char('+' * (net_fisc_CR >= 0) + '-' * (net_fisc_CR < 0));
+n_sign = char('+' * (net_fisc >= 0) + '-' * (net_fisc < 0));
 
-if is_reform_panel && net_fisc_CR > 0
-    t_str = sprintf('%s — %s | Net Surplus: %s%.1f kNZD/yr (Age 30) | %s%.1f kNZD/yr (To Ret: %.1fk Debt Sink + %.1fk Reinvest)', ...
-        Panel_Tag, disp_reg, n_sign_30, abs(net_fisc_30), n_sign_CR, abs(net_fisc_CR), DebtSink_50_CR, Reinvest_50_CR);
+if is_reform_panel && net_fisc > 0
+    t_str = sprintf('%s — %s | Builders [z_h]: %.1f%% | Net Fiscal Surplus: %s%.1f kNZD/yr (%.1fk Debt Sink + %.1fk Reinvest)', ...
+        Panel_Tag, disp_reg, 100*Pop_S5_Career(4), n_sign, abs(net_fisc), DebtSink_50, Reinvest_50);
 else
-    t_str = sprintf('%s — %s (Cohort-Weighted kNZD/yr per Birth) | Net Balance: %s%.1f kNZD/yr (Age 30) | %s%.1f kNZD/yr (To Ret.)', ...
-        Panel_Tag, disp_reg, n_sign_30, abs(net_fisc_30), n_sign_CR, abs(net_fisc_CR));
+    t_str = sprintf('%s — %s (Cohort-Weighted kNZD/yr per Birth) | Rent-Seekers [z_l]: %.1f%% vs Builders [z_h]: %.1f%% | Net Balance: %s%.1f kNZD/yr', ...
+        Panel_Tag, disp_reg, 100*Pop_S5_Career(3), 100*Pop_S5_Career(4), n_sign, abs(net_fisc));
 end
 t_obj = title(ax, t_str, 'FontName', 'Helvetica', 'FontSize', 11.2, 'FontWeight', 'bold');
 set(t_obj, 'Units', 'normalized');
@@ -1157,17 +1104,17 @@ N_p   = numel(Phase_Ledgers);
 L_ref = Phase_Ledgers{1};
 
 T_Prot = table([L_ref.Net_Fiscal_Balance_kNZD(1); L_ref.Net_Fiscal_Balance_kNZD(2)], ...
-    'RowNames', {'Gate5_Age30_J10', 'Gate6_CareerToRet_J11_16'}, ...
+    'RowNames', {'Gate5_CareerSorting_J8_11', 'Gate6_AdultFiscalLedger_J10_16'}, ...
     'VariableNames', {sprintf('Baseline_%s_kNZD', Phase_Codes{1})});
 
 for p = 2:N_p
     Lp   = Phase_Ledgers{p};
     code = Phase_Codes{p};
-    Omega_30 = max(0, Lp.Net_Fiscal_Balance_kNZD(1) - L_ref.Net_Fiscal_Balance_kNZD(1));
-    Omega_CR = max(0, Lp.Net_Fiscal_Balance_kNZD(2) - L_ref.Net_Fiscal_Balance_kNZD(2));
+    Omega_1 = max(0, Lp.Net_Fiscal_Balance_kNZD(1) - L_ref.Net_Fiscal_Balance_kNZD(1));
+    Omega_2 = max(0, Lp.Net_Fiscal_Balance_kNZD(2) - L_ref.Net_Fiscal_Balance_kNZD(2));
 
     T_Prot.(sprintf('Reform_%s_kNZD', code))             = [Lp.Net_Fiscal_Balance_kNZD(1); Lp.Net_Fiscal_Balance_kNZD(2)];
-    T_Prot.(sprintf('Gain_Omega_%s_kNZD', code))         = [Omega_30; Omega_CR];
+    T_Prot.(sprintf('Gain_Omega_%s_kNZD', code))         = [Omega_1; Omega_2];
     T_Prot.(sprintf('DebtSinking_50Pct_%s_kNZD', code))  = [Lp.SinkingFund_50Pct_kNZD(1); Lp.SinkingFund_50Pct_kNZD(2)];
     T_Prot.(sprintf('ReinvestPool_50Pct_%s_kNZD', code)) = [Lp.ReinvestmentPool_50Pct_kNZD(1); Lp.ReinvestmentPool_50Pct_kNZD(2)];
     T_Prot.(sprintf('DebtIntSaved_2050_%s_kNZD', code))  = [Lp.Annual_DebtService_Saving_kNZD(1); Lp.Annual_DebtService_Saving_kNZD(2)];
@@ -1186,9 +1133,10 @@ end
 
 function T_Fiscal = Build_Custom_Table14_Fiscal_CSV(Phase_Ledgers, Phase_Codes)
 %% BUILD_CUSTOM_TABLE14_FISCAL_CSV
-% Builds the 32-Node, 6-Gate Monetary & 4-Lane Fiscal Decomposition Table
-% with Exits 1, 2, 4 disaggregated at Gate 5 (Nodes 17..19) & Gate 6 (Nodes 25..27),
-% and Marilyn Waring's Unpaid Whanau Time (Lane B) + AS Landlord Capture (Lane D) explicit.
+% Builds the 29-Node, 6-Gate Monetary & 4-Lane Fiscal Decomposition Table (Solution 1):
+%   - Gates 1..4 (Nodes 1..16): Childhood & Age-20 Launch
+%   - Gate 5 (Nodes 17..21):    Prime Career & Enterprise Sorting (Adversity, Core, z_l Rent, z_h Builder, Abroad)
+%   - Gate 6 (Nodes 22..29):    Annualized Adult Fiscal Ledger (Exits 1, 2, 4, Infra/Super, GST/Cap/Estate, PAYE, Exit 3, Abroad)
 N_p = numel(Phase_Ledgers);
 
 Gate_Labels = { ...
@@ -1196,71 +1144,69 @@ Gate_Labels = { ...
     'Gate2_J2_3_First2000Days_0to5'; 'Gate2_J2_3_First2000Days_0to5'; 'Gate2_J2_3_First2000Days_0to5'; 'Gate2_J2_3_First2000Days_0to5'; ...
     'Gate3_J5_Adolescent_12to14';    'Gate3_J5_Adolescent_12to14';    'Gate3_J5_Adolescent_12to14';    'Gate3_J5_Adolescent_12to14';    'Gate3_J5_Adolescent_12to14'; ...
     'Gate4_J6_7_AdultLaunch_Age20';  'Gate4_J6_7_AdultLaunch_Age20';  'Gate4_J6_7_AdultLaunch_Age20'; ...
-    'Gate5_J10_Age30_Fiscal';        'Gate5_J10_Age30_Fiscal';        'Gate5_J10_Age30_Fiscal';        'Gate5_J10_Age30_Fiscal'; ...
-    'Gate5_J10_Age30_Fiscal';        'Gate5_J10_Age30_Fiscal';        'Gate5_J10_Age30_Fiscal';        'Gate5_J10_Age30_Fiscal'; ...
-    'Gate6_J11_16_CareerToRet';      'Gate6_J11_16_CareerToRet';      'Gate6_J11_16_CareerToRet';      'Gate6_J11_16_CareerToRet'; ...
-    'Gate6_J11_16_CareerToRet';      'Gate6_J11_16_CareerToRet';      'Gate6_J11_16_CareerToRet';      'Gate6_J11_16_CareerToRet'};
+    'Gate5_J8_11_CareerSorting';     'Gate5_J8_11_CareerSorting';     'Gate5_J8_11_CareerSorting';     'Gate5_J8_11_CareerSorting';     'Gate5_J8_11_CareerSorting'; ...
+    'Gate6_J10_16_AdultFiscalLedger';'Gate6_J10_16_AdultFiscalLedger';'Gate6_J10_16_AdultFiscalLedger';'Gate6_J10_16_AdultFiscalLedger'; ...
+    'Gate6_J10_16_AdultFiscalLedger';'Gate6_J10_16_AdultFiscalLedger';'Gate6_J10_16_AdultFiscalLedger';'Gate6_J10_16_AdultFiscalLedger'};
 
 Node_Names = { ...
     '1_Material_And_Severe_Hardship';      '2_Residual_AHC_Paper_And_Whanau';     '3_Universal_Birth_Benefit';           '4_Private_Birth_OutOfPocket'; ...
     '5_ECE_Corner_Benefit_Need';           '6_Public_ECE_Wraparound';             '7_High_Intensity_Public_ECE';         '8_Private_Parental_ECE_CashTime'; ...
     '9_HH_Unemp_And_Truancy_Remed';        '10_Psychosocial_CAMHS_ACC_ISSC';      '11_Public_Secondary_Schooling';       '12_Montessori_Tuakana_Public';        '13_Private_Adol_Commit_CashTime'; ...
     '14_Struggling_Tier_h1_h2_Launch';     '15_Core_Skill_Tier_h3_h5_Launch';     '16_Thriving_Tier_h6_h7_Launch'; ...
-    '17_Age30_Exit1_State_Care_Legacy';    '18_Age30_Exit2_Avoidable_Hosp_CAMHS'; '19_Age30_Exit4_Benefit_LOPE_Justice'; '20_Age30_Infra_Roads_BaseHealth'; ...
-    '21_Age30_GST_Cap_Tax';                '22_Age30_PAYE_Income_Tax';            '23_Age30_Exit3_LowerSkill_LostTax';   '24_Age30_Emigrated_Abroad_LostTax'; ...
-    '25_Career_Exit1_Ongoing_Care_Legacy'; '26_Career_Exit2_Ongoing_Hosp_CAMHS';  '27_Career_Exit4_Ongoing_Ben_Justice'; '28_Career_NZSuper_Health_Infra'; ...
-    '29_Career_GST_Cap_Estate_Tax';        '30_Career_PAYE_Income_Tax';           '31_Career_Exit3_LowerSkill_LostTax';  '32_Career_Perm_Abroad_LostTax'};
+    '17_Career_Chronic_Adversity_Trap';    '18_Career_Domestic_Core_Workforce';   '19_Career_Passive_Land_Rent_zl';      '20_Career_Productive_Builders_zh';    '21_Career_Emigrated_Abroad'; ...
+    '22_Fiscal_Exit1_State_Care_Legacy';   '23_Fiscal_Exit2_Avoidable_Hosp_CAMHS';'24_Fiscal_Exit3_LowerSkill_LostTax';  '25_Fiscal_Exit4_Benefit_LOPE_Justice'; ...
+    '26_Fiscal_Infra_Health_NZSuper';      '27_Fiscal_GST_Cap_Estate_Tax';        '28_Fiscal_WorkingAge_PAYE_Tax';       '29_Fiscal_Abroad_BrainDrain_LostTax'};
 
 T_Fiscal = table(Gate_Labels, Node_Names, 'VariableNames', {'Gate', 'Node_Name'});
-Flow_Mat = zeros(32, N_p);
+Flow_Mat = zeros(29, N_p);
 
 for p = 1:N_p
     L = Phase_Ledgers{p};
     c = Phase_Codes{p};
 
-    Pop_32 = 100 * [ ...
+    Pop_29 = 100 * [ ...
         L.Pop_S1_Birth(:); ...
         L.Pop_S2_ECE_4Node(:); ...
         L.Pop_S3_Adol_5Node(:); ...
         L.Pop_S4_Skill(:); ...
-        ones(16, 1)];
+        L.Pop_S5_Career(:); ...
+        ones(8, 1)];
 
-    Flow_32 = [ ...
+    Flow_29 = [ ...
         L.S1_Birth_kNZD(:); ...
         L.S2_ECE_4Node_kNZD(:); ...
         L.S3_Adol_5Node_kNZD(:); ...
         L.S4_Skill_kNZD(:); ...
-        L.S5_Age30_kNZD(:); ...
-        L.S6_Career_kNZD(:)];
+        L.S5_Career_kNZD(:); ...
+        L.S6_Fiscal_kNZD(:)];
 
-    Cond_32 = Flow_32 ./ max(0.01, Pop_32 / 100);
-    Flow_Mat(:, p) = Flow_32;
+    Cond_29 = Flow_29 ./ max(0.01, Pop_29 / 100);
+    Flow_Mat(:, p) = Flow_29;
 
-    % Construct 4-Lane Decomposition across all 32 Nodes:
-    LaneA = zeros(32, 1); LaneB = zeros(32, 1); LaneC = zeros(32, 1); LaneD = zeros(32, 1);
-    LaneD(1) = Flow_32(1);
-    LaneD(2) = Flow_32(2);
+    LaneA = zeros(29, 1); LaneB = zeros(29, 1); LaneC = zeros(29, 1); LaneD = zeros(29, 1);
+    LaneD(1) = Flow_29(1);
+    LaneD(2) = Flow_29(2);
     if isfield(L, 'Whanau_And_Landlord_G1_kNZD'), LaneB(2) = L.Whanau_And_Landlord_G1_kNZD(1); end
-    LaneC(3) = Flow_32(3);
-    LaneA(4) = 0.63 * Flow_32(4); LaneB(4) = 0.37 * Flow_32(4);
+    LaneC(3) = Flow_29(3);
+    LaneA(4) = 0.63 * Flow_29(4); LaneB(4) = 0.37 * Flow_29(4);
 
-    LaneD(5) = Flow_32(5); LaneC(6:7) = Flow_32(6:7);
-    LaneA(8) = 0.60 * Flow_32(8); LaneB(8) = 0.40 * Flow_32(8);
+    LaneD(5) = Flow_29(5); LaneC(6:7) = Flow_29(6:7);
+    LaneA(8) = 0.60 * Flow_29(8); LaneB(8) = 0.40 * Flow_29(8);
 
-    LaneD(9:10) = Flow_32(9:10); LaneC(11:12) = Flow_32(11:12);
-    LaneA(13) = 0.62 * Flow_32(13); LaneB(13) = 0.38 * Flow_32(13);
+    LaneD(9:10) = Flow_29(9:10); LaneC(11:12) = Flow_29(11:12);
+    LaneA(13) = 0.62 * Flow_29(13); LaneB(13) = 0.38 * Flow_29(13);
 
-    LaneD(14) = 0.82 * Flow_32(14); LaneC(14) = 0.18 * Flow_32(14);
-    LaneA(15) = 0.29 * Flow_32(15); LaneB(15) = 0.12 * Flow_32(15); LaneC(15) = 0.53 * Flow_32(15); LaneD(15) = 0.06 * Flow_32(15);
-    LaneA(16) = 0.37 * Flow_32(16); LaneB(16) = 0.13 * Flow_32(16); LaneC(16) = 0.50 * Flow_32(16);
+    LaneD(14) = 0.82 * Flow_29(14); LaneC(14) = 0.18 * Flow_29(14);
+    LaneA(15) = 0.29 * Flow_29(15); LaneB(15) = 0.12 * Flow_29(15); LaneC(15) = 0.53 * Flow_29(15); LaneD(15) = 0.06 * Flow_29(15);
+    LaneA(16) = 0.37 * Flow_29(16); LaneB(16) = 0.13 * Flow_29(16); LaneC(16) = 0.50 * Flow_29(16);
 
-    % Gates 5 & 6: Exits 1, 2, 4 (17..19 & 25..27) + Exit 3 & Emig Lost Tax (23,24 & 31,32) = Lane D; Infra/Super/Taxes = Lane C
-    LaneD([17, 18, 19, 23, 24, 25, 26, 27, 31, 32]) = Flow_32([17, 18, 19, 23, 24, 25, 26, 27, 31, 32]);
-    LaneC([20, 21, 22, 28, 29, 30])                 = Flow_32([20, 21, 22, 28, 29, 30]);
+    % Gate 5 Career Strata (17..21) & Gate 6 Fiscal Accounts (22..29: Exits 1..4 = 22..25, Infra = 26, GST = 27, PAYE = 28, Abroad = 29)
+    LaneD([17, 19, 21, 22, 23, 24, 25, 29]) = Flow_29([17, 19, 21, 22, 23, 24, 25, 29]);
+    LaneC([18, 20, 26, 27, 28])             = Flow_29([18, 20, 26, 27, 28]);
 
-    T_Fiscal.(sprintf('%s_Pop_Pct', c))               = round(Pop_32, 2);
-    T_Fiscal.(sprintf('%s_CohortFlow_kNZD', c))       = round(Flow_32, 2);
-    T_Fiscal.(sprintf('%s_CondPerChild_kNZD', c))     = round(Cond_32, 2);
+    T_Fiscal.(sprintf('%s_Pop_Pct', c))               = round(Pop_29, 2);
+    T_Fiscal.(sprintf('%s_CohortFlow_kNZD', c))       = round(Flow_29, 2);
+    T_Fiscal.(sprintf('%s_CondPerChild_kNZD', c))     = round(Cond_29, 2);
     T_Fiscal.(sprintf('%s_LaneA_PrivCash_kNZD', c))   = round(LaneA, 2);
     T_Fiscal.(sprintf('%s_LaneB_WhanauTime_kNZD', c)) = round(LaneB, 2);
     T_Fiscal.(sprintf('%s_LaneC_PubDev_kNZD', c))     = round(LaneC, 2);

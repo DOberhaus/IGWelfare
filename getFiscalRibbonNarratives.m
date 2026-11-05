@@ -33,21 +33,22 @@ narrativeMap('NODE_14') = 'Node 14 — Struggling Tier Launch (h1-h2, Age 20, 82
 narrativeMap('NODE_15') = 'Node 15 — Core Skill Tier Launch (h3-h5, Age 20): Vocational, apprenticeship, and polytechnic/tertiary launch coupled with the universal Age-20 Youth Capital Grant E (0.065 in SS1, 0.080 in SS2) [Ref 6, 12].';
 narrativeMap('NODE_16') = 'Node 16 — Thriving Tier Launch (h6-h7, Age 20): High-capability university and entrepreneurial launch (expanding from 23.5% / ~13.00 kNZD/yr in SS0 to 57.3% / ~26.20 kNZD/yr in SS1), seeded with Youth Capital Grant E to clear the 20% Kiyotaki LVR deposit cliff and build z_h enterprises in NZ [Ref 2, 4, 7].';
 
-% --- GATE 5 (J = 10, Age 30 Annual Fiscal Balance — Nodes 17..22) ---
-narrativeMap('NODE_17') = 'Node 17 — Age 30 Exits 1, 2, 4 Remediation (BAD Outlay 1, Lane D): Oranga Tamariki care legacy, avoidable hospitalisation/CAMHS, ACC LOPE, Supported Living / Jobseeker hardship, and Corrections outlays (~10.00 kNZD/yr in SS0 -> ~2.70 kNZD/yr in SS1; ~32.0 kNZD/yr per struggling h1-h2 adult) [Ref 16, 37, 38].';
-narrativeMap('NODE_18') = 'Node 18 — Age 30 Core Infrastructure, Roads & Base Health (BAD Outlay 2, Lane C): Baseline public goods, transport infrastructure, and primary health per retained young adult (~3.90 kNZD/yr) [Ref 31, 36].';
-narrativeMap('NODE_19') = 'Node 19 — Age 30 GST & Productive Capital Tax (GOOD Revenue 1, Lane C): Consumption tax (tau_c = 15%) plus book-value land/wealth levy (tau_a = 1.5%) and z_h enterprise equity revenues (~4.20 kNZD/yr in SS0 -> ~8.20 kNZD/yr in SS1; funds the 50% Public Infrastructure Reinvestment Pool Omega_reinv) [Ref 1, 2, 36].';
-narrativeMap('NODE_20') = 'Node 20 — Age 30 PAYE Income Tax (GOOD Revenue 2, Lane C): Working-age labor income tax receipts (~4.40 kNZD/yr in SS0 -> ~8.90 kNZD/yr in SS1; funds the 50% Sovereign Debt-Sinking Fund Omega_debt) [Ref 1, 31].';
-narrativeMap('NODE_21') = 'Node 21 — Age 30 Exit 3 Lower-Skill Foregone Tax (BEYOND Drag 1, Lane D): Uncollected PAYE and GST tax revenue due to childhood/adolescent skill deprivation trapping adults in h1-h2 rather than h3-h7 (~1.80 kNZD/yr in SS0 -> ~0.90 kNZD/yr in SS1) [Ref 11, 14].';
-narrativeMap('NODE_22') = 'Node 22 — Age 30 Emigrated Abroad Foregone Tax (BEYOND Drag 2, Lane D): Domestic PAYE and GST revenue lost to Australia/OECD via trans-Tasman youth brain drain (~1.10-1.30 kNZD/yr) [Ref 23, 24, 25].';
+% --- GATE 5 (J = 8..11, Prime Career & Enterprise Sorting, Ages 30-54 — Nodes 17..21) ---
+narrativeMap('NODE_17') = 'Node 17 — Chronic Adversity & Benefit/NEET Trap (Deep Crimson): Retained adults (primarily from Struggling h1-h2 launch) trapped in chronic unemployment, Supported Living / Jobseeker dependency, ACC LOPE, or state care/justice sequelae (~20.1% of cohort in SS0 -> ~4.2% in SS1) [Ref 16, 37, 38].';
+narrativeMap('NODE_18') = 'Node 18 — Domestic Core Workforce & Skilled Trades (Steel Blue): Retained adults in core domestic employment, skilled trades, healthcare, and education forming the stable working-age tax and service backbone [Ref 12, 31].';
+narrativeMap('NODE_19') = 'Node 19 — Passive Land & Rent Speculation [z_l Skew] (Ochre-Rust): In SS0, untaxed 1.6T NZD property appreciation pulls 61% of retained Thriving h6-h7 graduates and 12% of Core workers (~16.7% of cohort) into zero-sum land hoarding and rent extraction (z_l) with lower PAYE compliance. Crushed to ~3.5% in SS1/SS2 by the tau_a = 1.5% wealth levy and tau_b = 25%->18% estate levy [Ref 2, 7, 36].';
+narrativeMap('NODE_20') = 'Node 20 — Productive Enterprise Builders [z_h Innovators] (Emerald Teal): High-capability domestic founders, engineers, clinicians, and innovators deploying capital in positive-sum tradable/productive enterprises (z_h). Surges from ~8.1% of the cohort in SS0 to ~46.5% in SS1 and ~56.0% in SS2 as Youth Capital Grant E and land-tax reform flip the occupational cutoff A* [Ref 2, 4, 7].';
+narrativeMap('NODE_21') = 'Node 21 — Emigrated Abroad [Trans-Tasman Brain Drain] (Purple): Young adults who departed to Australia/OECD between ages 20 and 35 via the 4x5 Gumbel sorting matrix Pi_mig (~11.1% in SS0 -> ~7.5% in SS1) [Ref 23, 24, 25].';
 
-% --- GATE 6 (J = 11..16, Career to Retirement Fiscal Destiny — Nodes 23..28) ---
-narrativeMap('NODE_23') = 'Node 23 — Career-to-Retirement Exits 1, 2, 4 Ongoing Burden (BAD Outlay 1, Lane D): Chronic adult hospital, disability/SLP, ACC LOPE, and justice costs across ages 35-99 (~7.10 kNZD/yr in SS0 -> ~2.00 kNZD/yr in SS1) [Ref 16, 38].';
-narrativeMap('NODE_24') = 'Node 24 — NZ Superannuation, Geriatric Health & Core Infrastructure (BAD Outlay 2, Lane C): Universal NZ Superannuation (p_super = 0.18 at Age 65 in SS0/SS1 and Age 64 in SS2) plus late-life health and infrastructure (~5.40-6.50 kNZD/yr) [Ref 13, 26, 31].';
-narrativeMap('NODE_25') = 'Node 25 — Career GST, Productive Capital & Estate Tax Pool (GOOD Revenue 1, Lane C): Prime-career GST, tau_a = 1.5% wealth levy, and tau_b = 25%->18% estate levy on the 1.6T NZD property transfer wave (~8.40 kNZD/yr in SS0 -> ~16.90 kNZD/yr in SS1; 50% allocated to Public Infrastructure Reinvestment at 1.65x multiplier) [Ref 2, 6, 36].';
-narrativeMap('NODE_26') = 'Node 26 — Career Builder PAYE Income Tax (GOOD Revenue 2, Lane C): Prime-earning PAYE tax receipts (~1.70 kNZD/yr in SS0 -> ~5.30 kNZD/yr in SS1, even after cutting the statutory PAYE rate from 22.0% to 18.85% in SS2; 50% allocated to Sovereign Debt Sinking) [Ref 1, 2, 31].';
-narrativeMap('NODE_27') = 'Node 27 — Career Exit 3 Foregone Tax Drag (BEYOND Drag 1, Lane D): Cumulative career tax-base loss from unbuffered early/adolescent skill deficits (~1.60 kNZD/yr in SS0 -> ~1.10 kNZD/yr in SS1).';
-narrativeMap('NODE_28') = 'Node 28 — Permanent Abroad Tax Loss (BEYOND Drag 2, Lane D): Career and retirement tax base permanently lost to Australia/OECD from unretained graduates [Ref 23, 24, 25].';
+% --- GATE 6 (J = 10..16, Annualized Adult Fiscal Ledger — Nodes 22..29) ---
+narrativeMap('NODE_22') = 'Node 22 — Exit 1: State Care Legacy Outlay (Deep Crimson, Lane D Remed): Annualized adult Oranga Tamariki care legacy and Royal Commission abuse-in-care statutory liability (14.1% of Exits 1,2,4 remediation; ~1.1 kNZD/yr in SS0, collapsing below 0.35 kNZD/yr and visually suppressed in SS1/SS2) [Ref 16, 37].';
+narrativeMap('NODE_23') = 'Node 23 — Exit 2: Avoidable Hospitalisation & CAMHS Outlay (Burnt Rust, Lane D Remed): Annualized preventable adult hospital admissions, acute psychiatric care, and ACC ISSC trauma rehabilitation (25.8% of Exits 1,2,4 remediation; ~2.1 kNZD/yr in SS0 -> ~0.6 kNZD/yr in SS1) [Ref 16, 38].';
+narrativeMap('NODE_24') = 'Node 24 — Exit 4: Benefit, ACC LOPE & Justice Burden (Dark Ruby, Lane D Remed): Annualized Supported Living, Jobseeker hardship, ACC Loss of Potential Earnings (LOPE at 80% min wage), and Corrections outlays (60.1% of Exits 1,2,4 remediation; ~4.9 kNZD/yr in SS0 -> ~1.1 kNZD/yr in SS1) [Ref 16, 38].';
+narrativeMap('NODE_25') = 'Node 25 — Base Infrastructure, Public Health & NZ Superannuation (Ochre-Brown, Lane C Outlay): Model attributes ~10.2 kNZD/yr per retained domestic adult (0.068*NZD_Scale = 6.46 kNZD/yr for roads, core infrastructure, and baseline public health + 0.22*p_super*NZD_Scale = 3.76 kNZD/yr annualized universal NZ Superannuation across J=10..16), totaling ~9.1 kNZD/yr cohort-weighted [Ref 13, 31, 36].';
+narrativeMap('NODE_26') = 'Node 26 — GST, Productive Capital & Estate Tax Pool (Public Steel Blue, GOOD Revenue 1): Annualized consumption tax (tau_c = 15%), capital/wealth levy (tau_k = 20%, tau_a = 1.5%), and estate bequest levy (tau_b = 25%->18%). Allocates 50% of net reform surplus to the Public Infrastructure Reinvestment Pool (Omega_reinv at 1.65x multiplier) [Ref 2, 6, 36].';
+narrativeMap('NODE_27') = 'Node 27 — Working-Age PAYE Income Tax (Teal, GOOD Revenue 2): Annualized working-age labor income tax receipts (tau_l * w * z * h * (l - Ih)). Allocates 50% of net reform surplus to the 2050 Sovereign Debt-Sinking Fund (Omega_debt), retiring 17.5B-21.85B NZD of debt per cohort wave and unlocking the -3.15 pp PAYE rate cut (22.0% -> 18.85%) in SS2 [Ref 1, 2, 31, 35].';
+narrativeMap('NODE_28') = 'Node 28 — Exit 3: Lower-Skill Foregone Tax Drag (Muted Mauve, BEYOND Drag 1): Uncollected PAYE and GST revenue (~8.4 kNZD/yr per chronically struggling adult) lost because childhood/adolescent hardship trapped potential builders in low-wage/NEET trajectories [Ref 11, 14].';
+narrativeMap('NODE_29') = 'Node 29 — Abroad Brain-Drain Lost Tax (Purple, BEYOND Drag 2): Annualized domestic PAYE, GST, and estate tax revenue permanently lost to Australia/OECD from emigrated graduates [Ref 23, 24, 25].';
 
 % =========================================================================
 % 2. RIBBON-LEVEL TRANSITIONS (GATES 1 -> 2 -> 3 -> 4 -> 5 -> 6)
@@ -97,28 +98,39 @@ narrativeMap('12->16') = 'Two-Way Ako / Protege Dividend (+0.11 to +0.14 log-ski
 narrativeMap('13->15') = 'Private parental and whanau adolescent investment (Node 13) launching young adults into Core Skill careers (Node 15).';
 narrativeMap('13->16') = 'Private parental cash + time commitment combining with Youth Capital Grant E to launch Thriving h6-h7 young adults (Node 16) [Ref 6, 12].';
 
-% --- GATE 4 (14..16) -> GATE 5 (17..22, Age 30 Fiscal Balance) ---
-narrativeMap('14->17') = 'Dunedin Study 74.1% Concentration Benchmark: Struggling h1-h2 young adults (Node 14) drive acute Age-30 Crown outlays across Exit 1 (State Care legacy), Exit 2 (Avoidable Hospitalisation/CAMHS), and Exit 4 (SLP/Jobseeker/ACC LOPE/Corrections) in Node 17 (~32.0 kNZD/yr per struggling adult) [Ref 16, 37, 38].';
-narrativeMap('14->18') = 'Baseline core infrastructure and primary health usage by h1-h2 young adults (Node 18).';
-narrativeMap('14->21') = 'Exit 3 Foregone Tax Drag at Age 30 (Node 21): Permanent PAYE and GST revenue lost because childhood/adolescent hardship trapped potential builders in h1-h2 [Ref 11, 14].';
-narrativeMap('15->18') = 'Core Skill Tier (h3-h5) adults utilizing baseline public infrastructure and health services at Age 30 (Node 18).';
-narrativeMap('15->19') = 'Core Skill Tier (h3-h5) adults generating GST and capital/land tax revenues at Age 30 (Node 19).';
-narrativeMap('15->20') = 'Core Skill Tier (h3-h5) adults generating working-age PAYE income tax surpluses at Age 30 (Node 20).';
-narrativeMap('15->22') = 'Trans-Tasman emigration of h3-h5 skilled trades and professionals to Australia (Node 22 Foregone Tax) [Ref 23, 24].';
-narrativeMap('16->18') = 'Thriving Tier (h6-h7) adults utilizing baseline public infrastructure at Age 30.';
-narrativeMap('16->19') = 'Guvenen et al. & MSV Builder Dividend at Age 30 (Node 19): Retained h6-h7 builders and entrepreneurs generate surging GST and z_h enterprise revenues, funding the 50% Public Infrastructure Reinvestment Pool (Omega_reinv) [Ref 2, 7, 36].';
-narrativeMap('16->20') = 'High-Wage Builder PAYE Dividend at Age 30 (Node 20): Retained h6-h7 graduates power net fiscal surpluses, funding the 50% Sovereign Debt-Sinking Fund (Omega_debt) [Ref 2, 31].';
-narrativeMap('16->22') = 'High-Skill Brain Drain Tax Loss at Age 30 (Node 22): Conditional emigration of h6-h7 graduates cut from 22% in SS0 to 12% in SS1 via Youth Grant E, Auckland rent cooling (-7.5% to -10.5%), and higher z_h firm wages [Ref 23, 24, 25].';
 
-% --- GATE 5 (17..22) -> GATE 6 (23..28, Career to Retirement Fiscal Destiny) ---
-narrativeMap('17->23') = 'Persistence of acute Exits 1, 2, 4 remediation burdens from Age 30 (Node 17) into chronic mid-career and geriatric hospital/benefit/LOPE outlays (Node 23; cut from ~7.10 kNZD/yr in SS0 to ~2.00 kNZD/yr in SS1) [Ref 16, 38].';
-narrativeMap('18->24') = 'Progression from Age-30 base infrastructure/health (Node 18) into prime-career infrastructure, geriatric health, and universal NZ Superannuation (Node 24, optimized at Age 64 in SS2 for the +8.1% Kuia whanau dividend) [Ref 13, 26, 31].';
-narrativeMap('19->25') = 'Compounding of Age-30 GST and z_h capital revenues into the Career GST, Productive Capital (tau_a = 1.5%), and Estate Tax (tau_b = 25%->18%) Pool (Node 25; ~8.40 -> ~16.90 kNZD/yr, mobilizing 11.5B-14.9B NZD/wave for public infrastructure at 1.65x multiplier) [Ref 2, 6, 36].';
-narrativeMap('20->25') = 'Prime-age PAYE savings accumulating into productive enterprise equity, GST, and intergenerational estate tax receipts (Node 25) [Ref 2, 5, 6].';
-narrativeMap('19->26') = 'Reinvestment of productive capital and infrastructure dividends boosting prime-career wage and PAYE tax receipts (Node 26).';
-narrativeMap('20->26') = 'Prime-Career PAYE Surplus Engine (Node 26; ~1.70 -> ~5.30 kNZD/yr): Retires 17.5B-21.85B NZD of sovereign debt per cohort wave under the 2050 50/50 Protocol while unlocking a -3.15 pp working-age PAYE tax cut (22.0% -> 18.85% at Super Age 64) in SS2 [Ref 1, 31, 35].';
-narrativeMap('21->27') = 'Compounding of Age-30 Exit 3 lower-skill tax drag into permanent career foregone tax revenue (Node 27).';
-narrativeMap('22->28') = 'Age-30 emigrants who settle permanently in Australia/OECD, locking in lifetime career and estate tax loss (Node 28) [Ref 23, 25].';
+% --- GATE 4 (14..16) -> GATE 5 (17..21, Career & Enterprise Sorting) ---
+narrativeMap('14->17') = 'Dunedin 78% Persistence Trap: Retained Struggling h1-h2 youth (Node 14) disproportionately enter Chronic Adversity, NEET, and long-term benefit/LOPE trajectories (Node 17) [Ref 16, 38].';
+narrativeMap('14->18') = 'Late-Launch Workforce Stabilisation: 22% (SS0) -> 32% (SS1) of retained h1-h2 youth stabilise into the Domestic Core Workforce (Node 18) via adult Ben-Porath training (Ih) [Ref 12].';
+narrativeMap('15->17') = 'Cyclical or health-driven downward drift from Core Skill Launch (Node 15) into Chronic Adversity (Node 17; cut from 9% in SS0 to 4% in SS1).';
+narrativeMap('15->18') = 'Core Workforce Backbone: 73%-76% of retained Core Skill (h3-h5) launches establish careers in domestic trades, nursing, teaching, and services (Node 18) [Ref 31].';
+narrativeMap('15->19') = 'In SS0, 12% of Core-tier households divert savings into leveraged rental property speculation (z_l, Node 19); cut to 2%-4% in SS1/SS2 [Ref 2, 7].';
+narrativeMap('15->20') = 'Upward Entrepreneurial Mobility: Core-tier tradespeople and technicians launching productive SMEs (z_h, Node 20; rising from 6% in SS0 to 16%-20% in SS1/SS2) [Ref 2, 4].';
+narrativeMap('15->21') = 'Trans-Tasman emigration of Core Skill (h3-h5) trades and healthcare workers to Australia (Node 21; cut from 11% in SS0 to 6% in SS1) [Ref 23, 24].';
+narrativeMap('16->18') = 'Retained Thriving (h6-h7) graduates entering senior public service, clinical, and core professional roles (Node 18).';
+narrativeMap('16->19') = 'Murphy-Shleifer-Vishny Rent-Seeking Drain (Node 16 -> Node 19): In SS0, 61% of retained Thriving h6-h7 talent is captured by passive land/property speculation and tax arbitrage (z_l). Compresses to 14% in SS1 and 6% in SS2 [Ref 2, 7].';
+narrativeMap('16->20') = 'Guvenen & MSV Builder Pivot (Node 16 -> Node 20): Retained Thriving h6-h7 graduates deploying talent in high-productivity z_h enterprises (surging from 29% of retained top talent in SS0 to 78% in SS1 and 88% in SS2) [Ref 2, 7].';
+narrativeMap('16->21') = 'High-Skill Brain Drain (Node 16 -> Node 21): 22% conditional emigration of top graduates in SS0 cut to 12% in SS1 via Youth Capital Grant E, metro rent cooling, and z_h firm wage premiums [Ref 23, 24, 25].';
 
+% --- GATE 5 (17..21, Career Strata) -> GATE 6 (22..29, Exact Adult Fiscal Ledger) ---
+narrativeMap('17->22') = 'Chronic Adversity stratum (Node 17) driving Exit 1 State Care Legacy and Royal Commission abuse-in-care liabilities (Node 22; 14.1% of Exits 1,2,4 remediation) [Ref 16, 37].';
+narrativeMap('17->23') = 'Chronic Adversity stratum (Node 17) driving Exit 2 Avoidable Hospitalisation, acute CAMHS, and ACC ISSC trauma care (Node 23; 25.8% of Exits 1,2,4 remediation) [Ref 16, 38].';
+narrativeMap('17->24') = 'Chronic Adversity stratum (Node 17) driving Exit 4 Supported Living, Jobseeker hardship, ACC LOPE (80% min wage), and Corrections outlays (Node 24; 60.1% of Exits 1,2,4 remediation) [Ref 16, 38].';
+narrativeMap('17->25') = 'Per-capita attribution of baseline public infrastructure, roads, public health, and NZ Superannuation (~10.2 kNZD/yr per retained adult) to the Chronic Adversity stratum (Node 25) [Ref 13, 31].';
+narrativeMap('17->26') = 'Modest GST consumption tax paid out of benefit and low-wage income by the Chronic Adversity stratum (Node 26).';
+narrativeMap('17->27') = 'Minimal working-age PAYE tax paid during intermittent employment spells by the Chronic Adversity stratum (Node 27).';
+narrativeMap('17->28') = 'Exit 3 Lower-Skill Foregone Tax (Node 28): ~8.4 kNZD/yr per chronically struggling adult in uncollected PAYE and GST revenue due to early/adolescent skill deprivation [Ref 11, 14].';
+narrativeMap('18->23') = 'Residual avoidable hospitalisation and health shocks among the Domestic Core Workforce (Node 18 -> Node 23).';
+narrativeMap('18->24') = 'Cyclical unemployment or benefit spells among the Domestic Core Workforce (Node 18 -> Node 24).';
+narrativeMap('18->25') = 'Per-capita attribution of roads, core infrastructure, public health (6.46 kNZD/yr), and universal NZ Superannuation (3.76 kNZD/yr) to the Domestic Core Workforce (~10.2 kNZD/yr conditional; NZ Treasury LTFS & He Tirohanga Mokopuna) [Ref 13, 31, 36].';
+narrativeMap('18->26') = 'Domestic Core Workforce (Node 18) generating steady GST, capital, and estate tax revenues (Node 26) [Ref 31].';
+narrativeMap('18->27') = 'Domestic Core Workforce (Node 18) generating the broad middle-income PAYE income tax base (Node 27) [Ref 31].';
+narrativeMap('19->25') = 'Per-capita attribution of public infrastructure, health, and NZ Superannuation (~10.2 kNZD/yr per adult) utilized by the Passive Land/Rent Speculation stratum (Node 19 -> Node 25) [Ref 31, 36].';
+narrativeMap('19->26') = 'Passive Land/Rent Speculators (z_l, Node 19) paying GST and land/estate levies on property holdings (Node 26) [Ref 2, 36].';
+narrativeMap('19->27') = 'Reduced PAYE income tax yield from Passive Land/Rent Speculators (z_l, Node 19 -> Node 27) due to untaxed capital gains and income sheltering in SS0 [Ref 2, 7].';
+narrativeMap('20->25') = 'Per-capita attribution of public infrastructure, health, and NZ Superannuation (~10.2 kNZD/yr per adult) utilized by Productive Enterprise Builders (z_h, Node 20 -> Node 25) [Ref 31, 36].';
+narrativeMap('20->26') = 'Guvenen/MSV Builder Capital & GST Dividend (Node 20 -> Node 26): Productive Enterprise Builders (z_h) generate surging GST, corporate/capital, and estate tax receipts, funding the 50% Public Infrastructure Reinvestment Pool (Omega_reinv) [Ref 2, 7, 36].';
+narrativeMap('20->27') = 'High-Wage Builder PAYE Surplus Engine (Node 20 -> Node 27): Productive Enterprise Builders (z_h) generate high-wage PAYE surpluses, funding the 50% Sovereign Debt-Sinking Fund (Omega_debt) and unlocking the 18.85% PAYE tax cut in SS2 [Ref 1, 2, 31, 35].';
+narrativeMap('21->29') = '100% Exact Mapping of Emigrated Abroad Stratum (Node 21 -> Node 29): Every dollar of foregone domestic PAYE, GST, and estate tax from emigrated young adults flows directly into Abroad Brain-Drain Lost Tax [Ref 23, 24, 25].';
 
 end

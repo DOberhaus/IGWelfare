@@ -400,49 +400,63 @@ Nodes_S4 = {sprintf('10. Struggling Tier h1-h2 (%.1f%%)', S4_Pct(1)), ...
     sprintf('11. Core Skill Tier h3-h5 (%.1f%%)', S4_Pct(2)), ...
     lbl_12};
 
-Nodes_S5 = {sprintf('13. Exit 1: State Care (%.1f%%)',                S5_Pct(1)), ...
+% Guarantee Exit 1 (State Care, Node 13) is ALWAYS rendered in SS1/SS2 with exact % on legend,
+% plus a visual-legibility floor (0.50% plot height) and "[ribbon not to scale]" note when compressed:
+minExit_Vis_Pct = 0.50;
+if S5_Pct(1) < minExit_Vis_Pct
+    lbl_13 = sprintf('13. Exit 1: State Care (%.2f%% — ribbon not to scale)', S5_Pct(1));
+else
+    lbl_13 = sprintf('13. Exit 1: State Care (%.1f%%)', S5_Pct(1));
+end
+
+Nodes_S5 = {lbl_13, ...
     sprintf('14. Exit 2: Avoidable Hospitalisation (%.1f%%)', S5_Pct(2)), ...
     sprintf('15. Exit 3: Lower Lifetime Income (%.1f%%)',     S5_Pct(3)), ...
     sprintf('16. Exit 4: Benefit & Justice Burden (%.1f%%)',  S5_Pct(4)), ...
     lbl_17, ...
     sprintf('18. Emigrated Abroad (%.1f%%)\n       [Age 20-35 Brain Drain]', S5_Pct(6))};
 
-% Prune sub-threshold phantom ribbons (< 0.15% of cohort) and redistribute pro-rata
+% Prune sub-threshold phantom ribbons (< 0.15% of cohort), then enforce the Exit 1..4 visual floor on Flow_S4_to_S5:
 minFatesRibbon_Pct = 0.15;
 Flow_S1_to_S2 = pruneAndBalanceFlowMatrix(Flow_S1_to_S2, minFatesRibbon_Pct);
 Flow_S2_to_S3 = pruneAndBalanceFlowMatrix(Flow_S2_to_S3, minFatesRibbon_Pct);
 Flow_S3_to_S4 = pruneAndBalanceFlowMatrix(Flow_S3_to_S4, minFatesRibbon_Pct);
 Flow_S4_to_S5 = pruneAndBalanceFlowMatrix(Flow_S4_to_S5, minFatesRibbon_Pct);
 
-% Assemble links cell array (only non-zero surviving ribbons)
+% Apply visual floor to Exit 1 (Col 1) in SS1/SS2 so the block & ribbon remain legible at the bottom:
+if sum(Flow_S4_to_S5(:, 1)) < minExit_Vis_Pct
+    Flow_S4_to_S5(:, 1) = [minExit_Vis_Pct; 0; 0];
+end
+
+% Assemble links cell array (looping j outer / i inner guarantees destination nodes enter SK.NodeList in 1..18 order)
 links = {};
 row_k = 0;
-for i = 1:3
-    for j = 1:3
+for j = 1:3
+    for i = 1:3
         if Flow_S1_to_S2(i, j) > 0
             row_k = row_k + 1;
             links(row_k, :) = {Nodes_S1{i}, Nodes_S2{j}, Flow_S1_to_S2(i, j)};
         end
     end
 end
-for i = 1:3
-    for j = 1:3
+for j = 1:3
+    for i = 1:3
         if Flow_S2_to_S3(i, j) > 0
             row_k = row_k + 1;
             links(row_k, :) = {Nodes_S2{i}, Nodes_S3{j}, Flow_S2_to_S3(i, j)};
         end
     end
 end
-for i = 1:3
-    for j = 1:3
+for j = 1:3
+    for i = 1:3
         if Flow_S3_to_S4(i, j) > 0
             row_k = row_k + 1;
             links(row_k, :) = {Nodes_S3{i}, Nodes_S4{j}, Flow_S3_to_S4(i, j)};
         end
     end
 end
-for i = 1:3
-    for j = 1:6
+for j = 1:6
+    for i = 1:3
         if Flow_S4_to_S5(i, j) > 0
             row_k = row_k + 1;
             links(row_k, :) = {Nodes_S4{i}, Nodes_S5{j}, Flow_S4_to_S5(i, j)};
@@ -487,7 +501,9 @@ Master_Colors = [0.72, 0.12, 0.14;  % 1. Material & Severe Hardship (DEP-17 6+ &
 
 All_Node_Names = [Nodes_S1, Nodes_S2, Nodes_S3, Nodes_S4, Nodes_S5];
 if isprop(SK, 'NodeList') && ~isempty(SK.NodeList)
-    mapped_colors = zeros(length(SK.NodeList), 3);
+    active_canonical = All_Node_Names(ismember(All_Node_Names, SK.NodeList));
+    SK.NodeList      = active_canonical(:);
+    mapped_colors    = zeros(length(SK.NodeList), 3);
     for n_i = 1:length(SK.NodeList)
         idx_match = find(strcmp(SK.NodeList{n_i}, All_Node_Names), 1);
         if ~isempty(idx_match)
