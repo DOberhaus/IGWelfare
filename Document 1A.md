@@ -2,7 +2,7 @@
 ## A Multi-Audience Strategic Monograph (4-Region + Abroad Multiphase Edition)
 
 **Author:** Michael Tiemann (`mdtiemann@gmail.com`)  
-**Date:** October 2026 | **Code & Replication Repository:** [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)
+**Date:** November 2026 | **Code & Replication Repository:** [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)
 
 **Disclaimer:** No people nor organizations mentioned herein have endorsed this work unless stated otherwise.  This is the work of the author, and all errors and omissions are his alone.
 
@@ -291,10 +291,10 @@ Our 6-Gate (29-Node) Dollar-Weighted Fiscal Sankey (`Plot_ChildFiscal_SSankey.m`
       - **Node 17 — Chronic Adversity & Benefit Trap** *(Deep Crimson: 21.7% of cohort in SS0, falling to 4.5% in SS1 and 2.5% in SS2)*.
       - **Node 18 — Domestic Core Workforce & Trades** *(Steel Blue: 53.9% in SS0, 40.3% in SS1, and 36.2% in SS2)*.
       - **Node 19 — Passive Land & Rent Speculation [$z_l$ Skew]** *(Ochre-Rust: in SS0, untaxed property appreciation pulls 61% of retained top talent—14.6% of the entire birth cohort—into zero-sum land hoarding and tax sheltering; compressed to 7.7% in SS1 and 3.6% in SS2)*.
-      - **Node 20 — Productive Enterprise Builders [$z_h$ Innovators]** *(Emerald Teal: only 6.8%–7.1% of the cohort in SS0, surging more than five-fold to 39.9% in SS1 and 52.0% in SS2 as the property-to-enterprise tax shift and Youth Capital Grant flip the occupational cutoff $A^*$)*.
+      - **Node 20 — Productive Enterprise Builders [$z_h$ Innovators]** *(Emerald Teal: only 6.8%–7.1% of the cohort in SS0, surging more than five-fold to 39.9% in SS1 and 52.0% in SS2 as the property-to-enterprise tax shift and Youth Capital Grant flip the occupational cutoff $`A^*`$)*.
       - **Node 21 — Emigrated Abroad [Brain Drain]** *(Purple: 9.7%–10.9% in SS0, falling to 7.4% in SS1 and 5.7% in SS2)*.
 
-#### **Right Regime — The Single Annualized Adult Fiscal Ledger & Net-Zero Breakeven Line** *(Gate 6, Nodes 22–29, $J = 10\text{–}16$)*:
+#### **Right Regime — The Single Annualized Adult Fiscal Ledger & Net-Zero Breakeven Line** *(Gate 6, Nodes 22–29, J = 10–16)*:
    - Across the regime-break wave, each of the five adult human career strata at Gate 5 maps directly into the **eight annualized fiscal ledger accounts at Gate 6** without cross-account distortion:
    - *Bottom 4 Adversarial Exits (Ordered 1 to 4 Bottom-to-Top, Matching the Fates Sankey):* **Node 22 (Exit 1: State Care Legacy)**, **Node 23 (Exit 2: Avoidable Hospitalisation & CAMHS)**, **Node 24 (Exit 3: Lower-Skill Lost Tax)**, and **Node 25 (Exit 4: Benefit, ACC LOPE & Justice Burden)**. In **SS1** and **SS2**, where Exit 1 and Exit 2 compress below **0.45 kNZD/yr** (**Exit 1** dropping from **1.30 kNZD/yr** [3.27% pop] in **SS0** down to **0.26 kNZD/yr** [0.81% pop] in **SS1** and **0.12 kNZD/yr** [0.50% pop] in **SS2**), the diagram preserves all four exit nodes with a thin legibility floor labeled `— not to scale` alongside their exact percentages and dollar flows.
    - *Middle Base Outlay vs. Good Tax Credits:* **Node 26 (Base Infrastructure, Public Health & NZ Superannuation)** attributes **10.2 kNZD/yr** per retained domestic adult (**9.2 to 9.6 kNZD/yr** cohort-weighted, or **0.55–0.58 BNZD/yr** per 60k national birth wave and **36.9–38.5 BNZD/yr** across the national adult stock, scaled proportionally on regional charts) just below the dotted Debit/Credit boundary line. Above that boundary sit the two consolidated Crown revenue credits: **Node 27 (GST, Productive Capital & Estate Tax Pool)** and **Node 28 (Working-Age PAYE Income Tax)**, topped by **Node 29 (Abroad Brain-Drain Lost Tax)**.
