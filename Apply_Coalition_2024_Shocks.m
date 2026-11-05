@@ -1,12 +1,12 @@
 function [Params_Out, pi_z_Out, ShockMeta] = Apply_Coalition_2024_Shocks(Params_In, pi_z_In, Mode, ShockOpts)
-% APPLY_COALITION_2024_SHOCKS (Full 13-Shock Steel-Manned Edition)
+% APPLY_COALITION_2024_SHOCKS (Full 13-Shock Edition)
 % Standalone parameterization module for branch: "exp/coalition-2024-shocks"
 %
 % Supported Modes:
 %   1. 'reanchor_2023'           : Pre-Coalition late-2023 baseline (SS0_2023)
 %   2. 'austerity_landlord_only' : Shocks #1-#8 + #12-#13 (Austerity + Landlord Relief + Teacher/KS squeeze)
 %   3. 'pro_growth_only'         : Shocks #9-#11 Only (Income Tax Cut + AIP Visa + 20% Investment Boost)
-%   4. 'full_13_shocks'          : All 13 Shocks Combined (Default Steel-Manned Coalition Package)
+%   4. 'full_13_shocks'          : All 13 Shocks Combined (Default Coalition Package)
 %   5. 'custom'                  : Uses user-supplied boolean switches in ShockOpts
 
 if nargin < 3 || isempty(Mode)

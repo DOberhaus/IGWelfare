@@ -1,9 +1,9 @@
-%% PLOT_COALITION2024_VS_LTFM_DIVERGENCE.M (4-Regime Steel-Manned Edition)
+%% PLOT_COALITION2024_VS_LTFM_DIVERGENCE.M (4-Regime Edition)
 % Standalone 4-Panel Diagnostic Suite for the "exp/coalition-2024-shocks" Branch
 % Contrasts 4 Regimes:
 %   0. SS0_2023        : Pre-Coalition HYEFU 2023 / Treasury LTFM Drift (-16.21% CE)
 %   1. Aust_Landlord   : Coalition Austerity + Landlord Tax Break Only (-23.85% CE)
-%   2. Full13_Coalition: Full 13-Shock Steel-Manned Coalition w/ AIP Visa + Inv Boost (-21.85% CE)
+%   2. Full13_Coalition: Full 13-Shock Coalition w/ AIP Visa + Inv Boost (-21.85% CE)
 %   3. SS2_Reform      : Foiling Aotearoa Unified 4-Coalition Reform (+24.24% CE)
 %
 % Panels:
@@ -32,7 +32,7 @@ tau_n    = (Years_60 - 2024) / 60;
 
 Col_LTFM    = [0.25, 0.38, 0.52]; % Slate Blue: 2023 SS0 / LTFM Baseline (-16.21% CE)
 Col_Aust    = [0.58, 0.08, 0.12]; % Dark Burgundy: Austerity + Landlord Only (-23.85% CE)
-Col_Full13  = [0.86, 0.24, 0.16]; % Crimson Orange-Red: Full 13-Shock Steel-Manned (-21.85% CE)
+Col_Full13  = [0.86, 0.24, 0.16]; % Crimson Orange-Red: Full 13-Shock (-21.85% CE)
 Col_Reform  = [0.08, 0.58, 0.44]; % Emerald Teal: Foiling Aotearoa Reform (+24.24% CE)
 Col_Cash    = [0.85, 0.52, 0.12]; % Amber Gold: Short-Term Cash OBEGAL Mirage
 
@@ -45,7 +45,7 @@ Aust_Cash_OBEGAL_B   =  1.90 .* exp(-0.18 .* max(0, t_15 - 2)) - 0.34 .* max(0, 
 Aust_Actuarial_Val_B = -2.62 .* t_15.^0.92 - 0.19 .* t_15.^1.45;
 Aust_Cash_OBEGAL_B(1) = 0; Aust_Actuarial_Val_B(1) = 0;
 
-% 2. Full 13-Shock Steel-Manned Coalition: Adding unfunded #9 Income Tax Cut ($3.7B/yr) and
+% 2. Full 13-Shock Coalition: Adding unfunded #9 Income Tax Cut ($3.7B/yr) and
 %    #11 20% Investment Boost ($1.7B/yr) flips Cash OBEGAL into a -$1.9B/yr structural deficit
 %    (matching BEFU 2026 OBEGALx), while leaving a -$11.5B net ACC actuarial hole at Year 5.
 Full13_Cash_OBEGAL_B   = -1.90 - 0.22 .* t_15 + 0.45 .* sin(t_15 / 3);
@@ -87,7 +87,7 @@ fig = figure('Name', '4-Regime Comparison: 2023 LTFM vs. Aust-Only vs. Full 13-S
     'Color', 'w', 'Position', [25, 25, 1760, 1040]);
 
 annotation(fig, 'textbox', [0.01, 0.945, 0.98, 0.045], ...
-    'String', 'STEEL-MANNED 13-SHOCK COALITION DECOMPOSITION VS. 2023 LTFM BASELINE (SS0) & FOILING AOTEAROA REFORM (SS1 \rightarrow SS2)', ...
+    'String', '13-SHOCK COALITION DECOMPOSITION VS. 2023 LTFM BASELINE (SS0) & FOILING AOTEAROA REFORM (SS1 \rightarrow SS2)', ...
     'FontName', 'Helvetica', 'FontSize', 13.5, 'FontWeight', 'bold', ...
     'HorizontalAlignment', 'center', 'EdgeColor', 'none', 'Color', [0.10, 0.10, 0.10]);
 
@@ -120,7 +120,7 @@ plot(ax1, Years_15, Reform_Actuarial_Val_B, '-^', 'Color', Col_Reform, 'LineWidt
     'MarkerSize', 5.5, 'MarkerFaceColor', Col_Reform, ...
     'DisplayName', '3. Foiling Aotearoa ACC Actuarial (+$35.25B / 3.84x at Yr 5)');
 
-text(ax1, 2029.2, -14.8, sprintf('Yr 5 Steel-Manned Coalition:\nCash: -$1.9B/yr | Actuarial: -$11.5B'), ...
+text(ax1, 2029.2, -14.8, sprintf('Yr 5 Coalition:\nCash: -$1.9B/yr | Actuarial: -$11.5B'), ...
     'Color', Col_Full13, 'FontName', 'Helvetica', 'FontSize', 8.5, 'FontWeight', 'bold');
 text(ax1, 2029.2, 26.5, sprintf('Yr 5 Foiling Aotearoa:\n+$35.25B Net Asset (3.84x)'), ...
     'Color', Col_Reform, 'FontName', 'Helvetica', 'FontSize', 8.5, 'FontWeight', 'bold');

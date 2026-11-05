@@ -3,7 +3,7 @@
 % relative to the 2023 LTFM Baseline (SS0_2023) and Foiling Aotearoa (SS1->SS2).
 
 clear; clc;
-Params.dt = 5;
+Params.dt = 3;
 Params = Configure_TimeGrid_Params(Params);
 NZ_4Region_Master; % Initializes baseline grids, Params, pi_z, ReturnFn
 
@@ -19,7 +19,7 @@ NZ_4Region_Master; % Initializes baseline grids, Params, pi_z, ReturnFn
 [Params_GrowthOnly, pi_z_GrowthOnly, Meta_Growth] = Apply_Coalition_2024_Shocks( ...
     Params_SS0_2023, pi_z_SS0_2023, 'pro_growth_only');
 
-% 4. Branch 3: Full 13-Shock Steel-Manned Coalition Package (#1-#13 Combined)
+% 4. Branch 3: Full 13-Shock Coalition Package (#1-#13 Combined)
 [Params_Full13, pi_z_Full13, Meta_Full13] = Apply_Coalition_2024_Shocks( ...
     Params_SS0_2023, pi_z_SS0_2023, 'full_13_shocks');
 
