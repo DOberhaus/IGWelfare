@@ -3,7 +3,7 @@
 % Contrasts 4 Regimes (using solved dt = 3 yr, J = 27 steady-state outcomes):
 %   0. SS0_2023        : Pre-Coalition HYEFU 2023 Baseline (-16.21% CE | Emig 11.0% | S_0 = 100.0 | CPI = 81.0)
 %   1. Aust_Landlord   : Austerity + Landlord Tax Break Only (-23.85% CE | Emig 17.4% | S_1 = 76.2  | CPI = 70.9)
-%   2. Full13_Coalition: Full 13-Shock Steel-Manned Coalition (-21.85% CE | Emig 16.8% | S_1 = 77.5  | CPI = 71.5)
+%   2. Full13_Coalition: Full 13-Shock Coalition (-21.85% CE | Emig 16.8% | S_1 = 77.5  | CPI = 71.5)
 %   3. SS2_Reform      : Foiling Aotearoa Unified Reform (+24.24% CE | Emig  7.6% | S_2 = 126.0 | CPI = 92.0 #1)
 %
 % Panels:
@@ -32,7 +32,7 @@ tau_n    = (Years_60 - 2024) / 60;
 
 Col_LTFM    = [0.25, 0.38, 0.52]; % Slate Blue: 2023 SS0 / LTFM Baseline (-16.21% CE)
 Col_Aust    = [0.58, 0.08, 0.12]; % Dark Burgundy: Austerity + Landlord Only (-23.85% CE)
-Col_Full13  = [0.86, 0.24, 0.16]; % Crimson Orange-Red: Full 13-Shock Steel-Manned (-21.85% CE)
+Col_Full13  = [0.86, 0.24, 0.16]; % Crimson Orange-Red: Full 13-Shock (-21.85% CE)
 Col_Reform  = [0.08, 0.58, 0.44]; % Emerald Teal: Foiling Aotearoa Reform (+24.24% CE)
 Col_Cash    = [0.85, 0.52, 0.12]; % Amber Gold: Short-Term Cash OBEGAL Mirage
 Col_CPI     = [0.18, 0.12, 0.42]; % Deep Indigo: TI Social Credit Rating (CPI / 100)
@@ -145,7 +145,7 @@ plot(ax1, Years_15, Reform_Actuarial_Val_B, '-^', 'Color', Col_Reform, 'LineWidt
     'MarkerSize', 5.5, 'MarkerFaceColor', Col_Reform, ...
     'DisplayName', '3. Foiling Aotearoa ACC Actuarial (+$35.25B / 3.84x at Yr 5)');
 
-text(ax1, 2029.2, -14.8, sprintf('Yr 5 Steel-Manned Coalition:\nCash: -$1.9B/yr | Actuarial: -$11.5B'), ...
+text(ax1, 2029.2, -14.8, sprintf('Yr 5 Coalition:\nCash: -$1.9B/yr | Actuarial: -$11.5B'), ...
     'Color', Col_Full13, 'FontName', 'Helvetica', 'FontSize', 8.5, 'FontWeight', 'bold');
 text(ax1, 2029.2, 26.5, sprintf('Yr 5 Foiling Aotearoa:\n+$35.25B Net Asset (3.84x)'), ...
     'Color', Col_Reform, 'FontName', 'Helvetica', 'FontSize', 8.5, 'FontWeight', 'bold');
