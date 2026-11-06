@@ -73,28 +73,25 @@ $$
 \end{cases}
 $$
 
-where $`\pi_k^{*}\left(z_f, w_k\right) = \alpha_k \left(\left(1 - \alpha_k\right) / w_k\right)^{\left(1 - \alpha_k\right) / \alpha_k} \Pi_{\mathrm{trade},k} z_f`$. In `SS0` (`tau_a = 0`), passive rural land and exotic pine carbon-farming portfolios (`z_l`, the `else` branch in `ReturnFn_Firm.m`) capture an untaxed subsidy wedge `rho_pine_dairy > 0` while active exporters (`z_h`) suffer CBAM/NDC terms-of-trade drag (`Pi_trade_reg < 1`). In `SS1` and `SS2` (`tau_a = 0.015`), the passive pine/dairy subsidy vanishes, `(1 - tau_a)^dt` penalizes idle land banking, and credible domestic NDC compliance unlocks the Clean-Green export premium (`Pi_trade_reg > 1`) for active `z_h` enterprises:
+where $`\pi_k^{*}\left(z_f, w_k\right) = \alpha_k \left(\left(1 - \alpha_k\right) / w_k\right)^{\left(1 - \alpha_k\right) / \alpha_k} \Pi_{\mathrm{trade},k} z_f`$. In `SS0` (`tau_a = 0`), passive rural land and exotic pine carbon-farming portfolios (`z_l`, the `else` branch in `ReturnFn_Firm.m`) capture an untaxed subsidy wedge `rho_pine_dairy > 0` while active exporters (`z_h`) suffer CBAM/NDC terms-of-trade drag (`Pi_trade_reg < 1`). In `SS1` and `SS2` (`tau_a = 0.015`), the passive pine/dairy subsidy vanishes, `(1 - tau_a)^dt` penalizes idle land banking, and credible domestic NDC compliance unlocks the Clean-Green export premium (`Pi_trade_reg > 1`) for active `z_h` enterprises.
+
+### 2.2 Firm Bellman Equation & Stationary Equity Distribution ($`\Gamma_k`$)
+
+Each firm solves the infinite-horizon Bellman equation:
+
+$$
+V_{F,k}\left(a_f, z_f\right) = \max_{a_f^{\prime} \in \left\lbrack 0, R_k\left(z_f; \Delta t\right) a_f \right\rbrack} \left\lbrace \ln\left(R_k\left(z_f; \Delta t\right) a_f - a_f^{\prime} + \varepsilon_c\right) + \beta_{\mathrm{firm}}\left(\Delta t\right) \sum_{z_f^{\prime}} \Pi_{f,k}\left(z_f^{\prime} \vert z_f\right) V_{F,k}\left(a_f^{\prime}, z_f^{\prime}\right) \right\rbrace
+$$
+
+Replacing distortionary capital income taxation (`tau_k`) with a book-value wealth/land tax (`tau_a = 0.015`) penalizes low-productivity land-banking firms ($`z_{\ell,k}`$) while leaving high-productivity firms ($`z_{h,k}`$) with a higher marginal saving propensity, shifting the stationary equity distribution $`\Gamma_k\left(a_f, z_f\right)`$ toward $`z_{h,k}`$ and raising endogenous regional total factor productivity $`Z_k\left(\Gamma_k\right)`$.
+
+In `Firm_Rural` (`k = 1`) and `Firm_Small` (`k = 2`), baseline (`SS0`) asset pricing and operating returns are further shaped by two New Zealand climate-policy wedges (`LURNZ` land-use taxonomy; Hendy, Kerr, & Baisden, 2007 [Ref 30]): (i) **Unpriced Biogenic Dairy Emissions (`theta_ag = 0` in `SS0`) & Exotic Pine ETS Arbitrage (`kappa_pine_ets = 1` in `SS0`)**, which inflate passive rural land rents $`d_{\mathrm{land},1,t}`$ and Hirano and Toda (2025) land overvaluation ($`B_{\mathrm{land},1,t} > 0`$) while creating a post-Year-25 pine carbon-saturation cliff $`\mathcal{S}^{\mathrm{forest}}_t = \bar{\mathcal{S}}_0 \exp\left(-\delta_{\mathrm{sat}} \max\left(0, t - 25\right)\right)`$; and (ii) the **"Clean-Green" vs. CBAM Export Terms-of-Trade Multiplier** $`\Pi_{\mathrm{trade},k}`$:
 
 $$
 \Pi_{\mathrm{trade},k}\left(\Delta \mathcal{E}^{\mathrm{NDC}}_t , \theta_{\mathrm{ag}}\right) = 1 + \pi_{\mathrm{green},k} \theta_{\mathrm{ag}} - \chi_{\mathrm{CBAM},k} \max\left(0, \frac{\mathcal{E}^{\mathrm{dom}}_t - \overline{\mathcal{E}}^{\mathrm{NDC}}_t}{\overline{\mathcal{E}}^{\mathrm{NDC}}_t}\right)
 $$
 
-where `pi_green_reg = [0.045, 0.030, 0.010, 0.005]` is the verified low-emissions export premium and `chi_CBAM_reg = [0.080, 0.055, 0.020, 0.010]` is the Carbon Border Adjustment Mechanism (CBAM) tariff/market-access penalty when domestic emissions breach the Paris Agreement trajectory `E_NDC_schedule = [1.00, 0.65, 0.22]`.
-
-### 2.2 Firm Bellman Equation & Stationary Equity Distribution ($\Gamma_k$)
-Each firm solves the infinite-horizon Bellman equation:
-
-$$
-V_{F,k}\left(a_f, z_f\right) = \max_{a_f^{\prime} \in \left\lbrack 0,  R_k\left(z_f; \Delta t\right) a_f \right\rbrack} \left\lbrace \ln\left(R_k\left(z_f; \Delta t\right) a_f - a_f^{\prime} + \varepsilon_c\right) + \beta_{\mathrm{firm}}\left(\Delta t\right) \sum_{z_f^{\prime}} \Pi_{f,k}\left(z_f^{\prime} \middle| z_f\right) V_{F,k}\left(a_f^{\prime}, z_f^{\prime}\right) \right\rbrace
-$$
-
-Replacing distortionary capital income taxation ($`\tau_k`$) with a book-value wealth/land tax ($`\tau_a = 0.015`$) penalizes low-productivity land-banking firms ($`z_{\ell,k}`$) while leaving high-productivity firms ($`z_{h,k}`$) with a higher marginal saving propensity, shifting the stationary equity distribution $`\Gamma_k\left(a_f, z_f\right)`$ toward $`z_{h,k}`$ and raising endogenous regional total factor productivity $`Z_k\left(\Gamma_k\right)`$.
-
-In `Firm_Rural` (`k = 1`) and `Firm_Small` (`k = 2`), baseline (`SS0`) asset pricing and operating returns are further shaped by two New Zealand climate-policy wedges (`LURNZ` land-use taxonomy; Hendy, Kerr, & Baisden, 2007): (i) **Unpriced Biogenic Dairy Emissions (`theta_ag = 0` in `SS0`) & Exotic Pine ETS Arbitrage (`kappa_pine_ets = 1` in `SS0`)**, which inflate passive rural land rents $d_{\mathrm{land},1,t}$ and Hirano and Toda (2025) land overvaluation ($B_{\mathrm{land},1,t} > 0$) while creating a post-Year-25 pine carbon-saturation cliff $\mathcal{S}^{\mathrm{forest}}_t = \bar{\mathcal{S}}_0 \exp\left(-\delta_{\mathrm{sat}} \max\left(0, t - 25\right)\right)$; and (ii) the **"Clean-Green" vs. CBAM Export Terms-of-Trade Multiplier** $\Pi_{\mathrm{trade},k}$:
-
-$$\Pi_{\mathrm{trade},k}\left(\Delta \mathcal{E}^{\mathrm{NDC}}_t , \theta_{\mathrm{ag}}\right) = 1 + \pi_{\mathrm{green},k} \theta_{\mathrm{ag}} - \chi_{\mathrm{CBAM},k} \max\left(0, \frac{\mathcal{E}^{\mathrm{dom}}_t - \overline{\mathcal{E}}^{\mathrm{NDC}}_t}{\overline{\mathcal{E}}^{\mathrm{NDC}}_t}\right)$$
-
-where `pi_green_reg = [0.045, 0.030, 0.010, 0.005]` is the verified low-emissions export premium and `chi_CBAM_reg = [0.080, 0.055, 0.020, 0.010]` is the Carbon Border Adjustment Mechanism (CBAM) tariff/market-access penalty when domestic emissions $\mathcal{E}^{\mathrm{dom}}_t$ exceed the Paris Agreement cap $\overline{\mathcal{E}}^{\mathrm{NDC}}_t$. Phasing in circular biogenic pricing (`theta_ag: 0 -> 0.50 -> 1.00`), capping monoculture pine offsets (`kappa_pine_ets: 1.00 -> 0.25 -> 0.00`), and taxing passive land banking (`tau_a = 0.015`) eliminates the CBAM export penalty, unlocks the `+4.5%` Clean-Green export premium in `Rural`, and deflates speculative rural land bubbles ($B_{\mathrm{land},1,t} \equiv 0$).
+where `pi_green_reg = [0.045, 0.030, 0.010, 0.005]` is the verified low-emissions export premium and `chi_CBAM_reg = [0.080, 0.055, 0.020, 0.010]` is the Carbon Border Adjustment Mechanism (CBAM) tariff/market-access penalty when domestic emissions $`\mathcal{E}^{\mathrm{dom}}_t`$ exceed the Paris Agreement cap $`\overline{\mathcal{E}}^{\mathrm{NDC}}_t`$ (`E_NDC_schedule = [1.00, 0.65, 0.22]`). Phasing in circular biogenic pricing (`theta_ag: 0 -> 0.50 -> 1.00`), capping monoculture pine offsets (`kappa_pine_ets: 1.00 -> 0.25 -> 0.00`), and taxing passive land banking (`tau_a = 0.015`) eliminates the CBAM export penalty, unlocks the **+4.5%** Clean-Green export premium in `Rural`, and deflates speculative rural land bubbles ($`B_{\mathrm{land},1,t} \equiv 0`$).
 
 ---
 

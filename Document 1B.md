@@ -1021,12 +1021,12 @@ R_k(z_f; \Delta t) = (1 - \tau_a)\Delta t + (1 - \tau_k) \left\{ r + \max\left(0
 h' = (1 - \delta_{hc}(\Delta t)) h + \left(\frac{\Delta t}{5}\right) I(\ell > 0) I_h^{\alpha_I} h^{\alpha_H}
 ```
 
-- **5. Macro Public Residual (Ω<sub>fiscal</sub>) & The 2050 50/50 Dynamic Surplus Split (`Plot_ChildFiscal_SSankey.m`):** Projecting the five Gate 5 adult career strata (*s* ∈ {17, …, 21}) onto the eight Gate 6 annualized adult fiscal accounts (*a* ∈ {22, …, 29}), the topline net cohort fiscal balance Ω<sub>fiscal</sub> (indicated by the single black breakeven bar with gold marker above the Node 26 / Node 27 Debit-Credit boundary) and positive reform surplus allocation are defined as:
+* **5. Macro Public Residual ($`\Omega_{\mathrm{fiscal}}`$), Paris NDC Compliance, & The 2050 50/50 Dynamic Surplus Split (`Plot_ChildFiscal_SSankey.m`):** Projecting the five Gate 5 adult career strata (`s in {17..21}`) onto the eight Gate 6 annualized adult fiscal accounts (`a in {22..29}`), the topline net cohort fiscal balance $`\Omega_{\mathrm{fiscal}}`$ (indicated by the single black breakeven bar with gold marker above the Node 26 / Node 27 Debit-Credit boundary) and positive reform surplus allocation are defined as:
 
-```math
-\Omega_{\mathrm{fiscal}} = (\mathrm{Tax}_{\mathrm{GST,Cap,Est},27} + \mathrm{Tax}_{\mathrm{PAYE},28}) - (\mathrm{Cost}_{\mathrm{Exits},22,23,25} + \mathrm{Cost}_{\mathrm{Infra,Health,Super},26})
-```
+$$
+\Omega_{\mathrm{fiscal}} = \left(\mathrm{Tax}_{\mathrm{GST,Cap,Est},27} + \left(1 - \phi_{\mathrm{rebate}}\right)\mathrm{CTR}_{27} + \mathrm{Tax}_{\mathrm{PAYE},28}\right) - \left(\mathrm{Cost}_{\mathrm{Exits},22,23,25} + \mathrm{Cost}_{\mathrm{Infra,Health,Super},26} + \mathrm{Cost}_{\mathrm{NDC,offshore},26}\right)
+$$
 
-```math
-\Omega_{\mathrm{surplus}} = 0.50 \, \Omega_{\mathrm{debt}} + 0.50 \, \Omega_{\mathrm{reinv}}
-```
+$$
+\Omega_{\mathrm{surplus}} = \max\left(0, \Omega_{\mathrm{fiscal}}\right) = 0.50 \Omega_{\mathrm{debt}} + 0.50 \Omega_{\mathrm{reinv}}
+$$
