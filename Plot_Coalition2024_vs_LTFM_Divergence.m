@@ -160,61 +160,85 @@ xlim(ax1, [2024, 2039]); ylim(ax1, [-38, 50]);
 % =========================================================================
 % PANEL B (Top-Right): Solved Regional Emigration (Left) & TI Social Credit CPI (Right)
 % =========================================================================
-ax2 = subplot('Position', [0.540, 0.545, 0.415, 0.365]);
+ax2 = subplot('Position', [0.535, 0.545, 0.410, 0.365]); % Leaves 5.5% right margin for right Y-axis labels
 hold(ax2, 'on'); grid(ax2, 'on'); box(ax2, 'on');
 
+% --- LEFT AXIS: Grouped Bars for Age 20-35 Emigration (%) ---
 yyaxis(ax2, 'left');
 Emig_Mat = [Emig_SS0_2023(:), Emig_AustOnly(:), Emig_Full13(:), Emig_Reform(:)];
-b_emig   = bar(ax2, Emig_Mat, 'grouped', 'BarWidth', 0.84);
-b_emig(1).FaceColor = Col_LTFM;   b_emig(1).DisplayName = '0. 2023 Base (Nat Emig 11.0% | CPI 81.0 #4=)';
+b_emig   = bar(ax2, 1:5, Emig_Mat, 'grouped', 'BarWidth', 0.82);
+b_emig(1).FaceColor = Col_LTFM;   b_emig(1).DisplayName = '0. 2023 Base (Nat Emig 11.0% | CPI 81.0, Rank #4)';
 b_emig(2).FaceColor = Col_Aust;   b_emig(2).DisplayName = '1. Aust+Landlord (Nat Emig 17.4% | CPI 75.1 -> 70.9)';
 b_emig(3).FaceColor = Col_Full13; b_emig(3).DisplayName = '2. Full 13-Shock (Nat Emig 16.8% | CPI 75.7 -> 71.5)';
-b_emig(4).FaceColor = Col_Reform; b_emig(4).DisplayName = '3. Foiling Aotearoa (Nat Emig 7.6% | CPI 92.0 #1)';
+b_emig(4).FaceColor = Col_Reform; b_emig(4).DisplayName = '3. Foiling Aotearoa (Nat Emig 7.6% | CPI 92.0, Rank #1)';
 
 for k_b = 1:4
     xtips = b_emig(k_b).XEndPoints;
     ytips = b_emig(k_b).YEndPoints;
     labels_b = arrayfun(@(v) sprintf('%.1f%%', v), ytips, 'UniformOutput', false);
     text(ax2, xtips, ytips + 0.55, labels_b, 'HorizontalAlignment', 'center', ...
-        'VerticalAlignment', 'bottom', 'FontName', 'Helvetica', 'FontSize', 6.8, 'FontWeight', 'bold');
+        'VerticalAlignment', 'bottom', 'FontName', 'Helvetica', 'FontSize', 6.8, 'FontWeight', 'bold', ...
+        'Color', [0.15, 0.15, 0.15]);
 end
 ylabel(ax2, 'Solved Age 20–35 Cohort Emigrating Abroad (%)', 'FontName', 'Helvetica', 'FontSize', 10, 'FontWeight', 'bold');
-ax2.YColor = [0.15, 0.15, 0.15];
-ylim(ax2, [0, 42]);
+ax2.YAxis(1).Color  = [0.15, 0.15, 0.15];
+ax2.YAxis(1).Limits = [0, 44];
+ax2.YAxis(1).TickValues = 0:5:40;
 
-% Right Axis: Plot Both Impact (Wave 1) and Long-Run Steady-State (SS1) TI Social Credit Rating
+% --- RIGHT AXIS: TI Social Credit Rating (CPI / 100) & Social Cohesion (S_t) ---
 yyaxis(ax2, 'right');
-yline(ax2, 89.0, ':', '#1 Denmark Benchmark (CPI = 89)', 'Color', Col_Reform, 'LineWidth', 1.3, ...
+ax2.YAxis(2).Color      = Col_CPI;
+ax2.YAxis(2).Limits     = [64, 98];
+ax2.YAxis(2).TickValues = 65:5:95;
+ax2.YAxis(2).TickLabelFormat = '%.0f';
+
+% Benchmark Horizontal Lines on Right Axis
+yline(ax2, 89.0, ':', '#1 Denmark Benchmark (CPI = 89)', 'Color', Col_Reform, 'LineWidth', 1.4, ...
     'LabelHorizontalAlignment', 'left', 'FontName', 'Helvetica', 'FontSize', 8.0, 'FontWeight', 'bold', 'HandleVisibility', 'off');
-yline(ax2, 81.0, '--', '2023/25 NZ Base (CPI = 81, #4=)', 'Color', Col_LTFM, 'LineWidth', 1.1, ...
+yline(ax2, 81.0, '--', '2023/25 NZ Base (CPI = 81.0, #4=)', 'Color', Col_LTFM, 'LineWidth', 1.2, ...
     'LabelHorizontalAlignment', 'left', 'FontName', 'Helvetica', 'FontSize', 8.0, 'HandleVisibility', 'off');
 
+% Plot Wave 1 Impact and Solved Steady-State CPI Markers across the National Bar Group (x = 5)
 x_nat_bars = [b_emig(1).XEndPoints(5), b_emig(2).XEndPoints(5), b_emig(3).XEndPoints(5), b_emig(4).XEndPoints(5)];
 
-p_cpi_imp = plot(ax2, x_nat_bars, CPI_Impact_Regimes, '--d', 'Color', [0.45, 0.32, 0.72], 'LineWidth', 1.8, ...
-    'MarkerSize', 7.5, 'MarkerFaceColor', [0.85, 0.80, 0.98], ...
-    'DisplayName', 'Wave 1 Impact TI CPI (75.1 / 75.7)');
-p_cpi_ss  = plot(ax2, x_nat_bars, CPI_SS_Regimes, '-p', 'Color', Col_CPI, 'LineWidth', 2.6, ...
-    'MarkerSize', 11, 'MarkerFaceColor', [0.98, 0.82, 0.18], 'MarkerEdgeColor', Col_CPI, ...
+p_cpi_imp = plot(ax2, x_nat_bars, CPI_Impact_Regimes, '--d', 'Color', [0.45, 0.32, 0.72], 'LineWidth', 2.0, ...
+    'MarkerSize', 8.0, 'MarkerFaceColor', [0.85, 0.80, 0.98], ...
+    'DisplayName', 'Wave 1 Impact TI CPI (81.0 -> 75.1 / 75.7)');
+p_cpi_ss  = plot(ax2, x_nat_bars, CPI_SS_Regimes, '-p', 'Color', Col_CPI, 'LineWidth', 2.8, ...
+    'MarkerSize', 11.5, 'MarkerFaceColor', [0.98, 0.82, 0.18], 'MarkerEdgeColor', Col_CPI, ...
     'DisplayName', 'Solved Steady-State TI CPI (70.9 / 71.5 -> 92.0)');
 
-CPI_Badges = {sprintf('CPI 81.0\n(S_0=100)'), sprintf('Imp: 75.1\nSS1: 70.9 (S=76.2)'), ...
-    sprintf('Imp: 75.7\nSS1: 71.5 (S=77.5)'), sprintf('CPI 92.0 (#1)\n(S_2=126.0)')};
-y_offsets  = [2.2, -3.4, 2.8, 2.2];
+% Place all 4 CPI Badges in the unobstructed upper airspace above Auckland & National:
+%   - Badge 1 (Base 81.0):      Upper-left of National at (x = 4.48, y = 86.8)
+%   - Badge 2 (Aust 70.9):      Open airspace above Auckland's 12% bars at (x = 3.95, y = 78.5)
+%   - Badge 3 (13-Shock 71.5):  High above National's 17.4%/16.8% bar labels at (x = 5.02, y = 83.2)
+%   - Badge 4 (Foiling 92.0):   Top right at (x = 5.18, y = 94.8)
+badge_x = [4.48, 3.95, 5.02, 5.18];
+badge_y = [86.8, 78.5, 83.2, 94.8];
+CPI_Badges = {sprintf('Base: CPI 81.0\n(S_0 = 100.0)'), ...
+    sprintf('Aust: Imp 75.1\nSS1: 70.9 (S=76.2)'), ...
+    sprintf('13-Shock: Imp 75.7\nSS1: 71.5 (S=77.5)'), ...
+    sprintf('Foiling: CPI 92.0 (Rank #1)\n(S_2 = 126.0)')};
+
 for k_c = 1:4
-    text(ax2, x_nat_bars(k_c), CPI_SS_Regimes(k_c) + y_offsets(k_c), CPI_Badges{k_c}, ...
-        'HorizontalAlignment', 'center', 'FontName', 'Helvetica', 'FontSize', 7.0, ...
-        'FontWeight', 'bold', 'Color', Col_CPI, 'BackgroundColor', [1 1 0.94], 'Margin', 1.1);
+    plot(ax2, [x_nat_bars(k_c), badge_x(k_c)], [CPI_SS_Regimes(k_c), badge_y(k_c)], ':', ...
+        'Color', Col_CPI, 'LineWidth', 1.1, 'HandleVisibility', 'off');
+    text(ax2, badge_x(k_c), badge_y(k_c), CPI_Badges{k_c}, ...
+        'HorizontalAlignment', 'center', 'FontName', 'Helvetica', 'FontSize', 6.8, ...
+        'FontWeight', 'bold', 'Color', Col_CPI, 'BackgroundColor', [1, 1, 0.94], ...
+        'EdgeColor', Col_CPI, 'Margin', 1.1);
 end
 
-ylabel(ax2, 'TI Social Credit Rating (CPI / 100) [Cohesion S_t]', 'FontName', 'Helvetica', 'FontSize', 9.8, 'FontWeight', 'bold');
-ax2.YColor = Col_CPI;
-ylim(ax2, [64, 98]);
+ylabel(ax2, 'TI Social Credit Rating (CPI / 100) [Cohesion S_t]', ...
+    'FontName', 'Helvetica', 'FontSize', 9.8, 'FontWeight', 'bold', 'Color', Col_CPI);
 
+% Lock shared X-axis limits & ticks after configuring both YAxis(1) and YAxis(2)
+xlim(ax2, [0.45, 5.65]);
 set(ax2, 'XTick', 1:5, 'XTickLabel', Reg_Labels, 'FontName', 'Helvetica', 'FontSize', 9.0, 'FontWeight', 'bold');
 title(ax2, 'B. Solved Youth Brain Drain (Left) & TI Social Credit Rating CPI / S_t (Right)', ...
     'FontName', 'Helvetica', 'FontSize', 11.0, 'FontWeight', 'bold');
-legend(ax2, [b_emig(1), b_emig(2), b_emig(3), b_emig(4), p_cpi_imp, p_cpi_ss], 'Location', 'northwest', 'FontSize', 7.3, 'Box', 'on');
+legend(ax2, [b_emig(1), b_emig(2), b_emig(3), b_emig(4), p_cpi_imp, p_cpi_ss], ...
+    'Location', 'northwest', 'FontSize', 7.2, 'Box', 'on');
 
 % =========================================================================
 % PANEL C (Bottom-Left): Crowding Out Entrepreneurship (z_h) vs. Land Speculation (z_l)
@@ -247,41 +271,139 @@ ylim(ax3, [0, 85]);
 
 % =========================================================================
 % PANEL D (Bottom-Right): 60-Year Sovereign Solvency (PAYE %) & Welfare (CE %)
+% Architecture:
+%   1. Graph Box Stretched Horizontally: [0.535, 0.085, 0.352, 0.365]
+%   2. Unified 1D Order-Preserving Relaxation: Maps all 8 endpoints (both
+%      PAYE and CE%) into normalized [0, 1] vertical space, sorts strictly,
+%      and relaxes until every label has >= 0.072 breathing room.
+%   3. Balanced Right Channel: Labels start at x = 2089.8 (just right of the
+%      Right Y-Axis title), balancing left and right whitespace.
 % =========================================================================
-ax4 = subplot('Position', [0.540, 0.085, 0.415, 0.365]);
+ax4 = subplot('Position', [0.535, 0.085, 0.352, 0.365]);
 hold(ax4, 'on'); grid(ax4, 'on'); box(ax4, 'on');
 
+paye_lim = [8.5, 34.5]; % Inverted Left Axis limits
+ce_lim   = [-62, 56];   % Right Axis limits
+
+% --- LEFT AXIS: Required Solvency PAYE Tax Rate (Inverted & Scaled Downward) ---
 yyaxis(ax4, 'left');
-p_tax0 = plot(ax4, Years_60, PAYE_LTFM_Path, '--o', 'Color', Col_LTFM, 'LineWidth', 2.0, ...
-    'MarkerSize', 4.0, 'DisplayName', '0. 2023 LTFM PAYE (28.20% by 2065)');
-p_tax1 = plot(ax4, Years_60, PAYE_Aust_Path, '-v', 'Color', Col_Aust, 'LineWidth', 2.3, ...
-    'MarkerSize', 4.8, 'MarkerFaceColor', Col_Aust, 'DisplayName', '1. Austerity Only PAYE (31.45%)');
-p_tax2 = plot(ax4, Years_60, PAYE_Full13_Path, '-s', 'Color', Col_Full13, 'LineWidth', 2.8, ...
-    'MarkerSize', 5.5, 'MarkerFaceColor', Col_Full13, 'DisplayName', '2. Full 13-Shock PAYE (30.85%)');
-p_tax3 = plot(ax4, Years_60, PAYE_Reform_Path, '-^', 'Color', Col_Reform, 'LineWidth', 2.6, ...
-    'MarkerSize', 5.2, 'MarkerFaceColor', Col_Reform, 'DisplayName', '3. Foiling Aotearoa PAYE (18.85% in SS2)');
-ylabel(ax4, 'Required Solvency PAYE Tax Rate \tau_l (%)', 'FontName', 'Helvetica', 'FontSize', 10, 'FontWeight', 'bold');
-ax4.YColor = [0.15, 0.15, 0.15];
-ylim(ax4, [17.5, 33.5]);
+ax4.YAxis(1).Color      = [0.22, 0.22, 0.22];
+ax4.YAxis(1).Limits     = paye_lim;
+ax4.YAxis(1).TickValues = 16:4:32;
+ax4.YAxis(1).Direction  = 'reverse';
+ylabel(ax4, 'Required Solvency PAYE Tax Rate \tau_l (%) [Inverted: Down = Hike]', ...
+    'FontName', 'Helvetica', 'FontSize', 9.5, 'FontWeight', 'bold');
 
+p_tax0 = plot(ax4, Years_60, PAYE_LTFM_Path, '--o', 'Color', Col_LTFM, 'LineWidth', 1.7, ...
+    'MarkerSize', 3.8, 'DisplayName', '0. 2023 LTFM PAYE (28.20%)');
+p_tax1 = plot(ax4, Years_60, PAYE_Aust_Path, '--v', 'Color', Col_Aust, 'LineWidth', 1.7, ...
+    'MarkerSize', 4.2, 'DisplayName', '1. Austerity Only PAYE (31.45%)');
+p_tax2 = plot(ax4, Years_60, PAYE_Full13_Path, '--s', 'Color', Col_Full13, 'LineWidth', 1.9, ...
+    'MarkerSize', 4.5, 'DisplayName', '2. Full 13-Shock PAYE (30.85%)');
+p_tax3 = plot(ax4, Years_60, PAYE_Reform_Path, '--^', 'Color', Col_Reform, 'LineWidth', 1.9, ...
+    'MarkerSize', 4.5, 'DisplayName', '3. Foiling Aotearoa PAYE (18.85%)');
+
+% --- RIGHT AXIS: Cohort Consumption-Equivalent Welfare (CE %) ---
 yyaxis(ax4, 'right');
-p_ce0 = plot(ax4, Years_60, CE_LTFM_Path, ':', 'Color', Col_LTFM, 'LineWidth', 2.0, ...
-    'DisplayName', '0. 2023 LTFM Welfare (-16.21% CE)');
-p_ce1 = plot(ax4, Years_60, CE_Aust_Path, '-.', 'Color', Col_Aust, 'LineWidth', 2.2, ...
-    'DisplayName', '1. Austerity Only Welfare (-23.85% CE)');
-p_ce2 = plot(ax4, Years_60, CE_Full13_Path, '-.', 'Color', Col_Full13, 'LineWidth', 2.6, ...
-    'DisplayName', '2. Full 13-Shock Welfare (-21.85% CE)');
-p_ce3 = plot(ax4, Years_60, CE_Reform_Path, '-.', 'Color', [0.04, 0.42, 0.30], 'LineWidth', 2.6, ...
-    'DisplayName', '3. Foiling Aotearoa Welfare (+24.24% CE)');
-ylabel(ax4, 'Cohort Consumption-Equivalent Welfare (CE %)', 'FontName', 'Helvetica', 'FontSize', 10, 'FontWeight', 'bold');
-ax4.YColor = [0.25, 0.25, 0.25];
-ylim(ax4, [-28, 28]);
+ax4.YAxis(2).Color      = [0.10, 0.10, 0.10];
+ax4.YAxis(2).Limits     = ce_lim;
+ax4.YAxis(2).TickValues = -30:10:30;
+ylabel(ax4, 'Cohort Consumption-Equivalent Welfare (CE %)', ...
+    'FontName', 'Helvetica', 'FontSize', 9.8, 'FontWeight', 'bold', 'Color', [0.10, 0.10, 0.10]);
 
-xlabel(ax4, 'Transition Year (2024–2084, \Delta t = 3 Grid)', 'FontName', 'Helvetica', 'FontSize', 10, 'FontWeight', 'bold');
+yline(ax4, 0, 'k:', 'LineWidth', 1.1, 'HandleVisibility', 'off');
+
+p_ce0 = plot(ax4, Years_60, CE_LTFM_Path, '-o', 'Color', Col_LTFM, 'LineWidth', 2.4, ...
+    'MarkerSize', 4.8, 'MarkerFaceColor', 'w', 'DisplayName', '0. 2023 LTFM Welfare (-16.21% CE)');
+p_ce1 = plot(ax4, Years_60, CE_Aust_Path, '-v', 'Color', Col_Aust, 'LineWidth', 2.5, ...
+    'MarkerSize', 5.2, 'MarkerFaceColor', Col_Aust, 'DisplayName', '1. Austerity Only Welfare (-23.85% CE)');
+p_ce2 = plot(ax4, Years_60, CE_Full13_Path, '-s', 'Color', Col_Full13, 'LineWidth', 2.8, ...
+    'MarkerSize', 5.6, 'MarkerFaceColor', Col_Full13, 'DisplayName', '2. Full 13-Shock Welfare (-21.85% CE)');
+p_ce3 = plot(ax4, Years_60, CE_Reform_Path, '-^', 'Color', Col_Reform, 'LineWidth', 2.8, ...
+    'MarkerSize', 5.6, 'MarkerFaceColor', Col_Reform, 'DisplayName', '3. Foiling Aotearoa Welfare (+24.24% CE)');
+
+% =========================================================================
+% UNIFIED 8-ENDPOINT ORDER-PRESERVING RELAXATION IN NORMALIZED Y-SPACE [0, 1]
+% =========================================================================
+% Convert exact 2084 endpoints from both axes into normalized height y_norm in [0, 1]
+y_norm_ce   = ( [CE_Reform_Path(end), CE_LTFM_Path(end), CE_Full13_Path(end), CE_Aust_Path(end)] - ce_lim(1) ) / diff(ce_lim);
+y_norm_paye = ( paye_lim(2) - [PAYE_Reform_Path(end), PAYE_LTFM_Path(end), PAYE_Full13_Path(end), PAYE_Aust_Path(end)] ) / diff(paye_lim);
+
+% Combine all 8 endpoints: items 1..4 are Solid CE% boxes, items 5..8 are Dashed PAYE tags
+y_target_all = [y_norm_ce, y_norm_paye];
+is_ce_box    = [true, true, true, true, false, false, false, false];
+lbl_Account  = {'Foiling: +24.24% CE',     '2023 LTFM: -16.21% CE', ...
+                '13-Shock: -21.85% CE',    'Aust Only: -23.85% CE', ...
+                '--^ Foiling: 18.85% PAYE','--o LTFM: 28.20% PAYE', ...
+                '--s 13-Shock: 30.85% PAYE','--v Aust Only: 31.45% PAYE'};
+col_Account  = {Col_Reform, Col_LTFM, Col_Full13, Col_Aust, ...
+                Col_Reform, Col_LTFM, Col_Full13, Col_Aust};
+
+% Sort strictly descending from top of panel to bottom of panel
+[y_sorted, idx_sort] = sort(y_target_all, 'descend');
+y_relaxed = y_sorted;
+
+% Iterative relaxation: enforce minimum vertical breathing room (min_gap = 0.042)
+% while gently tethered to true endpoint heights y_sorted
+min_gap = 0.042; % ~4.9 CE% units of vertical separation between consecutive labels
+y_top_max = 0.76;
+y_bot_min = 0.04;
+
+for iter = 1:80
+    % 1. Gentle spring pull toward exact endpoint height
+    y_relaxed = y_relaxed + 0.12 * (y_sorted - y_relaxed);
+    % 2. Top-down & bottom-up collision push-apart
+    for i = 1:7
+        overlap = min_gap - (y_relaxed(i) - y_relaxed(i+1));
+        if overlap > 0
+            y_relaxed(i)   = y_relaxed(i)   + 0.52 * overlap;
+            y_relaxed(i+1) = y_relaxed(i+1) - 0.52 * overlap;
+        end
+    end
+    % 3. Clamp to panel vertical bounds and sweep back up if bottom clamped
+    y_relaxed = min(y_top_max, max(y_bot_min, y_relaxed));
+    for i = 7:-1:1
+        if y_relaxed(i) - y_relaxed(i+1) < min_gap
+            y_relaxed(i) = y_relaxed(i+1) + min_gap;
+        end
+    end
+end
+
+% Render Header & All 8 Relaxed Endpoint Labels on Right Axis Coordinate Scale
+x_lbl_start = 2089.8; % Pulled left (closer to Right Y-Axis title) for balanced margins
+y_hdr_ce    = ce_lim(1) + (y_relaxed(1) + 0.078) * diff(ce_lim);
+text(ax4, x_lbl_start, y_hdr_ce, '2084 Endpoints:', ...
+    'Color', [0.15, 0.15, 0.15], 'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle', ...
+    'FontName', 'Helvetica', 'FontSize', 7.6, 'FontWeight', 'bold', 'Clipping', 'off');
+
+for k_item = 1:8
+    orig_idx = idx_sort(k_item);
+    y_ce_pos = ce_lim(1) + y_relaxed(k_item) * diff(ce_lim);
+    if is_ce_box(orig_idx)
+        text(ax4, x_lbl_start, y_ce_pos, lbl_Account{orig_idx}, ...
+            'Color', col_Account{orig_idx}, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle', ...
+            'FontName', 'Helvetica', 'FontSize', 7.2, 'FontWeight', 'bold', ...
+            'BackgroundColor', [0.99, 0.99, 0.99], 'EdgeColor', col_Account{orig_idx}, ...
+            'Margin', 1.2, 'Clipping', 'off');
+    else
+        text(ax4, x_lbl_start, y_ce_pos, lbl_Account{orig_idx}, ...
+            'Color', col_Account{orig_idx}, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle', ...
+            'FontName', 'Helvetica', 'FontSize', 7.1, 'FontWeight', 'bold', 'Clipping', 'off');
+    end
+end
+
+% Lock X-Axis Strictly to the 2024-2084 Data Range
+xlim(ax4, [2024, 2084]);
+set(ax4, 'XTick', 2024:10:2084, 'FontName', 'Helvetica', 'FontSize', 9.0, 'FontWeight', 'bold');
+xlabel(ax4, 'Transition Year (2024–2084, \Delta t = 3 Grid)', ...
+    'FontName', 'Helvetica', 'FontSize', 10, 'FontWeight', 'bold');
 title(ax4, 'D. 60-Year Solvency (PAYE \tau_l) & Welfare (CE %): 46.09 pp Gap (Full 13 vs. Reform)', ...
     'FontName', 'Helvetica', 'FontSize', 11.0, 'FontWeight', 'bold');
-legend(ax4, [p_tax0, p_tax1, p_tax2, p_tax3, p_ce1, p_ce2, p_ce3], 'Location', 'southwest', 'FontSize', 7.6, 'Box', 'on');
-xlim(ax4, [2024, 2084]);
+
+% 2-Column Legend Centered in the Expanded Upper Corridor
+lgd4 = legend(ax4, [p_ce3, p_tax3, p_ce0, p_tax0, p_ce2, p_tax2, p_ce1, p_tax1], ...
+    'NumColumns', 2, 'FontSize', 6.8, 'Box', 'on');
+lgd4.Position = [0.542, 0.368, 0.335, 0.076];
 
 %% 4. EXPORT 300-DPI PNG AND EXPANDED 4-REGIME CSV TABLE (dt = 3 GRID)
 Out_PNG = fullfile(OutputDir, 'Fig_Coalition2024_vs_LTFM_4Panel_Divergence.png');

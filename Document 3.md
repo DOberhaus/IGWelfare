@@ -248,7 +248,7 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 
 For technical reviewers, Treasury analysts, and coalition partners who wish to inspect the exact regional and cohort numbers underlying the figures in Parts I and II, this appendix provides the complete leave-behind tables exported by `Plot_Counterfactuals_And_MirrorInvestments.m` (`Table 19`) and `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m` (`Tables 21 & 22`).
 
-## Table A.1: The 11-Layer Constructive Synergy Build-Up (SS2 Long-Run Welfare Gain, CE%)
+### Table A.1: The 11-Layer Constructive Synergy Build-Up (SS2 Long-Run Welfare Gain, CE%)
 
 | **Constructive Tier & Layer (`Table 19`)** | **Policy Constituency ("Owner Lane")** | **Rural (+18.2%)** | **Small (+21.8%)** | **Large (+24.4%)** | **Auckland (+28.7%)** | **National (+24.2%)** | **Share of National Prize** |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -268,7 +268,7 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 | **Tier 4 Subtotal (The Fiscal, Super-64 & Demographic Harvest Stack)** | **Coalition 4 + Full Loop (Iso +2.02% + Wedge +1.97%)** | **+2.79%** | **+3.68%** | **+3.99%** | **+4.77%** | **+3.99%** | **16.5%** |
 | **GRAND TOTAL (`SS2_3` Fully Integrated Policy)** | **7 Isolated (+12.79%, 52.7%) + 4 Wedges (+11.46%, 47.3%)** | **+18.21%** | **+21.75%** | **+24.41%** | **+28.70%** | **+24.24%** | **100.0%** |
 
-## Table A.2: The $`4 \times 4`$ Coalition Dependency Matrix (`Table 22`)
+### Table A.2: The $`4 \times 4`$ Coalition Dependency Matrix (`Table 22`)
 
 | **Policy Constituency (Row $i$)** | **1. Barnardos & Youth** *(ECE + Tuakana)* | **2. WellBeing Alliance** *(Housing + Grant + Whānau)* | **3. GrowthNZ & Venture** *(Firm Capital + Jobs)* | **4. Fiscal Stewards & MBAs** *(Debt-Sinking + PAYE Cut)* | **Total Value Connected to Constituency $i$** *(Own Base + 3 Neighbor Wedges)* |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -289,7 +289,7 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 
 ---
 
-## Table A.3: Quantitative Comparison of the Eight 60-Year Macro & Coalition Trajectories (`Table 21`)
+### Table A.3: Quantitative Comparison of the Eight 60-Year Macro & Coalition Trajectories (`Table 21`)
 
 | **Trajectory & Policy Regime (`Table 21`)** | **Year 0 (2026) Debt / PAYE** | **Year 25 (2050) Debt / PAYE / CE%** | **Year 60 (2086) Net Debt (% GDP)** | **Year 60 Required PAYE $`\tau_l`$ (%)** | **Year 60 Household Welfare (CE%)** | **Net Swing vs. Sinking *SS0* LTFM Floor** |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -301,3 +301,34 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 | **6. Barnardos/Youth Silo Alone vs. LTFM Drift** *(ECE + Mentoring Without Housing/Jobs)* | 42.0% / 22.0% | 68.0% / 23.1% / +5.8% | **138.0%** | **25.50%** | **-0.06%** | +16.15 pp *(>100% Eroded by Drift)* |
 | **7. Unified 4-Coalition Plan + 3% GDP Defense** *(Sustains +8.0B/yr Defense Outlay)* | 42.0% / 22.0% | 45.3% / 21.5% / +10.7% | **31.5%** | **20.65%** | **+20.72%** | **+36.93 pp** *(+42.41 pp vs Row 2)* |
 | **8. ★ Unified 4-Coalition Plan ($`SS1 \to SS2`$)** *(Super Age 64 + -3.15pp PAYE Cut + Debt Sunk)* | 42.0% / 22.0% | 38.0% / 21.0% / **+13.5%** | **22.0%** | **18.85%** | **+24.24%** | **+40.45 pp Total Welfare Swing** |
+
+## Appendix B: General-Equilibrium Stress-Test of the 2024–2026 Policy Shock Vector (`SS0_2023` vs. `SS1_Coalition` vs. `SS2_Reform`)
+
+To test whether conventional tax-relief and capital-attraction levers can offset contractions in early-childhood, scientific, and regional public infrastructure, we re-anchor the 4-Region + `Abroad` overlapping-generations model ($\Delta t = 3\text{ yr}, J = 27$) to the pre-Coalition late-2023 baseline (`SS0_2023`) and introduce the 13 largest fiscal and regulatory shocks enacted between 2024 and 2026. To ensure a rigorous, steel-manned evaluation, we decompose the policy vector into two distinct sub-portfolios before solving the combined general equilibrium:
+
+1. **Group A — Public Service Consolidation, Infrastructure Cancellations, and Residential Property Relief (Shocks #1–#8, #12–#13):** Restoring residential landlord interest deductibility and shortening the bright-line test (~NZD 2.9B), disestablishing Callaghan Innovation and contracting Marsden/science funding, executing >6,000–9,000 public-sector redundancies concentrated in `Large` metropolitan centers (Wellington), cancelling the iReX Cook Strait rail-ferry infrastructure, delaying/rescoping the Dunedin Hospital inpatient build, repealing Pay Equity claims alongside the termination of 337 Oranga Tamariki preventative contracts and early-childhood service closures, repealing first-year Fees-Free tertiary support, freezing tobacco/HTP excise, settling primary and secondary teacher collective agreements (2.5% in 2026, 2.0% in 2027) below the 4.0% BEFU 2026 CPI inflation rate, and halving the Crown KiwiSaver match while lifting social-housing income-related rent from 25% to 30%.
+2. **Group B — Flagship Tax-Relief, Business Expensing, and Foreign-Investor Levers (Shocks #9–#11):** The Budget 2024 personal income tax bracket adjustments (~NZD 14.7B over four years, lowering effective $\tau_l$ from $0.220$ to $0.208$), the April 2025 Active Investor Plus (AIP) visa refresh (attracting NZD 3.4B–5.4B in committed offshore capital alongside a carve-out permitting visa holders to purchase NZD 5M+ residential properties), and the Budget 2025 20% immediate business asset expensing incentive (*Investment Boost*, ~NZD 6.7B over four years, lowering effective $\tau_k$ from $0.250$ to $0.228$).
+
+### B.1 Solved 4-Region + `Abroad` Steady-State Decomposition ($\Delta t = 3\text{ yr}, J = 27$)
+
+| Equilibrium Metric / Diagnostic | `0. SS0_2023` (Pre-Shock Baseline) | `1. Group A Only` (Austerity + Landlord Relief) | `2. Group B Only` (Tax Cut + AIP Visa + Inv Boost) | `3. Full 13-Shock Coalition` (Groups A + B Combined) | `4. Foiling Aotearoa` (`SS1 -> SS2` Unified Reform) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Statutory / Effective Tax Anchors ($\tau_l, \tau_k$)** | `0.220 / 0.250` | `0.220 / 0.250` | `0.208 / 0.228` | **`0.208 / 0.228`** | `0.1885 / 0.250` ($\tau_a = 1.5\%$) |
+| **Auckland House Price-to-Income Ratio ($Q_{\mathrm{Auckland}}$)** | `3.02x` | `3.23x` (+6.8%) | `3.07x` (+1.8% AIP luxury right) | **`3.28x` (+8.6% stacked)** | **`2.70x–2.79x`** (-7.5% to -10.5%) |
+| **Effective Stage-1 ECE Capacity ($G_{\mathrm{ECE},1}^{\mathrm{eff}}$, Auckland)** | `0.0450` | `0.0321` (-28.7%) | `0.0447` (-0.7% via *Kaiako* deflator) | **`0.0319` (-29.1%)** | **`0.1140–0.1350`** (+153% to +200%) |
+| **National Stage-1 Skill / Completed Skill at Age 20** | `0.960 / 0.906` | `0.927 / 0.817` | `0.958 / 0.905` | **`0.926 / 0.816` (-9.9% skill loss)** | **`1.042 / 1.085`** (+19.8% skill gain) |
+| **Struggling / Material Hardship Cohort Share ($h_1\text{--}h_2$)** | `17.1%` | `25.0%` (+7.9 pp) | `17.2%` (+0.1 pp) | **`25.2%` (+8.1 pp)** | **`1.5%` (-15.6 pp)** |
+| **Mean Intergenerational Bequest ($b_j$)** | `1.956` | `1.985` (+1.5%) | `1.995` (+2.0%) | **`2.024` (+3.5% additive)** | **`2.480`** (Broad-based productive equity) |
+| **National Age 20–35 Skilled Emigration (`Abroad`)** | `11.0%` | `17.4%` (+6.4 pp) | `10.5%` (-0.5 pp) | **`16.8%` (+5.8 pp)** | **`7.6%` (-3.4 pp; ~3,550/yr retained)** |
+| **`Large` Metro (Wellington / Dunedin) Youth Emigration** | `23.6%` | `36.3%` (+12.7 pp) | `22.5%` (-1.1 pp) | **`35.0%` (+11.4 pp)** | **`15.2%` (-8.4 pp)** |
+| **Macro Social Cohesion Index ($S_t$: Impact $\rightarrow$ `SS1`)** | `100.0` | `86.0 -> 76.2` | `101.1 -> 100.6` | **`87.5 -> 77.5`** | **`114.2 -> 126.0`** |
+| **Imputed TI Social Credit Rating ($\text{CPI}_t$: Impact $\rightarrow$ `SS1`)** | `81.0 / 100` (#4=) | `75.1 -> 70.9` | `81.5 -> 81.3` | **`75.7 -> 71.5`** | **`87.0 -> 92.0 / 100` (#1 Global)** |
+| **Year 5 Cash OBEGAL vs. ACC Actuarial Valuation (2% SRTP)** | Baseline | Cash: `+$1.9B/yr`<br>Actuarial: `-$12.4B` | Cash: `-$3.8B/yr`<br>Actuarial: `+$0.9B` | **Cash: `-$1.9B/yr` (BEFU 26)**<br>**Actuarial: `-$11.5B net hole`** | Cash: Neutral (`22% PAYE`)<br>Actuarial: **`+$35.25B (3.84x)`** |
+| **Long-Run Consumption-Equivalent Welfare ($\mathrm{CE}\%$)** | **`-16.21% CE`** | **`-23.85% CE`** | **`-14.90% CE`** | **`-21.85% CE` (-5.64 pp vs `LTFM`)** | **`+24.24% CE` (+46.09 pp gap)** |
+
+### B.2 Four Structural Findings from the 13-Shock Equilibrium
+
+1. **9-to-1 Dominance of Human-Capital and Land-Speculation Channels Over Tax and Visa Levers:** Isolating the Coalition's pro-growth levers (`State 2: Group B Only`) lowers national youth emigration by $0.5\text{ pp}$ (`11.0% -> 10.5%`) and lifts Auckland high-talent firm productivity $z_{h,\mathrm{Akl}}$ from $1.750$ to $1.782$. However, when combined with `Group A` (`State 3: Full 13-Shock Coalition`), the NZD 2.9B landlord tax break and the AIP visa's NZD 5M+ luxury home carve-out stack multiplicatively to inflate Auckland house price-to-income ratios by $+8.6\%$ ($3.02 \to 3.28$). Through the endogenous *Kaiako* housing-affordability deflator $G_{\mathrm{ece},s}^{\mathrm{eff}}(Q_k) = G_{\mathrm{ece},s}(Q_{\mathrm{base},k}/Q_k)^{\nu_{\mathrm{kaiako}}}$, metropolitan rent inflation compounds with sub-inflation teacher settlements and Oranga Tamariki/ECE contract reductions to reduce effective early-childhood wraparound in Auckland by $-29.1\%$ ($0.0450 \to 0.0319$). Dynamic complementarity ($\varphi_2 = -0.95$) amplifies this early deficit into a $-9.9\%$ decline in completed age-20 skill ($0.906 \to 0.816$) and an $+8.1\text{ pp}$ expansion in the struggling youth cohort share ($17.1\% \to 25.2\%$).
+2. **Spatial Skill-Ordering Inversion in Primate Cities:** In the 2023 baseline (`State 0`), `Large` metros ($0.961$) and `Auckland` ($0.960$) exhibit the highest Stage-1 skill formation in New Zealand. Under the `Full 13-Shock Coalition` (`State 3`), this spatial ordering inverts: `Auckland` falls to the lowest Stage-1 skill ($0.921$) and lowest completed skill ($0.803$) of all four regions, while `Large` metros (Wellington, Christchurch, Dunedin) experience an $+11.4\text{ pp}$ surge in skilled youth emigration ($23.6\% \to 35.0\%$).
+3. **The Intergenerational Cleavage (`Mean Bequest` Rises While Capability and Cohesion Fall):** Across the entire national equilibrium table, `Mean Bequest` is the sole indicator that increases under the 13-shock vector ($1.956 \to 2.024$, and $2.397 \to 2.506$ in Auckland), as property tax relief and luxury foreign-buyer demand inflate passive land values ($z_\ell$) for incumbent asset holders while crowding out collateral-constrained operating firms ($z_h$).
+4. **The *OIA 20250878* Blind Spot and Sovereign Credit Rating Feedback (`TI CPI` & Fitch/Moody's `Negative` Outlooks):** Because the Treasury's `LTFM` and `FSM` models operate without micro-cohort feedback loops (*OIA 20250878*) and hold productivity ($0.9\%/\text{yr}$) and net migration exogenous (*Analytical Notes 26/01 & 26/03*), cash-flow budgeting records social and R&D retrenchment as short-term savings while missing both the **-NZD 11.5B Year-5 ACC actuarial liability** and the erosion of New Zealand's **Social Credit Rating** ($\text{CPI}_t$ falling from $81.0$ to $75.7$ on impact and $71.5$ in steady state). In sovereign credit rating methodology (Fitch `AA+ Negative Outlook`, March/October 2026; Moody's `Aaa Negative Outlook`, April 2026; S&P `AA+` downside triggers, August 2026), New Zealand's high external debt is explicitly buffered by its top-tier institutional governance score (`TI CPI`) and per-capita growth resilience. Eroding social cohesion ($S_t: 100.0 \to 77.5$) while depressing endogenous TFP growth to $0.66\%/\text{yr}$ directly undermines the institutional and per-capita growth pillars that anchor New Zealand's sovereign borrowing costs.
