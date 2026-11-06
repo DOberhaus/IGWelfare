@@ -1,8 +1,9 @@
 function narrativeMap = getFiscalRibbonNarratives(phase_code)
 %% GETFISCALRIBBONNARRATIVES
-% Returns containers.Map keyed by 'NODE_num' (1..28) and 'srcNum->dstNum' for the
-% 6-Gate (28-Node) Lifecycle Fiscal Sankey (Option 2: Gate 1 4-Node Split + Gate 3 5-Node Split).
-% Enforces strict suffix-unit formatting (kNZD/yr) and explicit 4-Lane Waring / Landlord attribution.
+% Returns containers.Map keyed by 'NODE_num' (1..29) and 'srcNum->dstNum' for the
+% 6-Gate (29-Node) Lifecycle Fiscal Sankey (Solution 1: Gate 5 Career Strata 17..21 -> Gate 6 Fiscal Ledger 22..29).
+% Enforces strict suffix-unit formatting (kNZD/yr) and explicit 4-Lane Waring / Landlord / NDC attribution.
+
 narrativeMap = containers.Map('KeyType', 'char', 'ValueType', 'char');
 is_ref = ~strcmpi(phase_code, 'SS0');
 

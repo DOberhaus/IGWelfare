@@ -80,7 +80,7 @@ M_trust_gated  = M_mentor * (0.45 + 0.55 * min(1.0, max(0.0, K_whanau_net) / 0.3
 % Note: ebar_energy and Transfer_Geo passed per region already incorporate the macro ETS carbon
 % price wedge tau_h_ets and recycled Carbon Tax Revenue (CTR). Here on the (a, z) sub-manifold,
 % asset-poor households (a < 0.12*Q_reg) cannot afford heat-pump/EV retrofits, facing a 15% higher
-% fossil fuel subsistence lock-in, whileLabrousse-Perdereau phaseout curvature scales with K_whanau:
+% fossil fuel subsistence lock-in, while Labrousse-Perdereau phaseout curvature scales with K_whanau:
 xk_geo           = 2.35 - 0.65 * K_whanau; % Maps [Rural..Auckland] to ~[2.08, 2.10, 2.14, 2.17]
 gross_earn       = w_reg * h * z * l;
 T_geo            = Transfer_Geo * exp(-xk_geo * gross_earn);

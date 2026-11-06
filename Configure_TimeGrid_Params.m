@@ -89,8 +89,8 @@ Params.reg_skill_drift = [-0.083, -0.059, -0.024, -0.020];
 
 % Canonical 4x5 Gumbel migration utility matrix [Rural, Small, Large, Auckland, Abroad]
 Params.u_target_4x5 = [ ...
-     2.85,  1.15,  0.65,  0.15, -0.82;   % From Rural    (1.8% Emig)
-     0.55,  2.45,  1.05,  0.45,  0.65;   % From Small    (9.1% Emig)
+    2.85,  1.15,  0.65,  0.15, -0.82;   % From Rural    (1.8% Emig)
+    0.55,  2.45,  1.05,  0.45,  0.65;   % From Small    (9.1% Emig)
     -0.25,  0.45,  2.15,  1.05,  1.45;   % From Large    (23.4% Emig)
     -0.45,  0.15,  0.65,  2.55,  0.16];  % From Auckland (7.0% Net / 19.3% Gross Emig)
 
@@ -130,23 +130,38 @@ if ~isfield(Params, 'ss2_harvest_div_base'),     Params.ss2_harvest_div_base    
 if ~isfield(Params, 'psi_austerity_tax_drag'),   Params.psi_austerity_tax_drag   = 0.220; end % SS2 harvest erosion coefficient when Super > 65
 
 %% 7. NDC (Nationally Determined Contributions) & Spatial Carbon Block ---
-Params.NDC_Regime     = 2;     % 0 = No NDC, 1 = Pure Domestic ETS Cap, 2 = Hybrid ETS + Offshore Liability
-Params.E_NDC_SS0      = 1.000; % Normalized 2025 baseline domestic emissions = 1.00
-Params.E_NDC_SS1      = 0.650; % Medium-run NDC1/NDC2 target (-35% gross / -50% net incl. forestry)
-Params.E_NDC_SS2      = 0.220; % 2050 Net-Zero biogenic-adjusted domestic residual target
+Params.NDC_Regime          = 2;     % 0 = No NDC, 1 = Pure Domestic ETS Cap, 2 = Hybrid ETS + Offshore Liability
+Params.E_NDC_SS0           = 1.000; % Normalized 2025 baseline domestic emissions = 1.00
+Params.E_NDC_SS1           = 0.650; % Medium-run NDC1/NDC2 target (-35% gross / -50% net incl. forestry)
+Params.E_NDC_SS2           = 0.220; % 2050 Net-Zero biogenic-adjusted domestic residual target
+Params.E_NDC_schedule      = [Params.E_NDC_SS0, Params.E_NDC_SS1, Params.E_NDC_SS2];
+
+% Multiphase ETS carbon price, exotic pine offset cap, & circular biogenic schedules [SS0, SS1, SS2]:
+Params.tau_h_ets_schedule  = [0.000, 0.055, 0.085]; % Household ETS carbon tax wedge schedule
+Params.tau_f_ets_schedule  = [0.000, 0.055, 0.085]; % Firm ETS carbon tax wedge schedule
+Params.kappa_pine_schedule = [1.000, 0.250, 0.000]; % Exotic monoculture pine ETS offset cap
+Params.theta_ag_schedule   = [0.000, 0.500, 1.000]; % Circular biogenic dairy pricing share
 
 % Regional fossil-fuel intensities (Rural, Small, Large, Auckland) - Labrousse & Perdereau (2025)
-Params.omega_y_reg    = [0.090, 0.070, 0.050, 0.020]; % Firm energy/emissions input share
-Params.gamma_h_reg    = [0.620, 0.500, 0.340, 0.220]; % Household fossil share in energy bundle
-Params.xk_geo_rebate  = [2.070, 2.080, 2.380, 2.270]; % Optimal Income x Geography rebate curvature
-Params.sigma_y_energy = 0.050;                        % Firm elasticity between (K,L) and energy
-Params.eps_h_energy   = 0.350;                        % HH elasticity between fossil fuel and electricity
+Params.omega_y_reg         = [0.090, 0.070, 0.050, 0.020]; % Firm energy/emissions input share
+Params.gamma_h_reg         = [0.620, 0.500, 0.340, 0.220]; % Household fossil share in energy bundle
+Params.xk_geo_rebate       = [2.070, 2.080, 2.380, 2.270]; % Optimal Income x Geography rebate curvature
+Params.sigma_y_energy      = 0.050;                        % Firm elasticity between (K,L) and energy
+Params.eps_h_energy        = 0.350;                        % HH elasticity between fossil fuel and electricity
+
+% Clean-Green export premium vs. CBAM penalty & regional terms-of-trade multipliers [Rural..Auckland]:
+Params.pi_green_reg        = [0.045, 0.030, 0.010, 0.005]; % Verified low-emissions export premium
+Params.chi_CBAM_reg        = [0.080, 0.055, 0.020, 0.010]; % CBAM tariff/market-access penalty slope
+Params.Pi_trade_SS0        = [0.940, 0.960, 0.990, 1.000]; % SS0 CBAM drag terms-of-trade multiplier
+Params.Pi_trade_SS1        = [1.020, 1.020, 1.010, 1.000]; % SS1 Clean-Green terms-of-trade multiplier
+Params.Pi_trade_SS2        = [1.050, 1.030, 1.010, 1.010]; % SS2 Clean-Green terms-of-trade multiplier
+if ~isfield(Params, 'Pi_trade_reg'), Params.Pi_trade_reg = Params.Pi_trade_SS0; end
 
 % Carbon prices (tau_h, tau_f) and offshore NDC credit price
-Params.p_F_base       = 0.6773;                       % Baseline imported fuel price (Table 8)
-Params.tau_h_ets      = 0.000;                        % Baseline SS0 household carbon tax wedge
-Params.tau_f_ets      = 0.000;                        % Baseline SS0 firm carbon tax wedge
-Params.p_NDC_intl     = 0.095;                        % Offshore NDC compliance unit price
-Params.phi_ctr_rebate = 0.650;                        % Share of CTR rebated via Income x Geography T_k
+Params.p_F_base            = 0.6773;                       % Baseline imported fuel price (Table 8)
+if ~isfield(Params, 'tau_h_ets'), Params.tau_h_ets = 0.000; end % Baseline SS0 household carbon tax wedge
+if ~isfield(Params, 'tau_f_ets'), Params.tau_f_ets = 0.000; end % Baseline SS0 firm carbon tax wedge
+Params.p_NDC_intl          = 0.095;                        % Offshore NDC compliance unit price (NZD 145/tCO2e)
+Params.phi_ctr_rebate      = 0.650;                        % Share of CTR rebated via Income x Geography T_k
 
 end

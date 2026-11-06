@@ -57,7 +57,7 @@ if ~exist('Reform_Phase_Specs', 'var') || isempty(Reform_Phase_Specs)
         'HH_Small',    0.031, ...
         'HH_Large',    0.025, ...
         'HH_Auckland', 0.028);
-    Reform_Phase_Specs(1).super_age = 65.0;
+    Reform_Phase_Specs(1).super_age = Params_SS0.super_age;
 elseif ~isfield(Reform_Phase_Specs, 'tau_l_delta')
     [Reform_Phase_Specs.tau_l_delta] = deal(0.000);
 end
@@ -144,11 +144,37 @@ for m = 1:M_reforms
     P_PE.Transfer_Geo     = spec.Transfer_Geo;
     P_PE.Reform_Intensity = spec.Intensity;
     P_PE.Phase_Label      = spec.Label;
-    if isfield(spec, 'super_age') && ~isempty(spec.super_age)
-        super_age_m = spec.super_age;
-    else
-        super_age_m = 65.0;
+
+    % --- NDC Climate, ETS Carbon Price, & Labrousse-Perdereau Energy Subsistence Update ---
+    phase_idx = min(m + 1, numel(Params_SS0.E_NDC_schedule)); % 2 for SS1, 3 for SS2
+    P_PE.E_NDC_cap        = Params_SS0.E_NDC_schedule(phase_idx);
+    P_PE.tau_h_ets        = Params_SS0.tau_h_ets_schedule(phase_idx);
+    P_PE.tau_f_ets        = Params_SS0.tau_f_ets_schedule(phase_idx);
+    P_PE.kappa_pine_ets   = Params_SS0.kappa_pine_schedule(phase_idx);
+    P_PE.theta_ag         = Params_SS0.theta_ag_schedule(phase_idx);
+    if strcmp(p_code, 'SS1') && isfield(Params_SS0, 'Pi_trade_SS1')
+        P_PE.Pi_trade_reg = Params_SS0.Pi_trade_SS1;
+    elseif strcmp(p_code, 'SS2') && isfield(Params_SS0, 'Pi_trade_SS2')
+        P_PE.Pi_trade_reg = Params_SS0.Pi_trade_SS2;
     end
+    % Scale regional Stone-Geary energy subsistence ebar_energy by CES carbon price index
+    % and set PType-specific tau_a (0.005 on HH liquid savings vs. 0.015 on Firm book equity):
+    P_PE.tau_a = struct();
+    for r_idx = 1:N_reg
+        reg       = Regions{r_idx};
+        hh_type   = ['HH_', reg];
+        firm_type = ['Firm_', reg];
+        gam_hk    = Params_SS0.gamma_h_reg(r_idx);
+        eps_h     = Params_SS0.eps_h_energy;
+        pF_ratio  = (Params_SS0.p_F_base + P_PE.tau_h_ets) / Params_SS0.p_F_base;
+        ces_e_fac = ((1.0 - gam_hk) + gam_hk * (pF_ratio ^ (1.0 - eps_h))) ^ (1.0 / (1.0 - eps_h));
+        % Household electrification & Healthy Homes retrofits offset 65% of raw ETS price shock:
+        P_PE.ebar_energy.(hh_type) = Params_SS0.ebar_energy.(hh_type) * (1.0 + 0.35 * (ces_e_fac - 1.0));
+        P_PE.tau_a.(hh_type)       = spec.tau_a; % 0.005 on household liquid savings
+        P_PE.tau_a.(firm_type)     = 0.015;      % 1.5% Guvenen book-value wealth/land levy on Firms
+    end
+
+    super_age_m = spec.super_age;
     P_PE.super_age = super_age_m;
     P_PE.Jr        = 1 + (super_age_m - 20.0) / Params_SS0.dt;
 
