@@ -59,7 +59,7 @@ Following Guvenen, Kambourov, Kuruscu, Ocampo, and Chen (2023), each region *k* 
 
 ### 2.1 Collateral-Constrained Profit Maximization, "Use-It-Or-Lose-It" Return, & NDC Carbon/Trade Channels
 
-Firms rent capital `k_f <= lambda_col * a_f` (with collateral multiplier `lambda_col = 2.50`) and hire regional effective labor `l_f` at wage `w_reg` to produce output $`y_f = z_f \left(k_f^{\alpha_k} \ell_f^{1 - \alpha_k}\right)^{1 - \nu_{\mathrm{span}}}`$. In `ReturnFn_Firm.m` (11 arguments: `(aprime, a, z, w_reg, r, alpha_k, lambda_col, delta_k, tau_k, tau_a, dt)`), integrating out static factor and energy demands under the regional ETS carbon cost `tau_f_ets` (`omega_y_reg = [0.09, 0.07, 0.05, 0.02]`) and the Paris NDC "Clean-Green" vs. CBAM export terms-of-trade multiplier $`\Pi_{\mathrm{trade},k}`$ (`Pi_trade_reg`) yields marginal capital return `marg_prod_k` ($`\pi_k^{*}`$) and gross-of-saving equity return `R_z`:
+Firms rent capital `k_f <= lambda_col * a_f` (with collateral multiplier `lambda_col = 2.50`) and hire regional effective labor `l_f` at wage `w_reg` to produce output $`y_f = z_f \left(k_f^{\alpha_k} \ell_f^{1 - \alpha_k}\right)^{1 - \nu_{\mathrm{span}}}`$. In `ReturnFn_Firm.m` (11 arguments: `(aprime, a, z, w_reg, r, alpha_k, lambda_col, delta_k, tau_k, tau_a, dt)`), integrating out static factor and energy demands under the regional ETS carbon cost `tau_f_ets` (`omega_y_reg = [0.09, 0.07, 0.05, 0.02]`) and the Paris NDC "Clean-Green" vs. CBAM export terms-of-trade multiplier $`\Pi_{\mathrm{trade},k}`$ (`Pi_trade_reg`) yields marginal capital return `marg_prod_k` ($`\pi_k^{\star}`$) and gross-of-saving equity return `R_z`:
 
 $$
 R_k\left(z_f; \Delta t\right) = \left(1 - \tau_a\right)^{\Delta t} + \left(1 - \tau_k\right) \left\lbrack r\left(\Delta t\right) + \pi_{\mathrm{excess},k}\left(z_f, w_k, \tau_a\right) \right\rbrack
@@ -68,12 +68,12 @@ $$
 $$
 \pi_{\mathrm{excess},k}\left(z_f, w_k, \tau_a\right) =
 \begin{cases}
-\left(\pi_k^{*}\left(z_f, w_k\right) - \left(r + \delta_k\right)\right) \lambda_{\mathrm{col}} & \mathrm{if\ } \pi_k^{*}\left(z_f, w_k\right) > r + \delta_k \quad \left(\mathrm{active\ } z_{h,k}\right) \\
-\rho_{\mathrm{pine/dairy},0} \left(1 - \frac{\tau_a}{0.015}\right) \Delta t & \mathrm{if\ } \pi_k^{*}\left(z_f, w_k\right) \le r + \delta_k \quad \left(\mathrm{passive\ } z_{\ell,k}\right)
+\left(\pi_k^{\star}\left(z_f, w_k\right) - \left(r + \delta_k\right)\right) \lambda_{\mathrm{col}} & \mathrm{if\ } \pi_k^{\star}\left(z_f, w_k\right) > r + \delta_k \quad \left(\mathrm{active\ } z_{h,k}\right) \\
+\rho_{\mathrm{pine/dairy},0} \left(1 - \frac{\tau_a}{0.015}\right) \Delta t & \mathrm{if\ } \pi_k^{\star}\left(z_f, w_k\right) \le r + \delta_k \quad \left(\mathrm{passive\ } z_{\ell,k}\right)
 \end{cases}
 $$
 
-where $`\pi_k^{*}\left(z_f, w_k\right) = \alpha_k \left(\left(1 - \alpha_k\right) / w_k\right)^{\left(1 - \alpha_k\right) / \alpha_k} \Pi_{\mathrm{trade},k} z_f`$. In `SS0` (`tau_a = 0`), passive rural land and exotic pine carbon-farming portfolios (`z_l`, the `else` branch in `ReturnFn_Firm.m`) capture an untaxed subsidy wedge `rho_pine_dairy > 0` while active exporters (`z_h`) suffer CBAM/NDC terms-of-trade drag (`Pi_trade_reg < 1`). In `SS1` and `SS2` (`tau_a = 0.015`), the passive pine/dairy subsidy vanishes, `(1 - tau_a)^dt` penalizes idle land banking, and credible domestic NDC compliance unlocks the Clean-Green export premium (`Pi_trade_reg > 1`) for active `z_h` enterprises.
+where $`\pi_k^{\star}\left(z_f, w_k\right) = \alpha_k \left(\left(1 - \alpha_k\right) / w_k\right)^{\left(1 - \alpha_k\right) / \alpha_k} \Pi_{\mathrm{trade},k} z_f`$. In `SS0` (`tau_a = 0`), passive rural land and exotic pine carbon-farming portfolios (`z_l`, the `else` branch in `ReturnFn_Firm.m`) capture an untaxed subsidy wedge `rho_pine_dairy > 0` while active exporters (`z_h`) suffer CBAM/NDC terms-of-trade drag (`Pi_trade_reg < 1`). In `SS1` and `SS2` (`tau_a = 0.015`), the passive pine/dairy subsidy vanishes, `(1 - tau_a)^dt` penalizes idle land banking, and credible domestic NDC compliance unlocks the Clean-Green export premium (`Pi_trade_reg > 1`) for active `z_h` enterprises.
 
 ### 2.2 Firm Bellman Equation & Stationary Equity Distribution ($`\Gamma_k`$)
 
