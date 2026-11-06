@@ -557,15 +557,22 @@ for r_i = 1:length(reg_list)
     reg_F56_kNZD(2, 6)         = reg_Pop_S5(2) * gst_tier(2);
     reg_F56_kNZD(2, 7)         = reg_Pop_S5(2) * paye_tier(2);
 
-    % Row 3: 19. Passive Land/Rent Speculation [z_l Skew]
-    reg_F56_kNZD(3, 5)         = reg_Pop_S5(3) * infra_sup_cond;
+    % Row 3: 19. Passive Land/Rent & Pine-ETS Speculation [z_l Skew]
+    % In SS0 (eta_ref == 0), unpriced dairy methane & saturating exotic pine ETS arbitrage
+    % leave a Paris NDC compliance shortfall (ndc_liab_cond) billed to Crown Outlays (Col 5):
+    ndc_liab_cond              = NZD_Scale * 0.032 * max(0.0, 1.0 - eta_ref);
+    reg_F56_kNZD(3, 5)         = reg_Pop_S5(3) * (infra_sup_cond + ndc_liab_cond);
     reg_F56_kNZD(3, 6)         = reg_Pop_S5(3) * (0.95 * gst_tier(3));
     reg_F56_kNZD(3, 7)         = reg_Pop_S5(3) * (0.68 * paye_tier(3));
 
-    % Row 4: 20. Productive Enterprise Builders [z_h Innovators]
-    zh_mult = 1.18 + 0.14 * eta_ref;
+    % Row 4: 20. Productive Enterprise Builders [z_h Innovators + Clean-Green Export Lift]
+    % In SS1/SS2 (eta_ref > 0), domestic decarbonization eliminates offshore NDC liabilities,
+    % unlocks the verified Clean-Green export premium (+4.5% in Rural/Small), and adds net
+    % unrebated ETS revenue (1 - phi_rebate)*CTR into Col 6 (Node 27):
+    zh_mult                    = 1.18 + 0.16 * eta_ref;
+    ctr_net_cond               = NZD_Scale * 0.014 * min(1.0, eta_ref);
     reg_F56_kNZD(4, 5)         = reg_Pop_S5(4) * infra_sup_cond;
-    reg_F56_kNZD(4, 6)         = reg_Pop_S5(4) * (zh_mult * gst_tier(3));
+    reg_F56_kNZD(4, 6)         = reg_Pop_S5(4) * (zh_mult * gst_tier(3) + ctr_net_cond);
     reg_F56_kNZD(4, 7)         = reg_Pop_S5(4) * (zh_mult * paye_tier(3));
 
     % Row 5: 21. Emigrated Abroad [Brain Drain] -> 100% into Col 8 (Node 29: Abroad Brain-Drain Lost Tax)
@@ -674,10 +681,10 @@ for iter_ras = 1:10
     Flow_S3_to_S4_5N = Flow_S3_to_S4_5N .* (sum(Flow_S2_to_S3_5N, 1)' ./ max(1e-8, sum(Flow_S3_to_S4_5N, 2)));
 end
 
-%% COMPUTE MACRO PUBLIC RESIDUAL (OMEGA) & 2050 50/50 SURPLUS SPLIT AT GATE 6
-% Columns 1..5 of Gate 6 are Domestic Outlays & Foregone Drag (Exits 1, 2, 3, 4 + Infra/Super);
-% Direct Crown Budget Outlays are Cols [1, 2, 4, 5] (Exits 1, 2, 4 + Infra/Super);
-% Good Tax Revenues are Cols [6, 7] (GST/Cap/Estate + PAYE):
+%% COMPUTE MACRO PUBLIC RESIDUAL (OMEGA), NDC COMPLIANCE SPREAD, & 2050 50/50 SURPLUS SPLIT AT GATE 6
+% Columns 1..5 of Gate 6 are Domestic Outlays & Foregone Drag (Exits 1, 2, 3, 4 + Infra/Super/NDC);
+% Direct Crown Budget Outlays are Cols [1, 2, 4, 5] (Exits 1, 2, 4 + Infra/Super + SS0 Offshore NDC Liability);
+% Good Tax Revenues are Cols [6, 7] (GST/Cap/Estate/Net-ETS + PAYE):
 Bad_Adult  = sum(Fiscal_Col_Full8([1, 2, 4, 5]));
 Good_Adult = sum(Fiscal_Col_Full8([6, 7]));
 net_fisc   = Good_Adult - Bad_Adult;
@@ -686,7 +693,9 @@ Surplus_Adult  = max(0, net_fisc) * double(is_reform_panel);
 DebtSink_50    = 0.50 * Surplus_Adult;
 Reinvest_50    = 0.50 * Surplus_Adult;
 
-r_gov_bond   = 0.042;
+% Sovereign bond yield r_gov_bond includes +45 bps rating-agency spread in SS0 from unfunded
+% Paris NDC liability, vs. -60 bps debt-sinking relief in SS2:
+r_gov_bond   = 0.042 + 0.0045 * max(0.0, 1.0 - eta_ref) - 0.0060 * max(0.0, eta_ref - 1.0);
 mu_infra_div = 1.65;
 Cohort_N     = 60.0 * reg_pop_share;
 

@@ -129,4 +129,24 @@ if ~isfield(Params, 'beta_exits_skill_div'),     Params.beta_exits_skill_div    
 if ~isfield(Params, 'ss2_harvest_div_base'),     Params.ss2_harvest_div_base     = 2.070; end % SS2 debt-sinking (-60 bps) + GE tax-base dividend (pp)
 if ~isfield(Params, 'psi_austerity_tax_drag'),   Params.psi_austerity_tax_drag   = 0.220; end % SS2 harvest erosion coefficient when Super > 65
 
+%% 7. NDC (Nationally Determined Contributions) & Spatial Carbon Block ---
+Params.NDC_Regime     = 2;     % 0 = No NDC, 1 = Pure Domestic ETS Cap, 2 = Hybrid ETS + Offshore Liability
+Params.E_NDC_SS0      = 1.000; % Normalized 2025 baseline domestic emissions = 1.00
+Params.E_NDC_SS1      = 0.650; % Medium-run NDC1/NDC2 target (-35% gross / -50% net incl. forestry)
+Params.E_NDC_SS2      = 0.220; % 2050 Net-Zero biogenic-adjusted domestic residual target
+
+% Regional fossil-fuel intensities (Rural, Small, Large, Auckland) - Labrousse & Perdereau (2025)
+Params.omega_y_reg    = [0.090, 0.070, 0.050, 0.020]; % Firm energy/emissions input share
+Params.gamma_h_reg    = [0.620, 0.500, 0.340, 0.220]; % Household fossil share in energy bundle
+Params.xk_geo_rebate  = [2.070, 2.080, 2.380, 2.270]; % Optimal Income x Geography rebate curvature
+Params.sigma_y_energy = 0.050;                        % Firm elasticity between (K,L) and energy
+Params.eps_h_energy   = 0.350;                        % HH elasticity between fossil fuel and electricity
+
+% Carbon prices (tau_h, tau_f) and offshore NDC credit price
+Params.p_F_base       = 0.6773;                       % Baseline imported fuel price (Table 8)
+Params.tau_h_ets      = 0.000;                        % Baseline SS0 household carbon tax wedge
+Params.tau_f_ets      = 0.000;                        % Baseline SS0 firm carbon tax wedge
+Params.p_NDC_intl     = 0.095;                        % Offshore NDC compliance unit price
+Params.phi_ctr_rebate = 0.650;                        % Share of CTR rebated via Income x Geography T_k
+
 end

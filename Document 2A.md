@@ -57,16 +57,29 @@ while stock endowments (`YouthGrant` *E*) and proportional tax rates ($`\tau_l, 
 
 Following Guvenen, Kambourov, Kuruscu, Ocampo, and Chen (2023), each region *k* contains a unit measure of infinite-horizon entrepreneurial firms (`Firm_Rural`, `Firm_Small`, `Firm_Large`, `Firm_Auckland`) with state vector $`\left(a_f, z_f\right) \in \mathcal{A}_f \times \mathcal{Z}_{f,k}`$, where $`a_f`$ is firm book equity and $`z_f \in \lbrace z_{\ell,k}, z_{h,k} \rbrace`$ is idiosyncratic entrepreneurial productivity evolving via Markov matrix $`\Pi_{f,k}`$.
 
-### 2.1 Collateral-Constrained Profit Maximization & "Use-It-Or-Lose-It" Return
-Firms rent capital $`k_f \le \lambda_{\mathrm{col}} a_f`$ (with collateral multiplier $`\lambda_{\mathrm{col}} = 2.50`$) and hire regional effective labor $`\ell_f`$ at wage *w_k* to produce output $`y_f = z_f \left(k_f^{\alpha_k} \ell_f^{1 - \alpha_k}\right)^{1 - \nu_{\mathrm{span}}}`$. Integrating out static factor demands yields the gross-of-equity-tax rate of return on firm equity $`R_k\left(z_f; \Delta t\right)`$ (`ReturnFn_Firm.m`):
+### 2.1 Collateral-Constrained Profit Maximization, "Use-It-Or-Lose-It" Return, & NDC Carbon/Trade Channels
+
+Firms rent capital `k_f <= lambda_col * a_f` (with collateral multiplier `lambda_col = 2.50`) and hire regional effective labor `l_f` at wage `w_reg` to produce output $`y_f = z_f \left(k_f^{\alpha_k} \ell_f^{1 - \alpha_k}\right)^{1 - \nu_{\mathrm{span}}}`$. In `ReturnFn_Firm.m` (11 arguments: `(aprime, a, z, w_reg, r, alpha_k, lambda_col, delta_k, tau_k, tau_a, dt)`), integrating out static factor and energy demands under the regional ETS carbon cost `tau_f_ets` (`omega_y_reg = [0.09, 0.07, 0.05, 0.02]`) and the Paris NDC "Clean-Green" vs. CBAM export terms-of-trade multiplier $`\Pi_{\mathrm{trade},k}`$ (`Pi_trade_reg`) yields marginal capital return `marg_prod_k` ($`\pi_k^{*}`$) and gross-of-saving equity return `R_z`:
 
 $$
-R_k\left(z_f; \Delta t\right) = \left(1 - \tau_a\right)^{\Delta t} + \left(1 - \tau_k\right) \left\lbrack r\left(\Delta t\right) + \max\left\lbrace 0,  \pi_k^{*}\left(z_f, w_k\right) - \left(r\left(\Delta t\right) + \delta_k\left(\Delta t\right)\right) \right\rbrace \lambda_{\mathrm{col}} \right\rbrack
+R_k\left(z_f; \Delta t\right) = \left(1 - \tau_a\right)^{\Delta t} + \left(1 - \tau_k\right) \left\lbrack r\left(\Delta t\right) + \pi_{\mathrm{excess},k}\left(z_f, w_k, \tau_a\right) \right\rbrack
 $$
 
 $$
-\pi_k^{*}\left(z_f, w_k\right) = \alpha_k \left(\frac{1 - \alpha_k}{w_k}\right)^{\frac{1 - \alpha_k}{\alpha_k}} z_f^{\frac{1}{\alpha_k}}
+\pi_{\mathrm{excess},k}\left(z_f, w_k, \tau_a\right) =
+\begin{cases}
+\left(\pi_k^{*}\left(z_f, w_k\right) - \left(r + \delta_k\right)\right) \lambda_{\mathrm{col}} & \mathrm{if\ } \pi_k^{*}\left(z_f, w_k\right) > r + \delta_k \quad \left(\mathrm{active\ } z_{h,k}\right) \\
+\rho_{\mathrm{pine/dairy},0} \left(1 - \frac{\tau_a}{0.015}\right) \Delta t & \mathrm{if\ } \pi_k^{*}\left(z_f, w_k\right) \le r + \delta_k \quad \left(\mathrm{passive\ } z_{\ell,k}\right)
+\end{cases}
 $$
+
+where $`\pi_k^{*}\left(z_f, w_k\right) = \alpha_k \left(\left(1 - \alpha_k\right) / w_k\right)^{\left(1 - \alpha_k\right) / \alpha_k} \Pi_{\mathrm{trade},k} z_f`$. In `SS0` (`tau_a = 0`), passive rural land and exotic pine carbon-farming portfolios (`z_l`, the `else` branch in `ReturnFn_Firm.m`) capture an untaxed subsidy wedge `rho_pine_dairy > 0` while active exporters (`z_h`) suffer CBAM/NDC terms-of-trade drag (`Pi_trade_reg < 1`). In `SS1` and `SS2` (`tau_a = 0.015`), the passive pine/dairy subsidy vanishes, `(1 - tau_a)^dt` penalizes idle land banking, and credible domestic NDC compliance unlocks the Clean-Green export premium (`Pi_trade_reg > 1`) for active `z_h` enterprises:
+
+$$
+\Pi_{\mathrm{trade},k}\left(\Delta \mathcal{E}^{\mathrm{NDC}}_t , \theta_{\mathrm{ag}}\right) = 1 + \pi_{\mathrm{green},k} \theta_{\mathrm{ag}} - \chi_{\mathrm{CBAM},k} \max\left(0, \frac{\mathcal{E}^{\mathrm{dom}}_t - \overline{\mathcal{E}}^{\mathrm{NDC}}_t}{\overline{\mathcal{E}}^{\mathrm{NDC}}_t}\right)
+$$
+
+where `pi_green_reg = [0.045, 0.030, 0.010, 0.005]` is the verified low-emissions export premium and `chi_CBAM_reg = [0.080, 0.055, 0.020, 0.010]` is the Carbon Border Adjustment Mechanism (CBAM) tariff/market-access penalty when domestic emissions breach the Paris Agreement trajectory `E_NDC_schedule = [1.00, 0.65, 0.22]`.
 
 ### 2.2 Firm Bellman Equation & Stationary Equity Distribution ($\Gamma_k$)
 Each firm solves the infinite-horizon Bellman equation:
@@ -76,6 +89,12 @@ V_{F,k}\left(a_f, z_f\right) = \max_{a_f^{\prime} \in \left\lbrack 0,  R_k\left(
 $$
 
 Replacing distortionary capital income taxation ($`\tau_k`$) with a book-value wealth/land tax ($`\tau_a = 0.015`$) penalizes low-productivity land-banking firms ($`z_{\ell,k}`$) while leaving high-productivity firms ($`z_{h,k}`$) with a higher marginal saving propensity, shifting the stationary equity distribution $`\Gamma_k\left(a_f, z_f\right)`$ toward $`z_{h,k}`$ and raising endogenous regional total factor productivity $`Z_k\left(\Gamma_k\right)`$.
+
+In `Firm_Rural` (`k = 1`) and `Firm_Small` (`k = 2`), baseline (`SS0`) asset pricing and operating returns are further shaped by two New Zealand climate-policy wedges (`LURNZ` land-use taxonomy; Hendy, Kerr, & Baisden, 2007): (i) **Unpriced Biogenic Dairy Emissions (`theta_ag = 0` in `SS0`) & Exotic Pine ETS Arbitrage (`kappa_pine_ets = 1` in `SS0`)**, which inflate passive rural land rents $d_{\mathrm{land},1,t}$ and Hirano and Toda (2025) land overvaluation ($B_{\mathrm{land},1,t} > 0$) while creating a post-Year-25 pine carbon-saturation cliff $\mathcal{S}^{\mathrm{forest}}_t = \bar{\mathcal{S}}_0 \exp\left(-\delta_{\mathrm{sat}} \max\left(0, t - 25\right)\right)$; and (ii) the **"Clean-Green" vs. CBAM Export Terms-of-Trade Multiplier** $\Pi_{\mathrm{trade},k}$:
+
+$$\Pi_{\mathrm{trade},k}\left(\Delta \mathcal{E}^{\mathrm{NDC}}_t , \theta_{\mathrm{ag}}\right) = 1 + \pi_{\mathrm{green},k} \theta_{\mathrm{ag}} - \chi_{\mathrm{CBAM},k} \max\left(0, \frac{\mathcal{E}^{\mathrm{dom}}_t - \overline{\mathcal{E}}^{\mathrm{NDC}}_t}{\overline{\mathcal{E}}^{\mathrm{NDC}}_t}\right)$$
+
+where `pi_green_reg = [0.045, 0.030, 0.010, 0.005]` is the verified low-emissions export premium and `chi_CBAM_reg = [0.080, 0.055, 0.020, 0.010]` is the Carbon Border Adjustment Mechanism (CBAM) tariff/market-access penalty when domestic emissions $\mathcal{E}^{\mathrm{dom}}_t$ exceed the Paris Agreement cap $\overline{\mathcal{E}}^{\mathrm{NDC}}_t$. Phasing in circular biogenic pricing (`theta_ag: 0 -> 0.50 -> 1.00`), capping monoculture pine offsets (`kappa_pine_ets: 1.00 -> 0.25 -> 0.00`), and taxing passive land banking (`tau_a = 0.015`) eliminates the CBAM export penalty, unlocks the `+4.5%` Clean-Green export premium in `Rural`, and deflates speculative rural land bubbles ($B_{\mathrm{land},1,t} \equiv 0$).
 
 ---
 
@@ -97,19 +116,25 @@ In the GPU experience-asset specification (`NZ_4Region_Master.m` and `ReturnFn_S
   * $\theta_c \in \text{linspace}(0.45, 1.85, 9)^{\top}$ ($n_{a_3} = 9$, continuous-interpolation child skill experience asset governed by `HumanCapital_Lifecycle_aprimeFn.m`, placed last in `n_a`).
 * **`z_grid` (`n_z = 7`):** $z \in Z_{hh}$ ($n_z = 7$, 7-point Rouwenhorst idiosyncratic earnings shock (Kopecky & Suen, 2010) with $\rho_z = 0.85$ and region-specific drift $\mu_k$ and volatility $\sigma_k \in [0.11, 0.24]$, where $i_z \in \{1, 2\}$ denotes unemployment or severe low-wage distress).
 
-### 3.2 Budget Constraint, Stone-Geary Subsistence, & Housing Tenure Cutoff
-Effective labor supply during working life ($`j < J_r`$) is $`\ell_{\mathrm{eff}} = \max\left(0,  \ell - I_h\right)`$, generating gross labor income $`y_{\mathrm{lab}} = w_k z h \ell_{\mathrm{eff}}`$. In retirement ($`j \ge J_r`$), households receive universal New Zealand Superannuation $`p_{\mathrm{super}}`$ plus means-tested consumption floor support $\underline{c}$. Total disposable cash-on-hand available for composite expenditure $`e_{\mathrm{tot}}`$ is:
+### 3.2 Budget Constraint, Stone-Geary ETS Energy Subsistence, Spatial Carbon Rebate, & Housing Tenure Cutoff
+
+In Section 4 of `ReturnFn_SpatialHH.m` (50 arguments) and `ReturnFn_SpatialHH_Compact4D.m` (40 arguments), gross labor earnings are `gross_earn = w_reg * h * z * l * senescence_fac`, and flow variables scale by `scale_dt = dt / 5`. Under household ETS carbon pricing `tau_h_ets` with regional fossil-fuel expenditure shares `gamma_h_reg = [0.62, 0.50, 0.34, 0.22]` (`Rural` households face 2.8x the mandatory transport/fuel share of `Auckland`) and clean-electricity substitution elasticity `eps_h_energy`, the regional energy subsistence parameter `ebar_energy` and `Income x Geography` transfer `Transfer_Geo` (augmented by recycled Carbon Tax Revenue `phi_rebate * CTR_k`) are evaluated on the `(a, z)` sub-manifold as:
 
 $$
-y_{\mathrm{disp}} = \left(1 - \tau_a\right)^{\Delta t} a + \left(1 - \tau_k\right) r\left(\Delta t\right) a + \left(1 - \tau_l\right) y_{\mathrm{lab}} + \mathbb{I}_{\left\lbrace j \ge J_r\right\rbrace} p_{\mathrm{super}} + \mathbb{I}_{\left\lbrace j = 1\right\rbrace} E + T_k\left(a, y_{\mathrm{lab}}\right)
+\bar{e}_k^{\mathrm{eff}}\left(a, \tau^h_t\right) = \bar{e}_{k,0} \left\lbrack \left(1 - \gamma_{h,k}\right) + \gamma_{h,k} \left(\frac{p_F + \tau^h_t}{p_{F,0}}\right)^{1 - \epsilon_h} \right\rbrack^{\frac{1}{1 - \epsilon_h}} \left(1 + 0.15 \mathbb{I}_{\left\lbrace a < 0.12 Q_k\right\rbrace}\right) , \qquad T_{\mathrm{geo},k}\left(y_{\mathrm{lab}}\right) = \left(T_{k,0} + \phi_{\mathrm{rebate}} \mathrm{CTR}_{k,t}\right) \exp\left(-\xi_{k} y_{\mathrm{lab}}\right)
+$$
+
+where `a < 0.12 * Q_reg` captures fossil-fuel lock-in among credit-constrained households unable to finance heat-pump or EV retrofits, and `xk_geo = 2.35 - 0.65 * K_whanau` implements the Labrousse and Perdereau (2025) spatial phase-out curvature without adding arguments to the GPU signature. Net consumption budget `c_budget` and tax-deflated effective composite expenditure `c_eff` are:
+
+$$
+c_{\mathrm{budget}} = \left(\left(1 - \tau_a\right)^{\Delta t} + r\left(1 - \tau_k\right)\right) a - a^{\prime} + \mathbb{I}_{\left\lbrace j = 1\right\rbrace} E + \left(\frac{\Delta t}{5}\right) \left\lbrack \left(1 - \tau_l\right) y_{\mathrm{lab}} + T_{\mathrm{geo},k}\left(y_{\mathrm{lab}}\right) + p_{\mathrm{inc},j} - \left(1 - s_{\mathrm{sub}}\right) i_c - \bar{e}_k^{\mathrm{eff}}\left(a, \tau^h_t\right) - \mathrm{drag}_{\mathrm{sandwich}}\right\rbrack
 $$
 
 $$
-e_{\mathrm{tot}} = \frac{y_{\mathrm{disp}} - \bar{e}_k - \mathbb{I}_{\left\lbrace j \in \mathcal{J}_{c,1} \cup \mathcal{J}_{c,2}\right\rbrace} \left(1 - s_{\mathrm{sub}}\right) i_c - a^{\prime}}{1 + \tau_c}
+c_{\mathrm{eff}} = \frac{1}{\Delta t / 5} \max\left(\left(\frac{\Delta t}{5}\right) \underline{c} , \frac{c_{\mathrm{budget}}}{1 + \tau_c}\right)
 $$
 
 Following Kiyotaki, Michaelides, and Nikolov (2024), households with net worth below the regional down-payment threshold ($`a < \xi_k Q_k`$, where $`\xi_k = 0.20`$) are **Renters** facing rental user cost $`r_{h,k}^{\mathrm{rent}} = \left(1 + \mu_{\mathrm{maint}} - G_k / R\right) Q_k`$, while households with $`a \ge \xi_k Q_k`$ are **Homeowners** facing user cost $`r_{h,k}^{\mathrm{own}} = \left(1 + \mu_{\mathrm{maint}} - G_k / R - \psi_{\mathrm{own}}\right) Q_k`$. Optimal non-durable consumption $`c_{nd} = \phi_{nd} e_{\mathrm{tot}}`$ and housing services $`c_H = \left(1 - \phi_{nd}\right) e_{\mathrm{tot}} / r_{h,k}`$ combine in the Cobb-Douglas bundle $`c_{\mathrm{comp}} = c_{nd}^{\phi_{nd}} c_H^{1 - \phi_{nd}}`$.
-
 
 #### 3.2.1 Discretization of Early Childhood Investment (`d_grid_ic`)
 In the baseline VFI configuration (`NZ_4Region_Master.m`), household liquid assets $a \in [0, 25]$ use cubic spacing (`25 * linspace(0, 1, 61).^3`), providing high resolution across low-wealth states ($a_1 \dots a_{17}$ span $0 \text{ to } 0.4741$, or $0 \text{ to } 45,040$ NZD at the $95,000$ NZD base scale). However, when the early childhood investment decision grid `d_grid_ic` ($n_{ic} = 7$ points on $[0, 0.50]$) is spaced linearly (`linspace(0, 0.50, 7)'`), the first positive investment rung sits at $ic_2 = 0.0833$ ($\approx 7,917\text{ NZD/yr}$ of private out-of-pocket expenditure).

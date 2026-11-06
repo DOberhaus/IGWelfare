@@ -985,11 +985,11 @@ Anchored to the national household consumption base (`NZD_Billion_Per_CE_Pct = N
 
 ### 7.2 Core Reference Equations for Technical Reviewers
 
-* **1. Working-Age & Retirement Household Budget Constraint (`ReturnFn_SpatialHH.m`):**
+* **1. Working-Age & Retirement Household Budget Constraint (`ReturnFn_SpatialHH_Compact4D.m` & `ReturnFn_SpatialHH.m`):**
 
-```math
-e_{\mathrm{tot}} = \frac{\bigl(1 + (1 - \tau_k)r\bigr)a + (1 - \tau_l) w_k z h \max(0, \ell - I_h) + \mathbb{I}_{j=1} E + T_k - \bar{e}_k - (1 - s_{\mathrm{sub}}) i_c - a'}{1 + \tau_c}
-```
+$$
+e_{\mathrm{tot}} = \frac{\left(1 - \tau_a\right)^{\Delta t} a + \left(1 - \tau_k\right) r\left(\Delta t\right) a + \left(1 - \tau_l\right) w_k z h \max\left(0, \ell - I_h\right) + \mathbb{I}_{\left\lbrace j \ge J_r\right\rbrace} p_{\mathrm{super}} + \mathbb{I}_{\left\lbrace j = 1\right\rbrace} E + T_k\left(a, y_{\mathrm{lab}}; \mathrm{CTR}_t\right) - \bar{e}_k^{\mathrm{eff}}\left(\tau^h_t\right) - \left(1 - s_{\mathrm{sub}}\right) i_c - a^{\prime}}{1 + \tau_c}
+$$
 
 * **2. Analytical Housing Tenure Cutoff $`\xi_k`$ & Composite Housing Price Index $`p_{H,k}(j)`$ (`Kiyotaki et al., 2024`):**
 

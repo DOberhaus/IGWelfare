@@ -79,11 +79,13 @@ sandwich_drag = max(0.0, -K_whanau_net) * 0.035 + 0.0012 * (yrs_above_65 ^ 1.20)
 M_mentor      = min(1.0, max(0.0, 0.173 + 12.0 * (G_ece - 0.045)));
 M_trust_gated = M_mentor * (0.45 + 0.55 * min(1.0, max(0.0, K_whanau_net) / 0.35));
 
-%% 4. BUDGET CONSTRAINT & "INCOME x GEOGRAPHY" TRANSFER RULE (FLOWS SCALED BY scale_dt)
+%% 4. BUDGET CONSTRAINT, STONE-GEARY ETS ENERGY SUBSISTENCE, & "INCOME x GEOGRAPHY" CARBON REBATE
 s_sub            = min(0.80, G_ece / (G_ece + gbar_ece));
 senescence_fac   = exp(-0.08 * max(0.0, age_end_yrs - 65.0)); % 8%/yr productivity decay past Age 65
+xk_geo           = 2.35 - 0.65 * K_whanau; % Labrousse-Perdereau spatial phaseout curvature
 gross_earn       = w_reg * h * z * l * senescence_fac;
-T_geo            = Transfer_Geo * exp(-1.8 * gross_earn);
+T_geo            = Transfer_Geo * exp(-xk_geo * gross_earn);
+ebar_eff         = ebar_energy * (1.0 + 0.15 * double(a < 0.12 * Q_reg)); % Fossil lock-in for credit-constrained HHs
 wealth_after_tax = ((1 - tau_a) ^ dt) * a + r * (1 - tau_k) * a;
 youth_endow      = (agej == 1) * YouthGrant;
 
@@ -93,7 +95,7 @@ unpensioned_post65 = double(is_post_65) * max(0.0, 1.0 - super_share_j);
 pension_inc        = (super_share_j + 0.55 * unpensioned_post65) * p_super;
 
 c_budget = wealth_after_tax - aprime + youth_endow ...
-    + scale_dt * ((1 - tau_l) * gross_earn + T_geo + pension_inc - (1 - s_sub) * ic - ebar_energy - sandwich_drag);
+    + scale_dt * ((1 - tau_l) * gross_earn + T_geo + pension_inc - (1 - s_sub) * ic - ebar_eff - sandwich_drag);
 c_eff    = max(scale_dt * c_floor, c_budget / (1 + tau_c)) / scale_dt;
 
 if c_budget <= 0 && (aprime > 0 || ic > 0) && (~is_full_ret)

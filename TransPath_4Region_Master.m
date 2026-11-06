@@ -148,7 +148,8 @@ for r_idx = 1:N_reg
     end
 end
 
-%% 4. KIYOTAKI HOUSING USER-COST COOLING, $1.6T ESTATE REALLOCATION & BRAIN-DRAIN CLOSURE
+%  CLEAN-GREEN EXPORT MULTIPLIER Pi_trade_path, & SOVEREIGN BOND SPREAD r_bond_path)]:
+%% 4. KIYOTAKI HOUSING COOLING, NDC CLIMATE/TRADE TRAJECTORY, & BRAIN-DRAIN CLOSURE
 Q_path         = zeros(T_trans, N_reg);
 Q_init         = [1.00, 1.40, 2.05, 3.10];
 Q_end_SS1      = Q_init .* [0.990, 0.975, 0.950, 0.925];
@@ -159,13 +160,37 @@ Emig_0         = [0.068, 0.082, 0.105, 0.118];
 Emig_SS1       = [0.032, 0.038, 0.046, 0.051];
 Emig_SS2       = [0.021, 0.025, 0.030, 0.033];
 
+% NDC Domestic Abatement, Exotic Pine Saturation Cliff (Yr 25), & Clean-Green Trade Vectors:
+Pi_trade_path  = ones(T_trans, N_reg);
+E_NDC_cap_path = zeros(T_trans, 1);
+E_net_dom_path = zeros(T_trans, 1);
+r_bond_path    = zeros(T_trans, 1);
+pi_green_reg   = [0.045, 0.030, 0.010, 0.005];
+chi_CBAM_reg   = [0.080, 0.055, 0.020, 0.010];
+
 for t = 1:T_trans
-    yr = Trans_Years(t);
+    yr   = Trans_Years(t);
     w_q1 = 1 - exp(-yr / 14);
     w_e1 = 1 / (1 + exp(-(yr - 18) / 6));
 
-    q_t = Q_init + w_q1 * (Q_end_SS1 - Q_init);
-    e_t = Emig_0 + w_e1 * (Emig_SS1  - Emig_0);
+    q_t  = Q_init + w_q1 * (Q_end_SS1 - Q_init);
+    e_t  = Emig_0 + w_e1 * (Emig_SS1  - Emig_0);
+
+    % Interpolate NDC emissions cap & biogenic/forestry reform progress (SS0 -> SS1 -> SS2):
+    w_p2_active = double(has_SS2 && yr >= T_phase2_yr) * (1 - exp(-max(0, yr - T_phase2_yr) / 10));
+    E_NDC_cap_t = 1.00 - 0.35 * w_q1 - 0.43 * w_p2_active; % 1.00 (2025) -> 0.65 (SS1) -> 0.22 (SS2 2050)
+    theta_ag_t  = 0.50 * w_q1 + 0.50 * w_p2_active;        % Circular biogenic pricing: 0 -> 0.50 -> 1.00
+    kappa_pine  = max(0.0, 1.00 - 0.75 * w_q1 - 0.25 * w_p2_active);
+
+    % Exotic pine sequestration saturates after T_phase2_yr = 25 yrs; native sinks grow permanently:
+    S_pine_t    = 0.18 * kappa_pine * exp(-0.085 * max(0, yr - T_phase2_yr));
+    S_native_t  = 0.14 * (1 - kappa_pine) * min(1.0, yr / T_phase2_yr);
+    E_gross_t   = 1.00 - 0.28 * w_q1 - 0.40 * w_p2_active;
+    E_net_t     = max(0.15, E_gross_t - (S_pine_t + S_native_t));
+
+    ndc_gap_t   = max(0.0, (E_net_t - E_NDC_cap_t) / max(0.10, E_NDC_cap_t));
+    Pi_trade_t  = 1.0 + pi_green_reg .* theta_ag_t - chi_CBAM_reg .* ndc_gap_t;
+    r_bond_t    = 0.042 + 0.0045 * ndc_gap_t - 0.0060 * w_p2_active;
 
     if has_SS2
         if yr >= T_phase2_yr
@@ -181,6 +206,10 @@ for t = 1:T_trans
     end
     Q_path(t, :)         = q_t;
     Emig_Rate_Path(t, :) = e_t;
+    Pi_trade_path(t, :)  = Pi_trade_t;
+    E_NDC_cap_path(t)    = E_NDC_cap_t;
+    E_net_dom_path(t)    = E_net_t;
+    r_bond_path(t)       = r_bond_t;
 end
 
 if ~has_SS2

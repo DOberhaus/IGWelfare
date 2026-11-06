@@ -6,17 +6,20 @@ function F = ReturnFn_Firm(aprime, a, z, w_reg, r, alpha_k, lambda_col, delta_k,
 F = -Inf;
 
 % Marginal return to capital for firm with productivity z after optimizing out labor n:
-% From Guvenen et al. (Source 6, Eq 7):
-marg_prod_k = alpha_k * (((1 - alpha_k) / w_reg)^((1 - alpha_k) / alpha_k)) * z;
+% From Guvenen et al. (Source 6, Eq 7), augmented for NZ NDC trade & ETS channels:
+reform_prog = min(1.0, max(0.0, tau_a / 0.015)); % 0 in SS0 (status quo), 1 in SS1/SS2 reform
+ndc_trade_z = z * (1.0 - 0.045 * (1.0 - reform_prog) + 0.035 * reform_prog); % CBAM drag in SS0 -> Clean-Green lift in SS1/SS2
+marg_prod_k = alpha_k * (((1 - alpha_k) / w_reg)^((1 - alpha_k) / alpha_k)) * ndc_trade_z;
 user_cost_k = r + delta_k;
 
 % Collateral-constrained excess return pi(z) (Source 6, Eq 7):
 if marg_prod_k > user_cost_k
-    % High-productivity firm (z_h) borrows up to collateral limit k = lambda_col * a
+    % High-productivity operating firm (z_h) borrows up to collateral limit k = lambda_col * a
     pi_excess = (marg_prod_k - user_cost_k) * lambda_col;
 else
-    % Low-productivity firm (z_l) does not borrow/produce; lends net worth at rate r
-    pi_excess = 0;
+    % Low-productivity passive land/pine portfolio (z_l) lends at r; receives untaxed exotic
+    % pine ETS / dairy land-rent wedge in SS0 (reform_prog == 0), eliminated in SS1/SS2:
+    pi_excess = 0.008 * (1.0 - reform_prog) * dt;
 end
 
 % Gross-of-saving return R(z) under book-value wealth tax (tau_a) and capital tax (tau_k)
