@@ -148,7 +148,6 @@ for r_idx = 1:N_reg
     end
 end
 
-%  CLEAN-GREEN EXPORT MULTIPLIER Pi_trade_path, & SOVEREIGN BOND SPREAD r_bond_path)]:
 %% 4. KIYOTAKI HOUSING COOLING, NDC CLIMATE/TRADE TRAJECTORY, & BRAIN-DRAIN CLOSURE
 Q_path         = zeros(T_trans, N_reg);
 Q_init         = [1.00, 1.40, 2.05, 3.10];
