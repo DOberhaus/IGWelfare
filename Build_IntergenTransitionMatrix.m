@@ -37,25 +37,21 @@ h_vec  = double(gather(a_grid.(ref_type)(n_a1+1 : n_a1+n_h)));
 ic_vec     = double(gather(d_grid.(ref_type)(n_d.(ref_type)(1)+n_d.(ref_type)(2)+1 : end)));
 ic_pol_row = 3;
 
-if ~isfield(Params, 'G_ece'),       Params.G_ece       = Params.G_ece_stage1; end
+if ~isfield(Params, 'G_ece') && isfield(Params, 'G_ece_stage1')
+    Params.G_ece = Params.G_ece_stage1;
+end
 if ~isfield(Params, 'rho_hc_ig'),   Params.rho_hc_ig   = 0.40; end
 if ~isfield(Params, 'gamma_ic'),    Params.gamma_ic    = 0.35; end
 if ~isfield(Params, 'sigma_hc_ig'), Params.sigma_hc_ig = 0.24; end
 
-% Extract Regional Extended Family / Whanau Network Intensity K_whanau(k) in [0, 1]
-% and Stage-2 Tuakana-Teina / Montessori Mentoring Intensity M_mentor(k) in [0, 1]:
-K_base_vec = zeros(1, N_reg);
-K_reg_vec  = zeros(1, N_reg);
-G_ece_vec  = zeros(1, N_reg);
-G_ece2_vec = zeros(1, N_reg);
+% Extract Regional Extended Family / Whanau Network Intensity K_whanau(k) in [0, 1]:
+K_base_vec = Params.K_whanau_base_vec; % Canonical SS0 baseline [Rural, Small, Large, Auckland]
+K_reg_vec  = K_base_vec;
 for r_i = 1:N_reg
-    hh_type         = ['HH_', Regions{r_i}];
-    K_base_vec(r_i) = Params.K_whanau_base.(hh_type);
-    K_reg_vec(r_i)  = Params.K_whanau.(hh_type);
-    G_ece_vec(r_i)  = Params.G_ece.(hh_type);
-    G_ece2_vec(r_i) = Params.G_ece_stage2.(hh_type);
+    f_name = ['HH_', Regions{r_i}];
+    if isfield(Params.K_whanau_base, f_name), K_base_vec(r_i) = Params.K_whanau_base.(f_name); end
+    if isfield(Params.K_whanau, f_name),      K_reg_vec(r_i)  = Params.K_whanau.(f_name);      end
 end
-M_mentor = min(1.0, max(0.0, (G_ece2_vec - 0.045) ./ (0.085 - 0.045)));
 
 % Precompute sub-grid cell spans [n_a1 x 1] and threshold vector tau_cuts [1 x 4]:
 a_dbl    = double(a_vec(:));
@@ -84,7 +80,7 @@ mort_vec  = reshape(1 - double(gather(Params.sj(retire_j))), [1, 1, 1, length(re
 if use_gpu, mort_vec = gpuArray(mort_vec); end
 
 NewbornDist_PreMig = struct();
-reg_skill_drift = [-0.083, -0.059, -0.024, -0.020]; % Hits [19.8%, 18.2%, 15.6%, 14.3%]
+reg_skill_drift    = Params.reg_skill_drift; % Canonical regional launch skill drift from Configure_TimeGrid_Params
 
 %% STAGE 1 & 2 (100% GPU-VECTORIZED): SKILL FORMATION (Q_h) & PROPERTY BEQUESTS (Q_a)
 for r_idx = 1:N_reg
@@ -161,17 +157,22 @@ for r_idx = 1:N_reg
         Diag.ResidualAHCShare.(reg)    = gather(sum(Dist_Fert .* w_ahc_az, 'all') / parent_mass);
 
         % 4D Compact Skill Transition: two-tier convex d_grid_ic stress & Adolescent lambda_psy hazard
+        g_ece_k      = Params.G_ece.(hh_type);
+        g_ece2_k     = Params.G_ece_stage2.(hh_type);
+        M_mentor     = min(1.0, max(0.0, (g_ece2_k - Params.G_ece1_sched(1)) / (Params.G_ece2_sched(2) - Params.G_ece1_sched(1))));
+
         is_stress_4D = double(ic_4D < 0.005) + 0.55 .* double((ic_4D >= 0.005) & (ic_4D < 0.035));
-        M_trust_k    = M_mentor(r_idx) * (0.45 + 0.55 * min(1.0, K_reg / 0.35));
+        M_trust_k    = M_mentor * (0.45 + 0.55 * min(1.0, K_reg / 0.35));
         lambda_psy_k = max(0.22 * 0.38, 0.22 * (1.0 - 0.52 * M_trust_k) * (1.0 - 0.35 * min(1.0, K_reg / 0.38)));
         comp_load_4D = is_stress_4D + lambda_psy_k .* (1.0 + 0.65 .* is_stress_4D);
         unbuf_mult_k = max(0.38 * lambda_psy_k, (1.0 - 0.80 * M_trust_k) * (1.0 - 0.55 * K_reg));
 
         stress_pen = 0.038 .* comp_load_4D .* unbuf_mult_k;
-        ece_lift   = 0.55 * (G_ece_vec(r_idx) - 0.045) + 0.04 * (M_mentor(r_idx) - 0.50) + 0.12 * dK_reg;
+        ece_lift   = 0.55 * (g_ece_k - Params.G_ece1_sched(1)) + 0.04 * (M_mentor - 0.50) + 0.12 * dK_reg;
         hp_eff_4D  = h_G .* (1.0 + 0.15 * dK_reg);
+
         log_h_mean = Params.rho_hc_ig .* log(hp_eff_4D) ...
-            + Params.gamma_ic .* log(0.82 + 1.15 * (ic_4D + G_ece_vec(r_idx) + 0.020 * dK_reg)) ...
+            + Params.gamma_ic .* log(0.82 + 1.15 * (ic_4D + g_ece_k + 0.020 * dK_reg)) ...
             + ece_lift - stress_pen + reg_skill_drift(r_idx) - crowd_G;
 
         pdf_5D = exp(-0.5 .* ((log_h_dst - log_h_mean) ./ 0.24).^2);
@@ -239,6 +240,9 @@ V_scale = max(0.50, std(V_mean_j1));
 V_norm  = (V_mean_j1 - mean(V_mean_j1)) / V_scale;
 
 % Ensure immutable SS0 baseline K_whanau_base and active K_whanau exist in Params
+if ~isfield(Params, 'K_whanau_base')
+    Params.K_whanau_base = struct('HH_Rural', 0.42, 'HH_Small', 0.38, 'HH_Large', 0.32, 'HH_Auckland', 0.28);
+end
 if ~isfield(Params, 'K_whanau')
     Params.K_whanau = Params.K_whanau_base;
 end
@@ -249,13 +253,9 @@ end
 w_akl_ratio = Params.w_reg.HH_Auckland / 1.180;
 Q_akl_ratio = Params.Q_reg.HH_Auckland / 3.100;
 reform_pull = 3.20 * (w_akl_ratio - 1.0) - 2.40 * (Q_akl_ratio - 1.0) ...
-    + 2.50 * (Params.YouthGrant - 0.030);
+    + 2.50 * (Params.YouthGrant - Params.YouthGrant_sched(1));
 
-u_target_4x5 = [ ...
-    2.85,  1.15,  0.65,  0.15, -0.82;   % From Rural    (1.8% Emig)
-    0.55,  2.45,  1.05,  0.45,  0.65;   % From Small    (9.1% Emig)
-    -0.25,  0.45,  2.15,  1.05,  1.45;   % From Large    (23.4% Emig)
-    -0.45,  0.15,  0.65,  2.55,  0.16];  % From Auckland (7.0% Net / 19.3% Gross Emig)
+u_target_4x5 = Params.u_target_4x5;
 
 Pi_mig_4x5     = zeros(N_reg, N_reg + 1);
 skill_emig_w   = linspace(0.45, 1.65, n_h)'; % Positive selection on skill h_1
