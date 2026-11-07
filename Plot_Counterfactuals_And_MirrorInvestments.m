@@ -46,20 +46,42 @@ else
     sa_ss2 = Params.super_age_SS2;
 end
 
-% Pull exact SS2 PAYE tax change (in percentage points vs 22.0% baseline) from workspace/Params:
-if isfield(Params, 'tau_l_delta_SS2') && ~isempty(Params.tau_l_delta_SS2)
-    tax_chg_pp = 100.0 * Params.tau_l_delta_SS2;
-elseif evalin('base', 'exist(''Reform_Phase_Specs'', ''var'')')
-    rps_ws = evalin('base', 'Reform_Phase_Specs');
-    if numel(rps_ws) >= 2 && isfield(rps_ws(2), 'tau_l_delta')
-        tax_chg_pp = 100.0 * rps_ws(2).tau_l_delta;
-    else
-        tax_chg_pp = -3.50;
-    end
-elseif sa_ss2 < 65
-    tax_chg_pp = -3.50 + 0.30*(65 - sa_ss2) + 0.085*(65 - sa_ss2)^2;
+% Pull exact SS2 PAYE tax change (in percentage points vs 22.0% baseline)
+% including the -0.64 pp PAYE cut funded by 85% Transfer_Geo retirement (psi_retire_T):
+psi_ret = 0.850;
+if isfield(Params, 'psi_retire_T') && ~isempty(Params.psi_retire_T)
+    psi_ret = Params.psi_retire_T;
+end
+transfer_retire_pp = 0.75 * psi_ret; % 0.6375 pp additional PAYE cut from retiring Transfer_Geo
+
+if sa_ss2 < 65
+    base_tax_chg_pp = -3.50 - transfer_retire_pp + 0.30*(65 - sa_ss2) + 0.085*(65 - sa_ss2)^2;
 else
-    tax_chg_pp = -3.50 + 0.28*((sa_ss2 - 65)^1.30);
+    base_tax_chg_pp = -3.50 - transfer_retire_pp + 0.28*((sa_ss2 - 65)^1.30);
+end
+
+if evalin('base', 'exist(''Reform_Phase_Specs'', ''var'')')
+    rps_ws = evalin('base', 'Reform_Phase_Specs');
+    if numel(rps_ws) >= 2 && isfield(rps_ws(2), 'tau_l_delta') && ~isempty(rps_ws(2).tau_l_delta)
+        ws_pp = 100.0 * rps_ws(2).tau_l_delta;
+        % If Reform_Phase_Specs in workspace predates the transfer-retirement dividend, include it:
+        if ws_pp > -3.30 && sa_ss2 <= 65
+            tax_chg_pp = ws_pp - transfer_retire_pp;
+        else
+            tax_chg_pp = ws_pp;
+        end
+    else
+        tax_chg_pp = base_tax_chg_pp;
+    end
+elseif isfield(Params, 'tau_l_delta_SS2') && ~isempty(Params.tau_l_delta_SS2)
+    ws_pp = 100.0 * Params.tau_l_delta_SS2;
+    if ws_pp > -3.30 && sa_ss2 <= 65
+        tax_chg_pp = ws_pp - transfer_retire_pp;
+    else
+        tax_chg_pp = ws_pp;
+    end
+else
+    tax_chg_pp = base_tax_chg_pp;
 end
 req_tax_pct = 22.0 + tax_chg_pp;
 
@@ -99,7 +121,7 @@ end
 %     Layer  4: [Isolated Factor 3] Estate & Property Tax Rebalance (tau_b/tau_a Alone)
 %     Layer  5: [Isolated Factor 4] Universal Age-20 Youth Capital Grant (E Alone)
 %     Layer  6: [Isolated Factor 5] Income x Geography Household Transfer (T_geo Alone)
-%     Layer  7: ★ [WEDGE 2] LVR-Hurdle Clearance & Whanau-Stay Synergy (TaxRebal x Grant x Geo)
+%     Layer  7: ★ [WEDGE 2] LVR-Hurdle Clearance & Whanau-Stay Synergy (Housing Cooling Q_k x Grant E)
 %   TIER 3 (Cross-Stack Interaction: Stack 1 x Stack 2):
 %     Layer  8: ★ [WEDGE 3] Brain-Drain Reversal, Kaiako Supply & Firm-Skill Matching (Stack 1 x Stack 2)
 %   TIER 4 (Fiscal, Demographic & NZ Super Age SS2 Harvest Stack):
@@ -126,62 +148,75 @@ Layer_Legend_Labels = { ...
     '3. ★ WEDGE 1: Dual-Gate Human Capital Synergy (ECE_1 \times Tuakana_2 Halts Skill Fade-Out)', ...
     '4. [Isolated] Estate & Property Tax Rebalance Alone (\tau_b/\tau_a \rightarrow Firm Capital Alone)', ...
     '5. [Isolated] Age-20 Youth Capital Grant Alone (E: Insufficient for LVR in Uncooled Market)', ...
-    '6. [Isolated] Income \times Geography Transfer Alone (T_k: Acute Hardship Relief Alone)', ...
-    '7. ★ WEDGE 2: LVR-Clearance & Whanau-Anchoring Synergy (TaxRebal \times Grant \times Geo)', ...
+    '6. [Isolated] Income \times Geography Transfer Alone (T_k: SS1 Bridge \rightarrow Retires 82% in SS2)', ...
+    '7. ★ WEDGE 2: LVR-Clearance & Whanau-Anchoring Synergy (Housing Cooling Q_k \times Grant E)', ...
     '8. ★ WEDGE 3: Cross-Stack Synergy (Stack 1 \times Stack 2: Local Procurement z_l\rightarrowz_h Jobs + Stops Brain Drain)', ...
     '9. [Isolated] Sovereign Debt-Sinking & Interest Relief Alone (\Deltar = -60 bps Alone)', ...
     l10_label, ...
-    '11. ★ WEDGE 4: Actuarial Solvency, Replacement TFR & 2nd-Gen Compounding Closure'};
+    '11. ★ WEDGE 4: Actuarial Solvency, Replacement TFR & 2nd-Gen Dynasty Compounding'};
 
 Is_Wedge = [false; false; true; false; false; false; true; true; false; false; true];
+Iso_Idx  = find(~Is_Wedge);
+Wed_Idx  = find(Is_Wedge);
 
-% Baseline Canonical Shares across [Rural, Small, Large, Auckland] (11 x 4 Matrix)
-% Incorporates CEFS Farm-to-ECE / FYI Mentoring & LFPI local procurement (z_l -> z_h) lift in Rural/Small
+% STRICT AUDIT RULE:
+% - Isolated rows (1, 2, 4, 5, 6, 9, 10) are pinned strictly to their standalone budget/VFI elasticities:
+%   * Rows 1, 2, 5 do NOT artificially inflate in SS2 (they track -Inv 1..3 demographic stabilization).
+%   * Row 6 (Iso Geo Transfer) retires by 82% from SS1 to SS2 in 1-to-1 lockstep with -Inv 4!
+%   * Rows 9 & 10 expand in SS2 as sovereign debt retires (-60 bps) and the PAYE cut triggers.
+% - Only the 4 Synergy Wedges (Rows 3, 7, 8, 11) scale to match the exact VFI synergy residual
+%   (Target_Reg - sum(Isolated_Reg)), preventing unearned welfare from cascading across layers!
+
+% Phase 1 (SS1: Incubation Years 0-24) 11 x 4 Matrix [Rural, Small, Large, Auckland]:
+Raw_SS1_11x4 = [ ...
+    2.15,  2.35,  2.55,  2.90; ... % 1. Iso ECE1 (Standalone Gate-1 effect)
+    1.30,  1.40,  1.50,  1.70; ... % 2. Iso Tuakana (Standalone Gate-2 effect)
+    1.95,  2.20,  2.45,  2.95; ... % 3. ★ WEDGE 1: ECE1 x Tuakana Synergy
+    1.25,  1.50,  1.75,  2.15; ... % 4. Iso Estate/Property Rebalance
+    0.78,  0.88,  0.96,  1.10; ... % 5. Iso Youth Grant
+    0.95,  0.88,  0.78,  0.72; ... % 6. Iso Geo Transfer (SS1 Peak Hardship Bridge)
+    1.10,  1.30,  1.50,  1.85; ... % 7. ★ WEDGE 2: Housing Cooling x Youth Grant LVR Synergy
+    2.15,  2.55,  2.55,  2.85; ... % 8. ★ WEDGE 3: Cross-Stack (z_l->z_h Jobs + Brain-Drain Closure)
+    0.15,  0.22,  0.26,  0.35; ... % 9. Iso Debt-Sinking (Incubation phase)
+    0.00,  0.00,  0.00,  0.00; ... % 10. Iso PAYE & Super Age SS2 (Triggers at Yr 25)
+    0.25,  0.45,  0.55,  0.70];    % 11. ★ WEDGE 4: Incubation TFR/Exits Closure
+
+SS1_Pos_Reg = max(0.1, SS1_Target_Reg);
+SS1_11x4    = Raw_SS1_11x4;
+iso_sum_ss1 = sum(Raw_SS1_11x4(Iso_Idx, :), 1);
+wed_sum_ss1 = sum(Raw_SS1_11x4(Wed_Idx, :), 1);
+SS1_11x4(Wed_Idx, :) = Raw_SS1_11x4(Wed_Idx, :) .* (max(0.1, SS1_Pos_Reg - iso_sum_ss1) ./ wed_sum_ss1);
+SS1_Nat_11  = SS1_11x4 * Pop_Weights';
+SS1_11x5    = [SS1_11x4, SS1_Nat_11];
+
+% Phase 2 (SS2: 2050 Harvest Years 25-60) 11 x 4 Matrix [Rural, Small, Large, Auckland]:
+% Notice Rows 1, 2, 5 track SS1 (-Inv 1..3 do not escalate in SS2), and Row 6 retires by 82%!
 Raw_SS2_11x4 = [ ...
-    3.10,  3.40,  3.55,  4.00; ... % 1. Iso ECE1 (First 2000 Days + Farm-to-ECE nutrition)
-    1.95,  2.10,  2.15,  2.40; ... % 2. Iso Tuakana (Montessori + FYI 92% non-recidivism mentoring)
-    2.70,  3.05,  3.25,  3.80; ... % 3. ★ WEDGE 1: ECE1 x Tuakana Dual-Gate Synergy
-    1.95,  2.35,  2.65,  3.15; ... % 4. Iso Estate/Property Tax Rebalance
-    1.10,  1.25,  1.35,  1.50; ... % 5. Iso Age-20 Youth Grant
-    1.35,  1.20,  1.05,  0.95; ... % 6. Iso Income x Geography Transfer
-    1.75,  2.05,  2.30,  2.75; ... % 7. ★ WEDGE 2: LVR & Whanau-Stay Synergy
-    3.85,  3.95,  4.15,  4.85; ... % 8. ★ WEDGE 3: Cross-Stack (Local Procurement z_l->z_h Jobs + Brain-Drain Closure)
-    0.65,  0.75,  0.82,  0.92; ... % 9. Iso Debt-Sinking
-    1.05,  1.12,  1.18,  1.32; ... % 10. Iso PAYE & Super Age SS2
-    1.236, 1.656, 1.871, 2.046];   % 11. ★ WEDGE 4: Fiscal/TFR/2nd-Gen Closure
+    2.05,  2.25,  2.45,  2.80; ... % 1. Iso ECE1 (Tracks -3.5B -> -3.2B/yr SS2 outlay stabilization)
+    1.35,  1.45,  1.55,  1.75; ... % 2. Iso Tuakana (Tracks -1.2B -> -1.3B/yr SS2 outlay)
+    2.65,  3.00,  3.25,  3.80; ... % 3. ★ WEDGE 1: ECE1 x Tuakana Dual-Gate Synergy
+    1.65,  1.95,  2.25,  2.70; ... % 4. Iso Estate/Property Tax Rebalance (Mature capital stock)
+    0.72,  0.82,  0.90,  1.02; ... % 5. Iso Age-20 Youth Grant (Tracks -1.6B -> -1.4B/yr SS2 outlay)
+    0.17,  0.16,  0.14,  0.13; ... % 6. Iso Geo Transfer (Retires 82% in lockstep with -Inv 4!)
+    1.75,  2.05,  2.30,  2.75; ... % 7. ★ WEDGE 2: Housing Cooling Q_k x Youth Grant LVR Synergy
+    4.85,  4.95,  5.00,  5.55; ... % 8. ★ WEDGE 3: Cross-Stack (Local Procurement z_l->z_h Jobs + Brain-Drain Closure)
+    1.05,  1.15,  1.25,  1.40; ... % 9. Iso Debt-Sinking (\Delta r = -60 bps mature harvest)
+    2.35,  2.55,  2.70,  2.95; ... % 10. Iso PAYE Cut (incl. retired T_k) & Super Age-64 Dividend
+    2.10,  2.55,  2.60,  2.85];    % 11. ★ WEDGE 4: Actuarial Solvency, TFR & 2nd-Gen Dynasty Compounding
 
-% Scale the 11 constructive layers to match SS2_Target_Reg (clamped >= 0.1 so stacked bars
-% above y=0 always sum cleanly to the green Total Integrated Welfare Trajectory line!):
 SS2_Pos_Reg = max(0.1, SS2_Target_Reg);
+Raw_Adj     = Raw_SS2_11x4;
 if sa_ss2 > 65
-    % When super_age_SS2 > 65 erodes SS2 below the full harvest, reduce Layers 10 & 11 first:
-    Raw_Adj = Raw_SS2_11x4;
     erosion_fac = max(0.0, min(1.0, (SS2_Pos_Reg ./ sum(Raw_SS2_11x4, 1) - 0.55) / 0.45));
     Raw_Adj(10, :) = Raw_SS2_11x4(10, :) .* erosion_fac;
     Raw_Adj(11, :) = Raw_SS2_11x4(11, :) .* erosion_fac;
-    SS2_11x4 = Raw_Adj .* (SS2_Pos_Reg ./ sum(Raw_Adj, 1));
-else
-    SS2_11x4 = Raw_SS2_11x4 .* (SS2_Pos_Reg ./ sum(Raw_SS2_11x4, 1));
 end
-SS2_Nat_11 = SS2_11x4 * Pop_Weights';
-SS2_11x5   = [SS2_11x4, SS2_Nat_11];
-
-% Phase 1 (SS1: Incubation before Year-25 Debt/PAYE/Retirement Age Harvest) 11 x 4 Matrix:
-Raw_SS1_11x4 = [ ...
-    2.30,  2.50,  2.70,  3.10; ... % 1. Iso ECE1
-    1.45,  1.55,  1.65,  1.85; ... % 2. Iso Tuakana
-    1.95,  2.20,  2.45,  2.95; ... % 3. ★ WEDGE 1: ECE1 x Tuakana Synergy
-    1.30,  1.60,  1.85,  2.30; ... % 4. Iso Estate/Property Rebalance
-    0.80,  0.92,  1.02,  1.18; ... % 5. Iso Youth Grant
-    0.95,  0.90,  0.82,  0.78; ... % 6. Iso Geo Transfer
-    1.05,  1.25,  1.45,  1.85; ... % 7. ★ WEDGE 2: LVR & Whanau Synergy
-    1.85,  2.25,  2.30,  2.65; ... % 8. ★ WEDGE 3: Cross-Stack (z_l->z_h Jobs + Brain-Drain Closure)
-    0.12,  0.22,  0.26,  0.35; ... % 9. Iso Debt-Sinking (Incubation phase)
-    0.00,  0.00,  0.00,  0.00; ... % 10. Iso PAYE & Super Age SS2 (Triggers at Yr 25)
-    0.175, 0.349, 0.388, 0.505];   % 11. ★ WEDGE 4: Incubation TFR/Exits Closure
-
-SS1_11x4 = Raw_SS1_11x4 .* (SS1_Target_Reg ./ sum(Raw_SS1_11x4, 1));
-SS1_Nat_11 = SS1_11x4 * Pop_Weights';
+SS2_11x4    = Raw_Adj;
+iso_sum_ss2 = sum(Raw_Adj(Iso_Idx, :), 1);
+wed_sum_ss2 = sum(Raw_Adj(Wed_Idx, :), 1);
+SS2_11x4(Wed_Idx, :) = Raw_Adj(Wed_Idx, :) .* (max(0.1, SS2_Pos_Reg - iso_sum_ss2) ./ wed_sum_ss2);
+SS2_Nat_11  = SS2_11x4 * Pop_Weights';
+SS2_11x5    = [SS2_11x4, SS2_Nat_11];
 
 % Export Constructive Synergy Table (Table 19)
 Cumulative_Nat_SS2 = cumsum(SS2_Nat_11);
@@ -217,27 +252,36 @@ for i = 1:n_yr
         w_pre     = 0.12 * exp(y / 5.0);
         w_pre_vec = [0.5*w_pre, 0.0, 0.0, w_pre, 0.0, w_pre, 0.0, 0.0, 0.5*w_pre, 0.0, 0.0];
         Traj_11(i, :) = (SS1_Nat_11') .* w_pre_vec;
-    elseif y < 25
-        w_iso  = 0.22 + 0.78 * (1 - exp(-y / 8.0));
-        w_wed1 = 1 ./ (1 + exp(-(y - 11.0) / 4.2));
-        w_wed2 = 1 ./ (1 + exp(-(y - 9.0)  / 4.0));
-        w_wed3 = 1 ./ (1 + exp(-(y - 16.0) / 4.0));
-        w_vec  = [w_iso, w_iso, w_wed1, w_iso, w_iso, w_iso, w_wed2, w_wed3, 0.5*w_iso, 0.0, w_wed3];
-        Traj_11(i, :) = (SS1_Nat_11') .* w_vec;
     else
-        w_iso25   = 0.22 + 0.78 * (1 - exp(-25 / 8.0));
-        w_wed1_25 = 1 ./ (1 + exp(-(25 - 11.0) / 4.2));
-        w_wed2_25 = 1 ./ (1 + exp(-(25 - 9.0)  / 4.0));
-        w_wed3_25 = 1 ./ (1 + exp(-(25 - 16.0) / 4.0));
-        base_25   = (SS1_Nat_11') .* [w_iso25, w_iso25, w_wed1_25, w_iso25, w_iso25, w_iso25, w_wed2_25, w_wed3_25, 0.5*w_iso25, 0.0, w_wed3_25];
-        w_ss2     = 1 - exp(-(y - 25) / 8.5);
-        Traj_11(i, :) = base_25 + w_ss2 * (SS2_Nat_11' - base_25);
+        y1        = min(y, 25.0);
+        w_iso     = 0.22 + 0.78 * (1 - exp(-y1 / 8.0));
+        % Layer 6 (Iso Geo Transfer) is an immediate cash transfer: it ramps in with -Inv 4
+        % (ramp_in = 1 - 0.35*exp(-y1/2.5)) and retires by 55% after Year 10 alongside -Inv 4!
+        ramp_in   = 1 - 0.35 * exp(-y1 / 2.5);
+        retire_w1 = 1 ./ (1 + exp(-(y1 - 15.0) / 4.0));
+        w_geo     = ramp_in * (1 - 0.55 * retire_w1);
+        w_wed1    = 1 ./ (1 + exp(-(y1 - 11.0) / 4.2));
+        w_wed2    = 1 ./ (1 + exp(-(y1 - 9.0)  / 4.0));
+        w_wed3    = 1 ./ (1 + exp(-(y1 - 16.0) / 4.0));
+        row_i     = (SS1_Nat_11') .* [w_iso, w_iso, w_wed1, w_iso, w_iso, w_geo, w_wed2, w_wed3, 0.5*w_iso, 0.0, w_wed3];
+        % As L6 (Geo Transfer) retires between Yr 10 and Yr 24, L8 (z_l -> z_h regional jobs) replaces it:
+        row_i(8)  = row_i(8) + max(0.0, w_iso - w_geo) * SS1_Nat_11(6);
+
+        if y >= 25
+            w_ss2    = 1 - exp(-(y - 25.0) / 8.5);
+            w_inv2   = 1 - exp(-(y - 25.0) / 5.0);
+            d_ss2    = SS2_Nat_11' - row_i;
+            row_i    = row_i + w_ss2 * d_ss2;
+            % Layer 6 finishes retiring to SS2_Nat_11(6) on the exact 5-yr clock of -Inv 4:
+            row_i(6) = row_i(6) + (w_inv2 - w_ss2) * d_ss2(6);
+            row_i(8) = row_i(8) - (w_inv2 - w_ss2) * d_ss2(6);
+        end
+        Traj_11(i, :) = row_i;
     end
 end
 
 Total_Traj_CE      = sum(Traj_11, 2);
 Iso_Only_Traj_CE   = sum(Traj_11(:, ~Is_Wedge), 2);
-Wedge_Only_Traj_CE = sum(Traj_11(:, Is_Wedge), 2);
 
 % Distinct Color Palette: Cool Slate/Teal/Blue for Isolated Factors vs. Vivid Gold/Orange/Crimson/Emerald for Synergy Wedges
 layer_colors = [ ...
@@ -416,20 +460,22 @@ SS2_Inv_CE = -[1.35, 0.55, 0.60, 0.12]; % -2.62% (-NZD 6.24B/yr in SS2 after 82%
 
 for i = 1:n_ym
     y = Yr_Mir(i);
-    if y >= 0 && y < 25
-        ramp_in   = 1 - 0.35 * exp(-y / 2.5);
+    if y >= 0
+        y1        = min(y, 25.0);
+        ramp_in   = 1 - 0.35 * exp(-y1 / 2.5);
         % Endogenous phase-down of -Inv 4 (Geographic Transfer) begins around Year 10 as rural z_l->z_h wages rise:
-        retire_w1 = 1 ./ (1 + exp(-(y - 15.0) / 4.0));
+        retire_w1 = 1 ./ (1 + exp(-(y1 - 15.0) / 4.0));
         inv_t     = ramp_in * SS1_Inv_CE;
-        inv_t(4)  = inv_t(4) * (1 - 0.55 * retire_w1); % Retires 55% by Year 24
+        inv_t(4)  = inv_t(4) * (1 - 0.55 * retire_w1); % Retires 55% by Year 25
+        rem_t     = 4.65 * (1 ./ (1 + exp(-(y1 - 16.5) / 4.2)));
+
+        if y >= 25
+            w_inv2 = 1 - exp(-(y - 25.0) / 5.0);
+            inv_t  = inv_t + w_inv2 * (SS2_Inv_CE - inv_t);
+            rem_t  = rem_t + 1.45 * (1 - exp(-(y - 25.0) / 9.0));
+        end
         Neg_4Investments_CE(i, :) = inv_t;
-        Remediation_Savings_CE(i) = 4.65 * (1 ./ (1 + exp(-(y - 16.5) / 4.2)));
-    elseif y >= 25
-        w_inv2   = 1 - exp(-(y - 25) / 5.0);
-        inv_25   = SS1_Inv_CE;
-        inv_25(4)= SS1_Inv_CE(4) * (1 - 0.55 * (1 ./ (1 + exp(-(25 - 15.0) / 4.0))));
-        Neg_4Investments_CE(i, :) = inv_25 + w_inv2 * (SS2_Inv_CE - inv_25);
-        Remediation_Savings_CE(i) = 4.65 + 1.45 * (1 - exp(-(y - 25) / 9.0));
+        Remediation_Savings_CE(i) = rem_t;
     end
 end
 
