@@ -184,17 +184,43 @@ Params.sigma_hc_ig = 0.18;
 % as a function of current NZ Super age (Jr), pension rate (p_super), and current house prices (Params.Q_reg):
 super_age_eff   = 20 + (Params.Jr - 1) * Params.dt;
 elder_time_mult = exp(-0.09 * max(0, super_age_eff - 65)); % -9%/yr loss of grandparent time when Super age > 65
-for r_idx = 1:length(Regions)
+for r_idx = 1:N_reg
     hh_type = ['HH_', Regions{r_idx}];
     % Ratio compares fixed SS0 baseline (Params.Q_reg_base) against active house price (Params.Q_reg):
     elder_home_mult = min(1.15, max(0.50, (Params.p_super / 0.18) * ((Params.Q_reg_base.(hh_type) / Params.Q_reg.(hh_type)) ^ 0.35)));
     Params.K_whanau.(hh_type) = Params.K_whanau_base.(hh_type) * elder_time_mult * elder_home_mult;
 end
 
+% Update active regional Duopoly Markup, Monopsony Markdown, & Farm-to-Marae parameters
+% (Uses Params.active_M_olig_vec, Params.active_mu_monop_vec, Params.active_phi_local_vec if set by caller; defaults to SS0)
+if ~isfield(Params, 'active_M_olig_vec'),    Params.active_M_olig_vec    = Params.M_olig_SS0;    end
+if ~isfield(Params, 'active_mu_monop_vec'),  Params.active_mu_monop_vec  = Params.mu_monop_SS0;  end
+if ~isfield(Params, 'active_phi_local_vec'), Params.active_phi_local_vec = Params.phi_local_SS0; end
+
+for r_idx = 1:N_reg
+    hh_type   = ['HH_', Regions{r_idx}];
+    firm_type = ['Firm_', Regions{r_idx}];
+    m_k       = Params.active_M_olig_vec(r_idx);
+    mu_k      = Params.active_mu_monop_vec(r_idx);
+    phi_k     = Params.active_phi_local_vec(r_idx);
+    phi_0     = Params.phi_local_SS0(r_idx);
+
+    % Effective household retail markup (with Farm-to-Marae/Co-op direct bypass) & local kai ECE boost
+    Params.M_olig_reg.(hh_type)   = 1.0 + (1.0 - Params.kappa_bypass_olig * phi_k) * (m_k - 1.0);
+    Params.kai_mult_reg.(hh_type) = 1.0 + Params.nu_kai_quality * max(0.0, phi_k - phi_0);
+
+    % Effective firm monopsony markdown, passive z_l oligopoly rent, & active z_h local kai contract yield
+    Params.mu_monop_reg.(firm_type)    = mu_k;
+    Params.rho_olig_reg.(firm_type)    = Params.rho_olig_vec(r_idx) * max(0.0, (m_k - 1.0) / max(1e-4, Params.M_olig_SS0(r_idx) - 1.0));
+    Params.rho_farm_reg.(firm_type)    = Params.rho_farm_vec(r_idx) * (phi_k / max(1e-4, phi_0));
+    Params.lambda_col_mult.(firm_type) = 1.0 + Params.chi_farm_col * phi_k;
+end
+
 %% 5. SOLVE VFI & 4-REGION + ABROAD INTERGENERATIONAL TRANSITION LOOP
 for r_idx = 1:N_reg
     hh_type   = ['HH_', Regions{r_idx}];
     firm_type = ['Firm_', Regions{r_idx}];
+
     ReturnFn.(hh_type) = @(l, Ih, ic, aprime, hprime, a, h, theta_c, z, ...
         w_reg, r, Q_reg, G_reg, phi_nd, mu_maint, upsilon_h, chi_bar, ebar_energy, ...
         Transfer_Geo, p_super, c_floor, G_ece_stage1, G_ece_stage2, gbar_ece, s_sub, ...
@@ -203,7 +229,7 @@ for r_idx = 1:N_reg
         delta_hc, alpha_I, alpha_H, b1_beq, b2_beq, YouthGrant, ...
         tau_l, tau_c, tau_k, tau_a, tau_b, agej, Jr, sj, dt, ...
         j_s1_start, j_s1_end, j_s2_start, j_s2_end, n_stage1_steps, n_stage2_steps, ...
-        Q_reg_base, K_whanau) ...
+        Q_reg_base, K_whanau, M_olig_reg, kai_mult_reg) ...
         ReturnFn_SpatialHH(l, Ih, ic, aprime, hprime, a, h, theta_c, z, ...
         w_reg, r, Q_reg, G_reg, phi_nd, mu_maint, upsilon_h, chi_bar, ebar_energy, ...
         Transfer_Geo, p_super, c_floor, G_ece_stage1, G_ece_stage2, gbar_ece, s_sub, ...
@@ -212,10 +238,12 @@ for r_idx = 1:N_reg
         delta_hc, alpha_I, alpha_H, b1_beq, b2_beq, YouthGrant, ...
         tau_l, tau_c, tau_k, tau_a, tau_b, agej, Jr, sj, dt, ...
         j_s1_start, j_s1_end, j_s2_start, j_s2_end, n_stage1_steps, n_stage2_steps, ...
-        Q_reg_base, K_whanau);
+        Q_reg_base, K_whanau, M_olig_reg, kai_mult_reg);
 
-    ReturnFn.(firm_type) = @(aprime, a, z, w_reg, r, alpha_k, lambda_col, delta_k, tau_k, tau_a, dt) ...
-        ReturnFn_Firm(aprime, a, z, w_reg, r, alpha_k, lambda_col, delta_k, tau_k, tau_a, dt);
+    ReturnFn.(firm_type) = @(aprime, a, z, w_reg, r, alpha_k, lambda_col, delta_k, tau_k, tau_a, dt, ...
+        mu_monop_reg, rho_olig_reg, rho_farm_reg, lambda_col_mult) ...
+        ReturnFn_Firm(aprime, a, z, w_reg, r, alpha_k, lambda_col, delta_k, tau_k, tau_a, dt, ...
+        mu_monop_reg, rho_olig_reg, rho_farm_reg, lambda_col_mult);
 end
 
 vfoptions.verbose = 0; simoptions.verbose = 0;

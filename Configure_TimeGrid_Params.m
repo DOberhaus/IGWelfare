@@ -144,29 +144,47 @@ Params.M_olig_reg          = Params.M_olig_SS0;            % Active regional mar
 Params.rho_olig_reg        = [0.008, 0.007, 0.005, 0.004]; % Initial passive z_l oligopoly rent yield (updated in GE)
 
 % Regional vectors ordered: [Rural, Small, Large, Auckland]
+% Regional vectors ordered: [Rural, Small, Large, Auckland]
 if ~isfield(Params, 'M_olig_SS0'),        Params.M_olig_SS0        = [1.080, 1.070, 1.050, 1.040]; end % Status quo retail oligopoly markup
 if ~isfield(Params, 'M_olig_SS1'),        Params.M_olig_SS1        = [1.025, 1.020, 1.015, 1.010]; end % Phase-1 Commerce Commission + Co-op reform
-if ~isfield(Params, 'M_olig_SS2'),        Params.M_olig_SS2        = [1.000, 1.000, 1.000, 1.000]; end % Phase-2 competitive parity
+if ~isfield(Params, 'M_olig_SS2'),        Params.M_olig_SS2        = [1.000, 1.000, 1.000, 1.000]; end % Phase-2 full competitive convergence
 if ~isfield(Params, 'mu_monop_SS0'),      Params.mu_monop_SS0      = [0.910, 0.930, 0.980, 1.000]; end % Farm-gate wholesale monopsony markdown
 if ~isfield(Params, 'mu_monop_SS1'),      Params.mu_monop_SS1      = [0.975, 0.980, 0.995, 1.000]; end % Grocery supply code + grower bargaining
 if ~isfield(Params, 'mu_monop_SS2'),      Params.mu_monop_SS2      = [1.000, 1.000, 1.000, 1.000]; end % Full farm-gate price parity
-if ~isfield(Params, 'phi_local_SS0'),     Params.phi_local_SS0     = [0.150, 0.150, 0.100, 0.100]; end % SS0 local school/marae food share (85-90% global caterer)
+if ~isfield(Params, 'phi_local_SS0'),     Params.phi_local_SS0     = [0.150, 0.150, 0.100, 0.100]; end % SS0 local school/marae food share
 if ~isfield(Params, 'phi_local_SS1'),     Params.phi_local_SS1     = [0.850, 0.800, 0.650, 0.550]; end % SS1 Farm-to-School & Farm-to-Marae switch
 if ~isfield(Params, 'phi_local_SS2'),     Params.phi_local_SS2     = [0.950, 0.900, 0.750, 0.650]; end % SS2 mature regional food hubs
+if ~isfield(Params, 'kappa_olig_schedule'), Params.kappa_olig_schedule = [0.000, 0.700, 1.000];    end % [SS0, SS1, SS2] enforcement intensity
 if ~isfield(Params, 'G_food_share'),      Params.G_food_share      = 0.012; end % Public school/ECE nutrition procurement budget
 if ~isfield(Params, 'chi_farm_col'),      Params.chi_farm_col      = 0.120; end % Collateral relaxation from bankable local food contracts
 if ~isfield(Params, 'kappa_bypass_olig'), Params.kappa_bypass_olig = 0.250; end % Direct Farm-to-Marae/Co-op household bypass of retail markup
 if ~isfield(Params, 'nu_kai_quality'),    Params.nu_kai_quality    = 0.140; end % Fresh local kai multiplier on Gate 1 & Gate 2 ECE productivity
 if ~isfield(Params, 'psi_retire_T'),      Params.psi_retire_T      = 0.850; end % Rate at which duopoly/monopsony relief retires Transfer_Geo
 if ~isfield(Params, 'T_reg_min_floor'),   Params.T_reg_min_floor   = [0.008, 0.005, 0.000, 0.000]; end % Residual remote-geography floor
+if ~isfield(Params, 'rho_olig_vec'),      Params.rho_olig_vec      = [0.008, 0.007, 0.005, 0.004] * scale_dt; end % Passive z_l oligopoly rent yield
+if ~isfield(Params, 'rho_farm_vec'),      Params.rho_farm_vec      = [0.002, 0.002, 0.001, 0.001] * scale_dt; end % Active z_h local kai contract yield
 
-% Default scalar parameters for ReturnFn calls (overwritten per region/phase in master scripts)
-if ~isfield(Params, 'M_olig_reg'),        Params.M_olig_reg        = 1.000; end % Effective retail markup (1.0 = no wedge)
-if ~isfield(Params, 'kai_mult_reg'),      Params.kai_mult_reg      = 1.000; end % Local kai quality multiplier on G_ece (1.0 = baseline)
-if ~isfield(Params, 'mu_monop_reg'),      Params.mu_monop_reg      = 1.000; end % Effective farm-gate monopsony factor
-if ~isfield(Params, 'rho_olig_reg'),      Params.rho_olig_reg      = 0.000; end % Passive z_l oligopoly rent yield (per dt period)
-if ~isfield(Params, 'rho_farm_reg'),      Params.rho_farm_reg      = 0.000; end % Active z_h local food procurement yield (per dt period)
-if ~isfield(Params, 'lambda_col_mult'),   Params.lambda_col_mult   = 1.000; end % Collateral expansion factor 1 + chi_farm_col * phi_local_k
+% Default regional structs for PType solvers (overwritten dynamically per phase in master scripts)
+if ~isfield(Params, 'M_olig_reg')
+    Params.M_olig_reg = struct('HH_Rural', 1.080, 'HH_Small', 1.070, 'HH_Large', 1.050, 'HH_Auckland', 1.040);
+end
+if ~isfield(Params, 'kai_mult_reg')
+    Params.kai_mult_reg = struct('HH_Rural', 1.000, 'HH_Small', 1.000, 'HH_Large', 1.000, 'HH_Auckland', 1.000);
+end
+if ~isfield(Params, 'mu_monop_reg')
+    Params.mu_monop_reg = struct('Firm_Rural', 0.910, 'Firm_Small', 0.930, 'Firm_Large', 0.980, 'Firm_Auckland', 1.000);
+end
+if ~isfield(Params, 'rho_olig_reg')
+    Params.rho_olig_reg = struct('Firm_Rural', Params.rho_olig_vec(1), 'Firm_Small', Params.rho_olig_vec(2), ...
+        'Firm_Large', Params.rho_olig_vec(3), 'Firm_Auckland', Params.rho_olig_vec(4));
+end
+if ~isfield(Params, 'rho_farm_reg')
+    Params.rho_farm_reg = struct('Firm_Rural', Params.rho_farm_vec(1), 'Firm_Small', Params.rho_farm_vec(2), ...
+        'Firm_Large', Params.rho_farm_vec(3), 'Firm_Auckland', Params.rho_farm_vec(4));
+end
+if ~isfield(Params, 'lambda_col_mult')
+    Params.lambda_col_mult = struct('Firm_Rural', 1.018, 'Firm_Small', 1.018, 'Firm_Large', 1.012, 'Firm_Auckland', 1.012);
+end
 
 %% 8. Long-term Macro Investment Parameters
 
