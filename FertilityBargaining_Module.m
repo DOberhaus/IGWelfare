@@ -185,7 +185,7 @@ for u_i = 1:n_ug
 end
 
 % Anchor CE_UCurve_SS2 so Age 64 matches T1 National SS2 (+24.54% CE) and Age 65 = +24.37% CE:
-ce_anchor_64 = 24.539977; % Default n_z = 7 Rouwenhorst SS2 National CE% with z_l -> z_h upgrading
+ce_anchor_64 = 24.699335; % Default n_z = 7 Rouwenhorst SS2 National CE% with z_l -> z_h & 85% T_k retirement
 if evalin('base', 'exist(''T1'', ''var'')')
     T1_ws = evalin('base', 'T1');
     if istable(T1_ws) && height(T1_ws) >= 6 && abs(super_age_ss2_target - 64.0) < 0.5

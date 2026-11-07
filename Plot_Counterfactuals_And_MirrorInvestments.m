@@ -27,7 +27,7 @@ if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
 % =========================================================================
 Pop_Weights    = [0.160, 0.240, 0.259, 0.341]; % [Rural, Small, Large, Auckland]
 SS1_Target_Reg = [11.945, 13.739, 14.888, 17.515];
-SS2_Target_Reg = [20.686, 22.876, 24.321, 27.686];
+SS2_Target_Reg = [20.628, 22.984, 24.574, 27.913];
 
 if evalin('base', 'exist(''T1'', ''var'')')
     T1_ws = evalin('base', 'T1');
