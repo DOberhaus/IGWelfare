@@ -1,5 +1,5 @@
 %% PLOT_CHILDFISCAL_SSANKEY.M
-% 6-Gate (28-Node) Pairwise N-Panel Lifecycle Fiscal Sankey Diagram (A3 Layout, 100% GPU-Vectorized)
+% 6-Gate (29-Node) Pairwise N-Panel Lifecycle Fiscal Sankey Diagram (A3 Layout, 100% GPU-Vectorized)
 % Units: Cohort-Weighted Annual NZD Thousands (kNZD/yr per child born in cohort)
 %        + Explicit Population Share (% pop) on Gates 1-4 & Explicit 4-Lane Waring / Landlord Split:
 %   - Gate 1 (J = 1, Birth, Age 0 — 4 Nodes: 1..4):
@@ -48,7 +48,7 @@ end
 Phases   = Build_Phase_Registry(Active_Phases);
 N_phases = numel(Phases);
 
-%% 3. RENDER 1..N FISCAL PANELS, STITCH, AND EXPORT 28-NODE TABLE 14 & 2050 PROTOCOL LEDGERS
+%% 3. RENDER 1..N FISCAL PANELS, STITCH, AND EXPORT 29-NODE TABLE 14 & 2050 PROTOCOL LEDGERS
 FiscalLedger = struct();
 
 for r_loop = 1:length(Target_Regions)
@@ -102,13 +102,13 @@ for r_loop = 1:length(Target_Regions)
         FiscalLedger.Protocol_2050_Summary = FiscalLedger.(Target_Region).Protocol_2050_Summary;
     end
 
-    %% 3.3 EXPORT CUSTOM 6-GATE (28-NODE) FISCAL LEDGER CSV (Table14_FiscalLedger_6Gate_Decomp_<Region>.csv)
+    %% 3.3 EXPORT CUSTOM 6-GATE (29-NODE) FISCAL LEDGER CSV (Table14_FiscalLedger_6Gate_Decomp_<Region>.csv)
     T_FiscalCSV = Build_Custom_Table14_Fiscal_CSV(Phase_Ledgers, {Phases.Code});
     FiscalLedger.(Target_Region).Table14_Decomp = T_FiscalCSV;
 
     fiscal_csv_fname = fullfile(OutputDir, sprintf('Table14_FiscalLedger_6Gate_Decomp_%s.csv', Target_Region));
     writetable(T_FiscalCSV, fiscal_csv_fname);
-    fprintf('  -> Exported %d-Phase 6-Gate (28-Node) Fiscal CSV to: %s\n', N_phases, fiscal_csv_fname);
+    fprintf('  -> Exported %d-Phase 6-Gate (29-Node) Fiscal CSV to: %s\n', N_phases, fiscal_csv_fname);
 
     fig_Merged = figure('Name', sprintf('%d-Panel 6-Gate Child Fiscal Sankey: %s', N_phases, Target_Region), ...
         'Color', 'w', 'Position', fig_pos);
@@ -213,7 +213,7 @@ else
     montessori_bank = +0.05;
 end
 
-% 6-Gate (28-Node) Accumulators (Cohort-Weighted kNZD/yr per birth + Exact Population Shares):
+% 6-Gate (29-Node) Accumulators (Cohort-Weighted kNZD/yr per birth + Exact Population Shares):
 %   Gate 1 (J = 1 Birth, 4 nodes -> Nodes 1..4):
 %     [1: Acute Hardship Tier 3 Support (DEP-17 9+, Deep Crimson);
 %      2: Residual AHC Paper Support & Waring Whanau Buffer (AS Landlord Capture + Unpaid Care, Burnt Rust);
