@@ -164,21 +164,16 @@ Params.K_whanau                  = Params.K_whanau_base; % Active regime value (
 % Two-Stage Child Skill (Cunha et al.), Ben-Porath, Housing Tenure, & Tax Parameters
 Params.gamma1_self = 0.53; Params.gamma1_inv = 0.24; Params.gamma1_par = 0.23; Params.phi1_ces = 0.35;
 Params.gamma2_self = 0.87; Params.gamma2_inv = 0.07; Params.gamma2_par = 0.06; Params.phi2_ces = -0.95;
-Params.G_ece_stage1 = 0.045; Params.G_ece_stage2 = 0.065; Params.gbar_ece = 0.020;
-Params.s_sub = 0.100; Params.omega_ic = 0.420; Params.h_par_mean = 1.000;
-
+Params.G_ece_stage1_base = Params.G_ece1_sched(1); Params.G_ece_stage2_base = Params.G_ece2_sched(1);
+Params.G_ece_base = Params.G_ece_stage1_base;
+Params.gbar_ece = 0.020; Params.s_sub = 0.100;
+Params.omega_ic = 0.420; Params.h_par_mean = 1.000;
 Params.phi_nd = 0.80; Params.mu_maint = 0.04; Params.upsilon_h = 0.008; Params.chi_bar = 2.55;
 Params.alpha_I = 0.090; Params.alpha_H = 0.064;
-Params.p_super = 0.18; Params.c_floor = 0.04; Params.b1_beq = 4.20; Params.b2_beq = 0.45; Params.YouthGrant = 0.03;
+Params.p_super = 0.18; Params.c_floor = 0.04;
+Params.b1_beq = 4.20; Params.b2_beq = 0.45; Params.YouthGrant = 0.03;
 Params.tau_l = 0.22; Params.tau_c = 0.15; Params.tau_k = 0.20; Params.tau_a = 0.005; Params.tau_b = 0.15;
-Params.alpha_k = 0.33; Params.lambda_col = 1.80;
-Params.sigma_hc_ig = 0.18;
-
-% Regional Extended Family / Whanau Proximity & Alloparental Network Intensity K_whanau(k) in [0, 1]
-% Reflects higher multigenerational co-residence / proximity in Rural & Provincial regions
-% vs. nuclear-household isolation in high-rent metropolitan Auckland (shockable via papakainga / zoning policy),
-% and connects NZ Super age (Jr vs 65), pension adequacy (p_super), and elders' ability to stay in their
-% communities (Params.Q_reg vs immutable baseline Params.Q_reg_base)
+Params.alpha_k = 0.33; Params.lambda_col = 1.80; Params.sigma_hc_ig = 0.18;
 
 % Update active regional whanau capacity Params.K_whanau(k) from fixed Params.K_whanau_base(k)
 % as a function of current NZ Super age (Jr), pension rate (p_super), and current house prices (Params.Q_reg):
@@ -190,6 +185,7 @@ for r_idx = 1:length(Regions)
     elder_home_mult = min(1.15, max(0.50, (Params.p_super / 0.18) * ((Params.Q_reg_base.(hh_type) / Params.Q_reg.(hh_type)) ^ 0.35)));
     Params.K_whanau.(hh_type) = Params.K_whanau_base.(hh_type) * elder_time_mult * elder_home_mult;
 end
+Params = Configure_TimeGrid_Params(Params);
 
 %% 5. SOLVE VFI & 4-REGION + ABROAD INTERGENERATIONAL TRANSITION LOOP
 for r_idx = 1:N_reg

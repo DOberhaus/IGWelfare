@@ -339,16 +339,22 @@ else
     elder_time_mult = 1.0 + Params.kappa_kuia_max * tanh((A_base - super_age_s) / Params.tau_kuia_sat);
 end
 
-M_mentor_s = min(1.0, max(0.0, (G_ece2_s - 0.045) / (0.085 - 0.045)));
-M_mentor_0 = min(1.0, max(0.0, (Params.G_ece_stage2 - 0.045) / (0.085 - 0.045)));
-
-N_reg     = numel(Dist_Reg_Cell);
-n_h       = numel(h_vec);
-tfr_row   = zeros(1, N_reg);
-diff_row  = zeros(1, N_reg);
+Reg_Names    = {'Rural', 'Small', 'Large', 'Auckland'};
+N_reg        = numel(Dist_Reg_Cell);
+n_h          = numel(h_vec);
+tfr_row      = zeros(1, N_reg);
+diff_row     = zeros(1, N_reg);
 struggle_row = zeros(1, N_reg);
 
 for r_idx = 1:N_reg
+    hh_t       = ['HH_', Reg_Names{r_idx}];
+    g1_r       = G_ece1_s.(hh_t);
+    g2_r       = G_ece2_s.(hh_t);
+    g1_0       = Params.G_ece_stage1.(hh_t);
+    g2_0       = Params.G_ece_stage2.(hh_t);
+    M_mentor_s = min(1.0, max(0.0, (g2_r - 0.045) / (0.085 - 0.045)));
+    M_mentor_0 = min(1.0, max(0.0, (g2_0 - 0.045) / (0.085 - 0.045)));
+
     Dist_k = Dist_Reg_Cell{r_idx};
     w_k    = w_Reg_Vec(r_idx);
     Q_k    = Q_Base_Vec(r_idx) * Q_mult(r_idx);
@@ -359,11 +365,13 @@ for r_idx = 1:N_reg
 
     fert_by_h = zeros(n_h, 1);
     mass_by_h = zeros(n_h, 1);
+
     for jj = j_fert_vec
         for ih = 1:n_h
             m_cell = sum(Dist_k(:, ih, :, :, jj), 'all');
-            opp_cost_mother = chi_f_pen * w_k * h_vec(ih) / max(0.50, 1 + 2.5 * G_ece1_s + 0.65 * dK_r);
+            opp_cost_mother = chi_f_pen * w_k * h_vec(ih) / max(0.50, 1 + 2.5 * g1_r + 0.65 * dK_r);
             housing_drag    = 0.22 * log(max(1.0, Q_k));
+
             n_opt = (beta_hyp ^ 0.65) * 2.28 / (1 + opp_cost_mother + housing_drag * (Q_k > 1.8));
             n_opt = max(0.85, min(2.60, n_opt));
 
@@ -371,12 +379,13 @@ for r_idx = 1:N_reg
             mass_by_h(ih) = mass_by_h(ih) + m_cell;
         end
     end
+
     avg_fert_h     = fert_by_h ./ max(1e-12, mass_by_h);
     tfr_row(r_idx) = sum(fert_by_h) / max(1e-12, sum(mass_by_h));
     diff_row(r_idx)= mean(avg_fert_h(1:2)) - mean(avg_fert_h(6:7));
 
     reg_weight         = 0.75 + 0.10 * r_idx;
-    ece_relief         = 115.0 * (G_ece1_s - Params.G_ece_stage1) * reg_weight ...
+    ece_relief         = 115.0 * (g1_r - g1_0) * reg_weight ...
         +  18.0 * (M_mentor_s - M_mentor_0) * reg_weight;
     whanau_gain        = 22.5 * max(0.0, dK_r);
     yrs_late_r         = max(0.0, super_age_s - A_base);

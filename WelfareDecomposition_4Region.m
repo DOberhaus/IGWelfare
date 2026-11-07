@@ -123,12 +123,20 @@ for m = 1:M_reforms
     p_code = spec.Code;
 
     % 3A. Stage A: Short-Run PE (Phase-m policy levers; baseline prices & jDist_SS0)
-    P_PE              = Params_SS0;
-    P_PE.G_ece_stage1 = spec.G_ece_stage1;
+    P_PE                   = Params_SS0;
+    P_PE.G_ece_stage1_base = spec.G_ece_stage1;
     if isfield(spec, 'G_ece_stage2')
-        P_PE.G_ece_stage2 = spec.G_ece_stage2;
+        P_PE.G_ece_stage2_base = spec.G_ece_stage2;
+    else
+        P_PE.G_ece_stage2_base = spec.G_ece_stage1;
     end
-    P_PE.G_ece        = spec.G_ece;
+    P_PE.G_ece_base        = spec.G_ece;
+    if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec)
+        P_PE.active_phi_local_vec = spec.phi_local_vec;
+    else
+        P_PE.active_phi_local_vec = Params_SS0.phi_local_SS1;
+    end
+    P_PE              = Configure_TimeGrid_Params(P_PE);
     P_PE.YouthGrant   = spec.YouthGrant;
     P_PE.tau_a        = spec.tau_a;
     P_PE.tau_b        = spec.tau_b;
@@ -180,6 +188,12 @@ for m = 1:M_reforms
     else
         elder_time_mult = 1 + 0.16*tanh((65 - super_age_m)/1.8);
     end
+
+    if isfield(spec, 'M_olig_vec') && ~isempty(spec.M_olig_vec),       P_GE.active_M_olig_vec    = spec.M_olig_vec;    else, P_GE.active_M_olig_vec    = Params_SS0.M_olig_SS1;    end
+    if isfield(spec, 'mu_monop_vec') && ~isempty(spec.mu_monop_vec),   P_GE.active_mu_monop_vec  = spec.mu_monop_vec;  else, P_GE.active_mu_monop_vec  = Params_SS0.mu_monop_SS1;  end
+    if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec), P_GE.active_phi_local_vec = spec.phi_local_vec; else, P_GE.active_phi_local_vec = Params_SS0.phi_local_SS1; end
+    P_GE = Configure_TimeGrid_Params(P_GE);
+
     for r_idx = 1:N_reg
         reg = Regions{r_idx};
         P_GE.w_reg.(['HH_', reg])   = Params_SS0.w_reg.(['HH_', reg])   * spec.w_mult_vs_SS0(r_idx);
@@ -188,7 +202,6 @@ for m = 1:M_reforms
         elder_home_mult = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
         P_GE.K_whanau.(['HH_', reg]) = Params_SS0.K_whanau_base.(['HH_', reg]) * elder_home_mult * elder_time_mult;
     end
-
     [V_GE_Exo_m, Policy_GE_Exo_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
         d_grid, a_grid, z_grid, pi_z, ReturnFn, P_GE, DiscountFactorParamNames, vfoptions);
 
