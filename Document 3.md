@@ -1,5 +1,5 @@
 # Document 3: Leaving Our Silos, Lifting All Boats
-## Dynamic Complementarity, Coalition Architecture, and Why Single-Lane Policy Fails Against the Fiscal Sinkhole
+#### Dynamic Complementarity, Coalition Architecture, and Why Single-Lane Policy Fails Against the Fiscal Sinkhole
 
 *Author:* Michael Tiemann (mdtiemann@gmail.com)  
 *Date:* November 2026 | *Code & Replication Repository:* [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)  
@@ -37,7 +37,7 @@ Just as our spatial migration model captures how households naturally prefer to 
 
 ## Part I: The 2D Coalition Matrix — Why Every Siloed Constituency Needs Its Neighbors
 
-### 1.1 Four Policy Constituencies, One Coupled Lifecycle
+#### 1.1 Four Policy Constituencies, One Coupled Lifecycle
 
 When young adults launch into independent life at Age 20, they navigate a coupled geographic system connecting Rural districts, Small towns, Large regional cities, Auckland, and the outside option of emigrating Abroad. New Zealand's political economy operates on an isomorphic $`4 \times 4`$ grid. Four distinct policy constituencies each champion a vital subset of our **12-Layer Constructive Synergy Stack** (7 Isolated Factors + 5 Synergy Wedges, illustrated below and tabulated in *Appendix Table A.1*):
 
@@ -48,7 +48,7 @@ When young adults launch into independent life at Age 20, they navigate a couple
 3. **Coalition 3 — The GrowthNZ, Founders, Venture & Primary Exporters Constituency (*The "Where Will the Jobs Come From?" Lane*):** Champions "use-it-or-lose-it" capital reallocation from passive land and exotic-pine carbon hoarding to high-productivity urban and MPI 4-channel primary-sector operating firms plus regional infrastructure reinvestment (*Layer 4, Enterprise side*), which couples with Coalitions 1 and 2 to ignite **Wedge 3** (reversing the youth brain drain and matching domestic talent with expanding firms) and **Wedge 5** (converting `SS0` CBAM export drag into a verified `+4.5%` Rural / `+3.0%` Small Clean-Green export premium).
 4. **Coalition 4 — The Fiscal Stewards & Sovereign Credit Guardians (*The Balance-Sheet, NDC Solvency & Tax-Relief Lane*):** Champions Sovereign Debt-Sinking (*Layer 9*) and working-age PAYE tax relief alongside Superannuation and Paris Agreement NDC solvency (*Layer 10*), which close the macroeconomic loop in **Wedge 4** and **Wedge 5**.
 
-### 1.2 Anatomy of the Four Single-Lane Silos
+#### 1.2 Anatomy of the Four Single-Lane Silos
 
 The $`4 \times 4`$ Coalition Matrix below (`Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png`, detailed in *Appendix Table A.2*) compares what each constituency achieves inside its own diagonal silo against the off-diagonal synergy wedges unlocked when it partners with its neighbors:
 
@@ -63,7 +63,7 @@ The $`4 \times 4`$ Coalition Matrix below (`Fig_Doc3_2D_Coalition_Migration_Matr
 
 ## Part II: The Sinking Baseline (*SS0*) & The 3.0%-of-GDP (+NZD 8.0B/yr) Defense Commitment
 
-### 2.1 The 3D Fiscal Surface and the Economics of Sustaining a 3%-of-GDP Defense Commitment
+#### 2.1 The 3D Fiscal Surface and the Economics of Sustaining a 3%-of-GDP Defense Commitment
 
 Why do single-lane strategies look merely suboptimal in a static world, yet fail so severely in reality? Because New Zealand's baseline is sliding down a non-linear 3D surface (`Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png` below) driven by **Compounding Net Crown Debt** on one axis and **Rising PAYE Tax Rates** on the other:
 
@@ -76,7 +76,7 @@ Now consider what happens if geo-strategic commitments require New Zealand to li
 * **Same Dollar Outlay (~NZD 8.1B–8.3B/yr), Different Fiscal Mechanics:** Look at the Mirror Investment ledger of our Generational Plan ([`Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png)). Our *entire* Phase 1 (*SS1*) gross public investment across all five domestic pillars—First-2,000-Days wraparound, adolescent mentoring, the Youth Capital Grant, regional transfers, and the front-loaded **~NZD 3.0B CERF Household & Enterprise Electrification Kick-Start** (`-Inv 5`)—costs **NZD 8.12B–8.27B/yr** (rising to NZD 10.38B/yr in *SS2*). Because those domestic investments lift children out of the struggling trajectory (from 22.0% down to 1.5%), reduce reactive state care, hospital, and justice outlays by over 75%, extinguish offshore Paris NDC liabilities, and retain skilled youth, their net unrecovered public cost reaches zero at **exact Year 20.0 (Generational Cash Breakeven)** and generates **+NZD 56.14B/yr (+23.59% CE)** in permanent household welfare.
 * **Carrying an External Security Commitment Requires Domestic Fiscal Capacity:** Whatever its strategic merits, an external defense expansion does not directly reduce domestic hospital, care, or benefit liabilities. Financed on top of an unreformed status quo (*SS0*), an additional +NZD 8.0B/yr outlay pushes required PAYE taxes to 30.68% and accelerates Crown debt toward 200% of GDP, lowering household welfare by an additional **-5.48 percentage points** (to **-21.69% CE**). To sustain a 3.0%-of-GDP defense posture without squeezing working families, New Zealand must **expand its domestic human-capital and enterprise tax base first**.
 
-### 2.2 Narrative Walkthrough of the Eight 60-Year Trajectories
+#### 2.2 Narrative Walkthrough of the Eight 60-Year Trajectories
 
 Tracing the eight 60-year paths in Panel B of the figure above (tabulated in *Appendix Table A.3*) illustrates how standalone silos compare against the unified compact:
 
@@ -89,9 +89,9 @@ Tracing the eight 60-year paths in Panel B of the figure above (tabulated in *Ap
 7. **Unified 4-Coalition Plan + 3.0% GDP Defense Commitment (*Sustains +NZD 8.0B/yr Outlay* → *+20.07% CE*):** Once all four coalitions unite to expand domestic capability and enterprise productivity, the economy sustains a 3.0%-of-GDP defense commitment while still retiring public debt (to 31.5% of GDP), cutting PAYE taxes (to 20.65%), and delivering **+20.07% CE** in net household welfare—a **+41.76 percentage-point advantage** over facing the same defense requirement under the status quo.
 8. **★ Unified 4-Coalition Plan ($`SS1 \rightarrow SS2`$) (*Super Age 64 + PAYE Cut + Debt Sunk + NDC Clean-Green* → *+23.59% CE*, a *+39.80 pp* Total Welfare Swing):** Without the external defense shock, uniting all four lanes crosses generational Cash Breakeven at **exact Year 20.0**, retires sovereign debt to **22.0% of GDP**, cuts working-age PAYE taxes to **18.85%**, lowers the NZ Super eligibility age to **64**, and lifts national welfare to **+23.59% CE**.
 
-### 2.3 Why Trajectory 3 Backfires and Trajectory 8 Soars: The Cross-Generational Coupling of Whānau, Housing, and NZ Superannuation
+#### 2.3 Why Trajectory 3 Backfires and Trajectory 8 Soars: The Cross-Generational Coupling of Whānau, Housing, and NZ Superannuation
 
-Comparing Trajectory 3 (*Early Austerity: Cuts ECE + Raises Super to 70* → `-6.80% CE`) against Trajectory 8 (*Unified 4-Coalition Plan: Super Age 64 + PAYE Cut + Debt Sunk* → `+24.24% CE`) exposes a blind spot in conventional single-lane fiscal accounting. Static budget models treat generations as separate ledgers across time rather than as **simultaneous, interconnected *whānau* networks in calendar time**. Yet when nuclear parents are aged 26 to 43 raising children through the **First 2,000 Days** (ages 0–5) and the **Early-Adolescent Transition Gate** (ages 12–14), their own parents, *kuia*, *koroua*, and older aunties are simultaneously aged **55 to 72**.
+Comparing Trajectory 3 (*Early Austerity: Cuts ECE + Raises Super to 70* → `-6.80% CE`) against Trajectory 8 (*Unified 4-Coalition Plan: Super Age 64 + PAYE Cut + Debt Sunk* → `+23.59% CE`) exposes a blind spot in conventional single-lane fiscal accounting. Static budget models treat generations as separate ledgers across time rather than as **simultaneous, interconnected *whānau* networks in calendar time**. Yet when nuclear parents are aged 26 to 43 raising children through the **First 2,000 Days** (ages 0–5) and the **Early-Adolescent Transition Gate** (ages 12–14), their own parents, *kuia*, *koroua*, and older aunties are simultaneously aged **55 to 72**.
 
 As formalized in [Document 2A (Section 3.3)](Document%202A.md) and [Document 2T (Section 4.1)](Document%202T.md), extended *whānau* care capacity $`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{eff}}(k) = K_{\mathrm{wh\bar{a}nau},0}(k) \cdot \Phi_{\mathrm{super}}(k)`$ is an off-balance-sheet public infrastructure asset jointly governed by two policy levers that sit in different constituency lanes—**universal New Zealand Superannuation** (*The Fiscal Stewardship Lane*) and **metropolitan housing affordability** (*The WellBeing & Housing Lane*):
 
@@ -110,28 +110,28 @@ $$
 
 Policy coalitions rarely stall because their values are wrong; they stall because they try to optimize one sub-system in isolation. Below, we summarize what each constituency gains by welcoming the other three into a single compact—followed by what that compact means in the daily lives of New Zealand households.
 
-### 3.1 To the Barnardos, Iwi & Youth Development Constituency (*The Human Potential Lane*)
+#### 3.1 To the Barnardos, Iwi & Youth Development Constituency (*The Human Potential Lane*)
 * **Your Core Contribution:** Front-loading universal First-2,000-Days wraparound (*Te Korowai Mokopuna*, *Whānau Ora*, *Kōhanga Reo*, *A'oga Amata*) and scaling *Tuakana-Teina*, Graeme Dingle Foundation, and Montessori adolescent mentoring is the engine that breaks the Dunedin Study's hardship pipeline into Oranga Tamariki care, hospitals, and youth justice.
 * **Why You Need Your Neighbors:**
   1. *You Need the Fiscal Stewards' Actuarial Language:* Because five-year-olds do not pay income tax until adulthood, traditional cash accounting makes your program look like a deficit in Year 3. Adopting **ACC-style Actuarial Continuation Valuation** recognises your verified **3.84x fiscal return (and 1.16x direct cost avoidance alone) at Year 5**—giving early childhood and mentoring funding durable institutional protection across parliaments.
   2. *You Need the WellBeing Alliance's Housing Relief:* You cannot staff high-trust early learning or keep *whānau* intact when *Kaiako* and *kuia* are priced out of Auckland and regional cities. Cooling speculative land values expands the real purchasing power of every dollar you invest.
   3. *You Need GrowthNZ's High-Wage Enterprises:* Lifting youth into the thriving skill tiers without domestic enterprise growth risks training young New Zealanders for jobs in Sydney and Melbourne. You need high-productivity local firms expanding to hire the young people you nurture.
 
-### 3.2 To the WellBeing & Housing Justice Alliance (*The Fair Start & Whānau Space Lane*)
+#### 3.2 To the WellBeing & Housing Justice Alliance (*The Fair Start & Whānau Space Lane*)
 * **Your Core Contribution:** Housing stability is the bedrock of family wellbeing. Rebalancing taxes onto speculative land and large estates while funding a universal Age-20 Youth Capital Grant and regional cost-of-living transfers clears the mortgage deposit hurdle for young renters and keeps *kuia* and *koroua* anchored in their communities.
 * **Why You Need Your Neighbors:**
   1. *Your Youth Grant Needs Barnardos' Childhood Pipeline:* A capital grant at Age 20 cannot substitute for missed early childhood brain development or adolescent executive function. Only when young adults arrive at Age 20 thriving in skill can they convert seed capital into homeownership and business formation rather than seeing it absorbed by landlord rents.
   2. *Your Tax Rebalance Needs GrowthNZ's Productive Enterprise Distinction:* Tax reform commands broad civic legitimacy when it distinguishes clearly between passive rent extraction and active value creation. By taxing dormant land hoarding while *cutting* tax drag on active business reinvestment, **active entrepreneurs remain net positive right up to NZD 50M in net worth and break even at the NBR Rich List median (NZD 140M)**—aligning housing justice with domestic job creation.
   3. *Lowering NZ Super to Age 64 Needs the Fiscal Solvency Loop:* Lowering the retirement age to **64** in Phase 2 releases a **+8.1% *Kuia / Koroua* caregiving time boost** for young families—but as our U-curve analysis demonstrates, early retirement is only fiscally sustainable once hardship reduction and debt-sinking have expanded the working tax base.
 
-### 3.3 To the GrowthNZ, Founders & Venture Constituency (*The "Where Will the Jobs Come From?" Lane*)
+#### 3.3 To the GrowthNZ, Founders & Venture Constituency (*The "Where Will the Jobs Come From?" Lane*)
 * **Your Core Contribution:** Social transfers alone do not create high-wage jobs; New Zealand must rotate capital out of passive property and into collateral-constrained operating firms and productive infrastructure.
 * **Why You Need Your Neighbors:**
   1. *You Cannot Scale Firms in a Domestic Skill Shortage:* Recruiting foreign specialists on visas cannot compensate for a domestic school pipeline where over a fifth of young people launch in the struggling tier ($`h_1\text{--}h_2`$). You need Barnardos and *Tuakana-Teina* mentoring to nearly triple New Zealand's domestic thriving talent pool.
   2. *You Need the WellBeing Alliance to Cure the Lavoisier Syndrome (Rotating Gate 5 from $`z_l`$ Rent-Seekers & Pine-ETS Arbitrageurs to $`z_h`$ Builders & MPI Clean-Green Exporters):* As long as residential and rural land appreciates largely tax-free and unharvested exotic pine carbon farms (`kappa_pine = 1.0`) capture passive ETS rents, domestic bank credit and 61% of retained top-tier graduates will be siphoned into passive property and carbon speculation ($`z_l`$, **Node 19** at 14.1% of the cohort in *SS0*) rather than operating enterprises ($`z_h`$, **Node 20** at just 6.2%), while young engineers flee urban rents. Grounded in the Ministry for Primary Industries' (MPI) 4-channel primary-sector value-add assumptions (*Fit for a Better World*, 2020; *SOPI*, 2025/2026) and bounded by a conservative regional land-inelasticity ceiling (`Agglom_Map = [0.68, 0.80, 0.94, 1.00]`), pairing the 1.5% land/wealth levy, estate rebalance, and circular biogenic pricing with the Age-20 Youth Capital Grant and `~NZD 3.0B` CERF electrification pulse rotates prime-career talent out of dormant land hoarding, expands skilled regional trades (**Node 18**), lifts **Productive Enterprise Builders & Clean-Green Exporters ($`z_h`$) to 35.3% of the cohort in SS1 and 46.0% in SS2**, and flips primary exporters from `SS0` CBAM drag to a **+4.5% (`Rural`) / +3.0% (`Small`) Clean-Green export premium**.
   3. *You Need Phase-2 Debt-Sinking:* Retiring sovereign debt lowers domestic business borrowing rates by **-60 bps** (expanding SME collateral capacity), while the Phase-2 PAYE tax cut makes New Zealand tax-competitive with Australia for senior talent.
 
-### 3.4 To the Fiscal Stewards, Bond Markets & Balance-Sheet Guardians (*The Solvency & Tax-Relief Lane*)
+#### 3.4 To the Fiscal Stewards, Bond Markets & Balance-Sheet Guardians (*The Solvency & Tax-Relief Lane*)
 
 * **Your Core Contribution:** Compounding sovereign debt, unfunded offshore Paris NDC compliance liabilities (`NZD 18.5B` and a `+45 bps` sovereign spread in `SS0`), and rising marginal tax rates are a genuine threat to New Zealand's long-run prosperity and resilience.
 * **Why "Solving Debt First" Fails (Why Balance-Sheet Discipline Needs Public-Policy Innovation):** Because a sovereign nation cannot fire its citizens, attempting to cut debt in Phase 1 (`SS1`) by starving early childhood capability or raising the Superannuation age to 70 backfires across three channels: (i) nearly half of displaced older manual workers shift onto disability and hardship support; (ii) forcing 65-to-69-year-old *kuia* and aunties to work withdraws **-36.2%** of extended-*whānau* care from young families and imposes an upward sandwich-generation elder-care drag on working-age children; and (iii) the resulting rise in struggling youth swells hospital, care, and justice bills while shrinking the future tax base. Only by protecting the human-capital and enterprise engines in Phase 1—while rotating capital from `Node 19` ($`z_{\ell}`$) to `Node 20` ($`z_h`$) to extinguish offshore Paris NDC liabilities within New Zealand's own productive borders—do you eliminate the `+45 bps` climate spread and generate the structural surplus that sinks debt to **22.0% of GDP** (a `-60 bps` interest reduction) and cuts PAYE taxes to **18.85%** in Phase 2.
@@ -150,7 +150,7 @@ Policy coalitions rarely stall because their values are wrong; they stall becaus
 
 ---
 
-### 3.5 What Our Calculations Mean for Everyday New Zealanders and Their Whānau
+#### 3.5 What Our Calculations Mean for Everyday New Zealanders and Their Whānau
 
 Stepping back from coalition mechanics, what does this coupled transition mean in the lived biography of a New Zealand household across the three stages of life?
 
@@ -162,15 +162,15 @@ Stepping back from coalition mechanics, what does this coupled transition mean i
 
 ## Part IV: Perishability, Two-Term "Stop-Go" Pendulums, and Why "Thick" Operators Beat "Thin" Spreadsheets
 
-### 4.1 The Six-Year (Two-Term) Political Pendulum
+#### 4.1 The Six-Year (Two-Term) Political Pendulum
 
 New Zealand's adversarial political cycle typically swings in **six-year (two-term) pendulums**: a government serves two 3-year terms investing in social and regional programs (Years 1–6), followed by a rival government serving two terms cutting "unproven soft spending" to chase short-term debt targets or tax cuts (Years 7–12), before surging social distress forces a rebound in Years 13–18.
 
 Why do conventional magic spreadsheets vastly underestimate the damage caused by this six-year "Stop-Go" pendulum?
 
-### 4.2 "Thin" Spreadsheets vs. "Thick" State-Contingent Reality
+#### 4.2 "Thin" Spreadsheets vs. "Thick" State-Contingent Reality
 
-As formalized in our companion technical tutorial, **[Document 2T: "Thick" vs. "Thin" Numbers in Quantitative Public Policy](Document%202T.md)**, a conventional spreadsheet models policy using **"thin" numbers**—evaluating linear formulas at population averages. Under a linear spreadsheet (`Trajectory 3a` in Panel B of Figure 1), funding a program 50% of the time (6 years On / 6 years Off) is assumed to deliver roughly half the long-run benefit (**+12.12% CE**), as if child development were a highway project that waits intact whenever the road crew is stood down for two terms.
+As formalized in our companion technical tutorial, **[Document 2T: "Thick" vs. "Thin" Numbers in Quantitative Public Policy](Document%202T.md)**, a conventional spreadsheet models policy using **"thin" numbers**—evaluating linear formulas at population averages. Under a linear spreadsheet (`Trajectory 3a` in Panel B of Figure 1), funding a program 50% of the time (6 years On / 6 years Off) is assumed to deliver roughly half the long-run benefit (**+11.80% CE**), as if child development were a highway project that waits intact whenever the road crew is stood down for two terms.
 
 In reality—and in our state-contingent VFI engine (`Trajectory 3b`)—human capability evolves across **"thick" probability distributions** with non-linear cliffs and developmental gates. Swinging between 6 years of pro-social investment and 6 years of fiscal-cutback swings triggers four compounding **perishability traps**:
 
@@ -179,7 +179,7 @@ In reality—and in our state-contingent VFI engine (`Trajectory 3b`)—human ca
 3. **Collapse of Young-Adult Credibility:** When 20-to-35-year-olds observe a six-year pendulum that repeatedly raids the generational compact, policy credibility collapses to zero; even during the "On" years, young graduates assume support will be repealed and emigrate to Australia anyway. **Wedge 3 collapses.**
 4. **Irreversible Cohort Scarring:** Because a child only passes through Ages 0–5 and Ages 12–14 once, a six-year cut permanently scars that cohort's adult earning capacity for 45 years—preventing the Crown ledger from ever reaching the Year 20.0 Cash Breakeven needed to unlock **Wedges 4 and 5**.
 
-#### Table 4.1: Perishability & Counterfactual Audit Across Policy Regimes
+##### Table 4.1: Perishability & Counterfactual Audit Across Policy Regimes
 
 | Counterfactual Regime / Policy Layer | Thin Spreadsheet Prediction (Scalar Means) | Thick VFI State-Contingent Reality | Welfare Lost to Synergy Collapse & Fade-Out | Perishability Window & How the Coalition Compact Protects It |
 | :--- | :---: | :---: | :---: | :--- |
@@ -207,14 +207,14 @@ In reality—and in our state-contingent VFI engine (`Trajectory 3b`)—human ca
 
 ## Part V: The Grand Coalition Compact — Phasing *SS1* Foundation & Incubation Before *SS2* Debt & Tax-Relief Harvest
 
-### 5.1 Resolving the Political Impasse: Not "Who Wins?", But "In What Order?"
+#### 5.1 Resolving the Political Impasse: Not "Who Wins?", But "In What Order?"
 
 None of New Zealand's four policy constituencies needs to abandon its core mission. The conflict between Child Advocates, Housing & WellBeing Reformers, GrowthNZ Venture & Primary Builders, and Fiscal Stewards is not an irreconcilable clash of values—it is a **sequencing error**:
 
 * **Phase 1 (*SS1*, Years 0–20.0 — Building the Human, Electrification & Enterprise Foundation at a Strictly Revenue-Neutral 22.0% PAYE):** *Coalition 1* gets Universal First-2,000-Days wraparound and *Tuakana-Teina* / Montessori mentoring funded to scale and legally protected by **Year-5 ACC Actuarial Continuation Valuation (3.84x audited fiscal return)**. *Coalition 2* gets metropolitan housing cooling, regional transfers + spatial carbon rebates, the `~NZD 3.0B` CERF household/farm electrification kick-start (`-Inv 5`), universal Age-20 Youth Capital Grants, and NZ Super protected at Age 65. *Coalition 3* gets "use-it-or-lose-it" tax rebalancing and MPI 4-channel primary-sector transformation that rotate capital and talent out of dormant land and pine-ETS arbitrage and into operating enterprises. *Coalition 4* gets ironclad cash neutrality (PAYE held at 22.0%) while reducing the struggling launch share and energy/NDC drag slashes reactive remediation costs by over 75%—driving the Crown ledger to hard **Generational Cash Breakeven at exact Year 20.0**.
 * **Phase 2 (*SS2*, Year 25 / 2050 Protocol — Harvesting the Debt, Infrastructure, Clean-Green Export, PAYE Cut, & Super Age-64 Dividend):** Once hard Cash Breakeven is crossed at Year 20.0, the statutory **50/50 Dynamic Surplus Allocation Rule** locks **50% of all net fiscal surpluses into the Sovereign Debt Sinking Fund** (retiring **NZD 32.09B–35.51B per wave** on the consolidated 29-node ledger down to **22.0% of GDP**, lowering interest rates by **-60 bps**, extinguishing offshore Paris NDC liabilities, and unlocking a **-3.15 pp PAYE tax cut to 18.85%**) and **50% into the Public Infrastructure & Core Health Reinvestment Pool** (lifting regional wages, unlocking a **+4.5% Rural / +3.0% Small Clean-Green export premium**, deepening early-years and mentoring reach, lifting fertility to replacement, and **lowering the NZ Super eligibility age to 64**).
 
-### 5.2 Master Scoreboard: What Each Coalition Wins Alone vs. Inside the Unified Compact
+#### 5.2 Master Scoreboard: What Each Coalition Wins Alone vs. Inside the Unified Compact
 
 | Coalition Constituency | Fate If Operating Standalone Against LTFM Drift (`Table 21`) | Fate Under 6-Yr (2-Term) "Stop-Go" Cycle (`Table 22`) | Total Connected Value Inside Unified $`SS1 \rightarrow SS2`$ Compact (`Table 22`) | Signature Institutional & Policy Wins Locked In by the Compact |
 | :--- | :---: | :---: | :---: | :--- |
@@ -224,7 +224,7 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 | **4. Fiscal Stewards**<br>*(Debt, NDC Solvency & Tax Relief)* | **-6.80% to -10.55% CE**<br>*("Debt-First" consolidation trap)* | **+0.37% CE**<br>*(Never reaches Yr 20.0 breakeven)* | **+3.93% CE**<br>*(80.4% from Neighbor Wedges)* | Net Crown debt sunk from **185% LTFM projection down to 22% of GDP** (`NZD 35.51B/wave`); working-age **PAYE cut -3.15 pp to 18.85%**; sustains **3% GDP Defense** at **+20.07% CE**. |
 | **Whole of Aotearoa New Zealand** | **-16.21% CE**<br>*(or **-21.69% CE** w/ 3% Defense)* | **+3.74% CE**<br>*(-84.2% lost to 2-term cycle)* | **+23.59% CE National**<br>*(+18.85% Rural to +27.45% Akl)* | **+39.80 pp net welfare swing vs. LTFM (+41.76 pp under 3% Defense); Rural flips from -2.14 kNZD/yr NDC deficit to +21.21 kNZD/yr surplus.** |
 
-### 5.3 Replication & Companion File Index for Document 3
+#### 5.3 Replication & Companion File Index for Document 3
 
 * **Constructive 12-Layer Synergy & 5-Pillar Mirror Investment Engine:** [`Plot_Counterfactuals_And_MirrorInvestments.m`](Plot_Counterfactuals_And_MirrorInvestments.m) → `Table 19`, `Table 20`, [`Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png), and [`Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png).
 * **3D LTFM Sinkhole, 3%-GDP Defense Shock, Two-Term Pendulum, & $`4 \times 4`$ Coalition Matrix Engine:** [`Plot_Doc3_Synergies_And_LTFMSinkhole.m`](Plot_Doc3_Synergies_And_LTFMSinkhole.m) → `Table 21`, `Table 22`, [`Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png), and [`Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png).
@@ -236,7 +236,7 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 
 For technical reviewers, Treasury analysts, and coalition partners who wish to inspect the exact regional and cohort numbers underlying the figures in Parts I and II, this appendix provides the complete leave-behind tables exported by `Plot_Counterfactuals_And_MirrorInvestments.m` (`Table 19`) and `Plot_Doc3_Synergies_And_LTFMSinkhole.m` (`Tables 21 & 22`).
 
-### Table A.1: The 12-Layer Constructive Synergy Build-Up (SS2 Long-Run Welfare Gain, CE%)
+#### Table A.1: The 12-Layer Constructive Synergy Build-Up (SS2 Long-Run Welfare Gain, CE%)
 
 | Constructive Tier & Layer (`Table 19`) | Policy Constituency ("Owner Lane") | Rural (`+18.85%`) | Small (`+21.41%`) | Large (`+23.44%`) | Auckland (`+27.45%`) | National (`+23.59%`) | Share of National Prize |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -257,7 +257,7 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 | **Tier 4 Subtotal (The Fiscal, Super-64, Demographic & NDC Clean-Green Stack)** | **Coalition 4 + Full Loop (Iso `+1.90%` + Wedges 4 & 5 `+2.62%`)** | **`+4.25%`** | **`+4.43%`** | **`+4.35%`** | **`+4.86%`** | **`+4.52%`** | **`19.18%`** |
 | **GRAND TOTAL (`SS2_3` Fully Integrated Policy)** | **7 Isolated (`+12.03%`, `51.02%`) + 5 Wedges (`+11.55%`, `48.98%`)** | **`+18.85%`** | **`+21.41%`** | **`+23.44%`** | **`+27.45%`** | **`+23.59%`** | **`100.0%`** |
 
-### Table A.2: The $`4 \times 4`$ Coalition Dependency Matrix (`Table 22`)
+#### Table A.2: The $`4 \times 4`$ Coalition Dependency Matrix (`Table 22`)
 
 | Policy Constituency (Row *i*) | 1. Barnardos & Youth *(ECE + Tuakana)* | 2. WellBeing Alliance *(Housing + CERF + Grant + Whānau)* | 3. GrowthNZ, Venture & Exporters *(Firm Capital + MPI 4-Channel)* | 4. Fiscal Stewards & MBAs *(Debt-Sinking + NDC + PAYE Cut)* | Total Value Connected to Constituency *i* *(Own Base + 3 Neighbor Wedges)* |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -276,7 +276,7 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
      * *Wedge (2 × 3) = `+1.19% CE`:* Captures the Guvenen et al. (2023), Murphy–Shleifer–Vishny (1991), and MPI 4-channel rotation of dormant residential land equity and exotic pine carbon farms ($`z_{l,k}`$) into collateral-constrained operating firms ($`k_f \le \lambda_{\mathrm{col}} a_f`$), simultaneously cooling urban land premia `Q_k` and expanding regional wage multipliers `w_k`.
      * *Wedges (1 × 4) = `+1.67% CE`, (2 × 4) = `+0.77% CE`, and (3 × 4) = `+0.91% CE`:* Capture the closed-loop fiscal, demographic, and Paris NDC harvest connecting verified Exit 1, 2, and 4 remediation savings, the `~NZD 3.0B` CERF electrification pulse (`Year 20.0` cash breakeven), the **+4.5% (`Rural`) / +3.0% (`Small`) Clean-Green export lift** (`Wedge 5`), the 50% Sovereign Debt-Sinking interest reduction ($`\Delta r = -60\text{ bps}`$), the **-3.15 pp** PAYE cut, the Age-64 *Kuia/Koroua* caregiving time boost ($`\Phi_{\mathrm{time}}(64) = 1.081`$), and second-generation dynastic skill transmission ($`T_{\mathrm{IG}}: Q_h \times Q_a \times \Pi_{\mathrm{mig}}`$).
 
-### Table A.3: Quantitative Comparison of the Eight 60-Year Macro & Coalition Trajectories (`Table 21`)
+#### Table A.3: Quantitative Comparison of the Eight 60-Year Macro & Coalition Trajectories (`Table 21`)
 
 | Trajectory & Policy Regime (`Table 21`) | Year 0 (2026) Debt / PAYE | Year 25 (2050) Debt / PAYE / CE% | Year 60 (2086) Net Debt (% GDP) | Year 60 Required PAYE $`\tau_l`$ (%) | Year 60 Household Welfare (CE%) | Net Swing vs. Sinking `SS0` LTFM Floor |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |

@@ -1,5 +1,5 @@
 # Intergenerational Welfare, Capital Allocation, and Human Potential in New Zealand
-## A Multi-Audience Strategic Monograph (4-Region + Abroad Multiphase Edition)
+#### A Multi-Audience Strategic Monograph (4-Region + Abroad Multiphase Edition)
 
 **Author:** Michael Tiemann (`mdtiemann@gmail.com`)  
 **Date:** November 2026 | **Code & Replication Repository:** [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)
@@ -95,7 +95,7 @@ For four decades—across governments of every political stripe—New Zealand's 
 
 **The 2050 Sovereign Debt-Sinking & Tax-Relief Harvest ($`SS2`$):** After crossing hard generational cash breakeven at **Year 20.0**, the 2050 Protocol partitions net fiscal surpluses 50/50 between a **Sovereign Debt Reduction Sinking Fund** and a **Public Infrastructure Reinvestment Pool** (retiring **NZD 32.09B in `SS1` to NZD 35.51B in `SS2`** of sovereign debt per 60k cohort wave on the consolidated 29-node ledger and flipping **`Rural`** from a **`-2.14 kNZD/yr` Paris NDC deficit in `SS0`** into a **`+18.80 to +21.21 kNZD/yr` fiscal surplus**), while demographic fertility recovery lowers the 65+ dependency ratio and reduces the required labor tax rate for universal New Zealand Superannuation by **3.15 to 3.43 percentage points**.
 
-## 4. For Academic & Policy Economists: Synthesizing Five Decades of Longitudinal Evidence and Operator Theory
+### 4. For Academic & Policy Economists: Synthesizing Five Decades of Longitudinal Evidence and Operator Theory
 
 *Strategic Mandate & Research Contribution:* Deploy a GPU-accelerated Mixed Finite/Infinite-Horizon 4-Region + Abroad Spatial Overlapping Generations (OLG) framework whose methodological pillars—structural laws of motion, general-equilibrium attribution, and actuarial accounting—unify five decades of co-confirming micro-econometric and macroeconomic research to evaluate a self-financing generational transformation.
 
@@ -228,7 +228,7 @@ Behind those percentages is a simple human transformation: a thirteen-year-old w
 
 Crucially, unlike those recurring crises—which destroy wealth for nothing, leave behind higher public debt, and accelerate the youth brain drain—this measured reallocation permanently strengthens New Zealand's productive economy, secures universal New Zealand Superannuation at Age 65 (or even Age 64), slashes crime and social distress, and builds a high-trust nation where the children and grandchildren of wealthy and modest families alike choose to build their futures.
 
-### Synthesis: Restoring New Zealand's "Social Credit Rating" — Institutional Trust & Social Cohesion
+## Synthesis: Restoring New Zealand's "Social Credit Rating" — Institutional Trust & Social Cohesion
 
 Taken together, these three lifecycle aspects bring into focus more than just economics and welfare. They show the way to restore to New Zealand the trust and social cohesion for which we were once famous, and for which we can be yet again.
 
@@ -364,7 +364,7 @@ Decomposing welfare impacts across housing tenure groups clarifies the transitio
 
 <br clear="all" />
 
-### Distributional Incidence Across 10 Survey-Anchored Earn + Own Tiers: Productive vs. Passive Asset Bifurcation and Balance-Sheet Resilience
+#### Distributional Incidence Across 10 Survey-Anchored Earn + Own Tiers: Productive vs. Passive Asset Bifurcation and Balance-Sheet Resilience
 
 To evaluate the distributional incidence of wealth and estate taxation transparently, we compute the reform's lifetime Consumption-Equivalent (CE %) welfare impact and post-reform net worth retention across **10 official survey-anchored Earn + Own (*Annual Household Income + Net Worth*) benchmarks**—drawn directly from the Statistics New Zealand Household Economic Survey (*HES* June 2024/2025 median household income = NZD 119k; median net worth = NZD 529k), Max Rashbrooke's New Zealand wealth percentile tables (`P90`, `P95`, `P98`, `P99`), the Inland Revenue High-Wealth Individuals Research Project (*HWIRP* median net worth = NZD 50M; median economic income = NZD 2.1M), and the *NBR Rich List* median (NZD 140M):
 
@@ -426,7 +426,7 @@ Retaining 3,550 young adults every year is not merely a labor-supply statistic. 
 +-----------------------------------------------------------------------------------+
 ```
 
-## 5. Cooperative Childcare Bargaining, Extended *Whānau* Scaffolding, & The NZ Superannuation U-Curve (Ages 60 to 75)
+### 5. Cooperative Childcare Bargaining, Extended *Whānau* Scaffolding, & The NZ Superannuation U-Curve (Ages 60 to 75)
 
 Conventional fiscal commentary treats New Zealand Superannuation as an isolated accounting ledger: if an aging population increases pension expenditure, the standard prescription is to raise the age of eligibility from 65 to 67 or 70. That static accounting view ignores how real New Zealand families—and extended *whānau*—function across three generations at once.
 
@@ -439,7 +439,7 @@ When a young couple or solo parent is raising children through the **First 2,000
 
 ---
 
-### The Retirement-Age U-Curve (Ages 60 to 75): Why Age 70 Austerity Backfires and Age 64–65 Is the Sweet Spot
+#### The Retirement-Age U-Curve (Ages 60 to 75): Why Age 70 Austerity Backfires and Age 64–65 Is the Sweet Spot
 
 To test how New Zealand Superannuation interacts with fertility bargaining, childhood hardship, and tax solvency, we evaluate our coupled 4-region lifecycle model across every statutory retirement age from **Age 60 to Age 75** (`FigFert_4Region_Bargaining_Solvency.png` below; full sweep in [Document 1B](Document%201B.md), Table 8B):
 
@@ -557,7 +557,7 @@ With both the lifecycle human-capital channels (*Part IV*) and the 2050 Debt-Sin
 1. *How do the annual public dollar outlays—including the front-loaded ~NZD 3.0B CERF Electrification Kick-Start—compare year-by-year against the annual household welfare gains, and when does the net unrecovered public cost hit zero?*
 2. *How much of the +23.59% CE national long-run welfare gain comes from individual policy levers in isolation versus the five non-linear Dynamic Complementarity Wedges between them?*
 
-### 4.1 The Mirror Investment Ledger: 5 Annual Public Outlay Pillars (-Below 0) vs. Compounding 12-Layer Welfare Gains (+Above 0)
+#### 4.1 The Mirror Investment Ledger: 5 Annual Public Outlay Pillars (-Below 0) vs. Compounding 12-Layer Welfare Gains (+Above 0)
 
 The Mirror Investment chart below (`Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png`, exported alongside `Table 20` by `Plot_Counterfactuals_And_MirrorInvestments.m`) plots the gross annual public investment across our five direct expenditure pillars below the zero line (in both `% Consumption-Equivalent` on the left axis and `NZD Billions/yr` on the right axis, where `1.0% CE = NZD 2.38B/yr`) against the 12-layer stacked household welfare gains above the zero line:
 
@@ -572,7 +572,7 @@ The Mirror Investment chart below (`Fig_7Segment_Welfare_And_MirrorInvestments_D
 * **The Yellow Dashed Trajectory — Net Unrecovered Public Cost Hits Zero at Exact Year 20.0 (Generational Cash Breakeven):** As early cohorts exit childhood hardship, acute remediation outlays across Oranga Tamariki care, hospitals, and youth/adult justice (Exits 1, 2, 4) fall by over 75%, and CERF electrification savings compound, direct fiscal savings and expanded tax receipts steadily offset the gross investment bars—driving the **Net Unrecovered Public Cost (yellow diamond trajectory) to strictly zero at exact Year 20.0**, while the **Year 5 ACC / CBAx Actuarial Audit** books **+4.1% CE** (`3.84x` fiscal return) at the end of the very first parliamentary cycle.
 * **Above the Zero Line — A 5.41x Steady-State Welfare-to-Outlay Payoff:** Against the gross steady-state public investment of **NZD 10.38B/yr** (`-4.36% CE`), the coupled reform generates **+NZD 33.29B/yr (+13.99% CE) by the end of *SS1*** and **+NZD 56.14B/yr (+23.59% CE) in *SS2***—a **5.41x annual welfare-to-outlay payoff**.
 
-### 4.2 Summary of the 12-Layer Constructive Synergy Attribution (7 Isolated Factors + 5 Synergy Wedges)
+#### 4.2 Summary of the 12-Layer Constructive Synergy Attribution (7 Isolated Factors + 5 Synergy Wedges)
 
 Rather than arbitrary top-down slicing, our constructive attribution (`Table 19` in [Document 1B](Document%201B.md) and [Document 3](Document%203.md)) evaluates what each of the **7 policy factors** achieves *entirely in isolation*, and then measures the **5 supermodular Dynamic Complementarity Wedges** unlocked when the stacks operate together:
 
@@ -602,7 +602,7 @@ Rather than arbitrary top-down slicing, our constructive attribution (`Table 19`
 
 Skeptics of long-horizon reform often ask whether any democratic market economy has ever achieved a nearly seven-fold cumulative GDP multiplier, double-digit permanent welfare gains, and a one-third reduction in intergenerational immobility over a forty-to-sixty-year horizon. Modern economic history provides an unambiguous answer. Every small or mid-sized nation that has paired **productive capital and land reallocation (Aspects 2 & 3)** with **universal early human-capital investment (Aspect 1)** has achieved this exact trajectory:
 
-#### Table 6A: The Eight Full-Loop Winners (Honoring Aspects 1, 2, and 3)
+##### Table 6A: The Eight Full-Loop Winners (Honoring Aspects 1, 2, and 3)
 
 | **Historical / International Case** | **Time Horizon** | **Primary Policy Instruments Deployed** | **Corresponding Lifecycle Aspects (`SS0 -> SS1 -> SS2`)** | **Observed Empirical Payoff** |
 | :--- | :--- | :--- | :--- | :--- |
@@ -617,7 +617,7 @@ Skeptics of long-horizon reform often ask whether any democratic market economy 
 
 By contrast, jurisdictions that deployed only the childhood half of the architecture without sovereign land/estate tax powers—or that expanded schooling while allowing metropolitan real-estate speculation to run unchecked—provide an equally decisive natural experiment:
 
-#### Table 6B: The Devolved Half-Bridge & The Cautionary Tales (When Aspects 2 & 3 Are Constrained or Ignored)
+##### Table 6B: The Devolved Half-Bridge & The Cautionary Tales (When Aspects 2 & 3 Are Constrained or Ignored)
 
 | **Regime Archetype & Case** | **Time Horizon** | **What Was Deployed vs. What Was Missing** | **Lifecycle Aspect Diagnostic (`SS0 -> SS1 -> SS2`)** | **Observed Empirical Outcome** |
 | :--- | :--- | :--- | :--- | :--- |
@@ -677,7 +677,7 @@ In the late twentieth century, South Korea achieved one of the fastest schooling
 #### Post-1990 Bubble Japan: The Cost of Unchecked Land Overvaluation
 When late-1980s Japan allowed an unbridled urban land and real-estate bubble to crowd out productive enterprise lending while failing to support working mothers, the subsequent 1991 land-bubble collapse ushered in three decades of balance-sheet stagnation and rapid demographic aging. This historical contrast—between Japan's high-growth post-war productive era (1946–1985) and its post-1990 land-bubble stagnation—directly validates shifting New Zealand's tax base off productive enterprise and onto overvalued land and passive estate transfers.
 
-### Coda: From Deming's Miracle to the Tokyo Bubble—Why Aotearoa Must Build Prosperity We Can Keep
+## Coda: From Deming's Miracle to the Tokyo Bubble—Why Aotearoa Must Build Prosperity We Can Keep
 
 When macroeconomists invoke post-1990 Japan as a cautionary tale of land bubbles and demographic stagnation, they often omit the far more instructive half of the story: **how a shattered, resource-poor island nation generated the most spectacular industrial and human-capital miracle of the twentieth century in the first place**. Between 1945 and 1951, as Supreme Commander of the Allied Powers, General Douglas MacArthur oversaw the reconstruction of Japan's devastated economy—an effort that combined post-war land and estate de-concentration with universal *Boshi Kenko Techo* (Maternal and Child Health Handbook) First-2000-Days care and rigorous statistical planning. Frustrated that he could hardly complete a telephone call without the line going dead, MacArthur recruited the American statistician and systems thinker **W. Edwards Deming** in 1947 to help plan the 1951 Japanese Census.
 

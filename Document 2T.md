@@ -1,5 +1,5 @@
 # Document 2T: "Thick" vs. "Thin" Numbers in Quantitative Public Policy
-## Why Dimension-Free State-Contingent Conditioning Captures Comonotonic Tail Risks Without Expanding GPU Grid Dimensions
+#### Why Dimension-Free State-Contingent Conditioning Captures Comonotonic Tail Risks Without Expanding GPU Grid Dimensions
 
 *Author:* Michael Tiemann (mdtiemann@gmail.com)  
 *Date:* November 2026 | *Code & Replication Repository:* [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)  
@@ -9,7 +9,7 @@
 
 ---
 
-## 1. Pedagogical Motivation: Why "Thin" Spreadsheet Numbers Miss the Real Policy Story
+### 1. Pedagogical Motivation: Why "Thin" Spreadsheet Numbers Miss the Real Policy Story
 
 A recurring question in public-finance modeling is why a dynamic stochastic Overlapping Generations (OLG) model solved on the GPU via the Value Function Iteration (VFI) Toolkit yields starkly different policy conclusions from a deterministic spreadsheet projection—even when both models are calibrated to the exact same national averages.
 
@@ -35,7 +35,7 @@ In a deterministic spreadsheet, an average child with average family income $`\b
 
 ---
 
-## 2. The Curse of Dimensionality Trap vs. Zero-Cost State Conditioning
+### 2. The Curse of Dimensionality Trap vs. Zero-Cost State Conditioning
 
 When researchers realize that regional parameters like extended *whānau* support (`K_whanau_base`), housing user costs (`Q_reg_base`), and public wraparound effectiveness (`G_ece`) vary across households, their first instinct is often to add new exogenous shock dimensions—for example, expanding `n_z` from a 1D vector of 7 states to a 3D tensor `n_z = [7, 3, 3]` (63 exogenous states per grid point).
 
@@ -47,7 +47,7 @@ Adding orthogonal *z*-dimensions is both computationally wasteful and economical
 
 ---
 
-## 3. Audit of the Four State-Contingent Structural Operators (Uniting the MBA and MPP Lenses Across Thick and Thin)
+### 3. Audit of the Four State-Contingent Structural Operators (Uniting the MBA and MPP Lenses Across Thick and Thin)
 
 Evaluating the model simultaneously through a **Long-Horizon Sovereign Turnaround (MBA) Lens** (focused on off-balance-sheet assets, Theory of Constraints bottlenecks, and R&D talent walkouts) and a **Master of Public Policy (MPP) Lens** (focused on actuarial equity, sandwich-generation care burdens, institutional trust, and workforce capacity) reveals four exact mechanisms where scalar approximations must be replaced with **dimension-free state-contingent parameterizations** and **comonotonic tail-risk coupling**:
 
@@ -60,9 +60,9 @@ Evaluating the model simultaneously through a **Long-Horizon Sovereign Turnaroun
 
 ---
 
-## 4. Mathematical Specification of the Four State-Contingent Operators
+### 4. Mathematical Specification of the Four State-Contingent Operators
 
-### 4.1 State-Contingent Extended Whānau Care ($`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{net}}`$): Comonotonic Sandwich-Generation Reversal & Trust-Gated Mentoring
+#### 4.1 State-Contingent Extended Whānau Care ($`K_{\mathrm{wh\bar{a}nau}}^{\mathrm{net}}`$): Comonotonic Sandwich-Generation Reversal & Trust-Gated Mentoring
 
 In a scalar parameterization, extended *whānau* support (grandmothers, *kuia*, aunties, and *kaumātua* aged 55–72) is represented as a static regional constant $`K_{\mathrm{whanau,base},k} \in [0.42, 0.38, 0.32, 0.28]`$ (Rural, Small, Large, Auckland). Under that deterministic scalar view, raising the New Zealand Superannuation eligibility age from 65 to 67 or 70 simply trims the regional constant by 36.2% to $[0.27, 0.24, 0.20, 0.18]$ as elders are forced back into market labor.
 
@@ -89,7 +89,7 @@ Notice the mathematical consequence of evaluating this **comonotonically coupled
 
 ---
 
-### 4.2 Price-Manifold Conditioned Public Wraparound ($`G_{\mathrm{ece}}^{\mathrm{eff}}`$): The Kaiako Housing-Affordability Supply Deflator
+#### 4.2 Price-Manifold Conditioned Public Wraparound ($`G_{\mathrm{ece}}^{\mathrm{eff}}`$): The Kaiako Housing-Affordability Supply Deflator
 
 In public administration, scaling nominal early-childhood expenditure `G_ece_stage1` and adolescent wraparound `G_ece_stage2` encounters a severe spatial labor-supply friction: when metropolitan house prices `Q_k` (`Params.Q_reg`) in Auckland (3.10) and Large regional cities (2.05) are inflated by speculative land hoarding, qualified early-childhood *Kaiako*, Montessori guides, and speech-language therapists are priced out of the high-deprivation suburbs where disadvantaged children live.
 
@@ -101,7 +101,7 @@ This functional conditioning generates an endogenous **Cross-Cohort Dynamic Comp
 
 ---
 
-### 4.3 Sub-Manifold Conditioned Housing User Costs ($`p_H`$): The 61-Point Asset-Grid LVR Hurdle & Comonotonic Eviction Tail
+#### 4.3 Sub-Manifold Conditioned Housing User Costs ($`p_H`$): The 61-Point Asset-Grid LVR Hurdle & Comonotonic Eviction Tail
 
 In Kiyotaki, Michaelides, and Nikolov (2024), the baseline regional ownership share $`\xi_{\mathrm{reg},k} = \min\lbrace 1, (rr_k - rh_k)/\bar{\chi}\rbrace`$ is a single regional scalar. If applied uniformly across all households in region *k*, an asset-poor family at `a = 0` and a wealthy household at `a = 15` face the exact same blended housing price $`p_H`$.
 
@@ -118,7 +118,7 @@ Projecting $`p_H`$ onto the $(a, z)$ sub-manifold expands housing user costs fro
 
 ---
 
-### 4.4 Skill-Manifold Conditioned Survival and Late-Life Labor Disutility ($`sj_{\text{eff}}`$): Capturing Actuarial Regressivity
+#### 4.4 Skill-Manifold Conditioned Survival and Late-Life Labor Disutility ($`sj_{\text{eff}}`$): Capturing Actuarial Regressivity
 
 Finally, to capture the MPP's warning regarding **differential mortality and physical wear-and-tear**, we condition late-life labor disutility and mortality hazard on the household's 7-point adult human-capital / occupational sub-manifold `h` in `[0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80]`:
 
@@ -134,7 +134,7 @@ When a policy simulation raises the NZ Superannuation eligibility age (`Jr`) abo
 
 ---
 
-## 5. Companion Codebase & Suite Navigation
+### 5. Companion Codebase & Suite Navigation
 
 * **For the Full 8-PType Mixed-Horizon Bellman Specification, SMM Identification Matrix, & 22-File Codebase Manifest:** See **[Document 2A](Document%202A.md) and [Document 2B](Document%202B.md) (*Technical Documentation & Model Specification Guides*)**.
 * **For the Policy & Coalition Implications of "Thick" vs. "Thin" Operators (Perishability, Two-Term "Stop-Go" Pendulums, & The $`4 \times 4`$ Coalition Matrix):** See **[Document 3: Leaving Our Silos, Lifting All Boats](Document%203.md)** (*Part IV* and *Table 4.1*).

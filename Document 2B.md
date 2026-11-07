@@ -9,9 +9,9 @@
 
 ---
 
-## 5. Post-Hoc Lifecycle Operators: The 6-Gate Fiscal Ledger, Statutory Fiscal Rules, Fertility Bargaining, & 10-Tier Wealth Incidence
+### 5. Post-Hoc Lifecycle Operators: The 6-Gate Fiscal Ledger, Statutory Fiscal Rules, Fertility Bargaining, & 10-Tier Wealth Incidence
 
-### 5.1 The 6-Gate (29-Node) Lifecycle Fiscal Ledger & Cohort-to-Ledger Operator (`Plot_ChildFiscal_SSankey.m`)
+#### 5.1 The 6-Gate (29-Node) Lifecycle Fiscal Ledger & Cohort-to-Ledger Operator (`Plot_ChildFiscal_SSankey.m`)
 
 To map all private parental commitments, unpaid *whānau* care, adult occupational sorting ($z_l$ vs. $z_h$), and public fiscal flows from Birth ($J = 1$) to Retirement ($J = 16$) without cross-account ontological distortion, `Plot_ChildFiscal_SSankey.m` defines vectorized linear integral operators over the solved stationary distribution $\mu_k(a, h, z, j)$ and policy arrays `Policy`:
 
@@ -36,7 +36,7 @@ $$\text{Flow}_{g,i}^{\text{cohort}} = p_{g,i} \times c_{g,i}^{\text{cond}}, \qqu
    - **Bottom 4 Adversarial Exits (Nodes 22–25):** **Node 22** (`Exit 1: State Care Legacy`), **Node 23** (`Exit 2: Avoidable Hosp & CAMHS`), **Node 24** (`Exit 3: Lower-Skill Lost Tax`), and **Node 25** (`Exit 4: Benefit, LOPE & Justice`). When an Exit compresses below $0.45\text{ kNZD/yr}$ in **SS1/SS2**, a vectorized visual floor (`minExit_Vis_kNZD = 0.45`) preserves the block and ribbon at the bottom with exact unfloored percentages and dollar values labeled `— not to scale`.
    - **Middle Base Outlay vs. Good Tax Credits (Nodes 26–28) & Top Emigration Loss (Node 29):** **Node 26** (`Base Infra, Health & NZ Super`, attributing 10.2 kNZD/yr per retained adult and scaling gross BNZD/yr cohort and stock figures by the regional population share $\omega_{\text{reg}}$ = `reg_pop_share`), **Node 27** (`GST, Cap & Estate Tax Pool`), **Node 28** (`Working-Age PAYE Income Tax`), and **Node 29** (`Abroad Brain-Drain Lost Tax`).
 
-### 5.2 Net Fiscal Balance (`Omega_fiscal`), Nationally Determined Contributions (NDCs), The 2050 Sovereign Debt-Sinking Protocol, & New Zealand Statutory Law
+#### 5.2 Net Fiscal Balance (`Omega_fiscal`), Nationally Determined Contributions (NDCs), The 2050 Sovereign Debt-Sinking Protocol, & New Zealand Statutory Law
 
 At **Gate 5 (Career & `z_l` / `z_h` Enterprise Sorting,** `J = 8..11` **, Nodes `17..21`)** and **Gate 6 (Adult Fiscal Ledger,** `J = 10..16` **, Nodes `22..29`)** in `Plot_ChildFiscal_SSankey.m`, the cohort-weighted **Net Fiscal Balance** $`\Omega_{\mathrm{fiscal},g}`$ (`net_fisc = Good_Adult - Bad_Adult`) integrates standard tax and expenditure flows with domestic Emissions Trading Scheme (ETS) Carbon Tax Revenue (`CTR_g`) and Paris Agreement **Nationally Determined Contribution (NDC)** offshore mitigation liabilities (`Cost_NDC_offshore`):
 
@@ -71,7 +71,7 @@ with national cohort births `N_births = 60,000/yr` scaled by the regional popula
   2. *Accident Compensation Act 2001 & Generally Accepted Accounting Practice (PBE IPSAS 19 / IFRS 17 Actuarial Provisions):* New Zealand's Crown balance sheet already recognizes the present value of future multi-decade injury rehabilitation liabilities via the ACC Outstanding Claims Liability (NZD 63.6B). Booking the verified reduction in future Oranga Tamariki (*Oranga Tamariki Act 1989*), justice, and hospital remediation liabilities at Gate 2 (`J = 2..3`) and Gate 3 (`J = 5`) applies identical actuarial accounting standards to early childhood hardship prevention.
   3. *Preventative Infrastructure Stewardship (Local Government (Water Services) / Te Waihanga National Infrastructure Plan & The 2026 Moa Point Review):* As documented in the *Independent Crown Review into the Moa Point Wastewater Treatment Plant Failure* (Jaduram et al., Sept 2026), deferring preventative maintenance creates an unsustainable escalation in reactive remediation costs. Ring-fencing $`\Omega_{\mathrm{reinv},g} = 0.50 \Omega_{\mathrm{reform},g}`$ into a statutory Infrastructure & Core Health Endowment prevents short-term operating budgets from raiding capital maintenance.
   4. *New Zealand Superannuation and Retirement Income Act 2001 (Part 1 & Part 2) & Te Tiriti o Waitangi Jurisprudence:* Preserving universal entitlement at Age 65 (`Jr`, and lowering to Age 64 in `SS2`) avoids the severe disparate impact on Māori and Pasifika life-expectancy cohorts that would result from raising the statutory age to 67 or 70, while honoring the *Te Tiriti o Waitangi* principles of active protection (*kaitiakitanga*) and equity across *mokopuna* cohorts (Waitangi Tribunal *Wai 2575 Hauora* and *Wai 2915 Oranga Tamariki* reports).
-### 5.3 Cooperative Childcare Bargaining, Hyperbolic Fertility (`FertilityBargaining_Module.m`), & Cao & Li's (2022) Intended-vs.-Realized Fertility Wedge
+#### 5.3 Cooperative Childcare Bargaining, Hyperbolic Fertility (`FertilityBargaining_Module.m`), & Cao & Li's (2022) Intended-vs.-Realized Fertility Wedge
 
 Following Doepke, Hannusch, Kindermann, and Tertilt (2022) and Cao and Li (2022, *Journal of Population Economics*), couples in fertile brackets
 $j \in \lbrace 2, 3, 4 \rbrace$
@@ -144,7 +144,7 @@ dynastic closure) achieves exact mathematical equivalence on the Cao and Li (202
 `i_c = 0`
 hardship corner purely credit- and rent-driven.
 
-### 5.4 Endogenous NZ Superannuation Solvency & The Retirement-Age U-Curve ($A_{\mathrm{super}} \in [60, 75]$ in `FertilityBargaining_Module.m`)
+#### 5.4 Endogenous NZ Superannuation Solvency & The Retirement-Age U-Curve ($A_{\mathrm{super}} \in [60, 75]$ in `FertilityBargaining_Module.m`)
 
 Let $`D_{A_{\mathrm{super}},t}`$ denote the effective national fiscal dependency ratio of retirees ($`\mathrm{age}_j \ge A_{\mathrm{super}}`$) to working-age taxpayers ($`20 \le \mathrm{age}_j < A_{\mathrm{super}}`$) across the four domestic regions:
 
@@ -169,7 +169,7 @@ $$
    Consequently, raising the pension age to 70 under status-quo demographics drives the struggling launch share up to 25.4% in Rural and 18.0% in Auckland and pushes required PAYE taxes **up** to 25.00% (22.48% even under *SS2*, wiping out the entire tax cut).
 2. **Below Age 65 ($`A_{\mathrm{super}} < 65`$ — The Age-64 Kuia/Whānau Sweet Spot vs. The Age-60 Denominator Wall):** Lowering $`A_{\mathrm{super}}`$ below 65 releases healthy 60-to-64-year-old *kuia*, *koroua*, and aunties into voluntary alloparental support via $`\Phi_{\mathrm{time}}(A_{\mathrm{super}}) = 1 + 0.16 \tanh((65 - A_{\mathrm{super}})/1.80)`$ (`+8.1%` at Age 64, `+12.9%` at Age 63), while avoided ACC/Supported Living payouts offset $`\omega_{\mathrm{offset},<65} = 0.28`$ (28%) of the gross pension cost at Age 64. Dropping all the way to Age 60 swells the effective dependency ratio to `39.78%` (`Required PAYE = 21.05%`), whereas **Age 64 (`18.85% PAYE`, `+23.59% CE` global peak)** and **Age 65 (`18.57% PAYE` global tax minimum, `+23.42% CE`)** form the global welfare and tax-solvency sweet spot.
 
-### 5.5 Joint Income-Wealth Distributional Incidence Across 10 Survey-Anchored Earn + Own Tiers (`Plot_WealthBracket_GiveAndGain.m`)
+#### 5.5 Joint Income-Wealth Distributional Incidence Across 10 Survey-Anchored Earn + Own Tiers (`Plot_WealthBracket_GiveAndGain.m`)
 
 To evaluate welfare incidence across the empirical joint distribution of gross household income $`Y_m`$ and net worth $`W_m`$ (`Annual Income + Net Worth`, spanning $`M_{\mathrm{tier}} = 10`$ official survey-anchored benchmarks from `Tier 1: NZD 45k + 12k` at P12 to `Tier 10: NZD 6.5M + 140M` at P99.99, anchored to Stats NZ Household Economic Survey June 2024/2025, Rashbrooke 2021, the IRD High-Wealth Individuals Research Project 2023, and the *NBR Rich List*), `Plot_WealthBracket_GiveAndGain.m` decomposes the Consumption-Equivalent welfare change $`\Delta\mathrm{CE}_m\left(\omega_{\mathrm{ent}}\right)`$ as a function of the household's operating-enterprise equity share $`\omega_{\mathrm{ent}} \in [0, 1]`$ (where $`\omega_{\mathrm{ent}} = 0.80`$ for **Active Growth Entrepreneurs** $`z_f = z_{h,k}`$ and $`\omega_{\mathrm{ent}} = 0.15`$ for **Passive Residential Land Hoarders** $`z_f = z_{\ell,k}`$):
 
@@ -181,9 +181,9 @@ Because Guvenen et al. (2023) capital reallocation raises the after-tax return o
 
 ---
 
-## 6. Calibration, SMM Identification (`Calibrate_NZ_Moments.m`), & Cross-Country Validation
+### 6. Calibration, SMM Identification (`Calibrate_NZ_Moments.m`), & Cross-Country Validation
 
-### 6.1 Exact SMM Parameter Identification Matrix (15 Parameters $\leftrightarrow$ 15 NZ Empirical Moments)
+#### 6.1 Exact SMM Parameter Identification Matrix (15 Parameters $\leftrightarrow$ 15 NZ Empirical Moments)
 
 | Parameter | Symbol | Value | Empirical Target Moment & Source | Model Fit |
 | :--- | :---: | :---: | :--- | :---: |
@@ -205,7 +205,7 @@ Because Guvenen et al. (2023) capital reallocation raises the after-tax return o
 
 ---
 
-## 6.2 Two-Stage Sobol + Nelder-Mead SMM Optimization & Welfare-Based In-Kind Imputation (`Calibrate_NZ_Moments.m`)
+#### 6.2 Two-Stage Sobol + Nelder-Mead SMM Optimization & Welfare-Based In-Kind Imputation (`Calibrate_NZ_Moments.m`)
 
 To discipline the structural parameter vector $\theta$ against the 15 empirical New Zealand moments in Table 6.1 without getting trapped in local minima on the multi-region general-equilibrium surface, `Calibrate_NZ_Moments.m` executes a two-stage Simulated Method of Moments (SMM) procedure:
 
@@ -231,7 +231,7 @@ Even after strictly discounting direct static utility for cash-poor households (
 
 ---
 
-### 6.3 Cross-Country Macro-Calibration Validation Benchmarks & The Deming-to-Tokyo Coda
+#### 6.3 Cross-Country Macro-Calibration Validation Benchmarks & The Deming-to-Tokyo Coda
 
 To verify that our simulated 40-to-60-year multiphase transition magnitudes (`SS0 -> SS1 -> SS2`: **+10.00% to +17.04% CE in *SS1* [+13.99% National]**, **+18.85% to +27.45% CE in *SS2* [+23.59% National]**, **-33.4% IGE reduction**, and **6.86x cumulative 60-year GDP multiplier**) are structurally consistent with international evidence, we benchmark the model's core elasticities against six historical and contemporary empirical episodes:
 
@@ -258,9 +258,9 @@ $$
 
 ---
 
-## 7. Multiphase Transition Path, Actuarial Continuation Valuation, Credibility Blending, & Web SVG Architecture
+### 7. Multiphase Transition Path, Actuarial Continuation Valuation, Credibility Blending, & Web SVG Architecture
 
-### 7.1 Exact Multiphase Parameter Vector (`SS0 -> SS1 -> SS2` in `WelfareDecomposition_4Region.m`)
+#### 7.1 Exact Multiphase Parameter Vector (`SS0 -> SS1 -> SS2` in `WelfareDecomposition_4Region.m`)
 
 | Parameter Field | Symbol | *SS0* (Status Quo) | *SS1* (Incubation & Reallocation) | *SS2* (2050 Actuarial & Super-64 Harvest) | Structural Role in `ReturnFn_SpatialHH_Compact4D` & `Build_IntergenTransitionMatrix` |
 | :--- | :---: | :---: | :---: | :---: | :--- |
@@ -282,7 +282,7 @@ $$
 | `Pi_trade_reg` | $`\Pi_{\mathrm{trade},k}`$ | `[0.94, 0.96, 0.99, 1.00]` | `[1.02, 1.02, 1.01, 1.00]` | `[1.05, 1.03, 1.01, 1.01]` | Endogenous Clean-Green vs. CBAM terms-of-trade multiplier on regional TFP `Z_k` across `[Rural, Small, Large, Auckland]` |
 | `Cost_NDC_offshore` | $`\mathrm{Cost}_{\mathrm{NDC},t}`$ | `NZD 18.5B` | `NZD 0.0B` | `NZD 0.0B` | Unfunded offshore Paris NDC liability; adds `+45 bps` sovereign credit spread on `r_bond` in `SS0`, eliminated in `SS1`/`SS2` |
 
-### 7.2 Post-Hoc Transition Integrals & Actuarial Continuation Valuation Operators (`Plot_CumulativeTransitionPayoffs.m` & `Plot_ActuarialContinuationValuation.m`)
+#### 7.2 Post-Hoc Transition Integrals & Actuarial Continuation Valuation Operators (`Plot_CumulativeTransitionPayoffs.m` & `Plot_ActuarialContinuationValuation.m`)
 
 At each transition period $`t = 1, \dots, T_{\mathrm{trans}}`$ ($\Delta t \in \{5, 3, 2\}$ years spanning 60 years), `Plot_CumulativeTransitionPayoffs.m` integrates four regional and national annual flow series from `StationaryDist_t` ($`\mu_{k,t}`$) and $`\Gamma_{k,t}`$:
 
@@ -306,7 +306,7 @@ $$
 
 with dual Treasury discount rates $`r_{\mathrm{disc}} \in \{0.020, 0.080\}`$, real cost-base growth $`g_{\mathrm{cost}} = 0.015`$, attribution haircut $`\alpha_{\mathrm{attr}} = 0.30`$, pipeline maturity $`\Phi_{\mathrm{pipe}}(t_0) = \min(1, t_0 / 15)`$, and regional Markov skill retention $`[\psi_{\mathrm{Rural},0}, \psi_{\mathrm{Small},0}, \psi_{\mathrm{Large},0}, \psi_{\mathrm{Auckland},0}] = [0.984, 0.984, 0.986, 0.987]`$.
 
-### 7.3 Multiphase Policy Announcements, Credibility-Weighted Belief Blending, and Logistic Seam Smoothing (`TransPath_4Region_Master.m`)
+#### 7.3 Multiphase Policy Announcements, Credibility-Weighted Belief Blending, and Logistic Seam Smoothing (`TransPath_4Region_Master.m`)
 
 At each transition period $`t \in \{1, \dots, T_1 - 1\}`$ prior to the Phase-2 (*SS2*) enactment date `T_1` (Year 25), households and firms evaluate the **credibility-blended continuation value** $`\tilde{V}_{k,t+1}`$ inside the backward-induction Bellman operator:
 
@@ -330,7 +330,7 @@ $$
 \Phi(t) = \Phi_1 + \frac{\Phi_2 - \Phi_1}{1 + \exp\left(-\xi_{\mathrm{ramp}}\left(t - T_1\right)\right)}
 $$
 
-### 7.4 Constructive 12-Layer Supermodular Attribution, End-to-End Wedge Mechanics, & 3D LTFM Sinkhole Surface (`Plot_Counterfactuals_And_MirrorInvestments.m` & `Plot_Doc3_Synergies_And_LTFMSinkhole.m`)
+#### 7.4 Constructive 12-Layer Supermodular Attribution, End-to-End Wedge Mechanics, & 3D LTFM Sinkhole Surface (`Plot_Counterfactuals_And_MirrorInvestments.m` & `Plot_Doc3_Synergies_And_LTFMSinkhole.m`)
 
 To decompose the multiphase Consumption-Equivalent welfare trajectory (`T1` rows `SS1_1..3` and `SS2_1..3`) into its underlying isolated policy levers and non-linear dynamic complementarity wedges across cohort entry years $`c \in [-10, +60]`$ and regions $`k \in \{\mathrm{Rural}, \mathrm{Small}, \mathrm{Large}, \mathrm{Auckland}, \mathrm{National}\}`$, `Plot_Counterfactuals_And_MirrorInvestments.m` evaluates a sequential Topkis (1998) supermodular policy lattice over the structural parameter vector:
 
@@ -351,20 +351,17 @@ $$\mathrm{CE}_k^{\mathrm{SS2}} = \underbrace{\sum_{m \in \{1,2,4,5,6,9,10\}} \De
   * *Structural Complementarity Mechanism:* In `HumanCapital_Lifecycle_aprimeFn.m`, Stage 1 exhibits high substitutability ($`\varphi_1 = +0.35`$, $`\sigma_1 = 1.54 > 1`$) while Stage 2 operates as a Cunha–Heckman harmonic-mean bottleneck ($`\varphi_2 = -0.95`$, $`\sigma_2 = 0.513 < 1`$) subject to unbanked skill depreciation $`\delta_{\mathrm{fade}} = 0.22 w_2`$. The cross-partial derivative of Stage-2 CES skill output $`\theta_c^{\mathrm{ces},2}`$ with respect to retained early skill $`\theta_c^{\mathrm{ret}}`$ and Stage-2 inputs $`X_m \in \{I_{\mathrm{tot},2}, h_p^{\mathrm{safe}}\}`$ is strictly positive:
     $$\frac{\partial^2 \theta_c^{\mathrm{ces},2}}{\partial \theta_c^{\mathrm{ret}}\, \partial X_m} = (1 - \varphi_2)\gamma_{2,\mathrm{self}}\gamma_{2,m}\left(\theta_c^{\mathrm{ces},2}\right)^{1 - 2\varphi_2}\left(\theta_c^{\mathrm{ret}} X_m\right)^{\varphi_2 - 1} > 0 \quad (1 - \varphi_2 = 1.95)$$
   * Deploying Layer 1 without Layer 2 (`P0_Early_0to5` in `Counterfactuals_LeeSeshadri_4Region.m`) loses **22%** of early skill gains above $`\theta_{\mathrm{base}}`$ at ages 12–14 and leaves parental distress shocks ($`z_p \in \mathcal{Z}_{\mathrm{distress}}`$) unbuffered ($`-\psi_{\mathrm{unemp}}`$). Deploying Layer 2 without Layer 1 (`P1P2_Late_6to17`) feeds a depleted baseline $`\theta_c^{\mathrm{ret}}`$ from the **25.79%** $`i_c^{\star} = 0`$ birth corner into the $`\varphi_2 = -0.95`$ bottleneck. Deploying both gates jointly eliminates fade-out ($`(1 - M_{\mathrm{mentor}})\delta_{\mathrm{fade}} \rightarrow 0`$), activates the downward *tuakana* scaffolding multiplier, and generates the supermodular residual:
-    $$G_{\mathrm{ECE},1}^{\mathrm{eff}} = G_{\mathrm{ECE},1}\left(1 + \kappa_{\mathrm{down}} M_{\mathrm{mentor}}\bar{\theta}_{J=5}\right)$$
-    $$\Delta \mathrm{CE}_{k,\mathrm{Wedge\,1}} = \mathrm{CE}_k\left(\Delta G_{\mathrm{ECE},1}, \Delta G_{\mathrm{ECE},2}\right) - \Delta \mathrm{CE}_{k,\mathrm{ECE1}}^{\mathrm{iso}} - \Delta \mathrm{CE}_{k,\mathrm{Tuakana}}^{\mathrm{iso}} = +3.07\text{ pp CE}$$
-
+    $`G_{\mathrm{ECE},1}^{\mathrm{eff}} = G_{\mathrm{ECE},1}\left(1 + \kappa_{\mathrm{down}} M_{\mathrm{mentor}}\bar{\theta}_{J=5}\right)`$
+    $`\Delta \mathrm{CE}_{k,\mathrm{Wedge\,1}} = \mathrm{CE}_k\left(\Delta G_{\mathrm{ECE},1}, \Delta G_{\mathrm{ECE},2}\right) - \Delta \mathrm{CE}_{k,\mathrm{ECE1}}^{\mathrm{iso}} - \Delta \mathrm{CE}_{k,\mathrm{Tuakana}}^{\mathrm{iso}} = +3.07\text{ pp CE}`$
 * **2. Tier 2 — Spatial, LVR & Enterprise Stack (`+6.91% CE` Nat.) & Wedge 2 (`L07_WEDGE2_LVR_Whanau_Synergy` = `+2.14% CE` Nat., `9.09%` Share):**
   * *Isolated Factors:* Layer 4 ($`\tau_a = 0.015`$ and $`\tau_b: 0.25 \rightarrow 0.18`$, yielding **+2.48% CE**), Layer 5 (universal Age-20 Youth Capital Grant $`E: 0.065 \rightarrow 0.080`$, yielding **+1.26% CE**), and Layer 6 (Labrousse–Perdereau spatial transfer `T_k`, yielding **+1.04% CE**).
   * *Structural Complementarity Mechanism:* In `ReturnFn_SpatialHH_Compact4D.m`, young households transition from rental user cost $`r_{h,k}^{\mathrm{rent}}`$ to homeowner user cost $`r_{h,k}^{\mathrm{own}} = r_{h,k}^{\mathrm{rent}} - \psi_{\mathrm{own}} Q_k`$ if and only if initial net worth clears the non-linear Kiyotaki et al. (2024) 20% LVR down-payment threshold:
     $$a_1 + E \ge \xi_k Q_k(\tau_a, \tau_b), \qquad \xi_k = 0.20$$
   * In high-cost metropolitan markets ($`Q_{\mathrm{Auckland}} = 3.10`$ in *SS0*, requiring $`\xi_k Q_k = 0.620`$), providing $`E = 0.080`$ alone leaves cash-poor young adults below the deposit cliff, while cooling `Q_k` by **-10.5%** via $`\tau_a`$ and $`\tau_b`$ alone lowers the hurdle to `0.555` without supplying the seed equity to cross it. Simultaneously, cooling `Q_k` raises the elder housing stability multiplier $`\Phi_{\mathrm{home}}(p_{\mathrm{super}}, Q_k) = (p_{\mathrm{super}}/0.180)(Q_{k,0}/Q_k)^{0.35} > 1`$, anchoring *kaumātua* and aunties in urban neighborhoods and cutting childhood rental transience $`\nu_k`$. Wedge 2 measures the mass of young households pushed across $`\xi_k Q_k`$ and anchored near extended *whānau* by the joint operation of Layers 4, 5, and 6:
-    $$\Delta \mathrm{CE}_{k,\mathrm{Wedge\,2}} = \mathrm{CE}_k\left(\mathbf{\Phi}_{\mathrm{Spatial}}\right) - \left(\Delta \mathrm{CE}_{k,\mathrm{TaxRebal}}^{\mathrm{iso}} + \Delta \mathrm{CE}_{k,E}^{\mathrm{iso}} + \Delta \mathrm{CE}_{k,T}^{\mathrm{iso}}\right) = +2.14\text{ pp CE}$$
-
+    $`\Delta \mathrm{CE}_{k,\mathrm{Wedge\,2}} = \mathrm{CE}_k\left(\mathbf{\Phi}_{\mathrm{Spatial}}\right) - \left(\Delta \mathrm{CE}_{k,\mathrm{TaxRebal}}^{\mathrm{iso}} + \Delta \mathrm{CE}_{k,E}^{\mathrm{iso}} + \Delta \mathrm{CE}_{k,T}^{\mathrm{iso}}\right) = +2.14\text{ pp CE}`$
 * **3. Tier 3 — Cross-Stack Human Capital × Spatial/Enterprise Interaction (`L08_WEDGE3_CrossStack_HC_x_Spatial` = `+3.72% CE` Nat., `+4.76%` Akl, `15.76%` Share):**
   * *Structural Complementarity Mechanism:* Wedge 3 is the single largest complementarity term in the model, capturing three general-equilibrium cross-derivatives between the Dual-Gate Human Capital Stack ($`\mathbf{\Phi}_{\mathrm{HC}}`$, expanding the thriving `h6–h7` launch share from **23.5% to 65.0%**) and the Spatial/Enterprise Stack ($`\mathbf{\Phi}_{\mathrm{Spatial}}`$, shifting the infinite-horizon firm distribution $`\Gamma_k(a_f, z_f)`$ toward high-productivity enterprises $`z_{h,k}`$ and cooling `Q_k`): (i) *Firm–Worker Assortative Matching* in `Solve_Spatial_GE_Loop.m`, where $`\frac{\partial^2 Y_k}{\partial Z_k \partial H_k} = (1 - \alpha_k)K_k^{\alpha_k} H_k^{-\alpha_k} > 0`$; (ii) *Domestic Graduate Retention* in the $`4 \times 5`$ Gumbel sorting operator $`\Pi_{\mathrm{mig}}`$, where coupling $`\mathbf{\Phi}_{\mathrm{HC}}`$ with $`\mathbf{\Phi}_{\mathrm{Spatial}}`$ raises domestic continuation values $`V_{m,t}(a_1 + E - \kappa_{k\to m}, h_1, z_1, 1)`$ relative to $`V_{\mathrm{Abroad},t}`$, cutting national youth emigration from **10.93% to 7.60%** ($`\sim 3,550`$ skilled graduates/yr retained); and (iii) *Relief of the Kaiako Housing-Affordability Supply Deflator* $`G_{\mathrm{ECE}}^{\mathrm{eff}}(Q_k)`$ (formalized in [Document 2T](Document%202T.md)).
-    $$\Delta \mathrm{CE}_{k,\mathrm{Wedge\,3}} = \mathrm{CE}_k\left(\mathbf{\Phi}_{\mathrm{HC}} \cup \mathbf{\Phi}_{\mathrm{Spatial}}\right) - \mathrm{CE}_k\left(\mathbf{\Phi}_{\mathrm{HC}}\right) - \mathrm{CE}_k\left(\mathbf{\Phi}_{\mathrm{Spatial}}\right) = +3.72\text{ pp CE (Nat.)}, \quad +4.76\text{ pp CE (Akl)}$$
-
+    $`\Delta \mathrm{CE}_{k,\mathrm{Wedge\,3}} = \mathrm{CE}_k\left(\mathbf{\Phi}_{\mathrm{HC}} \cup \mathbf{\Phi}_{\mathrm{Spatial}}\right) - \mathrm{CE}_k\left(\mathbf{\Phi}_{\mathrm{HC}}\right) - \mathrm{CE}_k\left(\mathbf{\Phi}_{\mathrm{Spatial}}\right) = +3.72\text{ pp CE (Nat.)}, \quad +4.76\text{ pp CE (Akl)}`$
 * **4. Tier 4 — Fiscal, Super-64, 2nd-Generation Dynastic Harvest & NDC Clean-Green Stack (`+4.52% CE` Nat.) — Wedges 4 & 5 (`L11` = `+1.63% CE`, `L12` = `+0.99% CE` Nat. / `+1.71% CE` Rural):**
   * *Isolated Factors:* Layer 9 evaluates the **-60 bps** domestic interest rate reduction ($`\Delta r = -0.006`$) from the 50% Sovereign Debt-Sinking allocation $`\Omega_{\mathrm{debt},t} = 0.50\,\Omega_{\mathrm{reform},t}`$ in the national asset-market clearing condition:
     $$\sum_{k=1}^4 \omega_{F,k}\int \left(k_k(a_f, z_f) - a_f\right) d\Gamma_{k,t} + B_{\mathrm{gov},t} = \sum_{k=1}^4 \omega_{HH,k,t}\int a_{\mathrm{fin}}\, d\mu_{k,t} + B_t^{\star}$$
@@ -376,7 +373,7 @@ Finally, `Plot_Doc3_Synergies_And_LTFMSinkhole.m` (`Tables 21 & 22` in [Document
 
 ---
 
-### 7.5 Zero-Dependency Interactive HTML5 + SVG Sankey Serialization & Cosine-S-Curve Ribbon Geometry (`exportSankeyToHTML.m`)
+#### 7.5 Zero-Dependency Interactive HTML5 + SVG Sankey Serialization & Cosine-S-Curve Ribbon Geometry (`exportSankeyToHTML.m`)
 When MATLAB's `SSankey.m` renders gradient ribbons on an axes where `set(ax, 'YDir', 'normal')` is applied post-draw, the internal $`4 \times N_{\mathrm{strips}}`$ normal-offset quad vertices invert the vertical tangent sign $\left(-dy, dx\right)$, which causes direct vertex polygon exports to exhibit sub-pixel vertical striping and mid-span bowtie pinching on steep diagonal ribbons. `exportSankeyToHTML.m` eliminates both artifacts by extracting only the exact left and right block attachment spans $`\left\lbrack y_{L,\mathrm{bot}}, y_{L,\mathrm{top}} \right\rbrack`$ at $`x_L`$ and $`\left\lbrack y_{R,\mathrm{bot}}, y_{R,\mathrm{top}} \right\rbrack`$ at $`x_R`$, and reconstructing parallel upper and lower rails over $\tau \in \left\lbrack 0, 1 \right\rbrack$ via the smooth cosine S-curve $s\left(\tau\right) = \frac{1}{2}\left(1 - \cos\left(\pi \tau\right)\right)$:
 
 $$
@@ -399,7 +396,7 @@ Because the vertical thickness at every horizontal station $\tau \in \left\lbrac
 
 ---
 
-## 8. Consolidated 22-File VFI Toolkit Codebase Manifest
+### 8. Consolidated 22-File VFI Toolkit Codebase Manifest
 
 | File # | MATLAB Script / Function Name | Primary Role in the 4-Region + Abroad Multiphase Suite |
 | :---: | :--- | :--- |
@@ -428,11 +425,11 @@ Because the vertical thickness at every horizontal station $\tau \in \left\lbrac
 
 ---
 
-## 9. Annex: Master Reference Library & Empirical Source of Truth (`IntergenerationalWelfare` Drive Repository)
+### 9. Annex: Master Reference Library & Empirical Source of Truth (`IntergenerationalWelfare` Drive Repository)
 
 To ensure full replicability and unambiguous citation across the theoretical operators, VFI Toolkit scripts, New Zealand administrative calibrations, and historical benchmarks in **Documents 1A, 1B, 1C, 2A, 2B, 2T, and 3**, the project's primary literature and official datasets are indexed using a fixed decile numbering scheme (`1–10` for Folder 1, `11–20` for Folder 2, `21–30` for Folder 3, `31–40` for Folder 4, `41–50` for Folder 5, and `51–60` for Folder 6, with `RESERVED` slots preserving stable reference numbers across future additions):
 
-## Folder 1: `01_Core_Macro_OLG_and_Wealth_Tax_Theory` (References 1–10)
+### Folder 1: `01_Core_Macro_OLG_and_Wealth_Tax_Theory` (References 1–10)
 - **[1]** **Ferriere, A., Grübener, P., Navarro, G., & Vardishvili, O. (2025 / Working Paper 2023):** *"On the Optimal Design of Transfers and Income-Tax Progressivity"* (plus companion ECB/CEPR paper *"In-Kind Transfers, Luxury Thresholds, and Redistribution"*) — *Public PDF:* *Journal of Political Economy Macroeconomics* / ECB Working Paper Series / PSE. *(Anchors the $`\bar{g}_{\mathrm{ECE}}`$ Stone-Geary luxury corner `i_c = 0`, welfare-based in-kind imputation weight $`\omega_i`$, and intertemporal government debt-service budget constraint $`r_t d_t`$.)*
 - **[2]** **Guvenen, F., Kambourov, G., Kuruscu, B., Ocampo, S., & Chen, D. (2023):** *"Use It or Lose It: Efficiency and Redistributional Effects of Wealth Taxation"* — *Public PDF:* *Quarterly Journal of Economics* 138(2), 835–894 / NBER Working Paper w26284. *(Anchors the $`\tau_k \to \tau_a`$ property-to-enterprise capital reallocation mechanism and infinite-horizon firm Bellman equation `ReturnFn_Firm.m`.)*
 - **[3]** **Hirano, T., & Toda, A. A. (2025):** *"Unbalanced Growth and Land Overvaluation"* (and *"Bubble Necessity Theorem"*) — *Public PDF & Replication Code:* *Journal of Political Economy Macroeconomics* / *PNAS* / Alexis Akira Toda's GitHub (`alexisakira.github.io/files/code_unbalanced_growth.zip`). *(Anchors regional land overvaluation *Q_k* under unbalanced sectoral productivity growth $`G_k`$ and the Part VI Tokyo Land Bubble Coda.)*
@@ -444,7 +441,7 @@ To ensure full replicability and unambiguous citation across the theoretical ope
 - **[9]** **RESERVED**
 - **[10]** **RESERVED**
 
-## Folder 2: `02_Human_Capital_First2000Days_and_Adolescent_Gates` (References 11–20)
+### Folder 2: `02_Human_Capital_First2000Days_and_Adolescent_Gates` (References 11–20)
 - **[11]** **Cunha, F., Heckman, J. J., & Schennach, S. M. (2010):** *"Estimating the Technology of Cognitive and Noncognitive Skill Formation"* — *Public PDF:* *Econometrica* 78(3), 883–931 / NBER Working Paper w15664. *(Anchors the two-stage CES skill technology with high Stage-1 substitutability $`\varphi_1 = 0.35`$ in the First 2000 Days and strong Stage-2 dynamic complementarity $`\varphi_2 = -0.95`$ in schooling.)*
 - **[12]** **Lee, S. Y., & Seshadri, A. (2019):** *"On the Intergenerational Transmission of Economic Status"* (alongside Fan, Seshadri, & Taber, 2022, on adult Ben-Porath human capital) — *Public PDF:* *Journal of Political Economy* 127(2), 855–921 / NBER Working Paper w24395. *(Anchors `Counterfactuals_LeeSeshadri_4Region.m` regimes `P0_Early_0to5`, `P1P2_Late_6to17`, `BN_FrontLoad`, and `P0_Plus_GrantE`.)*
 - **[13]** **Fan, X., Seshadri, A., & Taber, C. (2024 / Working Paper 2022):** *"Estimation of a Life-Cycle Model with Human Capital, Labor Supply, and Retirement"* — *Public PDF:* *Journal of Political Economy* 132(1), 48–95 (alongside French, E., 2005, *Review of Economic Studies* 72(2), 395–427). *(Anchors adult Ben-Porath on-the-job training `I_h`, late-life physiological wage senescence `delta_senescence_post65 = 0.080`, and post-65 work disutility `psi_wear_post65 = 0.140` in `Configure_TimeGrid_Params.m` Section 6.)*
@@ -456,7 +453,7 @@ To ensure full replicability and unambiguous citation across the theoretical ope
 - **[19]** **Fleming, T., Tiatia-Seath, J., Peiris-John, R., Sutcliffe, K., Kang, K., Bavin, L., Crengle, S., & Clark, T. (2020):** *Youth19 Rangatahi Smart Survey, Initial Findings: Hauora Hinengaro / Emotional and Mental Health* — *Public PDF:* The Youth19 Research Group, University of Auckland and Victoria University of Wellington ( youth19.ac.nz ). *(Anchors the post-2012 doubling of clinically significant adolescent depressive symptoms from 13% to 23% overall—and 28% among rangatahi Māori—entering the Gate 3* $J = 5$ *psychosocial hazard* $\lambda_{\text{psy}}$ *at Node 7.)*
 - **[20]** **Green, V. A., Woods, L., Wegerhoff, D., Harcourt, S., & Towl, G. (2020):** *"An Evaluation of the KiVa Anti-Bullying Programme in New Zealand"* — *Public PDF:* *International Journal of Bullying Prevention* 2, 225–237 (alongside OECD PISA 2022/2025 Student Wellbeing bullying incidence tables). *(Anchors New Zealand's 32%–35% baseline peer-victimization incidence and validates bystander peer-ecology restructuring via cross-age* *Tuakana–Teina* *mentoring at Gate 3.)*
 
-## Folder 3: `03_Fertility_Bargaining_and_Brain_Drain_Migration` (References 21–30)
+### Folder 3: `03_Fertility_Bargaining_and_Brain_Drain_Migration` (References 21–30)
 - **[21]** **Doepke, M., Hannusch, A., Kindermann, F., & Tertilt, M. (2022 / 2023):** *"The Economics of Fertility: A New Era"* — *Public PDF:* *Handbook of the Economics of the Family* / NBER Working Paper w29948. *(Anchors the cooperative household childcare bargaining module `FertilityBargaining_Module.m`, maternal time share $`\theta_{\tau} = 0.68`$, and Nordic vs. East Asian fertility regimes.)*
 - **[22]** **Cao, J., & Li, M. (2021 / 2022):** *"Hyperbolic discounting in an intergenerational model with altruistic parents"* — *Public PDF:* *Journal of Population Economics* 35(3), 989–1005 ([https://doi.org/10.1007/s00148-021-00824-7](https://doi.org/10.1007/s00148-021-00824-7)). *(Anchors the Period-2 quasi-hyperbolic fertility discount parameter $`\beta_{\mathrm{hyp}} = 0.72`$ via Proposition 5's closed-form ratio of realized to intended fertility $`n^t / n^c = \beta_{\mathrm{hyp}}^{1/\epsilon}`$.)*
 - **[23]** **Labrousse, C., & Perdereau, Y. (2025):** *"Geography versus Income: The Heterogeneous Effects of Carbon Taxation"* — *Public PDF:* European Central Bank (ECB) Working Paper Series / Paris School of Economics (building on *Ferriere, A., & Navarro, G., 2025*, *Review of Economic Studies* 92(2), 1061–1125). *(Section 3.2, Appendix B, & Table 8 provide the exact $`4 × 5`$ Gumbel extreme-value discrete location-choice operator $`P_t^{k'}(a, z, k)`$ and baseline Gumbel shock variance $`\rho_G = 0.10`$, adapted in our Stage-3 youth sorting matrix with $`\varrho_{\mathrm{mig}} = 0.180`$, alongside the Spatial $`\times`$ Income transfer progressivity framework in `T2`.)*
@@ -468,7 +465,7 @@ To ensure full replicability and unambiguous citation across the theoretical ope
 * **[29]** **Ministry for Primary Industries — Manatū Ahu Matua (2020 / 2025 / 2026):** *Fit for a Better World: Background Analysis on Export Earnings in the Primary Sector* (MPI Technical Paper on 4-Channel Primary-Sector Value-Add & Land-Use Assumptions, July 2020, `mpi.govt.nz/dmsdocument/41319/direct/`), *Situation and Outlook for Primary Industries (SOPI)* (Dec 2025 & June 2026 editions), and *NZIER Scenarios for Estimating the Future Food and Fibre Workforce* (alongside DairyNZ *Economic Survey* & Beef + Lamb NZ *Sheep and Beef Farm Survey* ROA benchmark dispersions). *(Anchors the 4-channel primary-sector `z_l -> z_h` transformation in `Rural` and `Small`—closing the 80/20 pastoral ROA gap, high-value horticultural/arable conversion, permanent native biodiversity afforestation over exotic pine arbitrage, and farm/processing electrification—and the regional agglomeration ceiling `Agglom_Map = [0.68, 0.80, 0.94, 1.00]` in `Plot_ChildFiscal_SSankey.m`.)*
 * **[30]** **Hendy, S., Kerr, S., & Baisden, T. (2007 / 2022 LURNZ Updates) & He Pou a Rangi — Climate Change Commission (2024 / 2025):** *"Land Use in Rural New Zealand (LURNZ): Modelling Pastoral, Forestry, and ETS Carbon Dynamics"* (*Motu Economic and Public Policy Research*) and *Ināia Tonu Nei / 2025 Advice on New Zealand's Nationally Determined Contributions (NDC1 & NDC2) and Biogenic Methane Targets* — **Public PDFs:** `motu.nz` and `climatecommission.govt.nz`. *(Anchors the rural land-use arbitrage wedge between passive exotic pine carbon farming `kappa_pine_schedule` and circular biogenic dairy pricing `theta_ag_schedule`, the Year-25 exotic pine saturation cliff, the `NZD 145/tCO2e` shadow price of offshore Paris NDC mitigation `p_NDC_intl = 0.095`, and the Clean-Green vs. CBAM export terms-of-trade multiplier `Pi_trade_reg` in `ReturnFn_Firm.m` and `TransPath_4Region_Master.m`.)*
 
-## Folder 4: `04_NZ_Treasury_LTFS_CBAx_and_Infrastructure_Audits` (References 31–40)
+### Folder 4: `04_NZ_Treasury_LTFS_CBAx_and_Infrastructure_Audits` (References 31–40)
 - **[31]** **New Zealand Treasury (September 2025):** *He Tirohanga Mokopuna 2025 — Long-term Fiscal Statement 2025* (`ltfs-2025.pdf`, [https://www.treasury.govt.nz/publications/ltfp/he-tirohanga-mokopuna-2025](https://www.treasury.govt.nz/publications/ltfp/he-tirohanga-mokopuna-2025)). *(Anchors the status-quo 40-year fiscal outlook where real government spending per person nearly doubles from NZD 18,300 to NZD 35,900 and net core Crown debt reaches ~200% of GDP by 2065, alongside Annexes 1–2 introducing Treasury's OLG model.)*
 - **[32]** **Bell, M. / New Zealand Treasury (February 2026), Binning et al. (2024), & Treasury OIA Response 20250878 (February 2026):** *Analytical Note 26/01: The 2025 Long-term Fiscal Model — Main features and changes* (`an26-01-v2.pdf`, [https://www.treasury.govt.nz/publications/an/an-26-01](https://www.treasury.govt.nz/publications/an/an-26-01)), *Official Information Act Response 20250878: Social Cost Benefit Analysis and Fiscal Projection Models* (`oia-20250878.pdf`, 4 Feb 2026), and Binning, McKenzie, Özbilgin, & Smith (2024 / *AN 24/08*). *(AN 26/01 anchors the 2025 BEFU-based LTFM debt-interest spiral and 0.9%/yr productivity growth assumption; OIA 20250878 officially confirms on pp. 6–11 that Treasury's macro LTFM/FSM models do not model micro cohort social-harm feedback loops—the exact methodological gap closed by our coupled 4-Region OLG + Dunedin/CBAx lifecycle engine.)*
 - **[33]** **New Zealand Treasury (November 2025 & July 2015):** *CBAx Tool User Guidance: Guide for departments and agencies using Treasury's CBAx tool for cost benefit analysis* (`cbax-tool-user-guidance-nov25.pdf`), companion *CBAx Spreadsheet Model & Impacts Database* (`cbax-model-oct25.xlsx`, Oct 2025), and *Guide to Social Cost Benefit Analysis* (`cba-guide-jul15.pdf`, July 2015), supplemented by *Budget 2026 Guidance for Agencies* (`b26-guide-agen-5304608.pdf`). *(Page 15 of the November 2025 CBAx User Guidance anchors Treasury Circular 2024/15's dual public-sector real discount rates—**2.0% real SRTP** for non-commercial social investments over Years 1–30, stepping to 1.5% in Years 31–100, with mandatory **8.0% real SOC** sensitivity testing—while the July 2015 Guide pp. 10–15 anchors Counting Rule #1 separating fiscal transfer payments *T_k* from real GDP output $`\Delta Y_t`$.)*
@@ -480,7 +477,7 @@ To ensure full replicability and unambiguous citation across the theoretical ope
 - **[39]** **RESERVED**
 - **[40]** **RESERVED**
 
-## Folder 5: `05_NZ_Wealth_Distribution_Tax_and_Social_Cohesion_Data` (References 41–50)
+### Folder 5: `05_NZ_Wealth_Distribution_Tax_and_Social_Cohesion_Data` (References 41–50)
 - **[41]** **Inland Revenue Department (IRD) (April 2023):** *High-Wealth Individuals Research Project (HWIRP) — Final Report* — *Public PDF:* `ird.govt.nz`. *(Anchors Tiers 9–10 of the 10-Tier Survey-Anchored Earn + Own table: NZD 50M median net worth, NZD 106M mean net worth, and 8.9% baseline effective economic tax rate.)*
 - **[42]** **Statistics New Zealand (2022 / 2025):** *Household Net Worth Statistics* + *Subnational Population Estimates & Business Demography Statistics (Feb/June 2025)* + *Child Poverty Statistics (Year Ended June 2025)* — *Public PDFs/CSVs:* `stats.govt.nz`. *(Anchors median net worth NZD 529k, mean NZD 1.041M, the 4-region household `[0.160, 0.240, 0.259, 0.341]` and firm `[0.150, 0.230, 0.269, 0.351]` weights, and AHC child poverty.)*
 - **[43]** **Rashbrooke, M. (2015, 2021 / 2024 Updates):** *Wealth and New Zealand* and *Too Much Money: How Wealth Disparities Are Unbalancing Aotearoa New Zealand* (Bridget Williams Books / VUW Institute for Governance and Policy Studies Working Papers). *(Anchors the P50, P90, P95, and P99 wealth percentiles in `Plot_WealthBracket_GiveAndGain.m`.)*
@@ -492,7 +489,7 @@ To ensure full replicability and unambiguous citation across the theoretical ope
 - **[49]** **RESERVED**
 - **[50]** **RESERVED**
 
-## Folder 6: `06_International_Benchmarks_Scotland_Nordics_and_Deming` (References 51–60)
+### Folder 6: `06_International_Benchmarks_Scotland_Nordics_and_Deming` (References 51–60)
 - **[51]** **Scottish Government & Joseph Rowntree Foundation (2026):** *Bringing Hope, Building Futures: Tackling Child Poverty Delivery Plan 2026–2031* (Scottish Government, March 2026), *Scottish Child Payment and the Labour Market* (Oct 2026), and *Poverty in Scotland 2026* (JRF, Oct 2026) + *MCR Pathways (2024/2025) National Impact Report*. *(Anchors the Scotland devolved natural experiment in Part VI.)*
 - **[52]** **Corlet Walker, C., Druckman, A., & Jackson, T. (2021 / 2024):** *"Welfare systems without economic growth: A review of the challenges and next steps for the field"* — *Public PDF:* *The Lancet Planetary Health* 5(4), e237–e246. *(Links New Zealand, Scotland, and Finland in the Wellbeing Economy Governments alliance.)*
 - **[53]** **Baker, M., Gruber, J., & Milligan, K. (2008):** *"Universal Childcare, Maternal Labor Supply, and Family Well-Being"* — *Public PDF:* *Journal of Political Economy* 116(4), 709–745 / NBER Working Paper w11832. *(Anchors the Quebec universal childcare self-financing and maternal labor supply benchmark.)*
@@ -504,7 +501,7 @@ To ensure full replicability and unambiguous citation across the theoretical ope
 - **[59]** **RESERVED**
 - **[60]** **RESERVED**
 
-## 10. Companion Technical Tutorial: "Thick" vs. "Thin" Numbers & Dimension-Free State-Contingent Conditioning ([Document 2T](Document%202T.md))
+### 10. Companion Technical Tutorial: "Thick" vs. "Thin" Numbers & Dimension-Free State-Contingent Conditioning ([Document 2T](Document%202T.md))
 
 To keep this specification guide within GitHub's per-file MathJax rendering limits while giving our state-contingent operator methodology a full pedagogical treatment, Section 10 has been published as a standalone companion monograph: **[Document 2T: "Thick" vs. "Thin" Numbers in Quantitative Public Policy — Why Dimension-Free State-Contingent Conditioning Captures Comonotonic Tail Risks Without Expanding GPU Grid Dimensions](Document%202T.md)**.
 
