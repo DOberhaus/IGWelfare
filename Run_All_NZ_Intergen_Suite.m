@@ -57,6 +57,7 @@ if Force_Recompute_All && exist(CacheDir, 'dir')
     delete(fullfile(CacheDir, '*.mat'));
     fprintf('    [CLEAN STATE] Force_Recompute_All = true: Cleared all cached .mat files in %s\n', CacheDir);
 end
+Force_Recompute_All = false; % Auto-consume one-shot flag so subsequent/resumed runs never re-wipe cache
 
 fprintf('=========================================================================================\n');
 
