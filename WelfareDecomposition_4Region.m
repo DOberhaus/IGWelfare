@@ -209,9 +209,10 @@ for m = 1:M_reforms
     end
     for r_idx = 1:N_reg
         reg = Regions{r_idx};
-        % Clean-Green vs. CBAM terms-of-trade export lift on regional GE wages (Rural & Small lead):
+        % Conservative 0.16 pass-through of Clean-Green vs. CBAM terms-of-trade export lift into
+        % regional wages (accounts for inelastic rural land supply & on-farm compliance capex):
         if isfield(P_GE, 'Pi_trade_reg') && isfield(Params_SS0, 'Pi_trade_SS0')
-            ndc_trade_mult = (P_GE.Pi_trade_reg(r_idx) / Params_SS0.Pi_trade_SS0(r_idx)) ^ 0.35;
+            ndc_trade_mult = (P_GE.Pi_trade_reg(r_idx) / Params_SS0.Pi_trade_SS0(r_idx)) ^ 0.16;
         else
             ndc_trade_mult = 1.0;
         end

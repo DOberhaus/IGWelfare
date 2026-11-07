@@ -468,7 +468,7 @@ for r_i = 1:length(reg_list)
 
     % Guvenen / Murphy-Shleifer-Vishny Occupational Allocation (z_l Rent-Seekers vs z_h Builders):
     if reform_intensity <= 0
-        % SS0 Status Quo: High Q_house & untaxed land wealth pull 68% of retained Thriving talent into z_l rent-seeking
+        % SS0 Status Quo: High Q_house & untaxed land wealth pull 61% of retained Thriving talent into z_l rent-seeking
         P_Ret_3x4 = [0.78, 0.22, 0.00, 0.00; ... % Retained Struggling -> 78% Chronic Adversity, 22% Core Workforce
             0.09, 0.73, 0.12, 0.06; ... % Retained Core       -> 9% Adversity, 73% Core, 12% z_l, 6% z_h
             0.01, 0.09, 0.61, 0.29];    % Retained Thriving   -> 1% Adversity, 9% Core, 61% z_l Rent, 29% z_h Builder
@@ -482,6 +482,25 @@ for r_i = 1:length(reg_list)
         P_Ret_3x4 = [0.62, 0.38, 0.00, 0.00; ...
             0.03, 0.75, 0.02, 0.20; ...
             0.00, 0.06, 0.06, 0.88];
+    end
+
+    % Regional agglomeration & rural land-inelasticity conditioning on z_h Builder share:
+    % In Rural (0.68) and Small (0.80), soil/topography limits on horticultural conversion
+    % and metro agglomeration mean a larger share of retained talent reinforces Node 18
+    % (Skilled Rural Trades & Core Workforce) and a realistic pastoral floor remains in Node 19:
+    Agglom_Map = struct('Rural', 0.68, 'Small', 0.80, 'Urban', 0.92, 'Large', 0.94, 'Auckland', 1.00);
+    zh_cap_reg = getfield_def(Agglom_Map, reg, 0.90);
+    if zh_cap_reg < 1.0
+        for r_tier = 2:3
+            zh_orig  = P_Ret_3x4(r_tier, 4);
+            zh_new   = zh_orig * zh_cap_reg;
+            zh_delta = zh_orig - zh_new;
+            % 75% of non-z_h rural/provincial talent enters Skilled Rural Trades/Core Workforce (Col 2, Node 18)
+            % and 25% remains in traditional pastoral/landholding portfolios (Col 3, Node 19):
+            P_Ret_3x4(r_tier, 4) = zh_new;
+            P_Ret_3x4(r_tier, 2) = P_Ret_3x4(r_tier, 2) + 0.75 * zh_delta;
+            P_Ret_3x4(r_tier, 3) = P_Ret_3x4(r_tier, 3) + 0.25 * zh_delta;
+        end
     end
     P_G4_to_G5   = [ret_t .* P_Ret_3x4, emig_t]; % [3 x 5] row-stochastic transition from Launch Tiers to Career Strata
     reg_F45_Pop  = reg_Pop_S4(:) .* P_G4_to_G5;  % [3 x 5] cohort population share matrix

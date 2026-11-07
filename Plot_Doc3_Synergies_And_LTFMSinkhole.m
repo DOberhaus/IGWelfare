@@ -34,8 +34,8 @@ if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
 % 1. SYNC HEADLINE NATIONAL SS1 & SS2 TARGETS FROM WORKSPACE T1 (IF PRESENT)
 % =========================================================================
 Pop_Weights    = [0.160, 0.240, 0.259, 0.341]; % [Rural, Small, Large, Auckland]
-SS1_Target_Reg = [9.479, 12.184, 14.384, 17.728];  % Matches +14.21% National (n_z = 7)
-SS2_Target_Reg = [18.213, 21.750, 24.414, 28.697]; % Matches +24.24% National (n_z = 7)
+SS1_Target_Reg = [9.9955, 12.296, 13.997, 17.041]; % Matches +13.99% National (n_z = 7, NDC 0.16)
+SS2_Target_Reg = [18.847, 21.414, 23.440, 27.450]; % Matches +23.59% National (n_z = 7, NDC 0.16)
 
 if evalin('base', 'exist(''T1'', ''var'')')
     T1_ws = evalin('base', 'T1');
@@ -44,15 +44,15 @@ if evalin('base', 'exist(''T1'', ''var'')')
         SS2_Target_Reg = table2array(T1_ws(6, 1:4));
     end
 end
-SS1_Nat = sum(SS1_Target_Reg .* Pop_Weights); % ~14.21%
-SS2_Nat = sum(SS2_Target_Reg .* Pop_Weights); % ~24.24%
+SS1_Nat = sum(SS1_Target_Reg .* Pop_Weights); % +13.99%
+SS2_Nat = sum(SS2_Target_Reg .* Pop_Weights); % +23.59%
 
-% Canonical 11-Layer National SS2 Breakdown (from Table 19 / Fig_Counterfactual):
-%   L1: Iso ECE1 (+3.47%), L2: Iso Tuakana (+2.07%), L3: Wedge 1 ECE1xTuakana (+3.18%) -> Tier 1 = +8.72%
-%   L4: Iso TaxRebal (+2.57%), L5: Iso YouthGrant (+1.30%), L6: Iso GeoTrans (+1.06%), L7: Wedge 2 LVR/Whanau (+2.23%) -> Tier 2 = +7.16%
-%   L8: Wedge 3 Cross-Stack Stack1 x Stack2 (+3.87%)
-%   L9: Iso Debt-Sinking (+0.97%), L10: Iso PAYE Cut & Super 64 (+1.17%), L11: Wedge 4 Fiscal/TFR/2ndGen Closure (+1.74%) -> Tier 4 = +3.88%
-Raw_Nat_11 = [3.57; 2.13; 3.26; 2.63; 1.33; 1.10; 2.28; 3.95; 0.82; 1.20; 1.97];
+% Canonical 12-Layer National SS2 Breakdown (from Table 19 / Fig_Counterfactual):
+%   L1: Iso ECE1 (+3.36%), L2: Iso Tuakana (+2.01%), L3: Wedge 1 ECE1xTuakana (+3.07%) -> Tier 1 = +8.43%
+%   L4: Iso TaxRebal (+2.48%), L5: Iso YouthGrant (+1.26%), L6: Iso GeoTrans (+1.04%), L7: Wedge 2 LVR/Whanau (+2.14%) -> Tier 2 = +6.91%
+%   L8: Wedge 3 Cross-Stack Stack1 x Stack2 (+3.72%)
+%   L9: Iso Debt-Sinking (+0.77%), L10: Iso PAYE Cut & Super 64 (+1.13%), L11: Wedge 4 Fiscal/TFR/2ndGen Closure (+1.63%), L12: Wedge 5 NDC Clean-Green (+0.99%) -> Tier 4 = +4.52%
+Raw_Nat_11 = [3.3600; 2.0053; 3.0662; 2.4759; 1.2559; 1.0371; 2.1442; 3.7178; 0.7692; 1.1304; 1.6302; 0.9941];
 Nat_11     = Raw_Nat_11 * (SS2_Nat / sum(Raw_Nat_11));
 
 % =========================================================================
