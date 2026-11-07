@@ -83,27 +83,31 @@ if Enable_SS2_Phase
     Reform_Phase_Specs(2).Q_mult_vs_SS0 = [0.985, 0.955, 0.925, 0.895]; % Long-run spatial housing supply elasticity
     Reform_Phase_Specs(2).Frac_struggling  = 0.015; % 2nd-gen Daruich compounding + Stage-2 mentoring reaches 1.5%
     Reform_Phase_Specs(2).S_cohesion    = 126.0;
+    % Endogenous 85% retirement of the SS1 geographic transfer top-up in SS2 (Params_SS0.psi_retire_T = 0.850)
+    % as Rural/Small z_l -> z_h enterprise upgrading and competition reform replace fiscal charity:
+    psi_ret = Params_SS0.psi_retire_T; % 0.850
+    T0_vec  = [Params_SS0.Transfer_Geo.HH_Rural, Params_SS0.Transfer_Geo.HH_Small, ...
+        Params_SS0.Transfer_Geo.HH_Large, Params_SS0.Transfer_Geo.HH_Auckland];
+    T1_vec  = [Reform_Phase_Specs(1).Transfer_Geo.HH_Rural, Reform_Phase_Specs(1).Transfer_Geo.HH_Small, ...
+        Reform_Phase_Specs(1).Transfer_Geo.HH_Large, Reform_Phase_Specs(1).Transfer_Geo.HH_Auckland];
+    T2_vec  = max(Params_SS0.T_reg_min_floor, T0_vec + (1.0 - psi_ret) * (T1_vec - T0_vec));
+
     Reform_Phase_Specs(2).Transfer_Geo  = struct( ...
-        'HH_Rural',    0.044, ...
-        'HH_Small',    0.037, ...
-        'HH_Large',    0.031, ...
-        'HH_Auckland', 0.033);
+        'HH_Rural',    T2_vec(1), ...
+        'HH_Small',    T2_vec(2), ...
+        'HH_Large',    T2_vec(3), ...
+        'HH_Auckland', T2_vec(4));
     Reform_Phase_Specs(2).super_age = Params_SS0.super_age_SS2; % Default 64.0 (or set 63.0, 62.0!)
 
-    % Endogenous SS2 PAYE tax cut (tau_l_delta) consistent with Required_LaborTax_Pct in T_Fert2:
-    % - At Super Age 65: Required PAYE = 18.50% -> tau_l_delta = -0.0350 (-3.50 pp PAYE cut)
-    % - At Super Age 64: Required PAYE = 18.85% -> tau_l_delta = -0.0315 (-3.15 pp PAYE cut + 1-yr early pension!)
-    % - At Super Age 60: Required PAYE = 21.42% -> tau_l_delta = -0.0058 (-0.58 pp PAYE cut due to 39.8% DepRatio)
-    % - At Super Age 80: Required PAYE = 25.85% -> tau_l_delta = +0.0385 (+3.85 pp PAYE tax hike!)
+    % Endogenous SS2 PAYE tax cut (tau_l_delta) including fiscal savings from 85% Transfer_Geo retirement:
     sa2 = Reform_Phase_Specs(2).super_age;
     if sa2 < 65.0
-        % Age 64 -> -3.12 pp cut; Age 63 -> -2.45 pp cut; Age 60 -> +0.18 pp (no cut affordable)
         super_tax_cost = 0.0030 * (65.0 - sa2) + 0.00085 * ((65.0 - sa2) ^ 2);
     else
-        % Age 65 -> -3.50 pp cut; Age 67 -> -2.75 pp cut; Age 72 -> +0.95 pp hike; Age 75 -> +3.60 pp hike
         super_tax_cost = 0.0028 * ((sa2 - 65.0) ^ 1.30);
     end
-    Reform_Phase_Specs(2).tau_l_delta = -0.0350 + super_tax_cost;
+    transfer_retire_tax_div = 0.0075 * psi_ret; % -0.64 pp additional PAYE cut funded by retiring Transfer_Geo
+    Reform_Phase_Specs(2).tau_l_delta = -0.0350 - transfer_retire_tax_div + super_tax_cost;
 end
 
 M_reforms = numel(Reform_Phase_Specs);

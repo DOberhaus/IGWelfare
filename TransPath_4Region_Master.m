@@ -230,7 +230,6 @@ end
 grid on;
 xlabel('Cohort Birth/Entry Year Relative to Reform');
 ylabel('Lifetime Consumption Equivalent Welfare (CE %)');
-legend(h_lines, Regions, 'Location', 'northwest');
 
 % --- FIGURE 2: KIYOTAKI HOUSING & REGIONAL POPULATION SHARES ---
 fig2 = figure('Name', 'Fig2_Kiyotaki_Housing_Estates_4Region', 'Color', 'w', 'Position', [120, 120, 980, 480]);

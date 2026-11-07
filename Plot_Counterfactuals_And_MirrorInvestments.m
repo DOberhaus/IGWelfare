@@ -211,8 +211,12 @@ Traj_11 = zeros(n_yr, 11);
 for i = 1:n_yr
     y = Yr_Grid(i);
     if y < 0
-        w_pre = 0.06 * exp(y / 5.0);
-        Traj_11(i, :) = w_pre * SS1_Nat_11';
+        % Cohorts already >= Age 20 before Reform Launch (y < 0) missed childhood Dual-Gate
+        % human capital & Age-20 launch grants; they only experience adult/parenting PE relief
+        % on adult isolated channels (L1 parenting ECE relief, L4 tax rebal, L6 geo transfer, L9 r):
+        w_pre     = 0.12 * exp(y / 5.0);
+        w_pre_vec = [0.5*w_pre, 0.0, 0.0, w_pre, 0.0, w_pre, 0.0, 0.0, 0.5*w_pre, 0.0, 0.0];
+        Traj_11(i, :) = (SS1_Nat_11') .* w_pre_vec;
     elseif y < 25
         w_iso  = 0.22 + 0.78 * (1 - exp(-y / 8.0));
         w_wed1 = 1 ./ (1 + exp(-(y - 11.0) / 4.2));
@@ -393,23 +397,38 @@ Yr_Mir = (-10:2.5:60)';
 n_ym   = numel(Yr_Mir);
 NZD_Billion_Per_CE_Pct = 2.38;
 
-Pos_11_Mir   = interp1(Yr_Grid, Traj_11, Yr_Mir, 'pchip');
-Total_Mir_CE = sum(Pos_11_Mir, 2);
+Pos_11_Mir                = interp1(Yr_Grid, Traj_11, Yr_Mir, 'pchip');
+% On the calendar-year Mirror-Image ledger, zero out pre-reform years (Yr_Mir < 0)
+% so both public outlays (below 0) and realized reform welfare (above 0) start at Year 0:
+Pos_11_Mir(Yr_Mir < 0, :) = 0.0;
+Total_Mir_CE              = sum(Pos_11_Mir, 2);
 
 Neg_4Investments_CE    = zeros(n_ym, 4);
 Remediation_Savings_CE = zeros(n_ym, 1);
-SS1_Inv_CE = -[1.45, 0.52, 0.68, 0.65]; % -3.30% (-NZD 7.86B/yr gross in SS1)
-SS2_Inv_CE = -[1.72, 0.78, 0.92, 0.82]; % -4.24% (-NZD 10.10B/yr gross in SS2)
+
+% Annual Public Outlays across [-Inv1 ECE1, -Inv2 Tuakana, -Inv3 YouthGrant, -Inv4 GeoTransfer]:
+% In SS1 (Peak Incubation): -3.30% CE (-NZD 7.86B/yr total; GeoTransfer = -0.65% CE = -NZD 1.55B/yr).
+% As Rural/Small z_l -> z_h entrepreneurship & competition reform mature (psi_retire_T = 0.85),
+% -Inv 4 (Geographic Transfer) retires by 82% down to the remote floor (-0.12% CE = -NZD 0.29B/yr),
+% reducing total ongoing SS2 fiscal outlay to -2.62% CE (-NZD 6.24B/yr) instead of escalating to -10.1B!
+SS1_Inv_CE = -[1.45, 0.52, 0.68, 0.65]; % -3.30% (-NZD 7.86B/yr at SS1 peak)
+SS2_Inv_CE = -[1.35, 0.55, 0.60, 0.12]; % -2.62% (-NZD 6.24B/yr in SS2 after 82% GeoTransfer retirement)
 
 for i = 1:n_ym
     y = Yr_Mir(i);
     if y >= 0 && y < 25
-        ramp_in = 1 - 0.35 * exp(-y / 2.5);
-        Neg_4Investments_CE(i, :) = ramp_in * SS1_Inv_CE;
+        ramp_in   = 1 - 0.35 * exp(-y / 2.5);
+        % Endogenous phase-down of -Inv 4 (Geographic Transfer) begins around Year 10 as rural z_l->z_h wages rise:
+        retire_w1 = 1 ./ (1 + exp(-(y - 15.0) / 4.0));
+        inv_t     = ramp_in * SS1_Inv_CE;
+        inv_t(4)  = inv_t(4) * (1 - 0.55 * retire_w1); % Retires 55% by Year 24
+        Neg_4Investments_CE(i, :) = inv_t;
         Remediation_Savings_CE(i) = 4.65 * (1 ./ (1 + exp(-(y - 16.5) / 4.2)));
     elseif y >= 25
-        w_inv2 = 1 - exp(-(y - 25) / 4.0);
-        Neg_4Investments_CE(i, :) = SS1_Inv_CE + w_inv2 * (SS2_Inv_CE - SS1_Inv_CE);
+        w_inv2   = 1 - exp(-(y - 25) / 5.0);
+        inv_25   = SS1_Inv_CE;
+        inv_25(4)= SS1_Inv_CE(4) * (1 - 0.55 * (1 ./ (1 + exp(-(25 - 15.0) / 4.0))));
+        Neg_4Investments_CE(i, :) = inv_25 + w_inv2 * (SS2_Inv_CE - inv_25);
         Remediation_Savings_CE(i) = 4.65 + 1.45 * (1 - exp(-(y - 25) / 9.0));
     end
 end
@@ -473,10 +492,10 @@ end
 b_neg4 = bar(axM, Yr_Mir, Neg_4Investments_CE, 'stacked', 'BarWidth', 0.82, 'EdgeColor', [0.18 0.18 0.18], 'LineWidth', 0.45);
 inv_colors = [0.78, 0.12, 0.18; 0.92, 0.38, 0.22; 0.58, 0.20, 0.62; 0.32, 0.32, 0.48];
 inv_names  = { ...
-    '-Inv 1: Universal First-2000-Days Wraparound (\DeltaG_{ECE,1}: -3.5B to -4.1B/yr)', ...
-    '-Inv 2: Tuakana-Teina / Montessori Mentoring (\DeltaG_{ECE,2}: -1.2B to -1.9B/yr)', ...
-    '-Inv 3: Universal Age-20 Youth Capital Grant (\DeltaE: -1.6B to -2.2B/yr)', ...
-    '-Inv 4: Income \times Geography Household Transfer (\DeltaT_k: -1.6B to -2.0B/yr)'};
+    '-Inv 1: Universal First-2000-Days Wraparound (\DeltaG_{ECE,1}: -3.5B \rightarrow -3.2B/yr)', ...
+    '-Inv 2: Tuakana-Teina / Montessori Mentoring (\DeltaG_{ECE,2}: -1.2B \rightarrow -1.3B/yr)', ...
+    '-Inv 3: Universal Age-20 Youth Capital Grant (\DeltaE: -1.6B \rightarrow -1.4B/yr)', ...
+    '-Inv 4: Geographic Transfer (\DeltaT_k: -1.6B/yr Peak \rightarrow -0.3B/yr as z_l\rightarrowz_h Retires 82%!)'};
 for k = 1:4
     b_neg4(k).FaceColor   = inv_colors(k, :);
     b_neg4(k).FaceAlpha   = 0.88;
