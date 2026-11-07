@@ -168,7 +168,7 @@ if ~isfield(Params, 'G_ece_stage1_base'), Params.G_ece_stage1_base = 0.045; end
 if ~isfield(Params, 'G_ece_stage2_base'), Params.G_ece_stage2_base = 0.065; end
 if isnumeric(Params.G_ece_stage1), Params.G_ece_stage1_base = Params.G_ece_stage1; Params = rmfield(Params, 'G_ece_stage1'); end
 if isnumeric(Params.G_ece_stage2), Params.G_ece_stage2_base = Params.G_ece_stage2; Params = rmfield(Params, 'G_ece_stage2'); end
-Params.gbar_ece = 0.020; Params.s_sub = 0.100;
+Params.gbar_ece = 0.020;
 Params.s_sub = 0.100; Params.omega_ic = 0.420; Params.h_par_mean = 1.000;
 
 Params.phi_nd = 0.80; Params.mu_maint = 0.04; Params.upsilon_h = 0.008; Params.chi_bar = 2.55;

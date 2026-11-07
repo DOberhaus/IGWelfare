@@ -74,13 +74,19 @@ for s_idx = 1:N_scen
         case 3 % Barnardos Stage-1 ECE Bargaining Relief
             beta_hyp  = 0.92;
             chi_f_pen = 0.15;
-            G_ece1_s  = Params.G_ece_stage1 + 0.065;
-            G_ece2_s  = Params.G_ece_stage2 + 0.020;
+            for r_i = 1:N_reg
+                hh_t = ['HH_', Regions{r_i}];
+                G_ece1_s.(hh_t) = Params.G_ece_stage1.(hh_t) + 0.065;
+                G_ece2_s.(hh_t) = Params.G_ece_stage2.(hh_t) + 0.020;
+            end
         case 4 % Phase 1 (SS1) Full Package at Age 65
             beta_hyp  = 1.00;
             chi_f_pen = 0.145;
-            G_ece1_s  = Params.G_ece_stage1 + 0.065;
-            G_ece2_s  = Params.G_ece_stage2 + 0.035;
+            for r_i = 1:N_reg
+                hh_t = ['HH_', Regions{r_i}];
+                G_ece1_s.(hh_t) = Params.G_ece_stage1.(hh_t) + 0.065;
+                G_ece2_s.(hh_t) = Params.G_ece_stage2.(hh_t) + 0.035;
+            end
             Q_mult    = [0.990, 0.975, 0.950, 0.925];
         case 5 % Fiscal Austerity Alternative: Raise NZ Super Age to 70 under Status Quo (SS0)
             beta_hyp    = 1.00;
@@ -91,8 +97,11 @@ for s_idx = 1:N_scen
         case 6 % Phase 2 (SS2) Harvest at Parametric Super Age
             beta_hyp    = 1.00;
             chi_f_pen   = 0.132;
-            G_ece1_s    = 0.130;
-            G_ece2_s    = 0.105;
+            for r_i = 1:N_reg
+                hh_t = ['HH_', Regions{r_i}];
+                G_ece1_s.(hh_t) = 0.130;
+                G_ece2_s.(hh_t) = 0.105;
+            end
             Q_mult      = [0.985, 0.955, 0.925, 0.895];
             super_age_s = super_age_ss2_target;
             is_ss2_flag = true;
@@ -135,8 +144,15 @@ Tax_UCurve_SS0 = zeros(n_ug, 1);
 base_struggle_mean = mean(Struggling_mat(1, :));
 for u_i = 1:n_ug
     a_u = SuperAge_Grid(u_i);
+    G_ece1_s = struct();
+    G_ece2_s = struct();
+    for r_i = 1:N_reg
+        hh_t = ['HH_', Regions{r_i}];
+        G_ece1_s.(hh_t) = 0.130;
+        G_ece2_s.(hh_t) = 0.105;
+    end
     % 1) Phase 2 (SS2) Harvest Package across Super Age 60..75:
-    [tfr_u, ~, stn_u, dep_u, tax_u] = eval_super_age_point(a_u, 1.00, 0.132, 0.130, 0.105, ...
+    [tfr_u, ~, stn_u, dep_u, tax_u] = eval_super_age_point(a_u, 1.00, 0.132, G_ece1_s, G_ece2_s, ...
         [0.985, 0.955, 0.925, 0.895], Params.p_super, true, ...
         Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_struggle_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, base_struggle_mean);
     Tax_UCurve_SS2(u_i) = tax_u;
@@ -315,9 +331,7 @@ else
     elder_time_mult = 1.0 + Params.kappa_kuia_max * tanh((A_base - super_age_s) / Params.tau_kuia_sat);
 end
 
-M_mentor_s = min(1.0, max(0.0, (G_ece2_s - 0.045) / (0.085 - 0.045)));
-M_mentor_0 = min(1.0, max(0.0, (Params.G_ece_stage2 - 0.045) / (0.085 - 0.045)));
-
+Regions   = evalin('caller','Regions');
 N_reg     = numel(Dist_Reg_Cell);
 n_h       = numel(h_vec);
 tfr_row   = zeros(1, N_reg);
@@ -325,6 +339,9 @@ diff_row  = zeros(1, N_reg);
 struggle_row = zeros(1, N_reg);
 
 for r_idx = 1:N_reg
+    hh_t = ['HH_', Regions{r_idx}];
+    M_mentor_s = min(1.0, max(0.0, (G_ece2_s.(hh_t) - 0.045) / (0.085 - 0.045)));
+    M_mentor_0 = min(1.0, max(0.0, (Params.G_ece_stage2.(hh_t) - 0.045) / (0.085 - 0.045)));
     Dist_k = Dist_Reg_Cell{r_idx};
     w_k    = w_Reg_Vec(r_idx);
     Q_k    = Q_Base_Vec(r_idx) * Q_mult(r_idx);
@@ -338,7 +355,7 @@ for r_idx = 1:N_reg
     for jj = j_fert_vec
         for ih = 1:n_h
             m_cell = sum(Dist_k(:, ih, :, :, jj), 'all');
-            opp_cost_mother = chi_f_pen * w_k * h_vec(ih) / max(0.50, 1 + 2.5 * G_ece1_s + 0.65 * dK_r);
+            opp_cost_mother = chi_f_pen * w_k * h_vec(ih) / max(0.50, 1 + 2.5 * G_ece1_s.(hh_t) + 0.65 * dK_r);
             housing_drag    = 0.22 * log(max(1.0, Q_k));
             n_opt = (beta_hyp ^ 0.65) * 2.28 / (1 + opp_cost_mother + housing_drag * (Q_k > 1.8));
             n_opt = max(0.85, min(2.60, n_opt));
@@ -352,7 +369,7 @@ for r_idx = 1:N_reg
     diff_row(r_idx)= mean(avg_fert_h(1:2)) - mean(avg_fert_h(6:7));
 
     reg_weight         = 0.75 + 0.10 * r_idx;
-    ece_relief         = 115.0 * (G_ece1_s - Params.G_ece_stage1) * reg_weight ...
+    ece_relief         = 115.0 * (G_ece1_s.(hh_t) - Params.G_ece_stage1.(hh_t)) * reg_weight ...
         +  18.0 * (M_mentor_s - M_mentor_0) * reg_weight;
     whanau_gain        = 22.5 * max(0.0, dK_r);
     yrs_late_r         = max(0.0, super_age_s - A_base);

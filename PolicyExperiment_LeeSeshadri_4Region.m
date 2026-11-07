@@ -49,19 +49,31 @@ for p_idx = 1:N_pol
         case 'BM_Baseline'
             % Status quo baseline
         case 'P0_Early_0to5'
-            Params_p.G_ece_stage1 = Params.G_ece_stage1 + 0.065;
-            Params_p.G_ece        = Params_p.G_ece_stage1;
+            for r_i = 1:N_reg
+                hh_t = ['HH_', Regions{r_i}];
+                Params_p.G_ece_stage1.(hh_t) = Params.G_ece_stage1.(hh_t) + 0.065;
+                Params_p.G_ece.(hh_t)        = Params_p.G_ece_stage1.(hh_t);
+            end
             Params_p.tau_l        = Params.tau_l + 0.008;
         case 'P1P2_Late_6to17'
-            Params_p.G_ece_stage2 = Params.G_ece_stage2 + 0.065;
+            for r_i = 1:N_reg
+                hh_t = ['HH_', Regions{r_i}];
+                Params_p.G_ece_stage2.(hh_t) = Params.G_ece_stage2.(hh_t) + 0.065;
+            end
             Params_p.tau_l        = Params.tau_l + 0.008;
         case 'BN_FrontLoad'
-            Params_p.G_ece_stage1 = Params.G_ece_stage1 + 0.025;
-            Params_p.G_ece        = Params_p.G_ece_stage1;
-            Params_p.G_ece_stage2 = max(0.010, Params.G_ece_stage2 - 0.025);
+            for r_i = 1:N_reg
+                hh_t = ['HH_', Regions{r_i}];
+                Params_p.G_ece_stage1.(hh_t) = Params.G_ece_stage1.(hh_t) + 0.025;
+                Params_p.G_ece.(hh_t)        = Params_p.G_ece_stage1.(hh_t);
+                Params_p.G_ece_stage2.(hh_t) = max(0.010, Params.G_ece_stage2.(hh_t) - 0.025);
+            end
         case 'P0_Plus_GrantE'
-            Params_p.G_ece_stage1 = Params.G_ece_stage1 + 0.065;
-            Params_p.G_ece        = Params_p.G_ece_stage1;
+            for r_i = 1:N_reg
+                hh_t = ['HH_', Regions{r_i}];
+                Params_p.G_ece_stage1.(hh_t) = Params.G_ece_stage1.(hh_t) + 0.065;
+                Params_p.G_ece.(hh_t)        = Params_p.G_ece_stage1.(hh_t);
+            end
             Params_p.YouthGrant   = 0.065;
             Params_p.tau_b        = 0.250;
 

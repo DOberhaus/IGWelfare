@@ -37,42 +37,25 @@ h_vec  = double(gather(a_grid.(ref_type)(n_a1+1 : n_a1+n_h)));
 ic_vec     = double(gather(d_grid.(ref_type)(n_d.(ref_type)(1)+n_d.(ref_type)(2)+1 : end)));
 ic_pol_row = 3;
 
-if ~isfield(Params, 'G_ece') && isfield(Params, 'G_ece_stage1')
-    Params.G_ece = Params.G_ece_stage1;
-end
+if ~isfield(Params, 'G_ece'),       Params.G_ece       = Params.G_ece_stage1; end
 if ~isfield(Params, 'rho_hc_ig'),   Params.rho_hc_ig   = 0.40; end
 if ~isfield(Params, 'gamma_ic'),    Params.gamma_ic    = 0.35; end
 if ~isfield(Params, 'sigma_hc_ig'), Params.sigma_hc_ig = 0.24; end
 
 % Extract Regional Extended Family / Whanau Network Intensity K_whanau(k) in [0, 1]
-% and Stage-2 Tuakana-Teina / Montessori Mentoring Intensity M_mentor in [0, 1]:
-K_base_vec = [0.42, 0.38, 0.32, 0.28]; % Calibrated SS0 baseline [Rural, Small, Large, Auckland]
+% and Stage-2 Tuakana-Teina / Montessori Mentoring Intensity M_mentor(k) in [0, 1]:
+K_base_vec = zeros(1, N_reg);
+K_reg_vec  = zeros(1, N_reg);
+G_ece_vec  = zeros(1, N_reg);
+G_ece2_vec = zeros(1, N_reg);
 for r_i = 1:N_reg
-    f_b = ['HH_', Regions{r_i}];
-    if isfield(Params.K_whanau_base, f_b), K_base_vec(r_i) = Params.K_whanau_base.(f_b); end
+    hh_type         = ['HH_', Regions{r_i}];
+    K_base_vec(r_i) = Params.K_whanau_base.(hh_type);
+    K_reg_vec(r_i)  = Params.K_whanau.(hh_type);
+    G_ece_vec(r_i)  = Params.G_ece.(hh_type);
+    G_ece2_vec(r_i) = Params.G_ece_stage2.(hh_type);
 end
-K_reg_vec  = K_base_vec;
-if isfield(Params, 'K_whanau')
-    if isstruct(Params.K_whanau)
-        for r_i = 1:N_reg
-            f_name = ['HH_', Regions{r_i}];
-            if isfield(Params.K_whanau, f_name)
-                K_reg_vec(r_i) = Params.K_whanau.(f_name);
-            end
-        end
-    elseif isnumeric(Params.K_whanau) && isscalar(Params.K_whanau)
-        K_reg_vec(:) = Params.K_whanau;
-    elseif isnumeric(Params.K_whanau) && numel(Params.K_whanau) == N_reg
-        K_reg_vec = reshape(double(Params.K_whanau), 1, N_reg);
-    end
-end
-G_ece2_val = 0.065;
-if isfield(Params, 'G_ece_stage2')
-    G_ece2_val = Params.G_ece_stage2;
-elseif isfield(Params, 'G_ece')
-    G_ece2_val = Params.G_ece;
-end
-M_mentor = min(1.0, max(0.0, (G_ece2_val - 0.045) / (0.085 - 0.045)));
+M_mentor = min(1.0, max(0.0, (G_ece2_vec - 0.045) ./ (0.085 - 0.045)));
 
 % Precompute sub-grid cell spans [n_a1 x 1] and threshold vector tau_cuts [1 x 4]:
 a_dbl    = double(a_vec(:));
@@ -179,18 +162,17 @@ for r_idx = 1:N_reg
 
         % 4D Compact Skill Transition: two-tier convex d_grid_ic stress & Adolescent lambda_psy hazard
         is_stress_4D = double(ic_4D < 0.005) + 0.55 .* double((ic_4D >= 0.005) & (ic_4D < 0.035));
-        M_trust_k    = M_mentor * (0.45 + 0.55 * min(1.0, K_reg / 0.35));
+        M_trust_k    = M_mentor(r_idx) * (0.45 + 0.55 * min(1.0, K_reg / 0.35));
         lambda_psy_k = max(0.22 * 0.38, 0.22 * (1.0 - 0.52 * M_trust_k) * (1.0 - 0.35 * min(1.0, K_reg / 0.38)));
         comp_load_4D = is_stress_4D + lambda_psy_k .* (1.0 + 0.65 .* is_stress_4D);
         unbuf_mult_k = max(0.38 * lambda_psy_k, (1.0 - 0.80 * M_trust_k) * (1.0 - 0.55 * K_reg));
 
         stress_pen = 0.038 .* comp_load_4D .* unbuf_mult_k;
-        ece_lift   = 0.55 * (Params.G_ece - 0.045) + 0.04 * (M_mentor - 0.50) + 0.12 * dK_reg;
+        ece_lift   = 0.55 * (G_ece_vec(r_idx) - 0.045) + 0.04 * (M_mentor(r_idx) - 0.50) + 0.12 * dK_reg;
         hp_eff_4D  = h_G .* (1.0 + 0.15 * dK_reg);
-
         log_h_mean = Params.rho_hc_ig .* log(hp_eff_4D) ...
-                   + Params.gamma_ic .* log(0.82 + 1.15 * (ic_4D + Params.G_ece + 0.020 * dK_reg)) ...
-                   + ece_lift - stress_pen + reg_skill_drift(r_idx) - crowd_G;
+            + Params.gamma_ic .* log(0.82 + 1.15 * (ic_4D + G_ece_vec(r_idx) + 0.020 * dK_reg)) ...
+            + ece_lift - stress_pen + reg_skill_drift(r_idx) - crowd_G;
 
         pdf_5D = exp(-0.5 .* ((log_h_dst - log_h_mean) ./ 0.24).^2);
         pdf_5D = pdf_5D ./ sum(pdf_5D, 5);
@@ -257,9 +239,6 @@ V_scale = max(0.50, std(V_mean_j1));
 V_norm  = (V_mean_j1 - mean(V_mean_j1)) / V_scale;
 
 % Ensure immutable SS0 baseline K_whanau_base and active K_whanau exist in Params
-if ~isfield(Params, 'K_whanau_base')
-    Params.K_whanau_base = struct('HH_Rural', 0.42, 'HH_Small', 0.38, 'HH_Large', 0.32, 'HH_Auckland', 0.28);
-end
 if ~isfield(Params, 'K_whanau')
     Params.K_whanau = Params.K_whanau_base;
 end
