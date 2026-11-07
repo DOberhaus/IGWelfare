@@ -61,8 +61,8 @@ else
 end
 
 %% 4. COMPOUNDED DISCOUNT, RETURN, DEPRECIATION, & TRANSITION RATES
-Params.beta_hh   = 0.96^dt;
-Params.beta_firm = 0.95^dt;
+Params.beta_hh   = 0.985^dt;
+Params.beta_firm = 0.9815^dt;
 if ~isfield(Params, 'r');         Params.r         = (1 + 0.20)^scale_dt - 1; end
 if ~isfield(Params, 'delta_hc');  Params.delta_hc  = 1 - (1 - 0.087)^scale_dt; end
 if ~isfield(Params, 'delta_k');   Params.delta_k   = 1 - (1 - 0.06)^dt; end
@@ -128,43 +128,52 @@ if ~isfield(Params, 'dep_ratio_2026_anchor'),    Params.dep_ratio_2026_anchor   
 if ~isfield(Params, 'beta_aging_tax_drift'),     Params.beta_aging_tax_drift     = 0.220; end % Marginal PAYE tax sensitivity to dependency ratio
 if ~isfield(Params, 'beta_exits_skill_div'),     Params.beta_exits_skill_div     = 0.145; end % Marginal PAYE tax relief per pp of early hardship cut
 
-%% 7. DOMESTIC OLIGOPOLY / MONOPSONY PINCER & LOCAL FOOD ECONOMY (JON DUFFY / KA ORA, KA AKO)
-% Regional vectors ordered: [Rural, Small, Large, Auckland]
-if ~isfield(Params, 'M_olig_SS0'),          Params.M_olig_SS0          = [1.080, 1.070, 1.050, 1.040]; end % Status quo grocery duopoly markup
-if ~isfield(Params, 'M_olig_SS1'),          Params.M_olig_SS1          = [1.025, 1.020, 1.015, 1.010]; end % Phase-1 Commerce Commission + Co-op reform
-if ~isfield(Params, 'M_olig_SS2'),          Params.M_olig_SS2          = [1.000, 1.000, 1.000, 1.000]; end % Phase-2 full competitive convergence
-if ~isfield(Params, 'alpha_food_nd_vec'),   Params.alpha_food_nd_vec   = [0.300, 0.280, 0.240, 0.220]; end % Stats NZ HES food/grocery share of non-housing c_nd
-if ~isfield(Params, 'mu_monop_SS0'),        Params.mu_monop_SS0        = [0.910, 0.930, 0.980, 1.000]; end % Farm-gate wholesale monopsony markdown
-if ~isfield(Params, 'mu_monop_SS1'),        Params.mu_monop_SS1        = [0.975, 0.980, 0.995, 1.000]; end % Grocery supply code + grower bargaining
-if ~isfield(Params, 'mu_monop_SS2'),        Params.mu_monop_SS2        = [1.000, 1.000, 1.000, 1.000]; end % Full farm-gate price parity
-if ~isfield(Params, 'phi_local_SS0'),       Params.phi_local_SS0       = [0.150, 0.150, 0.100, 0.100]; end % SS0 local school/marae food share
-if ~isfield(Params, 'phi_local_SS1'),       Params.phi_local_SS1       = [0.850, 0.800, 0.650, 0.550]; end % SS1 Farm-to-School & Farm-to-Marae switch
-if ~isfield(Params, 'phi_local_SS2'),       Params.phi_local_SS2       = [0.950, 0.900, 0.750, 0.650]; end % SS2 mature regional food hubs
-if ~isfield(Params, 'kappa_olig_schedule'), Params.kappa_olig_schedule = [0.000, 0.700, 1.000];        end % [SS0, SS1, SS2] enforcement intensity
-if ~isfield(Params, 'G_food_share'),        Params.G_food_share        = 0.012; end % Public school/ECE nutrition procurement budget
-if ~isfield(Params, 'chi_farm_col'),        Params.chi_farm_col        = 0.120; end % Collateral relaxation from bankable local food contracts
-if ~isfield(Params, 'kappa_bypass_olig'),   Params.kappa_bypass_olig   = 0.250; end % Direct Farm-to-Marae/Co-op household bypass of retail markup
-if ~isfield(Params, 'nu_kai_quality'),      Params.nu_kai_quality      = 0.180; end % Fresh local kai nutritional efficacy elasticity (Ka Ora, Ka Ako)
-if ~isfield(Params, 'psi_retire_T'),        Params.psi_retire_T        = 0.850; end % Rate at which duopoly/monopsony relief retires Transfer_Geo
-if ~isfield(Params, 'T_reg_min_floor'),     Params.T_reg_min_floor     = [0.008, 0.005, 0.000, 0.000]; end % Residual remote-geography floor
-if ~isfield(Params, 'rho_olig_vec'),        Params.rho_olig_vec        = [0.008, 0.007, 0.005, 0.004] * scale_dt; end % Passive z_l oligopoly rent yield
-if ~isfield(Params, 'rho_farm_vec'),        Params.rho_farm_vec        = [0.002, 0.002, 0.001, 0.001] * scale_dt; end % Active z_h local kai contract yield
-if ~isfield(Params, 'G_ece_stage1_base'),   Params.G_ece_stage1_base   = 0.045; end % Baseline Gate 1 public ECE/health investment
-if ~isfield(Params, 'G_ece_stage2_base'),   Params.G_ece_stage2_base   = 0.065; end % Baseline Gate 2 public school/mentoring investment
-if ~isfield(Params, 'G_ece_base'),          Params.G_ece_base          = Params.G_ece_stage1_base; end
+%% 7. DOMESTIC OLIGOPOLY / MONOPSONY PINCER, LOCAL FOOD ECONOMY & CANONICAL REGIME SCHEDULES
+% Master switch for Duopoly / Ka Ora, Ka Ako channels (set false to reproduce pure pre-duopoly baseline)
+if ~isfield(Params, 'Enable_Duopoly_Kai'), Params.Enable_Duopoly_Kai = true; end
 
-% Active regime vectors (default to SS0 if not overridden by caller script)
+% Canonical National Policy Schedules across [SS0, SS1, SS2]:
+Params.G_ece1_sched     = [0.045, 0.110, 0.130]; % Gate 1 (Ages 0-5) national public investment schedule
+Params.G_ece2_sched     = [0.065, 0.085, 0.105]; % Gate 2 (Ages 6-17) national public investment schedule
+Params.YouthGrant_sched = [0.030, 0.065, 0.080]; % Age-20 Opportunity Endowment schedule
+Params.w_mult_SS0       = [1.000, 1.000, 1.000, 1.000];
+Params.w_mult_SS1       = [1.032, 1.038, 1.048, 1.055];
+Params.w_mult_SS2       = [1.068, 1.075, 1.088, 1.096];
+Params.Q_mult_SS0       = [1.000, 1.000, 1.000, 1.000];
+Params.Q_mult_SS1       = [0.990, 0.975, 0.950, 0.925];
+Params.Q_mult_SS2       = [0.985, 0.955, 0.925, 0.895];
+
+% Regional Duopoly, Monopsony, & Local Food vectors ordered: [Rural, Small, Large, Auckland]
+Params.M_olig_SS0          = [1.080, 1.070, 1.050, 1.040]; % Status quo grocery duopoly markup
+Params.M_olig_SS1          = [1.025, 1.020, 1.015, 1.010]; % Phase-1 Commerce Commission + Co-op reform
+Params.M_olig_SS2          = [1.000, 1.000, 1.000, 1.000]; % Phase-2 full competitive convergence
+Params.alpha_food_nd_vec   = [0.085, 0.075, 0.045, 0.030]; % Cardinal-calibrated grocery incidence [Rural, Small, Large, Akl]
+Params.mu_monop_SS0        = [0.910, 0.930, 0.980, 1.000]; % Farm-gate wholesale monopsony markdown
+Params.mu_monop_SS1        = [0.975, 0.980, 0.995, 1.000]; % Grocery supply code + grower bargaining
+Params.mu_monop_SS2        = [1.000, 1.000, 1.000, 1.000]; % Full farm-gate price parity
+Params.phi_local_SS0       = [0.150, 0.150, 0.100, 0.100]; % SS0 local school/marae food share
+Params.phi_local_SS1       = [0.850, 0.800, 0.650, 0.550]; % SS1 Farm-to-School & Farm-to-Marae switch
+Params.phi_local_SS2       = [0.950, 0.900, 0.750, 0.650]; % SS2 mature regional food hubs
+Params.kappa_olig_schedule = [0.000, 0.700, 1.000];        % [SS0, SS1, SS2] enforcement intensity
+Params.G_food_share        = 0.012; % Public school/ECE nutrition procurement budget
+Params.chi_farm_col        = 0.120; % Collateral relaxation from bankable local food contracts
+Params.kappa_bypass_olig   = 0.250; % Direct Farm-to-Marae/Co-op household bypass of retail markup
+Params.nu_kai_quality      = 0.180; % Fresh local kai nutritional efficacy elasticity (Ka Ora, Ka Ako)
+Params.psi_retire_T        = 0.850; % Rate at which duopoly/monopsony relief retires Transfer_Geo
+Params.T_reg_min_floor     = [0.008, 0.005, 0.000, 0.000]; % Residual remote-geography floor
+Params.rho_olig_vec        = [0.008, 0.007, 0.005, 0.004] * scale_dt; % Passive z_l oligopoly rent yield
+Params.rho_farm_vec        = [0.002, 0.002, 0.001, 0.001] * scale_dt; % Active z_h local kai contract yield
+
+if ~isfield(Params, 'G_ece_stage1_base'),   Params.G_ece_stage1_base   = Params.G_ece1_sched(1); end
+if ~isfield(Params, 'G_ece_stage2_base'),   Params.G_ece_stage2_base   = Params.G_ece2_sched(1); end
+if ~isfield(Params, 'G_ece_base'),          Params.G_ece_base          = Params.G_ece_stage1_base; end
 if ~isfield(Params, 'active_M_olig_vec'),    Params.active_M_olig_vec    = Params.M_olig_SS0;    end
 if ~isfield(Params, 'active_mu_monop_vec'),  Params.active_mu_monop_vec  = Params.mu_monop_SS0;  end
 if ~isfield(Params, 'active_phi_local_vec'), Params.active_phi_local_vec = Params.phi_local_SS0; end
 
-% Stage-specific nutritional budget shares omega_kai_s = G_food_share / (G_ece_s_base + G_food_share)
-omega_kai_1 = Params.G_food_share / (Params.G_ece_stage1_base + Params.G_food_share);
-omega_kai_2 = Params.G_food_share / (Params.G_ece_stage2_base + Params.G_food_share);
-omega_kai_c = Params.G_food_share / (Params.G_ece_base        + Params.G_food_share);
-
 % Single-Source-of-Truth Regional Struct Population for PType Solvers
 Reg_Names = {'Rural', 'Small', 'Large', 'Auckland'};
+duo_on    = double(logical(Params.Enable_Duopoly_Kai));
 for r_idx = 1:4
     hh_type   = ['HH_', Reg_Names{r_idx}];
     firm_type = ['Firm_', Reg_Names{r_idx}];
@@ -174,24 +183,21 @@ for r_idx = 1:4
     phi_k     = Params.active_phi_local_vec(r_idx);
     phi_0     = Params.phi_local_SS0(r_idx);
 
-    % 1. Concave bioavailability/attendance gain from local kai sourcing: sqrt(max(0, phi_k - phi_0))
-    q_kai_gain     = sqrt(max(0.0, phi_k - phi_0));
-    kai_mult_1_k   = 1.0 + omega_kai_1 * Params.nu_kai_quality * q_kai_gain;
-    kai_mult_2_k   = 1.0 + omega_kai_2 * Params.nu_kai_quality * q_kai_gain;
-    kai_mult_c_k   = 1.0 + omega_kai_c * Params.nu_kai_quality * q_kai_gain;
+    % 1. Additive bioavailability/attendance gain on the G_food_share nutrition slice:
+    dG_kai_k = duo_on * Params.G_food_share * Params.nu_kai_quality * sqrt(max(0.0, phi_k - phi_0));
 
-    Params.G_ece_stage1.(hh_type) = Params.G_ece_stage1_base * kai_mult_1_k;
-    Params.G_ece_stage2.(hh_type) = Params.G_ece_stage2_base * kai_mult_2_k;
-    Params.G_ece.(hh_type)        = Params.G_ece_base        * kai_mult_c_k;
+    Params.G_ece_stage1.(hh_type) = Params.G_ece_stage1_base + 1.25 * dG_kai_k;
+    Params.G_ece_stage2.(hh_type) = Params.G_ece_stage2_base + 0.85 * dG_kai_k;
+    Params.G_ece.(hh_type)        = Params.G_ece_base        + 1.00 * dG_kai_k;
 
-    % 2. Composite non-durable price index M_olig_reg weighted by food share alpha_food_nd_vec(r_idx)
-    Params.M_olig_reg.(hh_type)   = 1.0 + alpha_f_k * (1.0 - Params.kappa_bypass_olig * phi_k) * (m_k - 1.0);
+    % 2. Composite non-durable price index M_olig_reg weighted by grocery incidence alpha_food_nd_vec(r_idx)
+    Params.M_olig_reg.(hh_type)   = 1.0 + duo_on * alpha_f_k * (1.0 - Params.kappa_bypass_olig * phi_k) * (m_k - 1.0);
 
     % 3. Firm monopsony markdown, passive z_l oligopoly rent, & active z_h local kai contract yield
-    Params.mu_monop_reg.(firm_type)    = mu_k;
-    Params.rho_olig_reg.(firm_type)    = Params.rho_olig_vec(r_idx) * max(0.0, (m_k - 1.0) / max(1e-4, Params.M_olig_SS0(r_idx) - 1.0));
-    Params.rho_farm_reg.(firm_type)    = Params.rho_farm_vec(r_idx) * (phi_k / max(1e-4, phi_0));
-    Params.lambda_col_mult.(firm_type) = 1.0 + Params.chi_farm_col * phi_k;
+    Params.mu_monop_reg.(firm_type)    = 1.0 - duo_on * (1.0 - mu_k);
+    Params.rho_olig_reg.(firm_type)    = duo_on * Params.rho_olig_vec(r_idx) * max(0.0, (m_k - 1.0) / max(1e-4, Params.M_olig_SS0(r_idx) - 1.0));
+    Params.rho_farm_reg.(firm_type)    = duo_on * Params.rho_farm_vec(r_idx) * (phi_k / max(1e-4, phi_0));
+    Params.lambda_col_mult.(firm_type) = 1.0 + duo_on * Params.chi_farm_col * phi_k;
 end
 
 %% 8. Long-term (SS2) Macro Investment Parameters

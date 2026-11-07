@@ -54,55 +54,69 @@ for r_idx = 1:N_reg
 end
 
 %% 1. EVALUATE THE 6 DISCRETE BENCHMARK SCENARIOS
+% Construct canonical SS0, SS1, and SS2 regional parameter structs from Single Source of Truth:
+P_SS0 = Params;
+P_SS0.G_ece_stage1_base   = Params.G_ece1_sched(1);
+P_SS0.G_ece_stage2_base   = Params.G_ece2_sched(1);
+P_SS0.active_phi_local_vec = Params.phi_local_SS0;
+P_SS0 = Configure_TimeGrid_Params(P_SS0);
+
+P_SS1 = Params;
+P_SS1.G_ece_stage1_base   = Params.G_ece1_sched(2);
+P_SS1.G_ece_stage2_base   = Params.G_ece2_sched(2);
+P_SS1.active_phi_local_vec = Params.phi_local_SS1;
+P_SS1 = Configure_TimeGrid_Params(P_SS1);
+
+P_SS2 = Params;
+P_SS2.G_ece_stage1_base   = Params.G_ece1_sched(3);
+P_SS2.G_ece_stage2_base   = Params.G_ece2_sched(3);
+P_SS2.active_phi_local_vec = Params.phi_local_SS2;
+P_SS2 = Configure_TimeGrid_Params(P_SS2);
+
 for s_idx = 1:N_scen
     super_age_s = A_base;
     p_super_s   = Params.p_super;
-    Q_mult      = [1.00, 1.00, 1.00, 1.00];
+    Q_mult      = Params.Q_mult_SS0;
     is_ss2_flag = false;
 
     switch s_idx
         case 1 % Baseline Status Quo (Super Age 65)
             beta_hyp  = 1.00;
             chi_f_pen = 0.24;
-            G_ece1_s  = Params.G_ece_stage1;
-            G_ece2_s  = Params.G_ece_stage2;
+            G_ece1_s  = P_SS0.G_ece_stage1;
+            G_ece2_s  = P_SS0.G_ece_stage2;
         case 2 % Hyperbolic Procrastination (No Commitment, Cao & Li 2022)
             beta_hyp  = 0.72;
             chi_f_pen = 0.26;
-            G_ece1_s  = Params.G_ece_stage1;
-            G_ece2_s  = Params.G_ece_stage2;
-        case 3 % Barnardos Stage-1 ECE Bargaining Relief
+            G_ece1_s  = P_SS0.G_ece_stage1;
+            G_ece2_s  = P_SS0.G_ece_stage2;
+        case 3 % Barnardos Stage-1 ECE Bargaining Relief (PE ECE1/ECE2 expansion, SS0 prices/kai)
             beta_hyp  = 0.92;
             chi_f_pen = 0.15;
-            for r_i = 1:N_reg
-                hh_t = ['HH_', Regions{r_i}];
-                G_ece1_s.(hh_t) = Params.G_ece_stage1.(hh_t) + 0.065;
-                G_ece2_s.(hh_t) = Params.G_ece_stage2.(hh_t) + 0.020;
-            end
+            P_s3      = P_SS0;
+            P_s3.G_ece_stage1_base = Params.G_ece1_sched(2);
+            P_s3.G_ece_stage2_base = Params.G_ece2_sched(2);
+            P_s3      = Configure_TimeGrid_Params(P_s3);
+            G_ece1_s  = P_s3.G_ece_stage1;
+            G_ece2_s  = P_s3.G_ece_stage2;
         case 4 % Phase 1 (SS1) Full Package at Age 65
             beta_hyp  = 1.00;
             chi_f_pen = 0.145;
-            for r_i = 1:N_reg
-                hh_t = ['HH_', Regions{r_i}];
-                G_ece1_s.(hh_t) = Params.G_ece_stage1.(hh_t) + 0.065;
-                G_ece2_s.(hh_t) = Params.G_ece_stage2.(hh_t) + 0.035;
-            end
-            Q_mult    = [0.990, 0.975, 0.950, 0.925];
+            G_ece1_s  = P_SS1.G_ece_stage1;
+            G_ece2_s  = P_SS1.G_ece_stage2;
+            Q_mult    = Params.Q_mult_SS1;
         case 5 % Fiscal Austerity Alternative: Raise NZ Super Age to 70 under Status Quo (SS0)
             beta_hyp    = 1.00;
             chi_f_pen   = 0.24;
-            G_ece1_s    = Params.G_ece_stage1;
-            G_ece2_s    = Params.G_ece_stage2;
+            G_ece1_s    = P_SS0.G_ece_stage1;
+            G_ece2_s    = P_SS0.G_ece_stage2;
             super_age_s = 70.0;
         case 6 % Phase 2 (SS2) Harvest at Parametric Super Age
             beta_hyp    = 1.00;
             chi_f_pen   = 0.132;
-            for r_i = 1:N_reg
-                hh_t = ['HH_', Regions{r_i}];
-                G_ece1_s.(hh_t) = 0.130;
-                G_ece2_s.(hh_t) = 0.105;
-            end
-            Q_mult      = [0.985, 0.955, 0.925, 0.895];
+            G_ece1_s    = P_SS2.G_ece_stage1;
+            G_ece2_s    = P_SS2.G_ece_stage2;
+            Q_mult      = Params.Q_mult_SS2;
             super_age_s = super_age_ss2_target;
             is_ss2_flag = true;
     end
@@ -144,16 +158,10 @@ Tax_UCurve_SS0 = zeros(n_ug, 1);
 base_struggle_mean = mean(Struggling_mat(1, :));
 for u_i = 1:n_ug
     a_u = SuperAge_Grid(u_i);
-    G_ece1_s = struct();
-    G_ece2_s = struct();
-    for r_i = 1:N_reg
-        hh_t = ['HH_', Regions{r_i}];
-        G_ece1_s.(hh_t) = 0.130;
-        G_ece2_s.(hh_t) = 0.105;
-    end
+
     % 1) Phase 2 (SS2) Harvest Package across Super Age 60..75:
-    [tfr_u, ~, stn_u, dep_u, tax_u] = eval_super_age_point(a_u, 1.00, 0.132, G_ece1_s, G_ece2_s, ...
-        [0.985, 0.955, 0.925, 0.895], Params.p_super, true, ...
+    [tfr_u, ~, stn_u, dep_u, tax_u] = eval_super_age_point(a_u, 1.00, 0.132, P_SS2.G_ece_stage1, P_SS2.G_ece_stage2, ...
+        Params.Q_mult_SS2, Params.p_super, true, ...
         Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_struggle_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, base_struggle_mean);
     Tax_UCurve_SS2(u_i) = tax_u;
     Dep_UCurve_SS2(u_i) = dep_u;

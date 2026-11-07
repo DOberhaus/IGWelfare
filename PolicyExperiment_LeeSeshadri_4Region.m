@@ -47,46 +47,35 @@ for p_idx = 1:N_pol
 
     switch pol_name
         case 'BM_Baseline'
-            % Status quo baseline
+            % Status quo baseline (SS0)
         case 'P0_Early_0to5'
-            for r_i = 1:N_reg
-                hh_t = ['HH_', Regions{r_i}];
-                Params_p.G_ece_stage1.(hh_t) = Params.G_ece_stage1.(hh_t) + 0.065;
-                Params_p.G_ece.(hh_t)        = Params_p.G_ece_stage1.(hh_t);
-            end
-            Params_p.tau_l        = Params.tau_l + 0.008;
+            Params_p.G_ece_stage1_base = Params.G_ece1_sched(2); % 0.110 (+0.065 over SS0)
+            Params_p.G_ece_base        = Params_p.G_ece_stage1_base;
+            Params_p                   = Configure_TimeGrid_Params(Params_p);
+            Params_p.tau_l             = Params.tau_l + 0.008;
         case 'P1P2_Late_6to17'
-            for r_i = 1:N_reg
-                hh_t = ['HH_', Regions{r_i}];
-                Params_p.G_ece_stage2.(hh_t) = Params.G_ece_stage2.(hh_t) + 0.065;
-            end
-            Params_p.tau_l        = Params.tau_l + 0.008;
+            Params_p.G_ece_stage2_base = Params.G_ece2_sched(1) + 0.065; % +0.065 on Stage 2
+            Params_p                   = Configure_TimeGrid_Params(Params_p);
+            Params_p.tau_l             = Params.tau_l + 0.008;
         case 'BN_FrontLoad'
-            for r_i = 1:N_reg
-                hh_t = ['HH_', Regions{r_i}];
-                Params_p.G_ece_stage1.(hh_t) = Params.G_ece_stage1.(hh_t) + 0.025;
-                Params_p.G_ece.(hh_t)        = Params_p.G_ece_stage1.(hh_t);
-                Params_p.G_ece_stage2.(hh_t) = max(0.010, Params.G_ece_stage2.(hh_t) - 0.025);
-            end
+            Params_p.G_ece_stage1_base = Params.G_ece1_sched(1) + 0.025;
+            Params_p.G_ece_base        = Params_p.G_ece_stage1_base;
+            Params_p.G_ece_stage2_base = max(0.010, Params.G_ece2_sched(1) - 0.025);
+            Params_p                   = Configure_TimeGrid_Params(Params_p);
         case 'P0_Plus_GrantE'
-            for r_i = 1:N_reg
-                hh_t = ['HH_', Regions{r_i}];
-                Params_p.G_ece_stage1.(hh_t) = Params.G_ece_stage1.(hh_t) + 0.065;
-                Params_p.G_ece.(hh_t)        = Params_p.G_ece_stage1.(hh_t);
-            end
-            Params_p.YouthGrant   = 0.065;
-            Params_p.tau_b        = 0.250;
-
+            Params_p.G_ece_stage1_base = Params.G_ece1_sched(2); % 0.110
+            Params_p.G_ece_base        = Params_p.G_ece_stage1_base;
+            Params_p                   = Configure_TimeGrid_Params(Params_p);
+            Params_p.YouthGrant        = Params.YouthGrant_sched(2); % 0.065
+            Params_p.tau_b             = 0.250;
             % Convert tau_a and tau_k to PType structs so Firm_* gets the tax shift
             % while HH_* keeps baseline life-cycle savings tax
             tau_a_hh = Params.tau_a;
             tau_k_hh = Params.tau_k;
             Params_p.tau_a = struct();
             Params_p.tau_k = struct();
-
-            % Include Guvenen et al. GE wage boost & Kiyotaki house-price cooling from the tax shift
-            w_mult_GE = [1.032, 1.038, 1.048, 1.055];
-            Q_mult_GE = [0.990, 0.975, 0.950, 0.925];
+            w_mult_GE = Params.w_mult_SS1;
+            Q_mult_GE = Params.Q_mult_SS1;
             for rr = 1:N_reg
                 r_name = Regions{rr};
                 Params_p.tau_a.(['HH_', r_name])   = tau_a_hh;
@@ -99,7 +88,7 @@ for p_idx = 1:N_pol
             end
     end
 
-    simoptions_5D.d_grid = d_grid_5D; simoptions_5D.a_grid = a_grid_5D;
+    simoptions_5D.d_grid = d_grid_5D;
 
     % --- 1. SHORT-RUN PARTIAL EQUILIBRIUM (SR: Fixed Newborn Distribution jequaloneDist_5D_BM) ---
     [V_SR, Policy_SR] = ValueFnIter_MixHorz_PType(n_d_5D, n_a_5D, n_z, N_j, Names_i, ...
