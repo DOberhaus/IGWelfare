@@ -195,33 +195,17 @@ for r_idx = 1:N_reg
     Params.K_whanau.(hh_type) = Params.K_whanau_base.(hh_type) * elder_time_mult * elder_home_mult;
 end
 
-% Update active regional Duopoly Markup, Monopsony Markdown, & Farm-to-Marae parameters
-% (Uses Params.active_M_olig_vec, Params.active_mu_monop_vec, Params.active_phi_local_vec if set by caller; defaults to SS0)
-if ~isfield(Params, 'active_M_olig_vec'),    Params.active_M_olig_vec    = Params.M_olig_SS0;    end
-if ~isfield(Params, 'active_mu_monop_vec'),  Params.active_mu_monop_vec  = Params.mu_monop_SS0;  end
-if ~isfield(Params, 'active_phi_local_vec'), Params.active_phi_local_vec = Params.phi_local_SS0; end
-
-for r_idx = 1:N_reg
-    hh_type   = ['HH_', Regions{r_idx}];
-    firm_type = ['Firm_', Regions{r_idx}];
-    m_k       = Params.active_M_olig_vec(r_idx);
-    mu_k      = Params.active_mu_monop_vec(r_idx);
-    phi_k     = Params.active_phi_local_vec(r_idx);
-    phi_0     = Params.phi_local_SS0(r_idx);
-
-    % Effective household retail markup (with Farm-to-Marae/Co-op direct bypass)
-    % and stage- & region-specific public ECE/school investment (with local kai quality multiplier):
-    kai_mult_k                    = 1.0 + Params.nu_kai_quality * max(0.0, phi_k - phi_0);
-    Params.M_olig_reg.(hh_type)   = 1.0 + (1.0 - Params.kappa_bypass_olig * phi_k) * (m_k - 1.0);
-    Params.G_ece_stage1.(hh_type) = Params.G_ece_stage1_base * kai_mult_k;
-    Params.G_ece_stage2.(hh_type) = Params.G_ece_stage2_base * kai_mult_k;
-
-    % Effective firm monopsony markdown, passive z_l oligopoly rent, & active z_h local kai contract yield
-    Params.mu_monop_reg.(firm_type)    = mu_k;
-    Params.rho_olig_reg.(firm_type)    = Params.rho_olig_vec(r_idx) * max(0.0, (m_k - 1.0) / max(1e-4, Params.M_olig_SS0(r_idx) - 1.0));
-    Params.rho_farm_reg.(firm_type)    = Params.rho_farm_vec(r_idx) * (phi_k / max(1e-4, phi_0));
-    Params.lambda_col_mult.(firm_type) = 1.0 + Params.chi_farm_col * phi_k;
+Params.gamma2_self = 0.87; Params.gamma2_inv = 0.07; Params.gamma2_par = 0.06; Params.phi2_ces = -0.95;
+if ~isfield(Params, 'G_ece_stage1_base'), Params.G_ece_stage1_base = 0.045; end
+if ~isfield(Params, 'G_ece_stage2_base'), Params.G_ece_stage2_base = 0.065; end
+if isfield(Params, 'G_ece_stage1') && isnumeric(Params.G_ece_stage1)
+    Params.G_ece_stage1_base = Params.G_ece_stage1; Params = rmfield(Params, 'G_ece_stage1');
 end
+if isfield(Params, 'G_ece_stage2') && isnumeric(Params.G_ece_stage2)
+    Params.G_ece_stage2_base = Params.G_ece_stage2; Params = rmfield(Params, 'G_ece_stage2');
+end
+Params.G_ece_base = Params.G_ece_stage1_base;
+Params.gbar_ece = 0.020; Params.s_sub = 0.100;
 
 %% 5. SOLVE VFI & 4-REGION + ABROAD INTERGENERATIONAL TRANSITION LOOP
 for r_idx = 1:N_reg

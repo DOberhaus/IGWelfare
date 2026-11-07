@@ -57,7 +57,10 @@ if ~exist('Reform_Phase_Specs', 'var') || isempty(Reform_Phase_Specs)
         'HH_Small',    0.031, ...
         'HH_Large',    0.025, ...
         'HH_Auckland', 0.028);
-    Reform_Phase_Specs(1).super_age = 65.0;
+    Reform_Phase_Specs(1).super_age     = 65.0;
+    Reform_Phase_Specs(1).M_olig_vec    = Params_SS0.M_olig_SS1;
+    Reform_Phase_Specs(1).mu_monop_vec  = Params_SS0.mu_monop_SS1;
+    Reform_Phase_Specs(1).phi_local_vec = Params_SS0.phi_local_SS1;
 elseif ~isfield(Reform_Phase_Specs, 'tau_l_delta')
     [Reform_Phase_Specs.tau_l_delta] = deal(0.000);
 end
@@ -88,7 +91,10 @@ if Enable_SS2_Phase
         'HH_Small',    0.037, ...
         'HH_Large',    0.031, ...
         'HH_Auckland', 0.033);
-    Reform_Phase_Specs(2).super_age = Params_SS0.super_age_SS2; % Default 64.0 (or set 63.0, 62.0!)
+    Reform_Phase_Specs(2).super_age     = Params_SS0.super_age_SS2; % Default 64.0 (or set 63.0, 62.0!)
+    Reform_Phase_Specs(2).M_olig_vec    = Params_SS0.M_olig_SS2;
+    Reform_Phase_Specs(2).mu_monop_vec  = Params_SS0.mu_monop_SS2;
+    Reform_Phase_Specs(2).phi_local_vec = Params_SS0.phi_local_SS2;
 
     % Endogenous SS2 PAYE tax cut (tau_l_delta) consistent with Required_LaborTax_Pct in T_Fert2:
     % - At Super Age 65: Required PAYE = 18.50% -> tau_l_delta = -0.0350 (-3.50 pp PAYE cut)
@@ -123,21 +129,16 @@ for m = 1:M_reforms
     p_code = spec.Code;
 
     % 3A. Stage A: Short-Run PE (Phase-m policy levers & Farm-to-Marae kai quality; baseline prices & jDist_SS0)
-    P_PE                = Params_SS0;
+    P_PE                   = Params_SS0;
     P_PE.G_ece_stage1_base = spec.G_ece_stage1;
     if isfield(spec, 'G_ece_stage2'), P_PE.G_ece_stage2_base = spec.G_ece_stage2; else, P_PE.G_ece_stage2_base = spec.G_ece_stage1; end
+    P_PE.G_ece_base        = spec.G_ece;
     if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec)
-        phi_vec_m = spec.phi_local_vec;
+        P_PE.active_phi_local_vec = spec.phi_local_vec;
     else
-        phi_vec_m = Params_SS0.phi_local_SS1;
+        P_PE.active_phi_local_vec = Params_SS0.phi_local_SS1;
     end
-    for r_idx = 1:N_reg
-        hh_type    = ['HH_', Regions{r_idx}];
-        kai_mult_k = 1.0 + Params_SS0.nu_kai_quality * max(0.0, phi_vec_m(r_idx) - Params_SS0.phi_local_SS0(r_idx));
-        P_PE.G_ece_stage1.(hh_type) = P_PE.G_ece_stage1_base * kai_mult_k;
-        P_PE.G_ece_stage2.(hh_type) = P_PE.G_ece_stage2_base * kai_mult_k;
-        P_PE.G_ece.(hh_type)        = spec.G_ece * kai_mult_k;
-    end
+    P_PE = Configure_TimeGrid_Params(P_PE);
     P_PE.YouthGrant   = spec.YouthGrant;
     P_PE.tau_a        = spec.tau_a;
     P_PE.tau_b        = spec.tau_b;
@@ -189,32 +190,22 @@ for m = 1:M_reforms
     else
         elder_time_mult = 1 + 0.16*tanh((65 - super_age_m)/1.8);
     end
-    if isfield(spec, 'M_olig_vec') && ~isempty(spec.M_olig_vec),       m_vec_m  = spec.M_olig_vec;    else, m_vec_m  = Params_SS0.M_olig_SS1;    end
-    if isfield(spec, 'mu_monop_vec') && ~isempty(spec.mu_monop_vec),   mu_vec_m = spec.mu_monop_vec;  else, mu_vec_m = Params_SS0.mu_monop_SS1;  end
-    if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec), ph_vec_m = spec.phi_local_vec; else, ph_vec_m = Params_SS0.phi_local_SS1; end
+
+    if isfield(spec, 'M_olig_vec') && ~isempty(spec.M_olig_vec),       P_GE.active_M_olig_vec    = spec.M_olig_vec;    else, P_GE.active_M_olig_vec    = Params_SS0.M_olig_SS1;    end
+    if isfield(spec, 'mu_monop_vec') && ~isempty(spec.mu_monop_vec),   P_GE.active_mu_monop_vec  = spec.mu_monop_vec;  else, P_GE.active_mu_monop_vec  = Params_SS0.mu_monop_SS1;  end
+    if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec), P_GE.active_phi_local_vec = spec.phi_local_vec; else, P_GE.active_phi_local_vec = Params_SS0.phi_local_SS1; end
+    P_GE = Configure_TimeGrid_Params(P_GE);
 
     for r_idx = 1:N_reg
         reg       = Regions{r_idx};
         hh_type   = ['HH_', reg];
         firm_type = ['Firm_', reg];
-        P_GE.w_reg.(hh_type)   = Params_SS0.w_reg.(hh_type)   * spec.w_mult_vs_SS0(r_idx);
-        P_GE.w_reg.(firm_type) = Params_SS0.w_reg.(firm_type) * spec.w_mult_vs_SS0(r_idx);
-        P_GE.Q_reg.(hh_type)   = Params_SS0.Q_reg.(hh_type)   * spec.Q_mult_vs_SS0(r_idx);
-        elder_home_mult        = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
+        P_GE.w_reg.(hh_type)    = Params_SS0.w_reg.(hh_type)   * spec.w_mult_vs_SS0(r_idx);
+        P_GE.w_reg.(firm_type)  = Params_SS0.w_reg.(firm_type) * spec.w_mult_vs_SS0(r_idx);
+        P_GE.Q_reg.(hh_type)    = Params_SS0.Q_reg.(hh_type)   * spec.Q_mult_vs_SS0(r_idx);
+        elder_home_mult         = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
         P_GE.K_whanau.(hh_type) = Params_SS0.K_whanau_base.(hh_type) * elder_home_mult * elder_time_mult;
-
-        % Commerce Commission Duopoly Markup Compression & Farm-to-Marae Co-op Bypass in GE:
-        m_k   = m_vec_m(r_idx);
-        mu_k  = mu_vec_m(r_idx);
-        phi_k = ph_vec_m(r_idx);
-        phi_0 = Params_SS0.phi_local_SS0(r_idx);
-        P_GE.M_olig_reg.(hh_type)        = 1.0 + (1.0 - Params_SS0.kappa_bypass_olig * phi_k) * (m_k - 1.0);
-        P_GE.mu_monop_reg.(firm_type)    = mu_k;
-        P_GE.rho_olig_reg.(firm_type)    = Params_SS0.rho_olig_vec(r_idx) * max(0.0, (m_k - 1.0) / max(1e-4, Params_SS0.M_olig_SS0(r_idx) - 1.0));
-        P_GE.rho_farm_reg.(firm_type)    = Params_SS0.rho_farm_vec(r_idx) * (phi_k / max(1e-4, phi_0));
-        P_GE.lambda_col_mult.(firm_type) = 1.0 + Params_SS0.chi_farm_col * phi_k;
     end
-
     [V_GE_Exo_m, Policy_GE_Exo_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
         d_grid, a_grid, z_grid, pi_z, ReturnFn, P_GE, DiscountFactorParamNames, vfoptions);
 
