@@ -130,7 +130,7 @@ if ~isfield(Params, 'beta_exits_skill_div'),     Params.beta_exits_skill_div    
 
 %% 7. DOMESTIC OLIGOPOLY / MONOPSONY PINCER, LOCAL FOOD ECONOMY & CANONICAL REGIME SCHEDULES
 % Master switch for Duopoly / Ka Ora, Ka Ako channels (set false to reproduce pure pre-duopoly baseline)
-if ~isfield(Params, 'Enable_Duopoly_Kai'), Params.Enable_Duopoly_Kai = true; end
+if ~isfield(Params, 'Enable_Duopoly_Kai'), Params.Enable_Duopoly_Kai = false; end
 
 % Canonical National Policy Schedules across [SS0, SS1, SS2]:
 Params.G_ece1_sched     = [0.045, 0.110, 0.130]; % Gate 1 (Ages 0-5) national public investment schedule
