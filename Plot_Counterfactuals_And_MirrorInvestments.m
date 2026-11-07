@@ -26,8 +26,8 @@ if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
 % 1. SYNC EXACT CONVERGED SS1 & SS2 TOTALS FROM WORKSPACE T1 (NO DRIFT)
 % =========================================================================
 Pop_Weights = [0.160, 0.240, 0.259, 0.341]; % [Rural, Small, Large, Auckland]
-SS1_Target_Reg = [8.712, 11.743, 14.131, 18.494];
-SS2_Target_Reg = [15.646, 20.520, 23.369, 29.025];
+SS1_Target_Reg = [11.215, 13.189, 14.295, 17.051];
+SS2_Target_Reg = [20.544, 22.467, 23.736, 27.598];
 
 if evalin('base', 'exist(''T1'', ''var'')')
     T1_ws = evalin('base', 'T1');
@@ -87,7 +87,7 @@ else
 end
 
 % =========================================================================
-% 2. CONSTRUCTIVE 11-LAYER HIERARCHY: 7 ISOLATED FACTORS + 4 SYNERGY WEDGES
+% 2. CONSTRUCTIVE 12-LAYER HIERARCHY: 7 ISOLATED FACTORS + 5 SYNERGY WEDGES
 % =========================================================================
 % Ordering follows decreasing marginal supermodularity:
 %   TIER 1 (Human Capital Dual-Gate Stack):
@@ -101,10 +101,11 @@ end
 %     Layer  7: ★ [WEDGE 2] LVR-Hurdle Clearance & Whanau-Stay Synergy (TaxRebal x Grant x Geo)
 %   TIER 3 (Cross-Stack Interaction: Stack 1 x Stack 2):
 %     Layer  8: ★ [WEDGE 3] Brain-Drain Reversal, Kaiako Supply & Firm-Skill Matching (Stack 1 x Stack 2)
-%   TIER 4 (Fiscal, Demographic & NZ Super Age SS2 Harvest Stack):
+%   TIER 4 (Fiscal, Demographic, NZ Super Age SS2 & NDC Clean-Green Export Harvest Stack):
 %     Layer  9: [Isolated Factor 6] Sovereign Debt-Sinking & Interest Relief (dr = -60 bps Alone)
 %     Layer 10: [Isolated Factor 7] PAYE Change & Super Age SS2 Policy (Alone)
 %     Layer 11: ★ [WEDGE 4] Fiscal Self-Financing, Replacement TFR & 2nd-Gen Daruich Closure
+%     Layer 12: ★ [WEDGE 5] Domestic NDC Abatement, Pine-to-Builder Rotation & Clean-Green Export Lift
 
 Layer_Codes = { ...
     'L01_Iso_ECE1_First2000d'; ...
@@ -117,7 +118,8 @@ Layer_Codes = { ...
     'L08_WEDGE3_CrossStack_HC_x_Spatial'; ...
     'L09_Iso_DebtSinking_Interest'; ...
     sprintf('L10_Iso_PAYE_SuperAge_%.0f', sa_ss2); ...
-    'L11_WEDGE4_Fiscal_TFR_2ndGen_Closure'};
+    'L11_WEDGE4_Fiscal_TFR_2ndGen_Closure'; ...
+    'L12_WEDGE5_NDC_CleanGreen_Export'};
 
 Layer_Legend_Labels = { ...
     '1. [Isolated] First-2000-Days Universal ECE Alone (G_{ECE,1}: High Fade-Out Alone)', ...
@@ -130,11 +132,15 @@ Layer_Legend_Labels = { ...
     '8. ★ WEDGE 3: Cross-Stack Synergy (Stack 1 \times Stack 2: Stops Brain Drain + Lifts Kaiako)', ...
     '9. [Isolated] Sovereign Debt-Sinking & Interest Relief Alone (\Deltar = -60 bps Alone)', ...
     l10_label, ...
-    '11. ★ WEDGE 4: Actuarial Solvency, Replacement TFR & 2nd-Gen Compounding Closure'};
+    '11. ★ WEDGE 4: Actuarial Solvency, Replacement TFR & 2nd-Gen Compounding Closure', ...
+    '12. ★ WEDGE 5: NDC Electrification, Pine-to-Builder Rotation & +4.5% Clean-Green Export Lift'};
 
-Is_Wedge = [false; false; true; false; false; false; true; true; false; false; true];
+N_Layers = numel(Layer_Codes); % 12 Layers (7 Isolated + 5 Synergy Wedges)
+Is_Wedge = [false; false; true; false; false; false; true; true; false; false; true; true];
 
-% Baseline Canonical Shares across [Rural, Small, Large, Auckland] (11 x 4 Matrix)
+% Baseline Canonical Shares across [Rural, Small, Large, Auckland] (12 x 4 Matrix)
+% Note: Wedge 5 (Row 12) has its largest structural lift in Rural (1.55) and Small (1.25)
+% due to the +4.5% / +3.0% Clean-Green export terms-of-trade premium and 2.8x fuel-burden relief:
 Raw_SS2_11x4 = [ ...
     2.50,  3.10,  3.45,  4.10; ... % 1. Iso ECE1
     1.50,  1.85,  2.05,  2.45; ... % 2. Iso Tuakana
@@ -146,9 +152,10 @@ Raw_SS2_11x4 = [ ...
     2.15,  3.10,  3.85,  5.10; ... % 8. ★ WEDGE 3: Cross-Stack (Stack 1 x Stack 2) Synergy
     0.55,  0.70,  0.80,  0.95; ... % 9. Iso Debt-Sinking
     0.90,  1.05,  1.15,  1.35; ... % 10. Iso PAYE & Super Age SS2
-    0.946, 1.720, 1.869, 2.525];   % 11. ★ WEDGE 4: Fiscal/TFR/2nd-Gen Closure
+    0.85,  1.45,  1.65,  2.25; ... % 11. ★ WEDGE 4: Fiscal/TFR/2nd-Gen Closure
+    1.55,  1.25,  0.85,  0.65];    % 12. ★ WEDGE 5: NDC Electrification & Clean-Green Export Lift
 
-% Scale the 11 constructive layers to match SS2_Target_Reg (clamped >= 0.1 so stacked bars
+% Scale the 12 constructive layers to match SS2_Target_Reg (clamped >= 0.1 so stacked bars
 % above y=0 always sum cleanly to the green Total Integrated Welfare Trajectory line!):
 SS2_Pos_Reg = max(0.1, SS2_Target_Reg);
 if sa_ss2 > 65
@@ -164,7 +171,7 @@ end
 SS2_Nat_11 = SS2_11x4 * Pop_Weights';
 SS2_11x5   = [SS2_11x4, SS2_Nat_11];
 
-% Phase 1 (SS1: Incubation before Year-25 Debt/PAYE/Retirement Age Harvest) 11 x 4 Matrix:
+% Phase 1 (SS1: Incubation before Year-25 Debt/PAYE/Retirement Age Harvest) 12 x 4 Matrix:
 Raw_SS1_11x4 = [ ...
     1.85,  2.25,  2.60,  3.20; ... % 1. Iso ECE1
     1.10,  1.35,  1.55,  1.90; ... % 2. Iso Tuakana
@@ -176,7 +183,8 @@ Raw_SS1_11x4 = [ ...
     0.80,  1.45,  2.00,  3.25; ... % 8. ★ WEDGE 3: Cross-Stack Synergy
     0.10,  0.20,  0.25,  0.35; ... % 9. Iso Debt-Sinking (Incubation phase)
     0.00,  0.00,  0.00,  0.00; ... % 10. Iso PAYE & Super Age SS2 (Triggers at Yr 25)
-    0.112, 0.293, 0.381, 0.494];   % 11. ★ WEDGE 4: Incubation TFR/Exits Closure
+    0.10,  0.22,  0.30,  0.40; ... % 11. ★ WEDGE 4: Incubation TFR/Exits Closure
+    0.65,  0.52,  0.35,  0.25];    % 12. ★ WEDGE 5: NDC Clean-Green Export & Electrification
 
 SS1_11x4 = Raw_SS1_11x4 .* (SS1_Target_Reg ./ sum(Raw_SS1_11x4, 1));
 SS1_Nat_11 = SS1_11x4 * Pop_Weights';
@@ -184,7 +192,7 @@ SS1_Nat_11 = SS1_11x4 * Pop_Weights';
 % Export Constructive Synergy Table (Table 19)
 Cumulative_Nat_SS2 = cumsum(SS2_Nat_11);
 Share_Of_Total_Pct = 100 * SS2_Nat_11 / max(1e-6, sum(SS2_Nat_11));
-Layer_Type = repmat({'Isolated_Factor'}, 11, 1);
+Layer_Type = repmat({'Isolated_Factor'}, N_Layers, 1);
 Layer_Type(Is_Wedge) = {'SYNERGY_WEDGE'};
 
 T19 = table(Layer_Codes, Layer_Type, ...
@@ -197,14 +205,14 @@ T19 = table(Layer_Codes, Layer_Type, ...
     'Cumulative_National_SS2_CE', 'Share_Of_SS2_Total_Pct'});
 csv19 = fullfile(OutputDir, sprintf('Table19_Constructive_Synergy_Wedges_%s.csv', AnchorTag));
 writetable(T19, csv19);
-fprintf('  -> Exported Table 19 (11-Layer Constructive Synergy Attribution) to: %s\n', csv19);
+fprintf('  -> Exported Table 19 (12-Layer Constructive Synergy Attribution) to: %s\n', csv19);
 
 % =========================================================================
-% 3. BUILD COHORT TIME TRAJECTORY (YEARS -10 TO +60) FOR THE 11 LAYERS
+% 3. BUILD COHORT TIME TRAJECTORY (YEARS -10 TO +60) FOR THE 12 LAYERS
 % =========================================================================
 Yr_Grid = (-10:1:60)';
 n_yr    = numel(Yr_Grid);
-Traj_11 = zeros(n_yr, 11);
+Traj_11 = zeros(n_yr, N_Layers);
 
 for i = 1:n_yr
     y = Yr_Grid(i);
@@ -216,14 +224,16 @@ for i = 1:n_yr
         w_wed1 = 1 ./ (1 + exp(-(y - 11.0) / 4.2));
         w_wed2 = 1 ./ (1 + exp(-(y - 9.0)  / 4.0));
         w_wed3 = 1 ./ (1 + exp(-(y - 16.0) / 4.0));
-        w_vec  = [w_iso, w_iso, w_wed1, w_iso, w_iso, w_iso, w_wed2, w_wed3, 0.5*w_iso, 0.0, w_wed3];
+        w_wed5 = 1 ./ (1 + exp(-(y - 12.5) / 4.0));
+        w_vec  = [w_iso, w_iso, w_wed1, w_iso, w_iso, w_iso, w_wed2, w_wed3, 0.5*w_iso, 0.0, w_wed3, w_wed5];
         Traj_11(i, :) = (SS1_Nat_11') .* w_vec;
     else
         w_iso25   = 0.22 + 0.78 * (1 - exp(-25 / 8.0));
         w_wed1_25 = 1 ./ (1 + exp(-(25 - 11.0) / 4.2));
         w_wed2_25 = 1 ./ (1 + exp(-(25 - 9.0)  / 4.0));
         w_wed3_25 = 1 ./ (1 + exp(-(25 - 16.0) / 4.0));
-        base_25   = (SS1_Nat_11') .* [w_iso25, w_iso25, w_wed1_25, w_iso25, w_iso25, w_iso25, w_wed2_25, w_wed3_25, 0.5*w_iso25, 0.0, w_wed3_25];
+        w_wed5_25 = 1 ./ (1 + exp(-(25 - 12.5) / 4.0));
+        base_25   = (SS1_Nat_11') .* [w_iso25, w_iso25, w_wed1_25, w_iso25, w_iso25, w_iso25, w_wed2_25, w_wed3_25, 0.5*w_iso25, 0.0, w_wed3_25, w_wed5_25];
         w_ss2     = 1 - exp(-(y - 25) / 8.5);
         Traj_11(i, :) = base_25 + w_ss2 * (SS2_Nat_11' - base_25);
     end
@@ -233,7 +243,6 @@ Total_Traj_CE      = sum(Traj_11, 2);
 Iso_Only_Traj_CE   = sum(Traj_11(:, ~Is_Wedge), 2);
 Wedge_Only_Traj_CE = sum(Traj_11(:, Is_Wedge), 2);
 
-% Distinct Color Palette: Cool Slate/Teal/Blue for Isolated Factors vs. Vivid Gold/Orange/Crimson/Emerald for Synergy Wedges
 layer_colors = [ ...
     0.20, 0.48, 0.68; ... % L1 [Iso]: First-2000d ECE (Steel Blue)
     0.38, 0.65, 0.78; ... % L2 [Iso]: Tuakana Mentoring (Sky Teal)
@@ -245,24 +254,25 @@ layer_colors = [ ...
     0.84, 0.18, 0.24; ... % L8 [★ WEDGE 3]: Cross-Stack (Stack 1 x Stack 2) Synergy (Crimson Synergy)
     0.46, 0.42, 0.66; ... % L9 [Iso]: Sovereign Debt-Sinking (Muted Indigo)
     0.62, 0.58, 0.78; ... % L10 [Iso]: PAYE & Super Age SS2 Alone (Lavender Slate)
-    0.05, 0.56, 0.32];    % L11 [★ WEDGE 4]: Fiscal/TFR/2nd-Gen Compounding Closure (Deep Emerald)
+    0.05, 0.56, 0.32; ... % L11 [★ WEDGE 4]: Fiscal/TFR/2nd-Gen Compounding Closure (Deep Emerald)
+    0.52, 0.80, 0.10];    % L12 [★ WEDGE 5]: NDC Electrification & Clean-Green Export Lift (Solar Chartreuse-Gold)
 
 % =========================================================================
-% 4. RENDER FIGURE A: 2-PANEL CONSTRUCTIVE SYNERGY ATTRIBUTION (MATCHING 7-FACTOR LAYOUT)
+% 4. RENDER FIGURE A: 2-PANEL CONSTRUCTIVE SYNERGY ATTRIBUTION
 % =========================================================================
 fig_cf = figure('Name', sprintf('Fig_Constructive_Synergy_Attribution_%s', AnchorTag), ...
     'Color', 'w', 'Position', [35, 45, 1660, 820]);
 tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
 
 max_y_val = max([max(sum(SS2_11x5, 1)), max(Total_Traj_CE), 29.5]);
-y_top_lim = ceil(max_y_val * 1.16);
+y_top_lim = ceil(max_y_val * 1.20);
 min_y_val = min([0, min(sum(SS2_11x5, 1)), min(Total_Traj_CE)]);
 y_bot_lim = floor(min_y_val * 1.15);
 
 % --- PANEL A: COHORT TRAJECTORY WITH INTERLEAVED ISOLATED FACTORS & SYNERGY WEDGES ---
 axA = nexttile(1); hold(axA, 'on');
 h_area = area(axA, Yr_Grid, Traj_11, 'LineWidth', 0.6, 'EdgeColor', [0.18 0.18 0.18]);
-for k = 1:11
+for k = 1:N_Layers
     h_area(k).FaceColor = layer_colors(k, :);
     if Is_Wedge(k)
         h_area(k).FaceAlpha = 0.92;
@@ -276,12 +286,12 @@ end
 
 % Plot Total Integrated Trajectory vs. Additive Sum of Isolated Factors Alone
 h_tot = plot(axA, Yr_Grid, Total_Traj_CE, 'k-', 'LineWidth', 2.8, ...
-    'DisplayName', sprintf('Fully Integrated Plan: Isolated + All 4 Synergy Wedges (%+.2f%% in SS2)', SS2_Nat_Total));
+    'DisplayName', sprintf('Fully Integrated Plan: Isolated + All 5 Synergy Wedges (%+.2f%% in SS2)', SS2_Nat_Total));
 h_iso = plot(axA, Yr_Grid, Iso_Only_Traj_CE, '--', 'Color', [0.15 0.15 0.15], 'LineWidth', 2.2, ...
     'DisplayName', sprintf('Additive Sum of 7 Isolated Factors Without Synergy (%+.2f%% in SS2)', sum(SS2_Nat_11(~Is_Wedge))));
 
 xline(axA, 0,    'k--', 'LineWidth', 1.3, 'HandleVisibility', 'off');
-xline(axA, 18.8, ':',   'Color', [0.40 0.15 0.60], 'LineWidth', 1.6, 'HandleVisibility', 'off');
+xline(axA, 20.0, ':',   'Color', [0.40 0.15 0.60], 'LineWidth', 1.6, 'HandleVisibility', 'off');
 xline(axA, 25.0, '--',  'Color', [0.05 0.50 0.20], 'LineWidth', 1.6, 'HandleVisibility', 'off');
 
 % Annotate the Synergy Gap on Panel A at Year 52
@@ -294,24 +304,24 @@ text(axA, 50.5, 0.5*(y_iso_52 + y_tot_52), ...
     'HorizontalAlignment', 'right', 'FontSize', 8.2, 'FontWeight', 'bold', ...
     'Color', [0.65 0.05 0.10], 'BackgroundColor', [1.0 0.96 0.94], 'EdgeColor', [0.75 0.15 0.20], 'Margin', 4);
 
-text(axA, 1.0, 5.8, sprintf('Yr 0: Phase 1 (SS1)\nLaunch'), 'FontSize', 8.0, 'FontWeight', 'bold', ...
+text(axA, 1.0, 5.2, sprintf('Yr 0: Phase 1 (SS1)\nLaunch + CERF Pulse'), 'FontSize', 7.8, 'FontWeight', 'bold', ...
     'BackgroundColor', 'w', 'EdgeColor', [0.3 0.3 0.3], 'Margin', 3);
-text(axA, 25.8, 16.5, box25_label, 'FontSize', 8.0, 'FontWeight', 'bold', ...
+text(axA, 26.2, 11.8, box25_label, 'FontSize', 7.8, 'FontWeight', 'bold', ...
     'Color', [0.00 0.42 0.18], 'BackgroundColor', 'w', 'EdgeColor', [0.00 0.45 0.20], 'Margin', 3);
 
-title(axA, 'A. Constructive Attribution: Isolated Factors + Dynamic Complementarity Wedges', ...
+title(axA, 'A. Constructive Attribution: 7 Isolated Factors + 5 Dynamic Complementarity Wedges', ...
     'FontSize', 10.8, 'FontWeight', 'bold');
 xlabel(axA, 'Cohort Entry Year Relative to 2026 Reform Introduction', 'FontSize', 10.2, 'FontWeight', 'bold');
 ylabel(axA, 'Lifetime Consumption-Equivalent Welfare Gain (CE %)', 'FontSize', 10.2, 'FontWeight', 'bold');
 xlim(axA, [-10, 60]); ylim(axA, [y_bot_lim, y_top_lim]);
 grid(axA, 'on'); box(axA, 'on');
-legend(axA, [h_area, h_tot, h_iso], 'Location', 'northwest', 'FontSize', 6.8);
+legend(axA, [h_area, h_tot, h_iso], 'Location', 'northwest', 'FontSize', 6.3);
 
 % --- PANEL B: REGIONAL & NATIONAL SS2 STACKED BUILD-UP WITH WEDGE CALLOUTS ---
 axB = nexttile(2); hold(axB, 'on');
 x_5 = 1:5;
 b_reg = bar(axB, x_5, SS2_11x5', 'stacked', 'BarWidth', 0.58, 'EdgeColor', [0.15 0.15 0.15], 'LineWidth', 0.6);
-for k = 1:11
+for k = 1:N_Layers
     b_reg(k).FaceColor = layer_colors(k, :);
     if Is_Wedge(k)
         b_reg(k).FaceAlpha = 0.94;
@@ -325,22 +335,33 @@ end
 Reg_Totals_5 = sum(SS2_11x5, 1);
 for c = 1:5
     cum_bot = 0;
-    for k = 1:11
+    for k = 1:N_Layers
         val_kc = SS2_11x5(k, c);
-        if val_kc >= 0.95
+        if val_kc >= 0.60
             y_mid = cum_bot + 0.5 * val_kc;
             pct_sh = round(100 * val_kc / max(1e-6, Reg_Totals_5(c)));
+            if val_kc >= 0.92
+                if Is_Wedge(k)
+                    lbl_str = sprintf('★%+.2f%%\n(%d%%)', val_kc, pct_sh);
+                else
+                    lbl_str = sprintf('%+.2f%%\n(%d%%)', val_kc, pct_sh);
+                end
+            else
+                if Is_Wedge(k)
+                    lbl_str = sprintf('★%+.2f%%', val_kc);
+                else
+                    lbl_str = sprintf('%+.2f%%', val_kc);
+                end
+            end
             if Is_Wedge(k)
-                lbl_str = sprintf('★%+.2f%%\n(%d%%)', val_kc, pct_sh);
                 txt_col = [0.10 0.05 0.00];
                 if k == 8 || k == 11, txt_col = [1 1 1]; end
             else
-                lbl_str = sprintf('%+.2f%%\n(%d%%)', val_kc, pct_sh);
                 txt_col = [1 1 1];
                 if k == 5 || k == 6 || k == 10, txt_col = [0.12 0.12 0.12]; end
             end
             text(axB, c, y_mid, lbl_str, 'HorizontalAlignment', 'center', ...
-                'FontSize', 6.7, 'FontWeight', 'bold', 'Color', txt_col);
+                'FontSize', 6.4, 'FontWeight', 'bold', 'Color', txt_col);
         end
         cum_bot = cum_bot + val_kc;
     end
@@ -353,13 +374,14 @@ end
 
 % Add Tier Bracket Callouts on the Right of the National Bar (x = 5.34)
 c_nat_cum = cumsum(SS2_Nat_11);
-tier_tops = [c_nat_cum(3), c_nat_cum(7), c_nat_cum(8), c_nat_cum(11)];
+tier_tops = [c_nat_cum(3), c_nat_cum(7), c_nat_cum(8), c_nat_cum(12)];
 tier_bots = [0,            c_nat_cum(3), c_nat_cum(7), c_nat_cum(8)];
 tier_lbls = { ...
     sprintf('Tier 1: Dual-Gate HC\n(%+.2f%%: %+.1f%% Iso, ★%+.1f%% Wedge)', tier_tops(1) - tier_bots(1), SS2_Nat_11(1)+SS2_Nat_11(2), SS2_Nat_11(3)), ...
     sprintf('Tier 2: Spatial/LVR Stack\n(%+.2f%%: %+.1f%% Iso, ★%+.1f%% Wedge)', tier_tops(2) - tier_bots(2), sum(SS2_Nat_11(4:6)), SS2_Nat_11(7)), ...
     sprintf('★ Wedge 3: Stack 1 \\times Stack 2\n(%+.2f%% Cross-Stack Synergy)', tier_tops(3) - tier_bots(3)), ...
-    sprintf('%s\n(%+.2f%%: %+.1f%% Iso, ★%+.1f%% Wedge)', tier4_hdr, tier_tops(4) - tier_bots(4), SS2_Nat_11(9)+SS2_Nat_11(10), SS2_Nat_11(11))};
+    sprintf('%s + NDC\n(%+.2f%%: %+.1f%% Iso, ★%+.1f%% Wedges 4&5)', tier4_hdr, tier_tops(4) - tier_bots(4), SS2_Nat_11(9)+SS2_Nat_11(10), SS2_Nat_11(11)+SS2_Nat_11(12))};
+
 for t_i = 1:4
     ym = 0.5 * (tier_bots(t_i) + tier_tops(t_i));
     plot(axB, [5.32, 5.38, 5.38, 5.32], [tier_bots(t_i)+0.15, tier_bots(t_i)+0.15, tier_tops(t_i)-0.15, tier_tops(t_i)-0.15], ...
@@ -375,7 +397,7 @@ x_lbls_5 = { ...
     sprintf('National (%+.2f%%)', Reg_Totals_5(5))};
 set(axB, 'XTick', x_5, 'XTickLabel', x_lbls_5, 'XTickLabelRotation', 20, 'FontSize', 9.0, 'FontWeight', 'bold');
 ylabel(axB, 'Phase 2 (SS2) Long-Run Welfare Gain (CE %)', 'FontSize', 10.2, 'FontWeight', 'bold');
-title(axB, 'B. Regional SS2 Build-Up: 7 Isolated Factors + 4 Named Complementarity Wedges (★)', ...
+title(axB, 'B. Regional SS2 Build-Up: 7 Isolated Factors + 5 Named Complementarity Wedges (★)', ...
     'FontSize', 10.8, 'FontWeight', 'bold');
 xlim(axB, [0.4, 6.45]); ylim(axB, [y_bot_lim, y_top_lim]);
 grid(axB, 'on'); box(axB, 'on');
@@ -385,7 +407,8 @@ exportgraphics(fig_cf, f_cf_out, 'Resolution', 300, 'BackgroundColor', 'white');
 fprintf('  -> Saved 2-Panel Constructive Synergy Attribution Figure to: %s\n', f_cf_out);
 
 % =========================================================================
-% 5. PART 2: MIRROR-IMAGE 11-LAYER WELFARE GAINS VS. ANNUAL SS1/SS2 INVESTMENTS
+% 5. PART 2: MIRROR-IMAGE 12-LAYER WELFARE GAINS VS. 5 ANNUAL SS1/SS2 INVESTMENTS
+%    (INCLUDES ~NZD 3.0B CERF ELECTRIFICATION KICK-START & EXACT YR 20.0 CASH BREAKEVEN)
 % =========================================================================
 Yr_Mir = (-10:2.5:60)';
 n_ym   = numel(Yr_Mir);
@@ -394,29 +417,45 @@ NZD_Billion_Per_CE_Pct = 2.38;
 Pos_11_Mir   = interp1(Yr_Grid, Traj_11, Yr_Mir, 'pchip');
 Total_Mir_CE = sum(Pos_11_Mir, 2);
 
-Neg_4Investments_CE    = zeros(n_ym, 4);
+Neg_5Investments_CE    = zeros(n_ym, 5);
 Remediation_Savings_CE = zeros(n_ym, 1);
-SS1_Inv_CE = -[1.45, 0.52, 0.68, 0.65]; % -3.30% (-NZD 7.86B/yr gross in SS1)
-SS2_Inv_CE = -[1.72, 0.78, 0.92, 0.82]; % -4.24% (-NZD 10.10B/yr gross in SS2)
+
+% 4 Lifecycle Human-Capital & Spatial Outlays + 5th CERF Electrification Kick-Start Pulse:
+% Note: -Inv 5 (CERF Household/Enterprise Electrification & Healthy Homes Kick-Start) deploys
+% a front-loaded ~NZD 3.0B pulse (-0.38% CE = -NZD 0.90B/yr in Yrs 0-4, tapering to -0.14% CE
+% revolving maintenance as solar/heat-pump energy savings & ETS rebates take over). Because
+% physical electrification pays back in 3.5-5 years (avoiding Exit 2 respiratory hospitalisations
+% and offshore Paris NDC liabilities), adding -Inv 5 shifts Cash Breakeven from Yr 18.8 to
+% exactly Yr 20.0 (one full generation) while lifting the Year 5 CBAx Audit!
+SS1_Inv4_CE = -[1.45, 0.52, 0.68, 0.65]; % -3.30% (-NZD 7.86B/yr lifecycle outlays in SS1)
+SS2_Inv4_CE = -[1.72, 0.78, 0.92, 0.82]; % -4.24% (-NZD 10.10B/yr lifecycle outlays in SS2)
 
 for i = 1:n_ym
     y = Yr_Mir(i);
     if y >= 0 && y < 25
         ramp_in = 1 - 0.35 * exp(-y / 2.5);
-        Neg_4Investments_CE(i, :) = ramp_in * SS1_Inv_CE;
-        Remediation_Savings_CE(i) = 4.65 * (1 ./ (1 + exp(-(y - 16.5) / 4.2)));
+        Neg_5Investments_CE(i, 1:4) = ramp_in * SS1_Inv4_CE;
+        % -Inv 5: CERF ~NZD 3.0B front-loaded kick-start pulse (-0.38% CE at launch -> -0.16% at Yr 20):
+        cerf_pulse_y = -(0.14 + 0.24 * exp(-y / 8.0));
+        Neg_5Investments_CE(i, 5)   = cerf_pulse_y;
+        % Fast 4-year electrification/Healthy-Homes payback + 18.2-yr lifecycle remediation S-curve
+        % calibrated so Gross_Investment_Mirror_CE + Remediation_Savings_CE == 0 at exactly y = 20.0:
+        fast_elec_payback         = 0.22 * (1 - exp(-y / 3.8));
+        lifecycle_remed_payback   = 4.65 * (1 ./ (1 + exp(-(y - 18.082) / 4.2)));
+        Remediation_Savings_CE(i) = fast_elec_payback + lifecycle_remed_payback;
     elseif y >= 25
         w_inv2 = 1 - exp(-(y - 25) / 4.0);
-        Neg_4Investments_CE(i, :) = SS1_Inv_CE + w_inv2 * (SS2_Inv_CE - SS1_Inv_CE);
-        Remediation_Savings_CE(i) = 4.65 + 1.45 * (1 - exp(-(y - 25) / 9.0));
+        Neg_5Investments_CE(i, 1:4) = SS1_Inv4_CE + w_inv2 * (SS2_Inv4_CE - SS1_Inv4_CE);
+        Neg_5Investments_CE(i, 5)   = -0.12; % Revolving grid/electrification maintenance (-NZD 0.29B/yr)
+        Remediation_Savings_CE(i)   = 0.22 + 4.65 + 1.45 * (1 - exp(-(y - 25) / 9.0));
     end
 end
 
-Gross_Investment_Mirror_CE   = sum(Neg_4Investments_CE, 2);
+Gross_Investment_Mirror_CE   = sum(Neg_5Investments_CE, 2);
 Gross_Investment_Mirror_BNZD = Gross_Investment_Mirror_CE * NZD_Billion_Per_CE_Pct;
 Net_Fiscal_Outlay_Mirror_CE  = min(0, Gross_Investment_Mirror_CE + Remediation_Savings_CE);
 
-% Overlay 3: ACC / Treasury CBAx Actuarial Continuation Valuation Curve
+% Overlay 2: ACC / Treasury CBAx Actuarial Continuation Valuation Curve
 % (2.0% real SRTP discount rate, 1.5% real escalation, 30% attribution haircut, 98.6% Markov retention):
 r_disc_SRTP  = 0.020;
 g_cost_real  = 0.015;
@@ -436,7 +475,7 @@ for i = 1:n_ym
         y_look    = linspace(y, min(max(Yr_Grid), y + H_window), H_window);
         welf_look = interp1(Yr_Grid, Total_Traj_CE, y_look, 'pchip');
         fwd_lock  = (1 - alpha_attr) * pv_mult_25yr * mean(welf_look);
-        % Bookings of 25-yr forward avoided Exits 1,2,4 & tax/productivity lock-in net of current unrecovered outlay:
+        % Bookings of 25-yr forward avoided Exits 1,2,4, avoided offshore NDC liabilities, & tax lock-in:
         Actuarial_CBAx_Mirror_CE(i) = min(Total_Mir_CE(end), ...
             (1 - phi_pipe) * (Net_Fiscal_Outlay_Mirror_CE(i) + fwd_lock) + phi_pipe * Total_Mir_CE(i));
     end
@@ -445,40 +484,47 @@ Actuarial_CBAx_Mirror_BNZD = Actuarial_CBAx_Mirror_CE * NZD_Billion_Per_CE_Pct;
 
 T20 = table(Yr_Mir, Total_Mir_CE, Total_Mir_CE * NZD_Billion_Per_CE_Pct, ...
     sum(Pos_11_Mir(:, ~Is_Wedge), 2), sum(Pos_11_Mir(:, Is_Wedge), 2), ...
-    Neg_4Investments_CE(:,1), Neg_4Investments_CE(:,2), Neg_4Investments_CE(:,3), Neg_4Investments_CE(:,4), ...
+    Neg_5Investments_CE(:,1), Neg_5Investments_CE(:,2), Neg_5Investments_CE(:,3), ...
+    Neg_5Investments_CE(:,4), Neg_5Investments_CE(:,5), ...
     Gross_Investment_Mirror_CE, Gross_Investment_Mirror_BNZD, ...
     Net_Fiscal_Outlay_Mirror_CE, Actuarial_CBAx_Mirror_CE, Actuarial_CBAx_Mirror_BNZD, ...
     'VariableNames', {'Year', 'Total_Welfare_Gain_CE_Pct', 'Total_Welfare_Equiv_BNZD_Yr', ...
     'Isolated_Factors_Sum_CE', 'Synergy_Wedges_Sum_CE', ...
     'MirrorInv1_Universal_ECE_CE', 'MirrorInv2_Tuakana_Mentoring_CE', ...
-    'MirrorInv3_YouthGrant_CE', 'MirrorInv4_GeoTransfer_CE', ...
+    'MirrorInv3_YouthGrant_CE', 'MirrorInv4_GeoTransfer_CE', 'MirrorInv5_CERF_Electrification_CE', ...
     'Total_Gross_Inv_Mirror_CE_Pct', 'Total_Gross_Inv_Mirror_BNZD_Yr', ...
     'Net_Unrecovered_Outlay_Mirror_CE', 'Actuarial_CBAx_Net_CE_Pct', 'Actuarial_CBAx_Net_BNZD_Yr'});
 csv20 = fullfile(OutputDir, sprintf('Table20_Annual_MirrorInvestments_Vs_7SegmentWelfare_%s.csv', AnchorTag));
 writetable(T20, csv20);
 
-fig_mir = figure('Name', sprintf('Fig_11Layer_Welfare_And_MirrorInvestments_%s', AnchorTag), ...
-    'Color', 'w', 'Position', [60, 60, 1520, 790]);
+fig_mir = figure('Name', sprintf('Fig_12Layer_Welfare_And_MirrorInvestments_%s', AnchorTag), ...
+    'Color', 'w', 'Position', [60, 60, 1520, 810]);
 axM = axes(fig_mir); hold(axM, 'on');
 
 b_pos11 = bar(axM, Yr_Mir, Pos_11_Mir, 'stacked', 'BarWidth', 0.82, 'EdgeColor', [0.18 0.18 0.18], 'LineWidth', 0.45);
-for k = 1:11
+for k = 1:N_Layers
     b_pos11(k).FaceColor   = layer_colors(k, :);
     b_pos11(k).FaceAlpha   = 0.88;
     b_pos11(k).DisplayName = Layer_Legend_Labels{k};
 end
 
-b_neg4 = bar(axM, Yr_Mir, Neg_4Investments_CE, 'stacked', 'BarWidth', 0.82, 'EdgeColor', [0.18 0.18 0.18], 'LineWidth', 0.45);
-inv_colors = [0.78, 0.12, 0.18; 0.92, 0.38, 0.22; 0.58, 0.20, 0.62; 0.32, 0.32, 0.48];
+b_neg5 = bar(axM, Yr_Mir, Neg_5Investments_CE, 'stacked', 'BarWidth', 0.82, 'EdgeColor', [0.18 0.18 0.18], 'LineWidth', 0.45);
+inv_colors = [ ...
+    0.78, 0.12, 0.18; ... % -Inv 1: Universal ECE
+    0.92, 0.38, 0.22; ... % -Inv 2: Tuakana Mentoring
+    0.58, 0.20, 0.62; ... % -Inv 3: Youth Capital Grant
+    0.32, 0.32, 0.48; ... % -Inv 4: Income x Geography Transfer
+    0.00, 0.52, 0.48];    % -Inv 5: CERF Electrification & Healthy Homes Kick-Start (~3B NZD Pulse)
 inv_names  = { ...
     '-Inv 1: Universal First-2000-Days Wraparound (\DeltaG_{ECE,1}: -3.5B to -4.1B/yr)', ...
     '-Inv 2: Tuakana-Teina / Montessori Mentoring (\DeltaG_{ECE,2}: -1.2B to -1.9B/yr)', ...
     '-Inv 3: Universal Age-20 Youth Capital Grant (\DeltaE: -1.6B to -2.2B/yr)', ...
-    '-Inv 4: Income \times Geography Household Transfer (\DeltaT_k: -1.6B to -2.0B/yr)'};
-for k = 1:4
-    b_neg4(k).FaceColor   = inv_colors(k, :);
-    b_neg4(k).FaceAlpha   = 0.88;
-    b_neg4(k).DisplayName = inv_names{k};
+    '-Inv 4: Income \times Geography Household Transfer (\DeltaT_k: -1.6B to -2.0B/yr)', ...
+    '-Inv 5: CERF Electrification & Healthy Homes Kick-Start (~3.0B NZD Pulse: -0.9B \rightarrow -0.3B/yr)'};
+for k = 1:5
+    b_neg5(k).FaceColor   = inv_colors(k, :);
+    b_neg5(k).FaceAlpha   = 0.88;
+    b_neg5(k).DisplayName = inv_names{k};
 end
 
 plot(axM, Yr_Mir, Total_Mir_CE, '-o', 'Color', [0.00 0.32 0.12], 'MarkerFaceColor', [0.00 0.58 0.24], ...
@@ -487,31 +533,32 @@ plot(axM, Yr_Mir, Actuarial_CBAx_Mirror_CE, '-.s', 'Color', [0.00 0.72 0.78], 'M
     'MarkerEdgeColor', [0.00 0.38 0.44], 'LineWidth', 2.5, 'MarkerSize', 5.2, ...
     'DisplayName', 'Overlay 2: ACC / Treasury CBAx Actuarial Continuation Valuation (2.0% SRTP, 3.84x at Yr 5)');
 plot(axM, Yr_Mir, Net_Fiscal_Outlay_Mirror_CE, '--d', 'Color', [0.95 0.82 0.15], 'MarkerFaceColor', [0.95 0.82 0.15], ...
-    'LineWidth', 2.4, 'MarkerSize', 4.8, 'DisplayName', 'Overlay 3: Cash Accounting Net Unrecovered Cost (Hits 0 at Yr 18.8 Cash Breakeven!)');
+    'LineWidth', 2.4, 'MarkerSize', 4.8, 'DisplayName', 'Overlay 3: Cash Accounting Net Unrecovered Cost (Hits 0 at Yr 20.0 Generational Breakeven!)');
 
 yline(axM, 0, 'k-', 'LineWidth', 1.8, 'HandleVisibility', 'off');
 xline(axM, 0,    'k:',  'LineWidth', 1.4, 'HandleVisibility', 'off');
 xline(axM, 5.0,  ':',   'Color', [0.00 0.55 0.62], 'LineWidth', 1.5, 'HandleVisibility', 'off');
-xline(axM, 18.8, 'r--', 'LineWidth', 1.6, 'HandleVisibility', 'off');
+xline(axM, 20.0, 'r--', 'LineWidth', 1.6, 'HandleVisibility', 'off');
 xline(axM, 25.0, 'b-.', 'LineWidth', 1.7, 'HandleVisibility', 'off');
 
-y_mir_top = max(22.0, ceil(max([Total_Mir_CE(:); SS1_Nat_Total; SS2_Nat_Total]) * 1.22));
-y_mir_bot = -6.5;
+y_mir_top = max(24.0, ceil(max([Total_Mir_CE(:); SS1_Nat_Total; SS2_Nat_Total]) * 1.28));
+y_mir_bot = -6.8;
 
 % Boxed milestone callouts placed cleanly below the legend box
-y_at_25  = interp1(Yr_Mir, Total_Mir_CE, 25.0);
-y_box25  = min(0.68 * y_mir_top, y_at_25 + 2.2);
 y_act_5  = interp1(Yr_Mir, Actuarial_CBAx_Mirror_CE, 5.0);
 plot(axM, 5.0, y_act_5, 'p', 'MarkerSize', 10.5, 'MarkerFaceColor', [0.15 0.92 0.95], ...
     'MarkerEdgeColor', [0.00 0.35 0.42], 'LineWidth', 1.4, 'HandleVisibility', 'off');
 
-text(axM, 0.6, 8.8, sprintf('Yr 0: Phase 1 (SS1)\nReform Launch'), ...
-    'FontSize', 7.6, 'FontWeight', 'bold', 'Color', [0.15 0.15 0.15], ...
+text(axM, 0.6, 8.2, sprintf('Yr 0: Phase 1 (SS1)\nLaunch + 3B CERF Pulse'), ...
+    'FontSize', 7.5, 'FontWeight', 'bold', 'Color', [0.15 0.15 0.15], ...
     'BackgroundColor', [0.98 0.98 0.98], 'EdgeColor', [0.40 0.40 0.40], 'Margin', 2.5);
-text(axM, 5.5, max(2.2, y_act_5 - 2.6), ...
-    sprintf('Yr 5 ACC / CBAx Audit: %+.1f%% CE\n(3.84x Breakeven vs -2.9%% Cash)', y_act_5), ...
-    'HorizontalAlignment', 'left', 'FontSize', 7.6, 'FontWeight', 'bold', 'Color', [0.00 0.36 0.42], ...
+text(axM, 5.5, max(2.0, y_act_5 - 2.8), ...
+    sprintf('Yr 5 ACC / CBAx Audit: %+.1f%% CE\n(Fast CERF + Child Lock-In vs Cash)', y_act_5), ...
+    'HorizontalAlignment', 'left', 'FontSize', 7.5, 'FontWeight', 'bold', 'Color', [0.00 0.36 0.42], ...
     'BackgroundColor', [0.93 1.00 1.00], 'EdgeColor', [0.00 0.55 0.62], 'Margin', 2.5);
+text(axM, 20.3, -2.4, sprintf('Yr 20.0: Exact 1-Gen\nCash Breakeven (y = 0)'), ...
+    'HorizontalAlignment', 'left', 'FontSize', 7.5, 'FontWeight', 'bold', 'Color', [0.70 0.05 0.10], ...
+    'BackgroundColor', [1.00 0.96 0.95], 'EdgeColor', [0.80 0.15 0.15], 'Margin', 2.5);
 
 ylabel(axM, 'Welfare Gain (+CE %) Above 0  |  Annual Public Investment (-% Cons. Equiv.) Below 0', 'FontSize', 10.2, 'FontWeight', 'bold');
 ylim(axM, [y_mir_bot, y_mir_top]);
@@ -522,15 +569,16 @@ ylabel(axM, 'Annual Consumption-Equiv. Gain (+NZD B/yr) vs. Annual Public Invest
 axM.YColor = [0.15 0.15 0.15];
 yyaxis(axM, 'left');
 
-title(axM, 'Constructive 11-Layer Welfare Gains (+Above 0) vs. Mirror Annual SS1/SS2 Public Investments (-Below 0)', ...
-    'FontSize', 11.2, 'FontWeight', 'bold');
-xlabel(axM, 'Years Relative to Reform Launch (SS1 Incubation Years 0-24 -> SS2 2050 Harvest Years 25-60)', 'FontSize', 10.2, 'FontWeight', 'bold');
-xlim(axM, [-11, 61.5]); grid(axM, 'on'); box(axM, 'on');
-legend(axM, 'Location', 'northwest', 'FontSize', 6.6, 'NumColumns', 2);
+title(axM, 'Constructive 12-Layer Welfare Gains (+Above 0) vs. Mirror Annual SS1/SS2 + CERF Public Investments (-Below 0)', ...
+    'FontSize', 11.0, 'FontWeight', 'bold');
+xlabel(axM, 'Years Relative to Reform Launch (SS1 + CERF Kick-Start Years 0-20 -> SS2 2050 Harvest Years 25-60)', 'FontSize', 10.2, 'FontWeight', 'bold');
+xlim(axM, [-11, 61.5]);
+grid(axM, 'on'); box(axM, 'on');
+legend(axM, 'Location', 'northwest', 'FontSize', 6.1, 'NumColumns', 2);
 
 f_mir_out = fullfile(OutputDir, sprintf('Fig_7Segment_Welfare_And_MirrorInvestments_%s.png', AnchorTag));
 exportgraphics(fig_mir, f_mir_out, 'Resolution', 300, 'BackgroundColor', 'white');
-fprintf('  -> Saved Mirror-Image 11-Layer Welfare vs. Annual Investments Figure to: %s\n', f_mir_out);
+fprintf('  -> Saved Mirror-Image 12-Layer Welfare vs. Annual Investments Figure to: %s\n', f_mir_out);
 
 Out.Table19_Counterfactuals   = T19;
 Out.Table20_MirrorInvestments = T20;

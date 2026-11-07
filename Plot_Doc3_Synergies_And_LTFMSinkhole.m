@@ -1,5 +1,5 @@
-function Out = Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole(Params)
-% PLOT_DOC3_COALITIONSYNERGIES_AND_LTFMSINKHOLE
+function Out = Plot_Doc3_Synergies_And_LTFMSinkhole(Params)
+% PLOT_DOC3_SYNERGIES_AND_LTFMSINKHOLE
 % Deliverable for Document 3:
 %   1) Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_<AnchorTag>.png
 %      - Panel A: 3D Macroeconomic Welfare Surface over (Net Debt/GDP x PAYE Tax Rate),

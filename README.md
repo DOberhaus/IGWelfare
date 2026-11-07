@@ -79,7 +79,7 @@ You do not need to run individual helper or return functions (`ReturnFn_*.m`) ma
   * `Plot_CumulativeTransitionPayoffs.m` & `Plot_ActuarialContinuationValuation.m` — Compute 60-year transition integrals and the Year-5 ACC-style Actuarial Continuation Audit (`Table 16`).
   * `Plot_WealthBracket_GiveAndGain.m` — Evaluates Fiscal Give vs. Economic Gain and balance-sheet resilience across 10 survey-anchored Earn + Own tiers (`Table 17`).
   * `Plot_Counterfactuals_And_MirrorInvestments.m` — Generates the 11-Layer Constructive Synergy Attribution (`Table 19`) and Mirror Investment Ledger (`Table 20`).
-  * `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m` — Renders the 3D LTFM Fiscal Sinkhole & Defense Shock surface, Stop-Go perishability paths (`Table 21`), and the 4 × 4 Coalition Matrix (`Table 22`).
+  * `Plot_Doc3_Synergies_And_LTFMSinkhole.m` — Renders the 3D LTFM Fiscal Sinkhole & Defense Shock surface, Stop-Go perishability paths (`Table 21`), and the 4 × 4 Coalition Matrix (`Table 22`).
 
 ---
 

@@ -196,6 +196,14 @@ eta_ref         = min(1.18, max(0.0, double(reform_intensity)));
 
 if is_reform_panel
     if G_ece <= 0.06, G_ece = G_ece + 0.14; end
+    if isstruct(tau_a)
+        if isfield(tau_a, ['Firm_', Target_Region])
+            tau_a = tau_a.(['Firm_', Target_Region]);
+        else
+            fn_ta = fieldnames(tau_a);
+            tau_a = tau_a.(fn_ta{1});
+        end
+    end
     if tau_a <= 0.006, tau_a = tau_a + 0.010; end
     if tau_b <= 0.06,  tau_b = tau_b + 0.10;  end
     G_ece_eff       = G_ece * 1.15; % Montessori / Tuakana cross-age downward multiplier
@@ -1143,6 +1151,17 @@ end
 function val = getfield_def(S, fname, default_val)
 if isfield(S, fname)
     val = S.(fname);
+    if isstruct(val) && ~isstruct(default_val)
+        fn = fieldnames(val);
+        firm_f = fn(strncmp(fn, 'Firm_', 5));
+        if strcmp(fname, 'tau_a') && ~isempty(firm_f)
+            val = val.(firm_f{1});
+        elseif ~isempty(fn)
+            val = val.(fn{1});
+        else
+            val = default_val;
+        end
+    end
 else
     val = default_val;
 end

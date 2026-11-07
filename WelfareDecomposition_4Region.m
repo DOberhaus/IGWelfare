@@ -27,6 +27,7 @@ for ig0_it = 1:6
     jDist_SS0 = jDist_SS0_new;
 end
 Params_SS0   = Params;
+Params_SS0.super_age = Params_SS0.super_age_base;
 if exist('IG_Diagnostics', 'var'), IG_Diag_SS0 = IG_Diagnostics; else, IG_Diag_SS0 = struct(); end
 
 % Legacy aliases for backward compatibility
@@ -57,7 +58,7 @@ if ~exist('Reform_Phase_Specs', 'var') || isempty(Reform_Phase_Specs)
         'HH_Small',    0.031, ...
         'HH_Large',    0.025, ...
         'HH_Auckland', 0.028);
-    Reform_Phase_Specs(1).super_age = Params_SS0.super_age;
+    Reform_Phase_Specs(1).super_age = Params_SS0.super_age_SS1;
 elseif ~isfield(Reform_Phase_Specs, 'tau_l_delta')
     [Reform_Phase_Specs.tau_l_delta] = deal(0.000);
 end
@@ -208,8 +209,15 @@ for m = 1:M_reforms
     end
     for r_idx = 1:N_reg
         reg = Regions{r_idx};
-        P_GE.w_reg.(['HH_', reg])   = Params_SS0.w_reg.(['HH_', reg])   * spec.w_mult_vs_SS0(r_idx);
-        P_GE.w_reg.(['Firm_', reg]) = Params_SS0.w_reg.(['Firm_', reg]) * spec.w_mult_vs_SS0(r_idx);
+        % Clean-Green vs. CBAM terms-of-trade export lift on regional GE wages (Rural & Small lead):
+        if isfield(P_GE, 'Pi_trade_reg') && isfield(Params_SS0, 'Pi_trade_SS0')
+            ndc_trade_mult = (P_GE.Pi_trade_reg(r_idx) / Params_SS0.Pi_trade_SS0(r_idx)) ^ 0.35;
+        else
+            ndc_trade_mult = 1.0;
+        end
+        w_tot_mult = spec.w_mult_vs_SS0(r_idx) * ndc_trade_mult;
+        P_GE.w_reg.(['HH_', reg])   = Params_SS0.w_reg.(['HH_', reg])   * w_tot_mult;
+        P_GE.w_reg.(['Firm_', reg]) = Params_SS0.w_reg.(['Firm_', reg]) * w_tot_mult;
         P_GE.Q_reg.(['HH_', reg])   = Params_SS0.Q_reg.(['HH_', reg])   * spec.Q_mult_vs_SS0(r_idx);
         elder_home_mult = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
         P_GE.K_whanau.(['HH_', reg]) = Params_SS0.K_whanau_base.(['HH_', reg]) * elder_home_mult * elder_time_mult;
