@@ -97,14 +97,28 @@ Params.u_target_4x5 = [ ...
 % Canonical Daruich (2018) 4-region endogenous intergenerational skill & retention lift
 Params.daruich_ig_mult = [5.51, 7.27, 8.00, 9.93];
 
-if ~isfield(Params, 'leak_rate_super_up'), Params.leak_rate_super_up = 0.45; end % 45% disability/hardship leak when age > 65
-if ~isfield(Params, 'offset_super_down'),  Params.offset_super_down  = 0.25; end % 25% ACC/Jobseeker savings when age < 65
 
-%% 6. NAMED PARAMETERS FOR NZ SUPER ELIGIBILITY AGE, SENESCENCE, & WHANAU CARE ELASTICITIES
+%% 6. Domestic Oligopoly Markups & Commerce Commission Competition Block (Jon Duffy) ---
+% Regional non-durable price markups M_olig,k: [Rural, Small, Large, Auckland]
+% Higher in Rural/Small regions due to single-supermarket, gentailer, and building-supply dominance
+Params.M_olig_SS0          = [1.080, 1.070, 1.050, 1.040]; % Baseline status quo oligopoly markups
+Params.M_olig_SS1          = [1.025, 1.020, 1.015, 1.010]; % Phase-1 Commerce Commission Grocery/Bank/Energy reform
+Params.M_olig_SS2          = [1.000, 1.000, 1.000, 1.000]; % Phase-2 full competitive convergence (M_olig -> 1.00)
+
+% Multiphase competition reform scalar kappa_olig_comp in [0, 1] (0 = SS0 oligopoly, 1 = full competition)
+Params.kappa_olig_schedule = [0.000, 0.700, 1.000];        % [SS0, SS1, SS2] competition enforcement intensity
+Params.M_olig_reg          = Params.M_olig_SS0;            % Active regional markup vector passed to ReturnFn
+Params.rho_olig_reg        = [0.008, 0.007, 0.005, 0.004]; % Initial passive z_l oligopoly rent yield (updated in GE)
+
+%% 7. NAMED PARAMETERS FOR NZ SUPER ELIGIBILITY AGE, SENESCENCE, & WHANAU CARE ELASTICITIES
 % Literature Anchors:
 %   - Rupert & Zanella (2018, J. Labor Econ.) / Compton & Pollak (2014): Grandparent childcare time elasticity
 %   - Fan, Seshadri, & Taber (2022) / French (2005, RES): Late-life wage senescence & labor disutility slope
 %   - Case & Deaton (2005) / Coe & Van Houtven (2009): Age-morbidity decay & sandwich elder-care labor drag
+
+if ~isfield(Params, 'leak_rate_super_up'), Params.leak_rate_super_up = 0.45; end % 45% disability/hardship leak when age > 65
+if ~isfield(Params, 'offset_super_down'),  Params.offset_super_down  = 0.25; end % 25% ACC/Jobseeker savings when age < 65
+
 if ~isfield(Params, 'super_age_base'),           Params.super_age_base           = 65.0;  end % Statutory NZ Super baseline age
 if ~isfield(Params, 'super_age_SS1'),            Params.super_age_SS1            = 65.0;  end % Phase 1 (SS1) NZ Super age
 if ~isfield(Params, 'super_age_SS2'),            Params.super_age_SS2            = 64.0;  end % Phase 2 (SS2) NZ Super target age
