@@ -164,7 +164,11 @@ Params.K_whanau                  = Params.K_whanau_base; % Active regime value (
 % Two-Stage Child Skill (Cunha et al.), Ben-Porath, Housing Tenure, & Tax Parameters
 Params.gamma1_self = 0.53; Params.gamma1_inv = 0.24; Params.gamma1_par = 0.23; Params.phi1_ces = 0.35;
 Params.gamma2_self = 0.87; Params.gamma2_inv = 0.07; Params.gamma2_par = 0.06; Params.phi2_ces = -0.95;
-Params.G_ece_stage1 = 0.045; Params.G_ece_stage2 = 0.065; Params.gbar_ece = 0.020;
+if ~isfield(Params, 'G_ece_stage1_base'), Params.G_ece_stage1_base = 0.045; end
+if ~isfield(Params, 'G_ece_stage2_base'), Params.G_ece_stage2_base = 0.065; end
+if isnumeric(Params.G_ece_stage1), Params.G_ece_stage1_base = Params.G_ece_stage1; Params = rmfield(Params, 'G_ece_stage1'); end
+if isnumeric(Params.G_ece_stage2), Params.G_ece_stage2_base = Params.G_ece_stage2; Params = rmfield(Params, 'G_ece_stage2'); end
+Params.gbar_ece = 0.020; Params.s_sub = 0.100;
 Params.s_sub = 0.100; Params.omega_ic = 0.420; Params.h_par_mean = 1.000;
 
 Params.phi_nd = 0.80; Params.mu_maint = 0.04; Params.upsilon_h = 0.008; Params.chi_bar = 2.55;
@@ -205,9 +209,12 @@ for r_idx = 1:N_reg
     phi_k     = Params.active_phi_local_vec(r_idx);
     phi_0     = Params.phi_local_SS0(r_idx);
 
-    % Effective household retail markup (with Farm-to-Marae/Co-op direct bypass) & local kai ECE boost
+    % Effective household retail markup (with Farm-to-Marae/Co-op direct bypass)
+    % and stage- & region-specific public ECE/school investment (with local kai quality multiplier):
+    kai_mult_k                    = 1.0 + Params.nu_kai_quality * max(0.0, phi_k - phi_0);
     Params.M_olig_reg.(hh_type)   = 1.0 + (1.0 - Params.kappa_bypass_olig * phi_k) * (m_k - 1.0);
-    Params.kai_mult_reg.(hh_type) = 1.0 + Params.nu_kai_quality * max(0.0, phi_k - phi_0);
+    Params.G_ece_stage1.(hh_type) = Params.G_ece_stage1_base * kai_mult_k;
+    Params.G_ece_stage2.(hh_type) = Params.G_ece_stage2_base * kai_mult_k;
 
     % Effective firm monopsony markdown, passive z_l oligopoly rent, & active z_h local kai contract yield
     Params.mu_monop_reg.(firm_type)    = mu_k;
@@ -229,7 +236,7 @@ for r_idx = 1:N_reg
         delta_hc, alpha_I, alpha_H, b1_beq, b2_beq, YouthGrant, ...
         tau_l, tau_c, tau_k, tau_a, tau_b, agej, Jr, sj, dt, ...
         j_s1_start, j_s1_end, j_s2_start, j_s2_end, n_stage1_steps, n_stage2_steps, ...
-        Q_reg_base, K_whanau, M_olig_reg, kai_mult_reg) ...
+        Q_reg_base, K_whanau, M_olig_reg) ...
         ReturnFn_SpatialHH(l, Ih, ic, aprime, hprime, a, h, theta_c, z, ...
         w_reg, r, Q_reg, G_reg, phi_nd, mu_maint, upsilon_h, chi_bar, ebar_energy, ...
         Transfer_Geo, p_super, c_floor, G_ece_stage1, G_ece_stage2, gbar_ece, s_sub, ...
@@ -238,7 +245,7 @@ for r_idx = 1:N_reg
         delta_hc, alpha_I, alpha_H, b1_beq, b2_beq, YouthGrant, ...
         tau_l, tau_c, tau_k, tau_a, tau_b, agej, Jr, sj, dt, ...
         j_s1_start, j_s1_end, j_s2_start, j_s2_end, n_stage1_steps, n_stage2_steps, ...
-        Q_reg_base, K_whanau, M_olig_reg, kai_mult_reg);
+        Q_reg_base, K_whanau, M_olig_reg);
 
     ReturnFn.(firm_type) = @(aprime, a, z, w_reg, r, alpha_k, lambda_col, delta_k, tau_k, tau_a, dt, ...
         mu_monop_reg, rho_olig_reg, rho_farm_reg, lambda_col_mult) ...

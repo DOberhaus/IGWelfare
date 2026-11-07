@@ -3,7 +3,7 @@ function F = ReturnFn_SpatialHH_Compact4D(l, Ih, ic, aprime, hprime, a, h, z, ..
     Transfer_Geo, p_super, c_floor, G_ece, gbar_ece, K_whanau, omega_ic, ...
     delta_hc, alpha_I, alpha_H, b1_beq, b2_beq, YouthGrant, ...
     tau_l, tau_c, tau_k, tau_a, tau_b, agej, Jr, sj, dt, ...
-    j_s1_start, j_s2_end, M_olig_reg, kai_mult_reg)
+    j_s1_start, j_s2_end, M_olig_reg)
 
 %% COMPACT 4D HOUSEHOLD RETURN FUNCTION (PARAMETRIC SUPER_AGE VIA Jr = 1 + (super_age - 20)/dt)
 
@@ -119,7 +119,7 @@ if is_parenting
     metro_ece_mult = (max(1.0, Q_reg / 1.05) ^ 0.85) * (1.0 + 0.80 * max(0.0, 0.42 - K_whanau));
     Psi_perc       = -0.025 * is_corner_ic * max(0.0, (1 - 0.55 * K_whanau_net) * (1 - 0.80 * M_trust_gated)) ...
         + 0.045 * max(0.0, M_trust_gated - 0.173) * metro_ece_mult;
-    I_eff          = 1.0 + 2.20 * (ic + G_ece * kai_mult_reg * metro_ece_mult * (1 + 0.25 * M_trust_gated) + 0.025 * max(0.0, K_whanau_net) + gbar_ece);
+    I_eff          = 1.0 + 2.20 * (ic + G_ece * metro_ece_mult * (1 + 0.25 * M_trust_gated) + 0.025 * max(0.0, K_whanau_net) + gbar_ece);
     h_child_exp    = (h ^ 0.40) * (I_eff ^ 0.55) * exp(Psi_perc);
     u_child        = scale_dt * omega_ic * log(max(1e-4, h_child_exp));
 end
