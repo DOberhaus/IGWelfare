@@ -6,7 +6,8 @@ function F = ReturnFn_SpatialHH(l, Ih, ic, aprime, hprime, a, h, theta_c, z, ...
     delta_hc, alpha_I, alpha_H, b1_beq, b2_beq, YouthGrant, ...
     tau_l, tau_c, tau_k, tau_a, tau_b, agej, Jr, sj, dt, ...
     j_s1_start, j_s1_end, j_s2_start, j_s2_end, n_stage1_steps, n_stage2_steps, ...
-    Q_reg_base, K_whanau)
+    Q_reg_base, K_whanau, M_olig_reg, kai_mult_reg)
+
 %% CANONICAL 5D HOUSEHOLD RETURN FUNCTION (STATE-CONTINGENT SUB-MANIFOLD PARAMETERIZATION)
 % Pure scalar arithmetic for gpuArray/arrayfun compatibility (no nargin/isempty).
 
@@ -71,8 +72,8 @@ K_whanau_net  = K_whanau - 0.28 * is_super_cut * is_distress_z;
 sandwich_drag = max(0.0, -K_whanau_net) * 0.035;
 
 kaiako_cooling = (max(0.50, Q_reg_base) / max(0.50, Q_reg)) ^ 0.35;
-G_ece1_eff     = G_ece_stage1 * kaiako_cooling;
-G_ece2_eff     = G_ece_stage2 * kaiako_cooling;
+G_ece1_eff     = G_ece_stage1 * kaiako_cooling * kai_mult_reg;
+G_ece2_eff     = G_ece_stage2 * kaiako_cooling * kai_mult_reg;
 M_mentor       = min(1.0, max(0.0, 0.173 + 20.0 * (G_ece2_eff - 0.065)));
 M_trust_gated  = M_mentor * (0.45 + 0.55 * min(1.0, max(0.0, K_whanau_net) / 0.35));
 
@@ -92,7 +93,7 @@ if c_budget <= 0 && (aprime > 0 || ic > 0) && agej < Jr
 end
 
 %% 5. COMPOSITE CONSUMPTION, LABOR/TRAINING DISUTILITY, & TWO-STAGE CHILD ALTRUISM
-c_nd   = phi_nd * c_eff;
+c_nd   = (phi_nd * c_eff) / M_olig_reg;
 c_H    = (1 - phi_nd) * c_eff / p_H;
 u_comp = (c_nd ^ phi_nd) * (c_H ^ (1 - phi_nd));
 eta_c  = 2.0;

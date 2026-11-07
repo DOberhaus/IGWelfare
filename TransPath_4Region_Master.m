@@ -148,7 +148,7 @@ for r_idx = 1:N_reg
     end
 end
 
-%% 4. KIYOTAKI HOUSING USER-COST COOLING, $1.6T ESTATE REALLOCATION & BRAIN-DRAIN CLOSURE
+%% 4A. KIYOTAKI HOUSING USER-COST COOLING, $1.6T ESTATE REALLOCATION & BRAIN-DRAIN CLOSURE
 Q_path         = zeros(T_trans, N_reg);
 Q_init         = [1.00, 1.40, 2.05, 3.10];
 Q_end_SS1      = Q_init .* [0.990, 0.975, 0.950, 0.925];
@@ -195,6 +195,49 @@ T_BrainDrain_Path = table(Trans_Years, ...
     100 * Emig_Rate_Path(:, 3), 100 * Emig_Rate_Path(:, 4), Cohesion_Index, ...
     'VariableNames', {'Year', 'Rural_Emig_Pct', 'Small_Emig_Pct', ...
     'Large_Emig_Pct', 'Auckland_Emig_Pct', 'Social_Cohesion_Index'});
+
+%% 4B. DUOPOLY PINCER RELIEF, FARM-TO-MARAE PROCUREMENT, & URBAN-TO-RURAL TRANSFER RETIREMENT
+if ~isfield(Params, 'M_olig_SS0'), Params = Configure_TimeGrid_Params(Params, dt); end
+M_olig_Path      = zeros(T_trans, N_reg);
+M_olig_Eff_Path  = zeros(T_trans, N_reg);
+mu_monop_Path    = zeros(T_trans, N_reg);
+phi_local_Path   = zeros(T_trans, N_reg);
+T_Geo_Req_Path   = zeros(T_trans, N_reg);
+T_Geo_SS1_Base   = [0.042, 0.030, 0.008, 0.000]; % Baseline geographic transfer [Rural, Small, Large, Akl]
+C_nd_Base_Reg    = [0.210, 0.235, 0.275, 0.310]; % Baseline regional non-durable consumption
+
+for t = 1:T_trans
+    yr   = Trans_Years(t);
+    w_m1 = 1 - exp(-yr / 10);
+    m_t  = Params.M_olig_SS0    + w_m1 * (Params.M_olig_SS1    - Params.M_olig_SS0);
+    mu_t = Params.mu_monop_SS0  + w_m1 * (Params.mu_monop_SS1  - Params.mu_monop_SS0);
+    ph_t = Params.phi_local_SS0 + w_m1 * (Params.phi_local_SS1 - Params.phi_local_SS0);
+
+    if has_SS2 && yr >= T_phase2_yr
+        w_m2 = 1 - exp(-(yr - T_phase2_yr) / 10);
+        m_t  = m_t  + w_m2 * (Params.M_olig_SS2    - Params.M_olig_SS1);
+        mu_t = mu_t + w_m2 * (Params.mu_monop_SS2  - Params.mu_monop_SS1);
+        ph_t = ph_t + w_m2 * (Params.phi_local_SS2 - Params.phi_local_SS1);
+    end
+
+    % Effective retail markup after Farm-to-Marae / Co-op direct household bypass
+    m_eff_t = 1.0 + (1.0 - Params.kappa_bypass_olig .* ph_t) .* (m_t - 1.0);
+
+    % Purchasing power & farm-gate monopsony wage recovery retiring Transfer_Geo
+    duopoly_relief_k  = (Params.M_olig_SS0 - m_eff_t) .* C_nd_Base_Reg;
+    monop_wage_gain_k = 0.78 * (mu_t - Params.mu_monop_SS0) .* [0.28, 0.31, 0.36, 0.40];
+    t_req_k           = max(Params.T_reg_min_floor, ...
+        T_Geo_SS1_Base - Params.psi_retire_T .* (duopoly_relief_k + monop_wage_gain_k));
+
+    M_olig_Path(t, :)     = m_t;
+    M_olig_Eff_Path(t, :) = m_eff_t;
+    mu_monop_Path(t, :)   = mu_t;
+    phi_local_Path(t, :)  = ph_t;
+    T_Geo_Req_Path(t, :)  = t_req_k;
+end
+
+Transfer_Retire_Pct_Rural = 100 * (1 - T_Geo_Req_Path(:, 1) ./ max(1e-4, T_Geo_SS1_Base(1)));
+Transfer_Retire_Pct_Small = 100 * (1 - T_Geo_Req_Path(:, 2) ./ max(1e-4, T_Geo_SS1_Base(2)));
 
 %% 5. PLOT TRANSITION FIGURES (FIGURES 1, 2, AND 3)
 cols = [0.00 0.45 0.74; 0.85 0.33 0.10; 0.93 0.69 0.13; 0.49 0.18 0.56];
@@ -294,6 +337,17 @@ T_PopShares = table(Years_grid, ...
     'VariableNames', {'Year', 'Rural_PopShare_Pct', 'Small_PopShare_Pct', ...
     'Large_PopShare_Pct', 'Auckland_PopShare_Pct', ...
     'Rural_Q_Index', 'Small_Q_Index', 'Large_Q_Index', 'Auckland_Q_Index'});
+
+% Table tracking Duopoly Pincer Relief, Farm-to-Marae Share, & Urban-to-Rural Transfer Retirement
+T_Duopoly_TransferRetire = table(Years_grid, ...
+    M_olig_Eff_Path(:, 1), M_olig_Eff_Path(:, 2), ...
+    mu_monop_Path(:, 1),   mu_monop_Path(:, 2), ...
+    100 * phi_local_Path(:, 1), 100 * phi_local_Path(:, 2), ...
+    Transfer_Retire_Pct_Rural,  Transfer_Retire_Pct_Small, ...
+    'VariableNames', {'Year', 'Rural_M_Olig_Eff', 'Small_M_Olig_Eff', ...
+    'Rural_Mu_Monop', 'Small_Mu_Monop', ...
+    'Rural_LocalFood_Pct', 'Small_LocalFood_Pct', ...
+    'Rural_Transfer_Retired_Pct', 'Small_Transfer_Retired_Pct'});
 
 if isfolder('Output_NZ_4Region_Intergen')
     OutputDir = 'Output_NZ_4Region_Intergen';
