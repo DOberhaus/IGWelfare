@@ -127,8 +127,16 @@ if ~isfield(Params, 'dep_ratio_2026_anchor'),    Params.dep_ratio_2026_anchor   
 if ~isfield(Params, 'beta_aging_tax_drift'),     Params.beta_aging_tax_drift     = 0.220; end % Marginal PAYE tax sensitivity to dependency ratio
 if ~isfield(Params, 'beta_exits_skill_div'),     Params.beta_exits_skill_div     = 0.145; end % Marginal PAYE tax relief per pp of early hardship cut
 
-%% 7. DOMESTIC OLIGOPOLY / MONOPSONY PINCER, LOCAL FOOD ECONOMY & CANONICAL REGIME SCHEDULES
-% Master switch for Duopoly / Ka Ora, Ka Ako channels (set false to reproduce pure pre-duopoly baseline)
+%% 7. CANONICAL REGIME SCHEDULES & LOCAL PROCUREMENT / MENTORING (z_l -> z_h) UPGRADING
+% Literature & Empirical Anchors:
+%   - Jon Duffy (Consumer NZ) / Commerce Commission: Retail duopoly & farm-gate monopsony rent extraction
+%     blocking rural/provincial enterprise capital formation and trapping regions in low-wage z_l equilibria.
+%   - NC State CEFS Farm to ECE (Cosco et al. 2022; Color Me Healthy RCT): +24% to +33% preschool vegetable
+%     intake (d = 1.20), +26.6 pp parent nutrition crowding-in (53.5% -> 80.1%), 46% take-home garden produce.
+%   - NC State CEFS 2025-2026 Local Food Purchasing Incentive (LFPI) & Bloom et al. (2022): Directing upfront
+%     working capital via regional food hubs yields a 1.60x-2.16x local economic multiplier.
+%   - NC State CEFS Food Youth Initiative (FYI) & GrowingChange (Sanford): Paid youth agricultural leadership
+%     and food-hub apprenticeships achieve a 92% non-recidivism rate and retain skilled rural youth.
 if ~isfield(Params, 'Enable_Duopoly_Kai'), Params.Enable_Duopoly_Kai = false; end
 
 % Canonical National Policy Schedules across [SS0, SS1, SS2]:
@@ -143,6 +151,7 @@ Params.Q_mult_SS1       = [0.990, 0.975, 0.950, 0.925];
 Params.Q_mult_SS2       = [0.985, 0.955, 0.925, 0.895];
 
 % Regional Duopoly, Monopsony, & Local Food vectors ordered: [Rural, Small, Large, Auckland]
+% Retained for full compatibility with FertilityBargaining_Module and suite scripts
 Params.M_olig_SS0          = [1.080, 1.070, 1.050, 1.040]; % Status quo grocery duopoly markup
 Params.M_olig_SS1          = [1.025, 1.020, 1.015, 1.010]; % Phase-1 Commerce Commission + Co-op reform
 Params.M_olig_SS2          = [1.000, 1.000, 1.000, 1.000]; % Phase-2 full competitive convergence
@@ -163,12 +172,33 @@ Params.T_reg_min_floor     = [0.008, 0.005, 0.000, 0.000]; % Residual remote-geo
 Params.rho_olig_vec        = [0.008, 0.007, 0.005, 0.004] * scale_dt; % Passive z_l oligopoly rent yield
 Params.rho_farm_vec        = [0.002, 0.002, 0.001, 0.001] * scale_dt; % Active z_h local kai contract yield
 
+% If caller passed scalar G_ece_stage1 / G_ece_stage2 / G_ece, promote to *_base and reset to struct()
+if isfield(Params, 'G_ece_stage1') && ~isstruct(Params.G_ece_stage1)
+    Params.G_ece_stage1_base = Params.G_ece_stage1;
+end
+if isfield(Params, 'G_ece_stage2') && ~isstruct(Params.G_ece_stage2)
+    Params.G_ece_stage2_base = Params.G_ece_stage2;
+end
+if isfield(Params, 'G_ece') && ~isstruct(Params.G_ece)
+    Params.G_ece_base = Params.G_ece;
+end
+
 if ~isfield(Params, 'G_ece_stage1_base'),   Params.G_ece_stage1_base   = Params.G_ece1_sched(1); end
 if ~isfield(Params, 'G_ece_stage2_base'),   Params.G_ece_stage2_base   = Params.G_ece2_sched(1); end
 if ~isfield(Params, 'G_ece_base'),          Params.G_ece_base          = Params.G_ece_stage1_base; end
 if ~isfield(Params, 'active_M_olig_vec'),    Params.active_M_olig_vec    = Params.M_olig_SS0;    end
 if ~isfield(Params, 'active_mu_monop_vec'),  Params.active_mu_monop_vec  = Params.mu_monop_SS0;  end
 if ~isfield(Params, 'active_phi_local_vec'), Params.active_phi_local_vec = Params.phi_local_SS0; end
+
+% Reset to struct() so Octave never errors when converting a double to a regional struct
+Params.G_ece_stage1    = struct();
+Params.G_ece_stage2    = struct();
+Params.G_ece           = struct();
+Params.M_olig_reg      = struct();
+Params.mu_monop_reg    = struct();
+Params.rho_olig_reg    = struct();
+Params.rho_farm_reg    = struct();
+Params.lambda_col_mult = struct();
 
 % Single-Source-of-Truth Regional Struct Population for PType Solvers
 Reg_Names = {'Rural', 'Small', 'Large', 'Auckland'};
@@ -184,7 +214,6 @@ for r_idx = 1:4
 
     % 1. Additive bioavailability/attendance gain on the G_food_share nutrition slice:
     dG_kai_k = duo_on * Params.G_food_share * Params.nu_kai_quality * sqrt(max(0.0, phi_k - phi_0));
-
     Params.G_ece_stage1.(hh_type) = Params.G_ece_stage1_base + 1.25 * dG_kai_k;
     Params.G_ece_stage2.(hh_type) = Params.G_ece_stage2_base + 0.85 * dG_kai_k;
     Params.G_ece.(hh_type)        = Params.G_ece_base        + 1.00 * dG_kai_k;
@@ -198,6 +227,33 @@ for r_idx = 1:4
     Params.rho_farm_reg.(firm_type)    = duo_on * Params.rho_farm_vec(r_idx) * (phi_k / max(1e-4, phi_0));
     Params.lambda_col_mult.(firm_type) = 1.0 + duo_on * Params.chi_farm_col * phi_k;
 end
+
+% 4. Endogenous Regional z_l -> z_h Job & Enterprise Upgrading (Ka Ora, Ka Ako & CEFS LFPI / FYI):
+% In SS0, wholesale monopsony extraction & casualization depress Rural (-0.060) and Small (-0.010) job quality (z_l).
+% As Gate 1/2 local procurement (1.60x-2.16x LFPI multiplier) & FYI youth career pathways scale up from SS0 to SS2,
+% Rural and Small communities bypass rent-seeking intermediaries and upgrade z_l -> z_h:
+Params.mu_z_SS0    = [-0.060, -0.010, 0.060, 0.150];
+Params.mu_z_SS2    = [-0.020,  0.020, 0.075, 0.155];
+Params.sigma_z_vec = [ 0.110,  0.140, 0.180, 0.240];
+
+g1_scalar = Params.G_ece_stage1_base;
+if isfield(Params, 'G_ece_stage1')
+    if isstruct(Params.G_ece_stage1), g1_scalar = Params.G_ece_stage1.HH_Rural; else, g1_scalar = Params.G_ece_stage1; end
+end
+g2_scalar = Params.G_ece_stage2_base;
+if isfield(Params, 'G_ece_stage2')
+    if isstruct(Params.G_ece_stage2), g2_scalar = Params.G_ece_stage2.HH_Rural; else, g2_scalar = Params.G_ece_stage2; end
+end
+
+ece1_prog = (g1_scalar - Params.G_ece1_sched(1)) / max(1e-4, Params.G_ece1_sched(3) - Params.G_ece1_sched(1));
+ece2_prog = (g2_scalar - Params.G_ece2_sched(1)) / max(1e-4, Params.G_ece2_sched(3) - Params.G_ece2_sched(1));
+phi_prog  = (Params.active_phi_local_vec(1) - Params.phi_local_SS0(1)) / max(1e-4, Params.phi_local_SS2(1) - Params.phi_local_SS0(1));
+Params.kai_upgrade_share = min(1.0, max(0.0, max(0.50 * ece1_prog + 0.50 * ece2_prog, phi_prog)));
+
+% Active regional log(z) Rouwenhorst mean drift & Firm z_l -> z_h Markov transition probabilities:
+Params.mu_z_reg_vec     = Params.mu_z_SS0 + Params.kai_upgrade_share * (Params.mu_z_SS2 - Params.mu_z_SS0);
+Params.p_zh_upgrade_vec = [0.15, 0.15, 0.15, 0.15] + Params.kai_upgrade_share * [0.08, 0.06, 0.03, 0.01];
+Params.p_zl_downgrade_v = [0.15, 0.15, 0.15, 0.15] - Params.kai_upgrade_share * [0.05, 0.04, 0.02, 0.00];
 
 %% 8. Long-term (SS2) Macro Investment Parameters
 

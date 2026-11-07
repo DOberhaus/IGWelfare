@@ -174,7 +174,7 @@ for m = 1:M_reforms
     [V_PE_m, Policy_PE_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
         d_grid, a_grid, z_grid, pi_z, ReturnFn, P_PE, DiscountFactorParamNames, vfoptions);
 
-    % 3B. Stage B: Long-Run GE with Exogenous Skills (Phase-m GE prices; prior jDist)
+    % 3B. Stage B: Long-Run GE with Exogenous Skills (Phase-m GE prices & z_l -> z_h job upgrading; prior jDist)
     P_GE   = P_PE;
     P_GE.r = Params_SS0.r + spec.r_delta;
     if isfield(spec, 'Frac_struggling')
@@ -183,36 +183,67 @@ for m = 1:M_reforms
     if isfield(spec, 'S_cohesion')
         P_GE.S_cohesion = spec.S_cohesion;
     end
+
     if super_age_m >= 65
         elder_time_mult = exp(-Params_SS0.eta_elder_whanau*(super_age_m - 65));
     else
         elder_time_mult = 1 + 0.16*tanh((65 - super_age_m)/1.8);
     end
-
-    if isfield(spec, 'M_olig_vec') && ~isempty(spec.M_olig_vec),       P_GE.active_M_olig_vec    = spec.M_olig_vec;    else, P_GE.active_M_olig_vec    = Params_SS0.M_olig_SS1;    end
-    if isfield(spec, 'mu_monop_vec') && ~isempty(spec.mu_monop_vec),   P_GE.active_mu_monop_vec  = spec.mu_monop_vec;  else, P_GE.active_mu_monop_vec  = Params_SS0.mu_monop_SS1;  end
-    if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec), P_GE.active_phi_local_vec = spec.phi_local_vec; else, P_GE.active_phi_local_vec = Params_SS0.phi_local_SS1; end
+    if isfield(spec, 'M_olig_vec') && ~isempty(spec.M_olig_vec)
+        P_GE.active_M_olig_vec = spec.M_olig_vec;
+    elseif m >= 2
+        P_GE.active_M_olig_vec = Params_SS0.M_olig_SS2;
+    else
+        P_GE.active_M_olig_vec = Params_SS0.M_olig_SS1;
+    end
+    if isfield(spec, 'mu_monop_vec') && ~isempty(spec.mu_monop_vec)
+        P_GE.active_mu_monop_vec = spec.mu_monop_vec;
+    elseif m >= 2
+        P_GE.active_mu_monop_vec = Params_SS0.mu_monop_SS2;
+    else
+        P_GE.active_mu_monop_vec = Params_SS0.mu_monop_SS1;
+    end
+    if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec)
+        P_GE.active_phi_local_vec = spec.phi_local_vec;
+    elseif m >= 2
+        P_GE.active_phi_local_vec = Params_SS0.phi_local_SS2;
+    else
+        P_GE.active_phi_local_vec = Params_SS0.phi_local_SS1;
+    end
     P_GE = Configure_TimeGrid_Params(P_GE);
 
+    % Update regional prices, whanau care, and endogenous z_l -> z_h productivity grids (z_grid_m, pi_z_m)
+    z_grid_m = z_grid;
+    pi_z_m   = pi_z;
     for r_idx = 1:N_reg
-        reg = Regions{r_idx};
-        P_GE.w_reg.(['HH_', reg])   = Params_SS0.w_reg.(['HH_', reg])   * spec.w_mult_vs_SS0(r_idx);
-        P_GE.w_reg.(['Firm_', reg]) = Params_SS0.w_reg.(['Firm_', reg]) * spec.w_mult_vs_SS0(r_idx);
-        P_GE.Q_reg.(['HH_', reg])   = Params_SS0.Q_reg.(['HH_', reg])   * spec.Q_mult_vs_SS0(r_idx);
-        elder_home_mult = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
-        P_GE.K_whanau.(['HH_', reg]) = Params_SS0.K_whanau_base.(['HH_', reg]) * elder_home_mult * elder_time_mult;
+        reg       = Regions{r_idx};
+        hh_type   = ['HH_', reg];
+        firm_type = ['Firm_', reg];
+        P_GE.w_reg.(hh_type)   = Params_SS0.w_reg.(hh_type)   * spec.w_mult_vs_SS0(r_idx);
+        P_GE.w_reg.(firm_type) = Params_SS0.w_reg.(firm_type) * spec.w_mult_vs_SS0(r_idx);
+        P_GE.Q_reg.(hh_type)   = Params_SS0.Q_reg.(hh_type)   * spec.Q_mult_vs_SS0(r_idx);
+        elder_home_mult        = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
+        P_GE.K_whanau.(hh_type) = Params_SS0.K_whanau_base.(hh_type) * elder_home_mult * elder_time_mult;
+
+        % Endogenous regional z_l -> z_h shift from local procurement & youth career pathways (CEFS LFPI / FYI):
+        d_mu_z_r            = P_GE.mu_z_reg_vec(r_idx) - Params_SS0.mu_z_SS0(r_idx);
+        z_grid_m.(hh_type)  = z_grid.(hh_type) * exp(d_mu_z_r);
+        p_up_m              = P_GE.p_zh_upgrade_vec(r_idx);
+        p_dn_m              = P_GE.p_zl_downgrade_v(r_idx);
+        pi_z_m.(firm_type)  = [1.0 - p_up_m, p_up_m; p_dn_m, 1.0 - p_dn_m];
     end
+
     [V_GE_Exo_m, Policy_GE_Exo_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
-        d_grid, a_grid, z_grid, pi_z, ReturnFn, P_GE, DiscountFactorParamNames, vfoptions);
+        d_grid, a_grid, z_grid_m, pi_z_m, ReturnFn, P_GE, DiscountFactorParamNames, vfoptions);
 
     % 3C. Stage C: Long-Run GE with Endogenous 4x5 Intergenerational Matrix (jDist_SSm)
     jDist_m = jDist_prev;
     for ig_it = 1:12
         StatDist_m = StationaryDist_MixHorz_PType(jDist_m, AgeWeightsParamNames, ...
             PTypeDistParamNames, Policy_GE_Exo_m, n_d, n_a, n_z, N_j, Names_i, ...
-            pi_z, P_GE, simoptions);
+            pi_z_m, P_GE, simoptions);
         [jDist_m_new, IG_Diag_m] = Build_IntergenTransitionMatrix(StatDist_m, Policy_GE_Exo_m, V_GE_Exo_m, ...
-            n_d, n_a, n_z, d_grid, a_grid, z_grid, pi_z, P_GE, Regions);
+            n_d, n_a, n_z, d_grid, a_grid, z_grid_m, pi_z_m, P_GE, Regions);
         if max(abs(jDist_m_new.HH_Auckland(:) - jDist_m.HH_Auckland(:))) < 1e-5
             jDist_m = jDist_m_new;
             break;

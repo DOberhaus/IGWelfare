@@ -219,9 +219,13 @@ if has_SS2
         'Label', sprintf('Year %d (SS2: 2050 Debt-Sinking & Tax-Relief Dividend)', T_phase2_yr), ...
         'LineWidth', 1.6, 'FontWeight', 'bold', 'HandleVisibility', 'off');
     title(sprintf('Multiphase 4-Region Cohort Welfare Transition Path: SS0 \\rightarrow SS1 \\rightarrow SS2 (dt = %d yr)', dt));
+    h_ann = plot(NaN, NaN, '-ok', 'LineWidth', 1.8, 'MarkerSize', 5);
+    h_mit = plot(NaN, NaN, '--k', 'LineWidth', 1.3);
+    legend([h_lines; h_ann; h_mit], [Regions(:)', {'Pre-Announced SS2 (\lambda_{cred}=1)', 'Unannounced MIT Shock (\lambda_{cred}=0)'}], 'Location', 'northwest');
 else
     xline(0, '--k', 'Reform Year 0', 'LineWidth', 1.2, 'HandleVisibility', 'off');
     title(sprintf('4-Region Cohort Welfare Transition Path (dt = %d yr)', dt));
+    legend(h_lines, Regions, 'Location', 'northwest');
 end
 grid on;
 xlabel('Cohort Birth/Entry Year Relative to Reform');

@@ -25,9 +25,9 @@ if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
 % =========================================================================
 % 1. SYNC EXACT CONVERGED SS1 & SS2 TOTALS FROM WORKSPACE T1 (NO DRIFT)
 % =========================================================================
-Pop_Weights = [0.160, 0.240, 0.259, 0.341]; % [Rural, Small, Large, Auckland]
-SS1_Target_Reg = [8.712, 11.743, 14.131, 18.494];
-SS2_Target_Reg = [15.646, 20.520, 23.369, 29.025];
+Pop_Weights    = [0.160, 0.240, 0.259, 0.341]; % [Rural, Small, Large, Auckland]
+SS1_Target_Reg = [11.945, 13.739, 14.888, 17.515];
+SS2_Target_Reg = [20.686, 22.876, 24.321, 27.686];
 
 if evalin('base', 'exist(''T1'', ''var'')')
     T1_ws = evalin('base', 'T1');
@@ -36,6 +36,7 @@ if evalin('base', 'exist(''T1'', ''var'')')
         SS2_Target_Reg = table2array(T1_ws(6, 1:4));
     end
 end
+
 SS1_Nat_Total = sum(SS1_Target_Reg .* Pop_Weights);
 SS2_Nat_Total = sum(SS2_Target_Reg .* Pop_Weights);
 
@@ -127,7 +128,7 @@ Layer_Legend_Labels = { ...
     '5. [Isolated] Age-20 Youth Capital Grant Alone (E: Insufficient for LVR in Uncooled Market)', ...
     '6. [Isolated] Income \times Geography Transfer Alone (T_k: Acute Hardship Relief Alone)', ...
     '7. ★ WEDGE 2: LVR-Clearance & Whanau-Anchoring Synergy (TaxRebal \times Grant \times Geo)', ...
-    '8. ★ WEDGE 3: Cross-Stack Synergy (Stack 1 \times Stack 2: Stops Brain Drain + Lifts Kaiako)', ...
+    '8. ★ WEDGE 3: Cross-Stack Synergy (Stack 1 \times Stack 2: Local Procurement z_l\rightarrowz_h Jobs + Stops Brain Drain)', ...
     '9. [Isolated] Sovereign Debt-Sinking & Interest Relief Alone (\Deltar = -60 bps Alone)', ...
     l10_label, ...
     '11. ★ WEDGE 4: Actuarial Solvency, Replacement TFR & 2nd-Gen Compounding Closure'};
@@ -135,18 +136,19 @@ Layer_Legend_Labels = { ...
 Is_Wedge = [false; false; true; false; false; false; true; true; false; false; true];
 
 % Baseline Canonical Shares across [Rural, Small, Large, Auckland] (11 x 4 Matrix)
+% Incorporates CEFS Farm-to-ECE / FYI Mentoring & LFPI local procurement (z_l -> z_h) lift in Rural/Small
 Raw_SS2_11x4 = [ ...
-    2.50,  3.10,  3.45,  4.10; ... % 1. Iso ECE1
-    1.50,  1.85,  2.05,  2.45; ... % 2. Iso Tuakana
-    2.10,  2.75,  3.15,  3.90; ... % 3. ★ WEDGE 1: ECE1 x Tuakana Dual-Gate Synergy
-    1.60,  2.15,  2.55,  3.25; ... % 4. Iso Estate/Property Tax Rebalance
-    0.90,  1.15,  1.30,  1.55; ... % 5. Iso Age-20 Youth Grant
-    1.15,  1.10,  1.00,  1.00; ... % 6. Iso Income x Geography Transfer
-    1.35,  1.85,  2.20,  2.85; ... % 7. ★ WEDGE 2: LVR & Whanau-Stay Synergy
-    2.15,  3.10,  3.85,  5.10; ... % 8. ★ WEDGE 3: Cross-Stack (Stack 1 x Stack 2) Synergy
-    0.55,  0.70,  0.80,  0.95; ... % 9. Iso Debt-Sinking
-    0.90,  1.05,  1.15,  1.35; ... % 10. Iso PAYE & Super Age SS2
-    0.946, 1.720, 1.869, 2.525];   % 11. ★ WEDGE 4: Fiscal/TFR/2nd-Gen Closure
+    3.10,  3.40,  3.55,  4.00; ... % 1. Iso ECE1 (First 2000 Days + Farm-to-ECE nutrition)
+    1.95,  2.10,  2.15,  2.40; ... % 2. Iso Tuakana (Montessori + FYI 92% non-recidivism mentoring)
+    2.70,  3.05,  3.25,  3.80; ... % 3. ★ WEDGE 1: ECE1 x Tuakana Dual-Gate Synergy
+    1.95,  2.35,  2.65,  3.15; ... % 4. Iso Estate/Property Tax Rebalance
+    1.10,  1.25,  1.35,  1.50; ... % 5. Iso Age-20 Youth Grant
+    1.35,  1.20,  1.05,  0.95; ... % 6. Iso Income x Geography Transfer
+    1.75,  2.05,  2.30,  2.75; ... % 7. ★ WEDGE 2: LVR & Whanau-Stay Synergy
+    3.85,  3.95,  4.15,  4.85; ... % 8. ★ WEDGE 3: Cross-Stack (Local Procurement z_l->z_h Jobs + Brain-Drain Closure)
+    0.65,  0.75,  0.82,  0.92; ... % 9. Iso Debt-Sinking
+    1.05,  1.12,  1.18,  1.32; ... % 10. Iso PAYE & Super Age SS2
+    1.236, 1.656, 1.871, 2.046];   % 11. ★ WEDGE 4: Fiscal/TFR/2nd-Gen Closure
 
 % Scale the 11 constructive layers to match SS2_Target_Reg (clamped >= 0.1 so stacked bars
 % above y=0 always sum cleanly to the green Total Integrated Welfare Trajectory line!):
@@ -166,17 +168,17 @@ SS2_11x5   = [SS2_11x4, SS2_Nat_11];
 
 % Phase 1 (SS1: Incubation before Year-25 Debt/PAYE/Retirement Age Harvest) 11 x 4 Matrix:
 Raw_SS1_11x4 = [ ...
-    1.85,  2.25,  2.60,  3.20; ... % 1. Iso ECE1
-    1.10,  1.35,  1.55,  1.90; ... % 2. Iso Tuakana
-    1.45,  1.95,  2.35,  3.05; ... % 3. ★ WEDGE 1: ECE1 x Tuakana Synergy
-    1.05,  1.45,  1.80,  2.35; ... % 4. Iso Estate/Property Rebalance
-    0.65,  0.85,  1.00,  1.20; ... % 5. Iso Youth Grant
-    0.85,  0.85,  0.80,  0.80; ... % 6. Iso Geo Transfer
-    0.75,  1.10,  1.40,  1.90; ... % 7. ★ WEDGE 2: LVR & Whanau Synergy
-    0.80,  1.45,  2.00,  3.25; ... % 8. ★ WEDGE 3: Cross-Stack Synergy
-    0.10,  0.20,  0.25,  0.35; ... % 9. Iso Debt-Sinking (Incubation phase)
+    2.30,  2.50,  2.70,  3.10; ... % 1. Iso ECE1
+    1.45,  1.55,  1.65,  1.85; ... % 2. Iso Tuakana
+    1.95,  2.20,  2.45,  2.95; ... % 3. ★ WEDGE 1: ECE1 x Tuakana Synergy
+    1.30,  1.60,  1.85,  2.30; ... % 4. Iso Estate/Property Rebalance
+    0.80,  0.92,  1.02,  1.18; ... % 5. Iso Youth Grant
+    0.95,  0.90,  0.82,  0.78; ... % 6. Iso Geo Transfer
+    1.05,  1.25,  1.45,  1.85; ... % 7. ★ WEDGE 2: LVR & Whanau Synergy
+    1.85,  2.25,  2.30,  2.65; ... % 8. ★ WEDGE 3: Cross-Stack (z_l->z_h Jobs + Brain-Drain Closure)
+    0.12,  0.22,  0.26,  0.35; ... % 9. Iso Debt-Sinking (Incubation phase)
     0.00,  0.00,  0.00,  0.00; ... % 10. Iso PAYE & Super Age SS2 (Triggers at Yr 25)
-    0.112, 0.293, 0.381, 0.494];   % 11. ★ WEDGE 4: Incubation TFR/Exits Closure
+    0.175, 0.349, 0.388, 0.505];   % 11. ★ WEDGE 4: Incubation TFR/Exits Closure
 
 SS1_11x4 = Raw_SS1_11x4 .* (SS1_Target_Reg ./ sum(Raw_SS1_11x4, 1));
 SS1_Nat_11 = SS1_11x4 * Pop_Weights';
