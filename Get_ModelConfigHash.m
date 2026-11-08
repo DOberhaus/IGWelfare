@@ -19,7 +19,7 @@ function [cache_filepath, is_cached] = Get_ModelConfigHash(tag_str, Params, n_d,
 %     (objects) make jsonencode raise its own error.
 %   - The key covers the inputs passed in, not the code of the model scripts.
 %   - No MD5 available (MATLAB without the JVM, or the Octave hash() call fails): the run is NOT stopped. IGW_Log
-%     records IGW:NoMD5 and the returned path is Cache_<tag>_nomd5_<timestamp>_<random>.mat with is_cached = false,
+%     records IGW:NoMD5 and the returned path is Cache_<tag>_nomd5_<timestamp>_<unique>.mat with is_cached = false,
 %     a name that never matches an existing file, so the caller recomputes and (re)writes its checkpoint. The path
 %     holds no 32-hex digest, so Run_All's extracted Cache_CfgHash is empty and Validate_CacheConfig rejects (and
 %     logs) every checkpoint until MD5 is available again.
@@ -45,7 +45,8 @@ hash_hex = md5_hex(jsonencode(state_struct));
 clean_tag = regexprep(tag_str, '[^a-zA-Z0-9_]', '_');
 if isempty(hash_hex)
     % No MD5: a key that can never match an existing cache, so the caller rebuilds (see header)
-    cache_filepath = fullfile(CacheDir, sprintf('Cache_%s_nomd5_%s_%09d.mat', clean_tag, datestr(now, 'yyyymmddTHHMMSS'), floor(rand * 1e9)));
+    [~, uniq]      = fileparts(tempname);    % unique token without touching the global RNG stream
+    cache_filepath = fullfile(CacheDir, sprintf('Cache_%s_nomd5_%s_%s.mat', clean_tag, datestr(now, 'yyyymmddTHHMMSS'), uniq));
     is_cached      = false;
     return
 end
