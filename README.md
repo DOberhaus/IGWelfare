@@ -88,6 +88,7 @@ Lightweight checks on the exported CSV tables and the flow-matrix helper live in
 * **MATLAB:** `matlab -batch "addpath('tests'); run_all_tests"` (or `addpath('tests'); run_all_tests` in the Command Window)
 * **Octave:** `octave --no-gui --eval "cd tests; run_all_tests"`
 * Each test prints `PASS`/`FAIL`/`SKIP`; non-interactive runs exit with status 1 on any failure. The GPU solvers themselves are not under test.
+* CI (`.github/workflows/tests.yml`) runs the suite under both GNU Octave and MATLAB R2025b.
 
 ---
 
