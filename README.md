@@ -20,7 +20,7 @@ Every ribbon in our lifecycle Sankey diagrams traces 60,000 newborn lives—and 
 
 Click the preview charts below to view the high-resolution comparisons, or open the **Interactive HTML5 + SVG Sankey Explorers** in [`Output_NZ_4Region_Intergen/`](Output_NZ_4Region_Intergen/) to click on any node or ribbon and inspect the underlying equations, empirical data, and literature:
 
-| **Population Cohort Fates (5 Stages, 17 Nodes)** | **Lifecycle Fiscal Ledger (6 Gates, 26 Nodes)** |
+| **Population Cohort Fates (5 Stages, 18 Nodes)** | **Lifecycle Fiscal Ledger (6 Gates, 29 Nodes)** |
 | :---: | :---: |
 | [![5-Stage Population Cohort Fates Sankey](Output_NZ_4Region_Intergen/Fig_ChildFates_5Stage_2Panel_National_Dunedin_22.png)](Output_NZ_4Region_Intergen/Fig_ChildFates_5Stage_2Panel_National_Dunedin_22.png) | [![6-Gate Lifecycle Fiscal Ledger Sankey](Output_NZ_4Region_Intergen/Fig_ChildFiscal_6Gate_2Panel_National_Dunedin_22.png)](Output_NZ_4Region_Intergen/Fig_ChildFiscal_6Gate_2Panel_National_Dunedin_22.png) |
 | **Interactive Fates Explorers (Download/Open HTML):**<br>[`SS0` Status Quo](Output_NZ_4Region_Intergen/Interactive_ChildFates_SS0_National.html) · [`SS1` Phase 1](Output_NZ_4Region_Intergen/Interactive_ChildFates_SS1_National.html) · [`SS2` Phase 2](Output_NZ_4Region_Intergen/Interactive_ChildFates_SS2_National.html) | **Interactive Fiscal Explorers (Download/Open HTML):**<br>[`SS0` Status Quo](Output_NZ_4Region_Intergen/Interactive_ChildFiscal_SS0_National.html) · [`SS1` Phase 1](Output_NZ_4Region_Intergen/Interactive_ChildFiscal_SS1_National.html) · [`SS2` Phase 2](Output_NZ_4Region_Intergen/Interactive_ChildFiscal_SS2_National.html) |
@@ -75,7 +75,7 @@ You do not need to run individual helper or return functions (`ReturnFn_*.m`) ma
   * `FertilityBargaining_Module.m` — Solves cooperative childcare bargaining, hyperbolic fertility, and the continuous Age 60–75 NZ Superannuation U-Curve (`Tables 7, 8, & 8B`).
   * `TransPath_4Region_Master.m` — Computes the 60-year multiphase transition path with dynamic regional weights and credibility blending.
 * **Visualization, Actuarial Audits & Interactive Reporting:**
-  * `Plot_ChildFates_SSankey.m` & `Plot_ChildFiscal_SSankey.m` — Generate the 5-Stage (17-Node) Population Sankey, the 6-Gate (26-Node) Fiscal Sankey, the 2050 Debt-Sinking Protocol, and standalone interactive HTML5 explorers (via `exportSankeyToHTML.m`).
+  * `Plot_ChildFates_SSankey.m` & `Plot_ChildFiscal_SSankey.m` — Generate the 5-Stage (18-Node) Population Sankey, the 6-Gate (29-Node) Fiscal Sankey, the 2050 Debt-Sinking Protocol, and standalone interactive HTML5 explorers (via `exportSankeyToHTML.m`).
   * `Plot_CumulativeTransitionPayoffs.m` & `Plot_ActuarialContinuationValuation.m` — Compute 60-year transition integrals and the Year-5 ACC-style Actuarial Continuation Audit (`Table 16`).
   * `Plot_WealthBracket_GiveAndGain.m` — Evaluates Fiscal Give vs. Economic Gain and balance-sheet resilience across 10 survey-anchored Earn + Own tiers (`Table 17`).
   * `Plot_Counterfactuals_And_MirrorInvestments.m` — Generates the 11-Layer Constructive Synergy Attribution (`Table 19`) and Mirror Investment Ledger (`Table 20`).
