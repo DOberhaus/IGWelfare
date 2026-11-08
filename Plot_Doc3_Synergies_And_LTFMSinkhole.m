@@ -299,7 +299,7 @@ h_def = plot(ax2, Yr_Vec, CE_SS0_Def, ':', 'Color', [0.40 0.00 0.50], 'LineWidth
 
 yline(ax2, 0, 'k-', 'LineWidth', 1.5, 'HandleVisibility', 'off');
 xline(ax2, 0,    'k:',  'LineWidth', 1.2, 'HandleVisibility', 'off');
-xline(ax2, 18.8, 'r--', 'LineWidth', 1.3, 'HandleVisibility', 'off');
+xline(ax2, 20.0, 'r--', 'LineWidth', 1.3, 'HandleVisibility', 'off');
 xline(ax2, 25.0, 'b-.', 'LineWidth', 1.4, 'HandleVisibility', 'off');
 
 % Annotate the Perishability Gap (Thin vs. Thick 2-Term Cycle) & Total Swing vs LTFM

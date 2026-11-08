@@ -259,6 +259,14 @@ for m = 1:M_reforms
         P_GE.active_phi_local_vec = Params_SS0.phi_local_SS1;
     end
     P_GE = Configure_TimeGrid_Params(P_GE);
+    % Preserve Phase-m NDC & PType-specific tax structs across Configure_TimeGrid_Params refresh:
+    P_GE.Pi_trade_reg   = P_PE.Pi_trade_reg;
+    P_GE.tau_h_ets      = P_PE.tau_h_ets;
+    P_GE.tau_f_ets      = P_PE.tau_f_ets;
+    P_GE.theta_ag       = P_PE.theta_ag;
+    P_GE.kappa_pine_ets = P_PE.kappa_pine_ets;
+    P_GE.ebar_energy    = P_PE.ebar_energy;
+    P_GE.tau_a          = P_PE.tau_a;
 
     % Update regional prices, whanau care, and endogenous z_l -> z_h productivity grids (z_grid_m, pi_z_m)
     z_grid_m = z_grid;

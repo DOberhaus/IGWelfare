@@ -227,6 +227,20 @@ for r_idx = 1:4
     Params.rho_olig_reg.(firm_type)    = duo_on * Params.rho_olig_vec(r_idx) * max(0.0, (m_k - 1.0) / max(1e-4, Params.M_olig_SS0(r_idx) - 1.0));
     Params.rho_farm_reg.(firm_type)    = duo_on * Params.rho_farm_vec(r_idx) * (phi_k / max(1e-4, phi_0));
     Params.lambda_col_mult.(firm_type) = 1.0 + duo_on * Params.chi_farm_col * phi_k;
+
+    % 4. Populate PType structs for ReturnFn_SpatialHH (gamma_h, ctr_rebate) & ReturnFn_Firm:
+    if isfield(Params, 'gamma_h_reg')
+        Params.gamma_h.(hh_type) = Params.gamma_h_reg(r_idx);
+    else
+        gamma_def = [0.62, 0.50, 0.32, 0.22];
+        Params.gamma_h.(hh_type) = gamma_def(r_idx);
+    end
+    if isfield(Params, 'ctr_rebate_reg')
+        Params.ctr_rebate.(hh_type) = Params.ctr_rebate_reg(r_idx);
+    elseif ~isfield(Params, 'ctr_rebate') || ~isstruct(Params.ctr_rebate)
+        ctr_def = [0.008, 0.006, 0.004, 0.003];
+        Params.ctr_rebate.(hh_type) = ctr_def(r_idx);
+    end
 end
 
 % 4. Endogenous Regional z_l -> z_h Job & Enterprise Upgrading (Ka Ora, Ka Ako & CEFS LFPI / FYI):
@@ -261,7 +275,8 @@ Params.p_zl_downgrade_v = [0.15, 0.15, 0.15, 0.15] - Params.kai_upgrade_share * 
 if ~isfield(Params, 'ss2_harvest_div_base'),     Params.ss2_harvest_div_base     = 2.070; end % SS2 debt-sinking (-60 bps) + GE tax-base dividend (pp)
 if ~isfield(Params, 'psi_austerity_tax_drag'),   Params.psi_austerity_tax_drag   = 0.220; end % SS2 harvest erosion coefficient when Super > 65
 
-%% 7. NDC (Nationally Determined Contributions) & Spatial Carbon Block ---
+%% 9. NDC (Nationally Determined Contributions) & Spatial Carbon Block ---
+if ~isfield(Params, 'Enable_NDC_Module'), Params.Enable_NDC_Module = true; end
 Params.NDC_Regime          = 2;     % 0 = No NDC, 1 = Pure Domestic ETS Cap, 2 = Hybrid ETS + Offshore Liability
 Params.E_NDC_SS0           = 1.000; % Normalized 2025 baseline domestic emissions = 1.00
 Params.E_NDC_SS1           = 0.650; % Medium-run NDC1/NDC2 target (-35% gross / -50% net incl. forestry)
@@ -277,6 +292,7 @@ Params.theta_ag_schedule   = [0.000, 0.500, 1.000]; % Circular biogenic dairy pr
 % Regional fossil-fuel intensities (Rural, Small, Large, Auckland) - Labrousse & Perdereau (2025)
 Params.omega_y_reg         = [0.090, 0.070, 0.050, 0.020]; % Firm energy/emissions input share
 Params.gamma_h_reg         = [0.620, 0.500, 0.340, 0.220]; % Household fossil share in energy bundle
+Params.ctr_rebate_reg      = [0.008, 0.006, 0.004, 0.003]; % Regional ETS carbon rebate base
 Params.xk_geo_rebate       = [2.070, 2.080, 2.380, 2.270]; % Optimal Income x Geography rebate curvature
 Params.sigma_y_energy      = 0.050;                        % Firm elasticity between (K,L) and energy
 Params.eps_h_energy        = 0.350;                        % HH elasticity between fossil fuel and electricity
@@ -287,13 +303,37 @@ Params.chi_CBAM_reg        = [0.080, 0.055, 0.020, 0.010]; % CBAM tariff/market-
 Params.Pi_trade_SS0        = [0.940, 0.960, 0.990, 1.000]; % SS0 CBAM drag terms-of-trade multiplier
 Params.Pi_trade_SS1        = [1.020, 1.020, 1.010, 1.000]; % SS1 Clean-Green terms-of-trade multiplier
 Params.Pi_trade_SS2        = [1.050, 1.030, 1.010, 1.010]; % SS2 Clean-Green terms-of-trade multiplier
-if ~isfield(Params, 'Pi_trade_reg'), Params.Pi_trade_reg = Params.Pi_trade_SS0; end
 
-% Carbon prices (tau_h, tau_f) and offshore NDC credit price
+% Carbon prices (tau_h_ets, tau_f_ets), agricultural/pine wedges (theta_ag, kappa_pine_ets), & rebate share (phi_rebate):
 Params.p_F_base            = 0.6773;                       % Baseline imported fuel price (Table 8)
-if ~isfield(Params, 'tau_h_ets'), Params.tau_h_ets = 0.000; end % Baseline SS0 household carbon tax wedge
-if ~isfield(Params, 'tau_f_ets'), Params.tau_f_ets = 0.000; end % Baseline SS0 firm carbon tax wedge
+if ~isfield(Params, 'tau_h_ets'),      Params.tau_h_ets      = Params.tau_h_ets_schedule(1);  end
+if ~isfield(Params, 'tau_f_ets'),      Params.tau_f_ets      = Params.tau_f_ets_schedule(1);  end
+if ~isfield(Params, 'kappa_pine_ets'), Params.kappa_pine_ets = Params.kappa_pine_schedule(1); end
+if ~isfield(Params, 'theta_ag'),       Params.theta_ag       = Params.theta_ag_schedule(1);   end
 Params.p_NDC_intl          = 0.095;                        % Offshore NDC compliance unit price (NZD 145/tCO2e)
 Params.phi_ctr_rebate      = 0.650;                        % Share of CTR rebated via Income x Geography T_k
+if ~isfield(Params, 'phi_rebate'),     Params.phi_rebate     = Params.phi_ctr_rebate;         end
+
+% Ensure ReturnFn_SpatialHH (gamma_h, ctr_rebate) & ReturnFn_Firm (Pi_trade_reg) receive regional scalars via PType structs:
+if ~isfield(Params, 'Pi_trade_reg')
+    pi_vec = Params.Pi_trade_SS0;
+elseif isstruct(Params.Pi_trade_reg)
+    pi_vec = [Params.Pi_trade_reg.Firm_Rural, Params.Pi_trade_reg.Firm_Small, ...
+              Params.Pi_trade_reg.Firm_Large, Params.Pi_trade_reg.Firm_Auckland];
+else
+    pi_vec = Params.Pi_trade_reg;
+end
+Params.Pi_trade_vec = pi_vec;
+Params.Pi_trade_reg = struct();
+Params.gamma_h      = struct();
+Params.ctr_rebate   = struct();
+for r_idx = 1:4
+    hh_type   = ['HH_', Reg_Names{r_idx}];
+    firm_type = ['Firm_', Reg_Names{r_idx}];
+    Params.gamma_h.(hh_type)        = Params.gamma_h_reg(r_idx);
+    Params.ctr_rebate.(hh_type)     = Params.ctr_rebate_reg(r_idx);
+    Params.Pi_trade_reg.(firm_type) = pi_vec(r_idx);
+end
+
 
 end
