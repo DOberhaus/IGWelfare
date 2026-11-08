@@ -322,6 +322,7 @@ fprintf('  -> Saved Figure 1 (3D LTFM Surface + LTFM Sinkhole) to: %s\n', f_out1
 fig1b = figure('Name', sprintf('Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_%s', AnchorTag), ...
     'Color', 'w', 'Position', [40, 40, 1280, 720]);
 ax_copied = copyobj(ax2,fig1b);
+legend(ax_copied, 'Location', 'northwest', 'FontSize', 6.8);
 set(ax_copied, 'OuterPosition', 'default');
 
 f_out1b = fullfile(OutputDir, sprintf('Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_%s.png', AnchorTag));
