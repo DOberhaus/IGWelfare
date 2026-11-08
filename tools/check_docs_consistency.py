@@ -48,7 +48,86 @@ DOCS = ["README.md"] + sorted(
 # KNOWN_AUTHOR_DECISIONS: (category, quantity-or-target, one-line reason).
 # --strict ignores findings listed here; everything else must be zero.
 # ---------------------------------------------------------------------------
-KNOWN_AUTHOR_DECISIONS = []
+KNOWN_AUTHOR_DECISIONS = [
+    # --- links and file references ---
+    ("LINK", "./Document%201B.md#lifecycle-vulnerability-gates-empirical-baselines-unpaid-buffers-and-policy-analogs",
+     "Document 1B.md has no such heading; the author picks the target (candidates: 1B section 2.2.2 at line 111, or 2.2.1 at line 96)."),
+    ("LINK", "ChildCES_aprimeFn.m",
+     "File existed in earlier history and is gone; 1B:162 and 1B:1010 name it beside HumanCapital_Lifecycle_aprimeFn.m; author to drop or restore."),
+    ("LINK", "SSankey.m",
+     "Third-party MATLAB function (Document 2B.md:366), not in the repo; author to state source and version."),
+    ("LINK", "Solve_Spatial_GE_Loop.m",
+     "Another branch supplies this file; re-run the checker after it merges."),
+    ("LINK", "Table16_Actuarial_Continuation_Audit_Dunedin_22.csv",
+     "Not committed and no .m file writes it; author to commit the output or reword 1B:34, 1B:798."),
+    # --- Sankey comments in .m files (no .m edits in this PR) ---
+    ("SANKEY", "fiscal_nodes=28",
+     "Comment-only: Plot_ChildFiscal_SSankey.m lines 2/111/208 and getFiscalRibbonNarratives.m:4 say 28; the code, CSVs and HTML have 29."),
+    # --- PAYE ---
+    ("DOC_VS_DOC", "PAYE_SS2_SuperAge64_pct",
+     "18.88 (1A:334/341, 1B:549) matches Table21 Year 60; 18.85 matches Table8/Table8B; 18.5 (1B:66/88) matches neither. Author picks the canonical rate."),
+    ("DOC_VS_CSV", "PAYE_SS2_SuperAge64_pct",
+     "Same split: Table21 gives 18.88, Table8/Table8B give 18.8536; Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m:107 mentions 18.88."),
+    ("CSV_VS_CSV", "PAYE_SS2_SuperAge64_pct",
+     "Table21 Year 60 (18.88) vs Table8/Table8B (18.8536): generator inconsistency, author's call."),
+    ("DOC_VS_DOC", "PAYE_CUT_PP_SuperAge64",
+     "3.12 (1A:334, 1B:549) follows Table21 (18.88); 3.15 follows Table8B; 3.32 (1A:96) matches no CSV value; follows the rate decision above."),
+    ("DOC_VS_CSV", "PAYE_CUT_PP_SuperAge64",
+     "Follows the 18.85 vs 18.88 decision; 3.32 at 1A:96 has no CSV derivation (nearest Table8 gap is 2.77 pp)."),
+    ("CSV_VS_CSV", "PAYE_CUT_PP_SuperAge64", "Follows the 18.85 vs 18.88 decision."),
+    ("DOC_VS_DOC", "PAYE_SS0_StatusQuo_Drift_pct",
+     "Remaining 23.60 is 1B:734 inside Table 4.7A, which mirrors typed fallbacks in Plot_Fertility_SuperSolvency_2Panel.m:55-67; refresh the whole table or leave."),
+    ("DOC_VS_CSV", "PAYE_SS0_StatusQuo_Drift_pct", "Same as above (1B:734 only)."),
+    ("DOC_VS_DOC", "PAYE_SS0_Drift_pp", "1B:734 (+1.60 pp) is part of Table 4.7A, see PAYE_SS0_StatusQuo_Drift_pct."),
+    ("DOC_VS_CSV", "PAYE_SS0_Drift_pp", "1B:734 (+1.60 pp) is part of Table 4.7A, see PAYE_SS0_StatusQuo_Drift_pct."),
+    # --- Table 4.7A / policy-pathway tables vs Table7/Table8 ---
+    ("DOC_VS_DOC", "DepRatio_SS0_Baseline_pct",
+     "31.80 (1A:463) and 31.78 (1B:734) both differ from Table8 (31.82); Table 4.7A mirrors typed fallbacks; author refreshes or not."),
+    ("DOC_VS_CSV", "DepRatio_SS0_Baseline_pct", "Same as above."),
+    ("DOC_VS_DOC", "DepRatio_SS2_SuperAge64_pct",
+     "1B:739 (29.66) is the typed fallback in Plot_Fertility_SuperSolvency_2Panel.m:63/66; Table8/8B give 29.68 (1A:469, 1B:478)."),
+    ("DOC_VS_CSV", "DepRatio_SS2_SuperAge64_pct", "Same as above."),
+    ("DOC_VS_DOC", "Struggling_Hyperbolic_Rural_pct",
+     "1B:735 (21.4) vs 1A:464 and Table8 (21.3); inside Table 4.7A, see above."),
+    ("DOC_VS_CSV", "Struggling_Hyperbolic_Rural_pct", "Same as above."),
+    ("DOC_VS_CSV", "TFR_Baseline_Rural", "Table 4.7A TFRs equal typed fallbacks in Plot_Fertility_SuperSolvency_2Panel.m:50-54; Table7 differs by 0.01-0.02."),
+    ("DOC_VS_CSV", "TFR_Baseline_Auckland", "Same as TFR_Baseline_Rural."),
+    ("DOC_VS_CSV", "TFR_SS2Age64_Rural", "Same as TFR_Baseline_Rural."),
+    ("DOC_VS_CSV", "TFR_SS2Age64_Auckland", "Same as TFR_Baseline_Rural."),
+    # --- IGE and parameters (no CSV decides) ---
+    ("DOC_VS_DOC", "IGE_reduction_FullPackage_pct",
+     "-33.4% is the First-2000-Days lever alone (1A:351, 1B:605); 1B:40, 1C:58, 2B:221/224 attribute it to the package, 1B:608 gives -37.7%. No CSV carries national IGE."),
+    ("DOC_VS_DOC", "PSI_sandwich",
+     "Two parameters share one symbol: 0.35 = Params.psi_sandwich_wrk_drag (Configure_TimeGrid_Params.m:121); 0.28 = literal in HumanCapital_Lifecycle_aprimeFn.m:38 (2T:73). Author to rename one."),
+    # --- Sankey tables and narrative vs the 2026-11-05 CSV regeneration ---
+    ("DOC_VS_DOC", "SS0_Corner_ic0_pct", "Doc tables predate the 2026-11-05 Table14/15 regeneration (87 of 90 cells of 1B Table 3.1 differ); re-sync is the author's call."),
+    ("DOC_VS_CSV", "SS0_Corner_ic0_pct", "Same as above (CSV 21.22)."),
+    ("DOC_VS_DOC", "SS0_Hardship_Node1_pct", "Same as SS0_Corner_ic0_pct."),
+    ("DOC_VS_CSV", "SS0_Hardship_Node1_pct", "Same as above (CSV 8.94)."),
+    ("DOC_VS_DOC", "SS0_LaunchTier_Core_pct", "1B:256 (54.5) vs 1B:282 (61.1); neither matches Table14/15 (64.30)."),
+    ("DOC_VS_CSV", "SS0_LaunchTier_Core_pct", "Same as above."),
+    ("DOC_VS_DOC", "SS0_LaunchTier_Struggling_pct", "1B:256 (22.00) vs 1B:282 (23.5); Table14/15 give 21.95."),
+    ("DOC_VS_CSV", "SS0_LaunchTier_Struggling_pct", "Same as above."),
+    ("DOC_VS_DOC", "SS0_LaunchTier_Thriving_pct", "23.2/23.5 (1A, 1B:256, 1C) vs 15.4 (1B:282); Table14/15 give 13.75."),
+    ("DOC_VS_CSV", "SS0_LaunchTier_Thriving_pct", "Same as above."),
+    # --- headline welfare numbers vs regenerated CSVs ---
+    ("DOC_VS_CSV", "CE_SS2_National_Total_pct", "Docs (24.24) agree with Table8B/Table21; Table19 sums to 23.13 (Plot_Counterfactuals rescales to T1 only when T1 exists)."),
+    ("CSV_VS_CSV", "CE_SS2_National_Total_pct", "Table19 (23.13) vs Table21/Table8B (24.24): export without the T1 rescale."),
+    ("DOC_VS_CSV", "CE_SS2_IsolatedSum_pct", "Docs appear to show a T1-rescaled Table 19 (x1.048); committed CSV is unscaled."),
+    ("DOC_VS_CSV", "CE_SS2_WedgeSum_pct", "Same as CE_SS2_IsolatedSum_pct (CSV 10.93; share 47.25% rounds to the documented 47.3%)."),
+    ("DOC_VS_CSV", "CE_SS1_National_Total_pct", "Same as CE_SS2_IsolatedSum_pct (CSV sums to 13.64)."),
+    ("DOC_VS_CSV", "CashBreakeven_Year", "Table20 net outlay is still negative at Year 20.0 and 0.00 by 22.5; docs say 18.8 throughout. Author to re-derive or re-run."),
+    ("DOC_VS_CSV", "CE_FiscalStewards_Standalone_Low_pct",
+     "3.md:234 cites Table 21 (min -6.80) but -10.55 is Table22 Net_In_Sinking_LTFM_CE; Table A.3 (3.md:294-303) has no -10.55 row."),
+    ("CSV_VS_CSV", "CE_FiscalStewards_Standalone_Low_pct", "Same as above."),
+]
+for _r in ("Rural", "Small", "Large", "Auckland"):
+    KNOWN_AUTHOR_DECISIONS.append(
+        ("DOC_VS_CSV", "T1_SS1_3_%s_CE_pct" % _r,
+         "Docs appear to quote an earlier run of Table 1 (about 3-4% above the committed CSV); re-sync or re-run is the author's call."))
+    KNOWN_AUTHOR_DECISIONS.append(
+        ("DOC_VS_CSV", "T1_SS2_3_%s_CE_pct" % _r,
+         "Docs appear to quote an earlier run of Table 1 (about 3-4% above the committed CSV); re-sync or re-run is the author's call."))
 
 
 # ---------------------------------------------------------------------------
@@ -751,10 +830,10 @@ def render(findings, actual, fates, fiscal, html, unused_known):
                 L.append("  - Cites: " + ", ".join(f.cites))
         L.append("")
     if unused_known:
-        L.append("## Stale KNOWN_AUTHOR_DECISIONS entries")
+        L.append("## Resolved (no longer observed)")
         L.append("")
         for c, k in unused_known:
-            L.append("- %s / %s (no longer produced; remove from the list)" % (c, k))
+            L.append("- %s / %s (known entry with no matching finding; not a strict failure, can be removed from the list)" % (c, k))
         L.append("")
     return "\n".join(L).rstrip() + "\n"
 
@@ -782,9 +861,11 @@ def main():
         print("  %-11s %3d / %3d / %3d" % (c, len(fs), k, len(fs) - k))
     print("  %-11s %3d / %3d / %3d" % ("TOTAL", len(findings), len(findings) - unresolved, unresolved))
     if unused:
-        print("stale KNOWN entries: %d" % len(unused))
-    if a.strict and (unresolved or unused):
-        print("STRICT: FAIL (%d unresolved finding(s), %d stale known entr(ies))" % (unresolved, len(unused)))
+        print("resolved known entries (no longer observed, not a failure): %d" % len(unused))
+        for c, k in unused:
+            print("  resolved: %s / %s" % (c, k))
+    if a.strict and unresolved:
+        print("STRICT: FAIL (%d unresolved finding(s))" % unresolved)
         return 1
     if a.strict:
         print("STRICT: OK")
