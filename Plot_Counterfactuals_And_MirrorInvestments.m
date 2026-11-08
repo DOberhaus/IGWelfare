@@ -268,8 +268,8 @@ for i = 1:n_yr
         row_i(8)  = row_i(8) + max(0.0, w_iso - w_geo) * SS1_Nat_11(6);
 
         if y >= 25
-            w_ss2    = 1 - exp(-(y - 25.0) / 8.5);
-            w_inv2   = 1 - exp(-(y - 25.0) / 5.0);
+            w_ss2    = (1 - exp(-(y - 25.0) / 8.5)) / (1 - exp(-(60.0 - 25.0) / 8.5));
+            w_inv2   = (1 - exp(-(y - 25.0) / 5.0)) / (1 - exp(-(60.0 - 25.0) / 5.0));
             d_ss2    = SS2_Nat_11' - row_i;
             row_i    = row_i + w_ss2 * d_ss2;
             row_i(6) = row_i(6) + (w_inv2 - w_ss2) * d_ss2(6);
@@ -472,6 +472,17 @@ Remediation_Savings_CE = zeros(n_ym, 1);
 SS1_Inv_CE = -[1.45, 0.52, 0.68, 0.65]; % -3.30% (-NZD 7.86B/yr lifecycle outlays at SS1 peak)
 SS2_Inv_CE = -[1.35, 0.55, 0.60, 0.12]; % -2.62% (-NZD 6.24B/yr in SS2 after 82% GeoTransfer retirement)
 
+% Compute exact gross outlay at y = 20.0 so remediation S-curve crosses 0.0000 at exact Year 20.0:
+ramp_20   = 1 - 0.35 * exp(-20.0 / 2.5);
+retire_20 = 1 ./ (1 + exp(-(20.0 - 15.0) / 4.0));
+inv_20    = ramp_20 * SS1_Inv_CE;
+inv_20(4) = inv_20(4) * (1 - 0.55 * retire_20);
+cerf_20   = -(0.14 + 0.24 * exp(-20.0 / 8.0));
+gross_abs_20 = abs(sum(inv_20) + cerf_20);
+fast_elec_20 = 0.22 * (1 - exp(-20.0 / 3.8));
+% Solve 4.65 / (1 + exp(-(20.0 - y_mid_20)/4.2)) == gross_abs_20 - fast_elec_20:
+y_mid_20  = 20.0 + 4.2 * log(4.65 / (gross_abs_20 - fast_elec_20) - 1.0);
+
 for i = 1:n_ym
     y = Yr_Mir(i);
     if y >= 0
@@ -481,12 +492,12 @@ for i = 1:n_ym
         inv_t     = ramp_in * SS1_Inv_CE;
         inv_t(4)  = inv_t(4) * (1 - 0.55 * retire_w1); % Retires 55% by Year 25
         cerf_t    = -(0.14 + 0.24 * exp(-y1 / 8.0));    % -Inv 5: CERF ~NZD 3.0B front-loaded pulse
-        % Fast 3.8-yr electrification payback + lifecycle remediation calibrated so net cost == 0 at exact Yr 20.0:
+        % Fast 3.8-yr electrification payback + lifecycle remediation pinned to 0.0000 at exact Yr 20.0:
         fast_elec = 0.22 * (1 - exp(-y1 / 3.8));
-        rem_t     = fast_elec + 4.65 * (1 ./ (1 + exp(-(y1 - 19.018) / 4.2)));
+        rem_t     = fast_elec + 4.65 * (1 ./ (1 + exp(-(y1 - y_mid_20) / 4.2)));
 
         if y >= 25
-            w_inv2 = 1 - exp(-(y - 25.0) / 5.0);
+            w_inv2 = (1 - exp(-(y - 25.0) / 5.0)) / (1 - exp(-(60.0 - 25.0) / 5.0));
             inv_t  = inv_t + w_inv2 * (SS2_Inv_CE - inv_t);
             cerf_t = cerf_t + w_inv2 * (-0.12 - cerf_t);
             rem_t  = rem_t + 1.45 * (1 - exp(-(y - 25.0) / 9.0));

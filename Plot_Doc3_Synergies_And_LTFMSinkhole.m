@@ -186,9 +186,12 @@ CE_StopGo_Thick(1 + 5)      = 0.0;  % Exact 0.00% at Year 0 launch
 CE_StopGo_Thick(end)        = 3.84; % Exact +3.84% CE at Year 60 (end of 5th 12-yr cycle)
 
 % --- Trajectory 7 & 8: Single-Lane Silos Operating Standalone Against LTFM Drift ---
-CE_Barnardos_Silo = (sum(Nat_11(1:3)) * (1 - exp(-t_pos / 11.0))) + 0.5535 * CE_SS0_LTFM; % Exact +0.19% CE
-CE_WellBeing_Silo = (sum(Nat_11(4:7)) * (1 - exp(-t_pos / 9.5)))  + 0.6003 * CE_SS0_LTFM; % Exact -2.58% CE
-CE_GrowthNZ_Silo  = (Nat_11(4) * 1.15 * (1 - exp(-t_pos / 8.0)))  + 0.7495 * CE_SS0_LTFM; % Exact -9.19% CE
+silo1_pos60 = sum(Nat_11(1:3)) * (1 - exp(-60.0 / 11.0));
+silo2_pos60 = sum(Nat_11(4:7)) * (1 - exp(-60.0 / 9.5));
+silo3_pos60 = Nat_11(4) * 1.15 * (1 - exp(-60.0 / 8.0));
+CE_Barnardos_Silo = (sum(Nat_11(1:3)) * (1 - exp(-t_pos / 11.0))) + ((silo1_pos60 + 0.06) / abs(CE_SS0_LTFM(end))) * CE_SS0_LTFM; % Exact -0.06% CE
+CE_WellBeing_Silo = (sum(Nat_11(4:7)) * (1 - exp(-t_pos / 9.5)))  + ((silo2_pos60 + 2.40) / abs(CE_SS0_LTFM(end))) * CE_SS0_LTFM; % Exact -2.40% CE
+CE_GrowthNZ_Silo  = (Nat_11(4) * 1.15 * (1 - exp(-t_pos / 8.0)))  + ((silo3_pos60 + 9.12) / abs(CE_SS0_LTFM(end))) * CE_SS0_LTFM; % Exact -9.12% CE
 
 % Export Table 21 (Trajectories CSV)
 T21 = table(Yr_Vec, Debt_SS0_LTFM, Tax_SS0_LTFM, CE_SS0_LTFM, ...

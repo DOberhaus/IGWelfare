@@ -276,10 +276,10 @@ for m = 1:M_reforms
         reg       = Regions{r_idx};
         hh_type   = ['HH_', reg];
         firm_type = ['Firm_', reg];
-        % Conservative 0.16 pass-through of Clean-Green vs. CBAM terms-of-trade export lift into
-        % regional wages when Enable_NDC_Module is active:
+        % Net 0.075 border terms-of-trade pass-through of Clean-Green vs. CBAM export lift
+        % (complements the domestic d_mu_z_r local procurement upgrading below without double-counting):
         if ndc_on && isfield(P_GE, 'Pi_trade_reg') && isfield(Params_SS0, 'Pi_trade_SS0')
-            ndc_trade_mult = (P_GE.Pi_trade_reg(r_idx) / Params_SS0.Pi_trade_SS0(r_idx)) ^ 0.16;
+            ndc_trade_mult = (P_GE.Pi_trade_reg(r_idx) / Params_SS0.Pi_trade_SS0(r_idx)) ^ 0.075;
         else
             ndc_trade_mult = 1.0;
         end
