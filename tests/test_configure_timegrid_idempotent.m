@@ -42,6 +42,19 @@ O.beta_firm = 0.90;
 O = Configure_TimeGrid_Params(O, 3);
 check(O.r == 0.5, 'caller override of r was overwritten');
 check(O.beta_firm == (0.90^(1/5))^3, 'caller override of beta_firm was ignored');
+
+% 6. Bookkeeping stays flat: every struct-valued Params field is keyed by PType names (HH_* / Firm_*), as the VFI Toolkit
+% reads struct parameters per PType; the dt bookkeeping is plain numeric (dt_applied, beta_*_ann)
+T = Configure_TimeGrid_Params(Configure_TimeGrid_Params(struct(), 3), 3);
+check(isnumeric(T.dt_applied) && isscalar(T.dt_applied) && T.dt_applied == 3, 'dt_applied is not the plain number dt');
+fn = fieldnames(T);
+for k = 1:numel(fn)
+    if isstruct(T.(fn{k}))
+        sub = fieldnames(T.(fn{k}));
+        check(all(strncmp(sub, 'HH_', 3) | strncmp(sub, 'Firm_', 5)), ...
+            sprintf('struct-valued Params field %s is not keyed by PType names', fn{k}));
+    end
+end
 end
 
 function check(cond, msg)
