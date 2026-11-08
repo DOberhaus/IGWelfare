@@ -1,0 +1,27 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  octave-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install GNU Octave
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y octave
+
+      - name: Run MATLAB/Octave test suite
+        # run_all_tests exits with status 1 on any failure when started via --eval,
+        # so a failing test fails this step.
+        run: octave --no-gui --eval "cd tests; run_all_tests"
+
+      - name: Check docs consistency (when the tool exists)
+        run: |
+          if [ -f tools/check_docs_consistency.py ]; then
+            python3 tools/check_docs_consistency.py --strict
+          fi
