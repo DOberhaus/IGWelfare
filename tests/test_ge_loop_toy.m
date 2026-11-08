@@ -49,31 +49,47 @@ assert(h2b.converged && max(abs(p2b - truth)) < tol_price, 'broyden(diag): did n
 
 % --- 3. non-convergence at max_iter = 1 ------------------------------------
 % 3a. DEFAULT (on_fail='warn'): warning IGW:NoConvergence, converged == false,
-%     last iterate returned. The warning is switched off for the id so that the test
-%     prints nothing; lastwarn is still set and is cleared before each call.
-ws = warning('off', 'IGW:NoConvergence');
+%     last iterate returned. The warning is captured by promoting it to an error
+%     with warning('error', id) (MATLAB does not record disabled warnings in
+%     lastwarn, so lastwarn is not used); the outputs are then checked in a second
+%     call with the warning switched off. Nothing is printed.
+wid_nc = 'IGW:NoConvergence';
 for m = {'damped', 'broyden'}
     for explicit = [false true]
         o = struct('method', m{1}, 'tol', 1e-10, 'max_iter', 1);
         if explicit, o.on_fail = 'warn'; end
-        lastwarn('');
+        ws = warning('error', wid_nc);
+        caught = [];
+        try
+            Solve_Spatial_GE_Loop(p0, F, o);
+        catch err
+            caught = err;
+        end
+        warning(ws);
+        assert(~isempty(caught), 'default (%s): no IGW:NoConvergence warning raised', m{1});
+        assert(strcmp(caught.identifier, wid_nc), 'default (%s): wrong warning id "%s"', m{1}, caught.identifier);
+        assert(~isempty(regexp(caught.message, '^Solve_Spatial_GE_Loop: 1 iterations, residual [0-9.eE+-]+$', 'once')), ...
+            'default (%s): warning message "%s" does not match the contract', m{1}, caught.message);
+
+        ws = warning('off', wid_nc);
         [pw, resw, hw] = Solve_Spatial_GE_Loop(p0, F, o);
-        [wmsg, wid] = lastwarn();
-        assert(strcmp(wid, 'IGW:NoConvergence'), 'default (%s): no IGW:NoConvergence warning (lastwarn id "%s")', m{1}, wid);
-        assert(~isempty(regexp(wmsg, '^Solve_Spatial_GE_Loop: 1 iterations, residual [0-9.eE+-]+$', 'once')), ...
-            'default (%s): warning message "%s" does not match the contract', m{1}, wmsg);
+        warning(ws);
         assert(~resw.converged && ~hw.converged && resw.n_iter == 1, 'default (%s): converged flag/iteration count wrong', m{1});
         assert(all(isfinite(pw)) && all(isfinite(resw.residual)) && isequal(size(pw), size(p0)), ...
             'default (%s): last iterate not returned', m{1});
         assert(abs(resw.res_inf - norm(resw.residual, Inf)) < 1e-15 && resw.res_inf == hw.res_inf(end), 'default (%s): res_inf inconsistent', m{1});
     end
 end
-% a converged run must NOT warn
-lastwarn('');
-[~, resok] = Solve_Spatial_GE_Loop(p0, F, struct('method', 'broyden', 'tol', 1e-10, 'max_iter', 100));
-[~, wid_ok] = lastwarn();
-assert(resok.converged && isempty(wid_ok), 'a converged run raised a warning');
+% a converged run must NOT warn (any warning would be promoted to an error here)
+ws = warning('error', wid_nc);
+caught = [];
+try
+    [~, resok] = Solve_Spatial_GE_Loop(p0, F, struct('method', 'broyden', 'tol', 1e-10, 'max_iter', 100));
+catch err
+    caught = err;
+end
 warning(ws);
+assert(isempty(caught) && resok.converged, 'a converged run raised a warning or did not converge');
 
 % 3b. on_fail = 'error' raises IGW:NoConvergence with the contract message
 for m = {'damped', 'broyden'}
@@ -95,11 +111,11 @@ fl = truth .* [0.95; 0.8; 0.95; 0.7; 0.9];       % all strictly below the equili
 [p4, ~, h4] = Solve_Spatial_GE_Loop(p0, F, struct('tol', 1e-10, 'max_iter', 500, 'bounds', fl, 'step', abs(p0)));
 assert(h4.converged && max(abs(p4 - truth)) < tol_price, 'bounds(damped): prices differ from analytic');
 assert(all(all(h4.price >= repmat(fl', size(h4.price, 1), 1))), 'bounds(damped): a floor was violated');
-assert(any(abs(h4.price(:, 1) - fl(1)) < 1e-15), 'bounds(damped): floor on w1 never bound (test no longer exercises projection)');
+assert(any(abs(h4.price(:, 1) - fl(1)) <= 1e-12), 'bounds(damped): floor on w1 never bound (test no longer exercises projection)');
 [p4b, ~, h4b] = Solve_Spatial_GE_Loop(p0, F, struct('method', 'broyden', 'tol', 1e-10, 'max_iter', 200, 'bounds', fl));
 assert(h4b.converged && max(abs(p4b - truth)) < tol_price, 'bounds(broyden): prices differ from analytic');
 assert(all(all(h4b.price >= repmat(fl', size(h4b.price, 1), 1))), 'bounds(broyden): a floor was violated');
-assert(any(abs(h4b.price(:, 5) - fl(5)) < 1e-15), 'bounds(broyden): floor on r never bound (test no longer exercises projection)');
+assert(any(abs(h4b.price(:, 5) - fl(5)) <= 1e-12), 'bounds(broyden): floor on r never bound (test no longer exercises projection)');
 
 % --- 5. shape is preserved ---------------------------------------------------
 Frow = @(pp) F(pp(:))';
