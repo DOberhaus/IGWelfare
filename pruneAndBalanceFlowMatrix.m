@@ -46,5 +46,11 @@ for iter = 1:6
     F_clean = bsxfun(@times, F_clean, cScale);
 end
 
+% The RAS loop above runs a fixed 6 passes with no tolerance: report when the row / column sums are still off
+resid_ras = max([0, max(abs(sum(F_clean, 2) - rowTarget) ./ max(rowTarget, eps)), ...
+    max(abs(sum(F_clean, 1) - colTarget) ./ max(colTarget, eps))]);
+if ~(resid_ras < 1e-3)
+    warning('IGW:NoConvergence', 'pruneAndBalanceFlowMatrix RAS rescaling: %d iterations, residual %.3g (max relative row/column-sum error)', iter, resid_ras);
+end
 
 end
