@@ -277,7 +277,7 @@ Every ribbon in a Sankey diagram is, in truth, a biography in motion—sixty tho
 
 📈 [Interactive Fates SS0](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFates_SS0_National.html)
 📈 [Interactive Fates SS1](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFates_SS1_National.html)
-📈 [Interactive Fates SS2](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFates_SS1_National.html)
+📈 [Interactive Fates SS2](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFates_SS2_National.html)
 
 ### 2. The 6-Gate Lifecycle Fiscal Sankey & Reconciling Private Parental Commitment
 Our 6-Gate (29-Node) Dollar-Weighted Fiscal Sankey (`Plot_ChildFiscal_SSankey.m`) traces annual per-birth resource and fiscal flows (in real 2025 NZD thousands per year per cohort birth) across two true-scale regimes separated by a vertical regime-break wave at *Gate 5 (Prime Career & Enterprise Sorting, Ages 30–54)*:
@@ -307,7 +307,7 @@ Our 6-Gate (29-Node) Dollar-Weighted Fiscal Sankey (`Plot_ChildFiscal_SSankey.m`
 
 📈 [Interactive Fiscal SS0](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFiscal_SS0_National.html)
 📈 [Interactive Fiscal SS1](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFiscal_SS1_National.html)
-📈 [Interactive Fiscal SS2](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFiscal_SS1_National.html)
+📈 [Interactive Fiscal SS2](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFiscal_SS2_National.html)
 
 ### 3. Lifecycle Vulnerability Gates in the 18-Node Sankey Architecture
 
