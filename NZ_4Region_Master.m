@@ -90,22 +90,24 @@ for r_idx = 1:N_reg
         Q_reg, Q_reg_base, K_whanau, Jr, dt);
     simoptions.aprimeFn.(hh_type) = vfoptions.aprimeFn.(hh_type);
 
-    % Infinite-Horizon Firm Grids
-    n_d.(firm_type) = 0; d_grid.(firm_type) = [];
-    n_a.(firm_type) = 81; a_grid.(firm_type) = 30 * (linspace(0.001, 1, 81).^2.5)';
-    n_z.(firm_type) = 2;  pi_z.(firm_type)   = [0.85, 0.15; 0.15, 0.85];
+    % Infinite-Horizon Firm Grids (with endogenous z_l -> z_h upgrading as local procurement breaks monopsony rents)
+    n_d.(firm_type) = 0;
+    d_grid.(firm_type) = [];
+    n_a.(firm_type) = 81;
+    a_grid.(firm_type) = 30 * (linspace(0.001, 1, 81).^2.5)';
+    n_z.(firm_type) = 2; 
+    p_up = Params.p_zh_upgrade_vec(r_idx);
+    p_dn = Params.p_zl_downgrade_v(r_idx);
+    pi_z.(firm_type) = [1.0 - p_up, p_up; p_dn, 1.0 - p_dn];
 end
 
 % Discretize regional log-productivity AR(1) via Rouwenhorst (mew, rho, sigma, znum)
-% Note: In VFI Toolkit, mew = mu * (1 - rho) so unconditional mean of log(z) is mu_reg
+% Note: In VFI Toolkit, mew = mu * (1 - rho) so unconditional mean of log(z) is Params.mu_z_reg_vec(r_idx)
 rho_z = 0.85;
-[z_grid_log.HH_Rural,    pi_z.HH_Rural]    = discretizeAR1_Rouwenhorst(-0.06*(1-rho_z), rho_z, 0.11, Params.n_z_pts);
-[z_grid_log.HH_Small,    pi_z.HH_Small]    = discretizeAR1_Rouwenhorst(-0.01*(1-rho_z), rho_z, 0.14, Params.n_z_pts);
-[z_grid_log.HH_Large,    pi_z.HH_Large]    = discretizeAR1_Rouwenhorst( 0.06*(1-rho_z), rho_z, 0.18, Params.n_z_pts);
-[z_grid_log.HH_Auckland, pi_z.HH_Auckland] = discretizeAR1_Rouwenhorst( 0.15*(1-rho_z), rho_z, 0.24, Params.n_z_pts);
-
 for r_idx = 1:length(Regions)
     hh_type = ['HH_', Regions{r_idx}];
+    [z_grid_log.(hh_type), pi_z.(hh_type)] = discretizeAR1_Rouwenhorst( ...
+        Params.mu_z_reg_vec(r_idx) * (1 - rho_z), rho_z, Params.sigma_z_vec(r_idx), Params.n_z_pts);
     z_grid.(hh_type) = exp(z_grid_log.(hh_type));
 end
 
