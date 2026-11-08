@@ -6,9 +6,11 @@ function test_igw_log()
 addpath(fileparts(fileparts(mfilename('fullpath'))));
 
 tmp  = tempname();
+tmp2 = tempname();
 mkdir(tmp);
+mkdir(tmp2);
 here = pwd;
-cleanup = onCleanup(@() cleanup_dir(here, tmp)); %#ok<NASGU>
+cleanup = onCleanup(@() cleanup_dirs(here, {tmp, tmp2})); %#ok<NASGU>   % one cleanup: leave the scratch dirs first, then remove both
 cd(tmp);
 
 % 1. First call: warning issued with id and text, log created with one well-formed line
@@ -33,7 +35,6 @@ check(strcmp(L{1}, first_line), 'first line was overwritten');
 
 % 3. Unwritable log (igw_run.log is a directory): no error, warning still issued
 cd(here);
-tmp2 = tempname(); mkdir(tmp2); cleanup2 = onCleanup(@() rmdir(tmp2, 's')); %#ok<NASGU>
 mkdir(fullfile(tmp2, 'igw_run.log'));
 cd(tmp2);
 lastwarn('');
@@ -53,9 +54,11 @@ txt = fileread(f);
 L = strsplit(strtrim(txt), char(10));
 end
 
-function cleanup_dir(here, tmp)
+function cleanup_dirs(here, dirs)
 cd(here);
-rmdir(tmp, 's');
+for k = 1:numel(dirs)
+    rmdir(dirs{k}, 's');
+end
 end
 
 function check(cond, msg)
