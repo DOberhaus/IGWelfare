@@ -40,7 +40,7 @@ Before running the code, consult the six companion documents in the repository r
 
 ### 2. *What Mathematical Tools Do We Use?* (Technical Specification & Methodology)
 * **[Document 2.md](Document%202.md) (*Technical Documentation & Model Specification Guide*):** Complete 8-PType Mixed Finite/Infinite-Horizon Bellman equations, exact $\Delta t$-scaling laws (`Configure_TimeGrid_Params.m` for trading off high-resolution `dt=3` vs. fast `dt=5` execution), Simulated Method of Moments (SMM) calibration matrices, and the 22-file codebase manifest.
-* **[Document 2B.md](Document%202T.md) (*"Thick" vs. "Thin" Numbers in Quantitative Public Policy*):** Standalone technical tutorial on dimension-free state-contingent conditioning—showing how comonotonic tail risks (sandwich-generation care reversal, *Kaiako* rent crowd-out, the 20% LVR deposit cliff, and differential mortality) are solved on the 26,901-point GPU state manifold at zero additional grid-dimension cost.
+* **[Document 2T.md](Document%202T.md) (*"Thick" vs. "Thin" Numbers in Quantitative Public Policy*):** Standalone technical tutorial on dimension-free state-contingent conditioning—showing how comonotonic tail risks (sandwich-generation care reversal, *Kaiako* rent crowd-out, the 20% LVR deposit cliff, and differential mortality) are solved on the 26,901-point GPU state manifold at zero additional grid-dimension cost.
 
 ### 3. *What Do Our Calculations Mean for Working Together?* (Coalition & Public Synthesis)
 * **[Document 3.md](Document%203.md) (*Leaving Our Silos, Lifting All Boats*):** Maps the 11-layer constructive synergy stack onto New Zealand's four policy constituencies (*Barnardos/Youth*, *WellBeing/Housing*, *GrowthNZ/Venture*, and *Fiscal Stewards*), contrasting standalone silos and 6-year "Stop-Go" political cycles against the Treasury LTFM sinkhole and a 3%-of-GDP defense commitment.
@@ -71,7 +71,7 @@ You do not need to run individual helper or return functions (`ReturnFn_*.m`) ma
   * `Configure_TimeGrid_Params.m` — Maps all flow rates, survival curves, and developmental stage indices across $\Delta t \in \{5, 3, 2, 1\}$ (see [Document 2.md](Document%202.md) Section 1.2).
   * `NZ_4Region_Master.m` & `Solve_Spatial_GE_Loop.m` — Initializes and solves the 8-PType mixed-horizon General Equilibrium (`ValueFnIter_MixHorz_PType` & `StationaryDist_MixHorz_PType`).
   * `WelfareDecomposition_4Region.m` — Computes the multiphase (`SS1`, `SS2`) Daruich / Lee-Seshadri welfare decompositions (`Table 1`), spatial quintiles (`Table 2`), and housing tenure cleavages (`Table 3`).
-  * `Counterfactuals_LeeSeshadri_4Region.m` — Runs the multi-stage human capital counterfactuals (`Tables 4–6` & `12A–C`).
+  * `PolicyExperiment_LeeSeshadri_4Region.m` — Runs the multi-stage human capital counterfactuals (`Tables 4–6` & `12A–C`).
   * `FertilityBargaining_Module.m` — Solves cooperative childcare bargaining, hyperbolic fertility, and the continuous Age 60–75 NZ Superannuation U-Curve (`Tables 7, 8, & 8B`).
   * `TransPath_4Region_Master.m` — Computes the 60-year multiphase transition path with dynamic regional weights and credibility blending.
 * **Visualization, Actuarial Audits & Interactive Reporting:**
