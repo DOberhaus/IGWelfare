@@ -4,12 +4,18 @@ function test_build_phase_registry_standins()
 % Default: the documented stand-in values are used and each one is logged (IGW_Log: warning + igw_run.log line naming
 % phase, variable and value, id IGW:PhaseStandIn). Params.strict_phases = true: error IGW:PhaseStandIn instead.
 % Solved phases in the workspace must pass through unchanged and unlogged.
-% Runs in a scratch directory. Throws on failure, silent on success. No toolboxes, no GPU; MATLAB and GNU Octave.
+% Runs in a scratch directory and plants variables in the base workspace; if any of those names already exist it
+% prints a SKIP line and returns without touching them. Throws on failure, silent on success. No toolboxes, no GPU; MATLAB and GNU Octave.
 addpath(fileparts(fileparts(mfilename('fullpath'))));
 
 base_vars = {'StatDist_SS0', 'Policy_SS0', 'V_SS0', 'jDist_SS0', 'Params_SS0', 'IG_Diag_SS0', 'Params', ...
     'StatDist_SS1', 'Params_SS1', 'StatDist_SS2'};
-clear_base(base_vars);
+% The test plants and then clears these names in the base workspace: never do that to a live session
+clash = intersect(base_vars, evalin('base', 'who'));
+if ~isempty(clash)
+    fprintf('SKIP test_build_phase_registry_standins: base workspace already holds %s; not clearing a live session.\n', strjoin(clash, ', '));
+    return
+end
 tmp  = tempname();
 mkdir(tmp);
 here = pwd;
