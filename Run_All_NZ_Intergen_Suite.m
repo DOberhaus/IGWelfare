@@ -45,7 +45,7 @@ end
 % different value raises warning IGW:StaleCache (Validate_CacheConfig.m) and the step is recomputed.
 Cache_CfgHash = '';
 if Use_Saved_Cache
-    Cache_CfgHash = regexp(Get_ModelConfigHash('RunAll_Params', Params, [], [], [], []), '[0-9A-F]{8}(?=\.mat$)', 'match', 'once');
+    Cache_CfgHash = regexp(Get_ModelConfigHash('RunAll_Params', Params, [], [], [], []), '[0-9a-f]{32}(?=\.mat$)', 'match', 'once');
 end
 
 fprintf('=========================================================================================\n');

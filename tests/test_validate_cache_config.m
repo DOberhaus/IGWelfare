@@ -2,7 +2,7 @@ function test_validate_cache_config()
 %% TEST_VALIDATE_CACHE_CONFIG
 % Validate_CacheConfig must accept a checkpoint only when it stores a Cache_CfgHash equal to the current one; a missing
 % or different hash (or an unreadable file) must warn IGW:StaleCache naming the file and return false.
-% Get_ModelConfigHash itself is NOT exercised here (it needs MATLAB's getByteStreamFromArray); the hash is a plain string.
+% Get_ModelConfigHash itself is NOT exercised here (see tests/test_get_model_config_hash.m); the hash is a plain string.
 % Throws on failure, silent on success. No toolboxes, no GPU; runs under MATLAB and GNU Octave.
 addpath(fileparts(fileparts(mfilename('fullpath'))));
 
@@ -40,6 +40,13 @@ out = evalc('ok = Validate_CacheConfig(f_nohash, ''A1B2C3D4'');'); %#ok<NASGU>
 [wmsg, wid] = lastwarn();
 check(~ok, 'checkpoint without Cache_CfgHash was accepted');
 check(strcmp(wid, 'IGW:StaleCache') && ~isempty(strfind(wmsg, f_nohash)), 'missing hash: expected IGW:StaleCache naming the file');
+
+% 3b. No current hash (Get_ModelConfigHash without MD5): never matches, even a checkpoint stored with an empty hash
+lastwarn('');
+out = evalc('ok = Validate_CacheConfig(f_ok, '''');'); %#ok<NASGU>
+[wmsg, wid] = lastwarn();
+check(~ok, 'empty current hash was accepted');
+check(strcmp(wid, 'IGW:StaleCache') && ~isempty(strfind(wmsg, f_ok)), 'empty current hash: expected IGW:StaleCache naming the file');
 
 % 4. Unreadable file: rejected, not an error
 lastwarn('');
