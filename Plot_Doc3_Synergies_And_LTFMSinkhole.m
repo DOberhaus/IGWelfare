@@ -34,8 +34,9 @@ if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
 % 1. SYNC HEADLINE NATIONAL SS1 & SS2 TARGETS FROM WORKSPACE T1 (IF PRESENT)
 % =========================================================================
 Pop_Weights    = [0.160, 0.240, 0.259, 0.341]; % [Rural, Small, Large, Auckland]
-SS1_Target_Reg = [9.9955, 12.296, 13.997, 17.041]; % Matches +13.99% National (n_z = 7, NDC 0.16)
-SS2_Target_Reg = [18.847, 21.414, 23.440, 27.450]; % Matches +23.59% National (n_z = 7, NDC 0.16)
+% Default 12-Layer NDC + Local Procurement targets (overridden dynamically when T1 is in workspace):
+SS1_Target_Reg = [11.945, 13.739, 14.888, 17.515]; % +15.04% National (or [9.9955, 12.296, 13.997, 17.041] = +13.99% pre-procurement NDC)
+SS2_Target_Reg = [20.628, 22.984, 24.574, 27.913]; % +24.70% National (or [18.847, 21.414, 23.440, 27.450] = +23.59% pre-procurement NDC)
 
 if evalin('base', 'exist(''T1'', ''var'')')
     T1_ws = evalin('base', 'T1');
@@ -44,16 +45,23 @@ if evalin('base', 'exist(''T1'', ''var'')')
         SS2_Target_Reg = table2array(T1_ws(6, 1:4));
     end
 end
-SS1_Nat = sum(SS1_Target_Reg .* Pop_Weights); % +13.99%
-SS2_Nat = sum(SS2_Target_Reg .* Pop_Weights); % +23.59%
+SS1_Nat = sum(SS1_Target_Reg .* Pop_Weights);
+SS2_Nat = sum(SS2_Target_Reg .* Pop_Weights);
 
-% Canonical 12-Layer National SS2 Breakdown (from Table 19 / Fig_Counterfactual):
-%   L1: Iso ECE1 (+3.36%), L2: Iso Tuakana (+2.01%), L3: Wedge 1 ECE1xTuakana (+3.07%) -> Tier 1 = +8.43%
-%   L4: Iso TaxRebal (+2.48%), L5: Iso YouthGrant (+1.26%), L6: Iso GeoTrans (+1.04%), L7: Wedge 2 LVR/Whanau (+2.14%) -> Tier 2 = +6.91%
-%   L8: Wedge 3 Cross-Stack Stack1 x Stack2 (+3.72%)
-%   L9: Iso Debt-Sinking (+0.77%), L10: Iso PAYE Cut & Super 64 (+1.13%), L11: Wedge 4 Fiscal/TFR/2ndGen Closure (+1.63%), L12: Wedge 5 NDC Clean-Green (+0.99%) -> Tier 4 = +4.52%
-Raw_Nat_11 = [3.3600; 2.0053; 3.0662; 2.4759; 1.2559; 1.0371; 2.1442; 3.7178; 0.7692; 1.1304; 1.6302; 0.9941];
-Nat_11     = Raw_Nat_11 * (SS2_Nat / sum(Raw_Nat_11));
+% Canonical 12-Layer National SS2 Breakdown (7 Isolated Factors + 5 Synergy Wedges from Table 19):
+%   L01: Iso ECE1 (+2.46%), L02: Iso Tuakana (+1.56%), L03: Wedge 1 ECE1xTuakana (+3.17%)
+%   L04: Iso TaxRebal (+2.24%), L05: Iso YouthGrant (+0.89%), L06: Iso GeoTrans (+0.15%, retires 82% in SS2), L07: Wedge 2 LVR/Whanau (+2.19%)
+%   L08: Wedge 3 Cross-Stack Stack1 x Stack2 (+4.75%)
+%   L09: Iso Debt-Sinking (+1.25%), L10: Iso PAYE Cut & Super 64 (+2.69%)
+%   L11: Wedge 4 Fiscal/TFR/2ndGen Closure (+2.37%), L12: Wedge 5 NDC Clean-Green Export & CERF (+0.99%)
+Raw_Nat_12 = [2.46; 1.56; 3.17; 2.24; 0.89; 0.15; 2.19; 4.75; 1.25; 2.69; 2.37; 0.99];
+Nat_12     = Raw_Nat_12 * (SS2_Nat / sum(Raw_Nat_12));
+
+% Map 12-Layer Nat_12 into the 11 coalition-channel slots Nat_11(1..11) used by Section 3 below
+% (routing L12 Wedge 5 Clean-Green Export & CERF into L8 Enterprise/Spatial [+45%] and L11 Fiscal/NDC Closure [+55%]):
+Nat_11     = Nat_12(1:11);
+Nat_11(8)  = Nat_11(8)  + 0.45 * Nat_12(12);
+Nat_11(11) = Nat_11(11) + 0.55 * Nat_12(12);
 
 % =========================================================================
 % 2. CONSTRUCT 3D MACROECONOMIC WELFARE SURFACE OVER (DEBT/GDP x PAYE TAX)
@@ -71,7 +79,7 @@ Debt_Drag_Surf = -0.045 * max(0, D_Grid - 42.0) - 0.00032 * (max(0, D_Grid - 42.
 Tax_Drag_Surf  = -0.920 * (T_Grid - 22.0) - 0.038 * (max(0, T_Grid - 22.0) .^ 2);
 
 % Smooth potential hill in the low-debt, low-tax Quadrant (unlocked by SS1->SS2 human capital & firm TFP):
-HC_Lift_Potential = SS2_Nat * exp(-(((D_Grid - 22.0) / 38.0) .^ 2 + ((T_Grid - 18.88) / 4.8) .^ 2));
+HC_Lift_Potential = SS2_Nat * exp(-(((D_Grid - 22.0) / 38.0) .^ 2 + ((T_Grid - 18.25) / 4.8) .^ 2));
 W_Surf_Base       = Debt_Drag_Surf + Tax_Drag_Surf + 0.82 * HC_Lift_Potential;
 
 % Define 60-Year Time Grid for Trajectories (-5 to +60)
@@ -107,7 +115,7 @@ CE_Aust_First   = -2.10 * (1 - exp(-t_pos / 4.0)) - 4.70 * (s_60 .^ 1.25); % Exa
 % Years 18.8-60: 50% Debt-Sinking Fund retires debt from 44% down to 22% of GDP; PAYE cut -3.12 pp to 18.88%
 Debt_Unified = 42.0 + 3.5 * sin(min(pi, pi * t_pos / 18.8)) ...
     - 20.0 * max(0, (t_pos - 18.8) / 41.2) .^ 0.85;
-Tax_Unified  = 22.0 - 3.12 * (1 ./ (1 + exp(-(Yr_Vec - 26.5) / 2.2))) .* (Yr_Vec >= 18);
+Tax_Unified  = 22.0 - 3.75 * (1 ./ (1 + exp(-(Yr_Vec - 26.5) / 2.2))) .* (Yr_Vec >= 18);
 
 CE_Unified = zeros(n_yr, 1);
 for i = 1:n_yr
@@ -125,7 +133,7 @@ end
 CE_Unified(Yr_Vec >= 25) = CE_Unified(Yr_Vec >= 25) * (SS2_Nat / CE_Unified(end));
 
 % --- Trajectory 5: Unified Coalition Carrying the 3.0% GDP (+NZD 8.0B/yr) Defense Commitment in SS2 ---
-CE_Unified_With_Defense = CE_Unified - 3.52 * def_ramp .* (0.65 + 0.35 * s_60); % Exact +20.11% CE at Year 60
+CE_Unified_With_Defense = CE_Unified - 3.52 * def_ramp; % Exact +20.11% CE at Year 60
 
 % --- Trajectory 6: "Stop-Go" Policy Cycling (Linear Mean vs. 1-Term 3-Yr vs. 2-Term 6-Yr Sawtooth) ---
 CE_StopGo_Thin = 0.50 * CE_Unified; % Linear spreadsheet assumes 50% duty cycle = +11.82% CE
@@ -232,13 +240,13 @@ p3_aus = plot3(ax1, Debt_Aust_First, Tax_Aust_First, CE_Aust_First + 0.8, '-.s',
 
 p3_uni = plot3(ax1, Debt_Unified, Tax_Unified, CE_Unified + 0.8, '-p', ...
     'Color', [0.00 0.50 0.22], 'MarkerFaceColor', [0.10 0.85 0.35], 'MarkerIndices', [6, 25, 31, 66], ...
-    'LineWidth', 3.4, 'MarkerSize', 9, 'DisplayName', sprintf('4. Unified Coalition (SS1 -> SS2: Debt 22%%, PAYE 18.9%%, %+.2f%% CE)', SS2_Nat));
+    'LineWidth', 3.4, 'MarkerSize', 9, 'DisplayName', sprintf('4. Unified Coalition (SS1 -> SS2: Debt 22%%, PAYE 18.25%%, %+.2f%% CE)', SS2_Nat));
 
 % 3D Endpoint Callout Labels Placed Cleanly ABOVE the Surface Mesh
 text(ax1, 52, 23.6, 5.2, '2026 Start (42% Debt, 22% Tax)', 'FontSize', 8.0, 'FontWeight', 'bold', ...
     'BackgroundColor', 'w', 'EdgeColor', 'k', 'Margin', 2);
 text(ax1, Debt_Unified(end), Tax_Unified(end), CE_Unified(end) + 3.5, ...
-    sprintf('2086 SS2 Convergence:\n%+.2f%% CE\n(Debt 22%%, Tax 18.9%%)', SS2_Nat), ...
+    sprintf('2086 SS2 Convergence:\n%+.2f%% CE\n(Debt 22%%, Tax 18.25%%)', SS2_Nat), ...
     'FontSize', 8.0, 'FontWeight', 'bold', 'Color', [0.00 0.38 0.15], ...
     'BackgroundColor', [0.94 1.00 0.95], 'EdgeColor', [0.00 0.45 0.20], 'Margin', 2);
 text(ax1, Debt_SS0_LTFM(end)-18, Tax_SS0_LTFM(end)-0.8, CE_SS0_LTFM(end) + 5.8, ...
@@ -355,7 +363,7 @@ Cell_Narratives = { ...
     'OWN LANE:\nFirm Tax Shift +\n1.65x Infra Base Alone', ...
     '★ SYNERGY WEDGE:\n-60 bps Credit + -3.1pp\nPAYE Retains Founders'; ...
     ...
-    '★ SYNERGY WEDGE:\n+16.8k/Birth Surplus &\nTFR 2.03 Secures Super', ...
+    '★ SYNERGY WEDGE:\n+16.8k/Birth Surplus &\nTFR 1.87 Secures Super', ...
     '★ SYNERGY WEDGE:\nPeak Estate Wave (\\tau_b)\nSelf-Funds SS1 Outlay', ...
     '★ SYNERGY WEDGE:\n+8.8%% Wage & Firm Growth\nExpands Tax Base +14.5%%', ...
     'OWN LANE:\nStatic Debt/Tax Target\n(Unachievable Standalone)'};

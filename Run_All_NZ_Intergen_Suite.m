@@ -11,13 +11,27 @@
 %   Step 6: 4-Region Welfare Decomposition (WelfareDecomposition_4Region.m)
 %   Step 7: 60-Year Non-Linear Transition Path (TransPath_4Region_Master.m) and other trans path plots (Opportunity Index, Actuarial Continuation Valuation)
 
-clear; clc; close all;
+% Preserve optional command-line overrides across workspace clear:
+if exist('Force_Recompute_All', 'var'), cmd_Force_Recompute = Force_Recompute_All; end
+if exist('Use_Saved_Cache', 'var'),     cmd_Use_Cache       = Use_Saved_Cache;     end
+if exist('Params', 'var') && isstruct(Params) && isfield(Params, 'Enable_Duopoly_Kai')
+    cmd_Enable_Duopoly_Kai = Params.Enable_Duopoly_Kai;
+end
+if exist('Params', 'var') && isstruct(Params) && isfield(Params, 'dt')
+    cmd_dt = Params.dt;
+end
+
+clearvars -except cmd_Force_Recompute cmd_Use_Cache cmd_Enable_Duopoly_Kai cmd_dt;
+clc; close all;
 suite_timer = tic;
 
 %% 0. CONFIGURATION SWITCHES, CACHING, & OUTPUT DIRECTORY SETUP
-Params.dt              = 3;     % Period length in years: 5 (J=16), 3 (J=27), or 2 (J=40)
-Use_Saved_Cache        = true;  % true = Load/save per-step .mat checkpoints in CacheDir
-Force_Recompute_All    = false; % true = Ignore cached .mat checkpoints and recompute all steps
+if exist('cmd_dt', 'var'),                 Params.dt = cmd_dt;                       else, Params.dt = 3;                 end
+if exist('cmd_Enable_Duopoly_Kai', 'var'), Params.Enable_Duopoly_Kai = cmd_Enable_Duopoly_Kai;                            end
+if exist('cmd_Use_Cache', 'var'),          Use_Saved_Cache = cmd_Use_Cache;          else, Use_Saved_Cache = true;        end
+if exist('cmd_Force_Recompute', 'var'),    Force_Recompute_All = cmd_Force_Recompute; else, Force_Recompute_All = false;  end
+clear cmd_Force_Recompute cmd_Use_Cache cmd_Enable_Duopoly_Kai cmd_dt;
+
 Use_ExpAsset_Pipeline  = true;  % true = Full 5D Experience-Asset Lifecycle Human Capital Pipeline
 Run_SMM_Calibration    = false; % true = Run Sobol global pre-screening + local fminsearch SMM
 Run_LeeSeshadri_Exp    = true;  % true = Run P0 vs P1/P2 & Budget-Neutral Front-Loading (Step 2)
@@ -39,6 +53,13 @@ CacheDir = fullfile(pwd, 'Cache_NZ_Intergen');
 if Use_Saved_Cache && ~exist(CacheDir, 'dir')
     mkdir(CacheDir);
 end
+if Force_Recompute_All && exist(CacheDir, 'dir')
+    delete(fullfile(CacheDir, '*.mat'));
+    fprintf('    [CLEAN STATE] Force_Recompute_All = true: Cleared all cached .mat files in %s\n', CacheDir);
+end
+Force_Recompute_All = false; % Auto-consume one-shot flag so subsequent/resumed runs never re-wipe cache
+
+fprintf('=========================================================================================\n');
 
 fprintf('=========================================================================================\n');
 fprintf('  STARTING NEW ZEALAND 4-REGION INTERGENERATIONAL WELFARE SUITE (VFI TOOLKIT 5D)\n');
@@ -72,19 +93,14 @@ else
     fprintf('    [CACHE SAVED] Saved Step 1 checkpoint to %s\n', Cache_Step1);
 end
 
-% Ensure Regional Extended Whanau Network K_whanau(k) is populated (even if loading older Step 1 cache)
-% and connect the dots between NZ Super age (Jr vs 65), pension adequacy (p_super),
-% and grandmothers'/aunties' ability to stay in their own homes (Q_reg vs baseline Q_base):
-K_whanau_base = struct('HH_Rural', 0.65, 'HH_Small', 0.50, 'HH_Large', 0.30, 'HH_Auckland', 0.20);
-Q_reg_base    = struct('HH_Rural', 1.05, 'HH_Small', 1.40, 'HH_Large', 2.05, 'HH_Auckland', 3.10);
-super_age_eff = 20 + (Params.Jr - 1) * Params.dt;
+% Ensure Regional Extended Whanau Network K_whanau(k) and Section 7 structs are synchronized with Single Source of Truth:
+Params = Configure_TimeGrid_Params(Params, Params.dt);
+super_age_eff   = 20 + (Params.Jr - 1) * Params.dt;
 elder_time_mult = exp(-0.09 * max(0, super_age_eff - 65)); % -9%/yr loss of grandparent time when Super age > 65
 for r_idx = 1:length(Regions)
     hh_type = ['HH_', Regions{r_idx}];
-    elder_home_mult = min(1.15, max(0.50, (Params.p_super / 0.18) * ((Q_reg_base.(hh_type) / Params.Q_reg.(hh_type)) ^ 0.35)));
-    if ~isfield(Params, 'K_whanau') || ~isfield(Params.K_whanau, hh_type)
-        Params.K_whanau.(hh_type) = K_whanau_base.(hh_type) * elder_time_mult * elder_home_mult;
-    end
+    elder_home_mult = min(1.15, max(0.50, (Params.p_super / 0.18) * ((Params.Q_reg_base.(hh_type) / Params.Q_reg.(hh_type)) ^ 0.35)));
+    Params.K_whanau.(hh_type) = Params.K_whanau_base.(hh_type) * elder_time_mult * elder_home_mult;
 end
 
 % Store full 5D Baseline objects ([a, h, theta_c, z, j]) across all 4 regions
