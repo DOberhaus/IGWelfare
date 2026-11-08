@@ -1,7 +1,7 @@
 function test_prune_balance_warns_noconvergence()
 %% TEST_PRUNE_BALANCE_WARNS_NOCONVERGENCE
-% pruneAndBalanceFlowMatrix runs a fixed 6-pass RAS rescaling. When the row / column sums are still off afterwards
-% it must warn (IGW:NoConvergence); when nothing is pruned it must stay silent and return the input unchanged.
+% pruneAndBalanceFlowMatrix iterates RAS rescaling to a tolerance (1e-9 of the matrix total, 500-sweep cap). When the
+% row / column sums are still off at the cap it must warn (IGW:NoConvergence); when nothing is pruned it must stay silent and return the input unchanged.
 % Throws on failure, silent on success. No toolboxes, no GPU; runs under MATLAB and GNU Octave.
 addpath(fileparts(fileparts(mfilename('fullpath'))));
 
@@ -19,7 +19,7 @@ lastwarn('');
 out = evalc('Gc = pruneAndBalanceFlowMatrix(G, 1);'); %#ok<NASGU>
 [wmsg, wid] = lastwarn();
 check(strcmp(wid, 'IGW:NoConvergence'), 'unbalanced result: expected warning IGW:NoConvergence');
-check(~isempty(strfind(wmsg, '6 iterations')) && ~isempty(strfind(wmsg, 'residual')), 'warning text lacks iteration count / residual');
+check(~isempty(strfind(wmsg, '500 iterations')) && ~isempty(strfind(wmsg, 'residual')), 'warning text lacks iteration count / residual');
 check(isequal(size(Gc), size(G)), 'output size changed');
 end
 
