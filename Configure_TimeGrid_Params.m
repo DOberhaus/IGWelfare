@@ -61,11 +61,41 @@ else
 end
 
 %% 4. COMPOUNDED DISCOUNT, RETURN, DEPRECIATION, & TRANSITION RATES
-if ~isfield(Params, 'beta_hh');   Params.beta_hh   = 0.96^dt; else; Params.beta_hh   = (Params.beta_hh^(1/5))^dt; end
-if ~isfield(Params, 'beta_firm'); Params.beta_firm = 0.95^dt; else; Params.beta_firm = (Params.beta_firm^(1/5))^dt; end
-if ~isfield(Params, 'r');         Params.r         = (1 + 0.20)^scale_dt - 1; end
-if ~isfield(Params, 'delta_hc');  Params.delta_hc  = 1 - (1 - 0.087)^scale_dt; end
-if ~isfield(Params, 'delta_k');   Params.delta_k   = 1 - (1 - 0.06)^dt; end
+% Idempotent: this function is re-run on an already-configured Params (Run_All_NZ_Intergen_Suite.m,
+% NZ_4Region_Master.m and WelfareDecomposition_4Region.m each call it), so every dt-scaled field below is
+% derived from a base value (beta_*_ann stored once; r, delta_hc, delta_k annual rates fixed in this file),
+% never by rescaling an already-scaled field. Params.dt_applied (a plain number: the dt of the previous call) lets
+% each call recognise its own earlier output: a field still equal to what the previous dt would have produced is
+% re-derived at the current dt; a field the caller changed since (or supplied up front) is a user override and is
+% left alone (beta_*: read as a 5-yr factor, as before). Only flat numeric fields are added to Params.
+dt_prev = [];
+if isfield(Params, 'dt_applied') && isnumeric(Params.dt_applied) && isscalar(Params.dt_applied)
+    dt_prev = Params.dt_applied;
+end
+
+beta_default_ann = struct('beta_hh', 0.96, 'beta_firm', 0.95);
+for beta_nm = {'beta_hh', 'beta_firm'}
+    bn  = beta_nm{1};
+    ann = [bn, '_ann'];
+    own_beta = ~isempty(dt_prev) && isfield(Params, bn) && isfield(Params, ann) && Params.(bn) == Params.(ann)^dt_prev;
+    if isfield(Params, bn) && ~own_beta
+        Params.(ann) = Params.(bn)^(1/5);          % caller-supplied value: 5-yr factor -> annual base
+    elseif ~isfield(Params, ann)
+        Params.(ann) = beta_default_ann.(bn);      % first call: annual default
+    end
+    Params.(bn) = Params.(ann)^dt;
+end
+
+if ~isfield(Params, 'r')        || (~isempty(dt_prev) && Params.r        == (1 + 0.20)^(dt_prev / 5) - 1)
+    Params.r        = (1 + 0.20)^scale_dt - 1;
+end
+if ~isfield(Params, 'delta_hc') || (~isempty(dt_prev) && Params.delta_hc == 1 - (1 - 0.087)^(dt_prev / 5))
+    Params.delta_hc = 1 - (1 - 0.087)^scale_dt;
+end
+if ~isfield(Params, 'delta_k')  || (~isempty(dt_prev) && Params.delta_k  == 1 - (1 - 0.06)^dt_prev)
+    Params.delta_k  = 1 - (1 - 0.06)^dt;
+end
+Params.dt_applied = dt;
 
 Params.T_trans_years = 60;
 Params.T_trans       = round(Params.T_trans_years / dt); % 12 (dt=5), 20 (dt=3), 30 (dt=2)
