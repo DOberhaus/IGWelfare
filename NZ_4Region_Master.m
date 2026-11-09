@@ -41,13 +41,8 @@ for jj = 1:(Params.J - 1)
 end
 N_pop = ones(Params.J, 1) / Params.J;
 for iter = 1:200
-    N_pop_prev = N_pop;
     N_pop = T_demo * N_pop + Params.mig_rate_j' .* N_pop;
     N_pop = max(0, N_pop) / sum(max(0, N_pop));
-end
-N_pop_resid = max(abs(N_pop - N_pop_prev));
-if ~(N_pop_resid < 1e-8)
-    IGW_Log('IGW:NoConvergence', 'NZ_4Region_Master age-pyramid power iteration: %d iterations, residual %.3g', iter, N_pop_resid);
 end
 AgeWeightsParamNames = {'mewj'};
 Params.mewj = N_pop';

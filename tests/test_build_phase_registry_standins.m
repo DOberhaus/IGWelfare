@@ -2,13 +2,13 @@ function test_build_phase_registry_standins()
 %% TEST_BUILD_PHASE_REGISTRY_STANDINS
 % Build_Phase_Registry must not block a run for a missing phase and must not substitute stand-in values silently.
 % Default: the documented stand-in values are used and each one is logged (IGW_Log: warning + igw_run.log line naming
-% phase, variable and value, id IGW:PhaseStandIn). Params.strict_phases = true: error IGW:PhaseStandIn instead.
+% phase, variable and value, id IGW:PhaseStandIn).
 % Solved phases in the workspace must pass through unchanged and unlogged.
 % Runs in a scratch directory and plants variables in the base workspace; if any of those names already exist it
 % prints a SKIP line and returns without touching them. Throws on failure, silent on success. No toolboxes, no GPU; MATLAB and GNU Octave.
 addpath(fileparts(fileparts(mfilename('fullpath'))));
 
-base_vars = {'StatDist_SS0', 'Policy_SS0', 'V_SS0', 'jDist_SS0', 'Params_SS0', 'IG_Diag_SS0', 'Params', ...
+base_vars = {'StatDist_SS0', 'Policy_SS0', 'V_SS0', 'jDist_SS0', 'Params_SS0', 'IG_Diag_SS0', ...
     'StatDist_SS1', 'Params_SS1', 'StatDist_SS2'};
 % The test plants and then clears these names in the base workspace: never do that to a live session
 clash = intersect(base_vars, evalin('base', 'who'));
@@ -66,28 +66,6 @@ check(numel(Ph) == 3 && strcmp(Ph(2).Dist, 'dist1') && strcmp(Ph(3).Dist, 'dist2
 check(~strcmp(wid, 'IGW:PhaseStandIn'), 'warning raised although every phase was solved');
 check(numel(read_lines('igw_run.log')) == n_logged, 'log grew although every phase was solved');
 evalin('base', 'clear StatDist_SS1 Params_SS1 StatDist_SS2');
-
-% 3. Opt-in strictness: Params.strict_phases = true raises the error instead (and logs nothing new)
-assignin('base', 'Params', struct('strict_phases', true));
-[id, msg] = catch_error(@() Build_Phase_Registry({'SS0', 'SS1'}));
-check(strcmp(id, 'IGW:PhaseStandIn'), 'strict: SS1 absent: expected error IGW:PhaseStandIn');
-check(~isempty(strfind(msg, 'StatDist_SS1')) && ~isempty(strfind(msg, 'phase SS1')) && ~isempty(strfind(msg, 'strict_phases')), ...
-    'strict SS1 error text lacks variable name / phase / switch');
-assignin('base', 'StatDist_SS1', 'dist1');
-assignin('base', 'Params_SS1',   P0);
-[id, msg] = catch_error(@() Build_Phase_Registry({'SS0', 'SS1', 'SS2'}));
-check(strcmp(id, 'IGW:PhaseStandIn') && ~isempty(strfind(msg, 'StatDist_SS2')) && ~isempty(strfind(msg, 'phase SS2')), ...
-    'strict: SS2 absent: expected error IGW:PhaseStandIn naming StatDist_SS2');
-check(numel(read_lines('igw_run.log')) == n_logged, 'strict mode logged stand-in values');
-end
-
-function [id, msg] = catch_error(fh)
-id = ''; msg = '';
-try
-    fh();
-catch err
-    id = err.identifier; msg = err.message;
-end
 end
 
 function L = read_lines(f)

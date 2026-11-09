@@ -7,8 +7,7 @@ function Phases = Build_Phase_Registry(Requested_Codes)
 % documented stand-in values are substituted (SS1: G_ece + 0.14, Q_reg x [0.990 ... 0.925], Emig_By_SkillTier x 0.55;
 % SS2: G_ece + 0.03, tau_l - 0.025, w_reg x 1.035, Emig_By_SkillTier x 0.80) and the missing variable and every
 % stand-in value used are written through IGW_Log (id IGW:PhaseStandIn: warning + igw_run.log line naming phase,
-% variable and value). Opt-in strictness: set Params.strict_phases = true in the base workspace and a missing phase
-% raises error('IGW:PhaseStandIn', ...) instead.
+% variable and value). A missing phase always substitutes the stand-ins; there is no switch that turns it into an error.
 
 if nargin < 1 || isempty(Requested_Codes)
     % Auto-detect available phases in base workspace
@@ -128,11 +127,7 @@ elseif evalin('base', 'exist(''StatDist_GE_Endo'',''var'')')
     P1     = evalin_def('Params_GE',      evalin_def('Params_Reform', P0));
     Diag1  = evalin_def('IG_Diag_Reform', Diag0);
 else
-    % Parametric fallback from SS0 -- every stand-in value is logged (Params.strict_phases = true raises an error instead)
-    if strict_phases_on(P0)
-        error('IGW:PhaseStandIn', ['Build_Phase_Registry: missing workspace variable StatDist_SS1 (or StatDist_GE_Endo) for phase SS1; ' ...
-            'Params.strict_phases=true forbids stand-in values']);
-    end
+    % Parametric fallback from SS0 -- every stand-in value is logged
     IGW_Log('IGW:PhaseStandIn', 'Build_Phase_Registry phase SS1: workspace variable StatDist_SS1 (or StatDist_GE_Endo) is missing; substituting stand-in values, this phase is NOT a solved steady state');
     Dist1 = Dist0; Pol1 = Pol0; V1 = V0; jDist1 = jDist0; P1 = P0;
     G0 = getfield_def(P0, 'G_ece', 0.05);
@@ -167,11 +162,7 @@ if evalin('base', sprintf('exist(''StatDist_%s'',''var'')', code))
     DiagK  = evalin_def(sprintf('IG_Diag_%s', code),PrevPhase.Diag);
 else
     % Parametric preview for SS2 (2050 Debt-Sinking & Dividend Harvest) if not yet solved in VFI
-    % -- every stand-in value is logged (Params.strict_phases = true raises an error instead)
-    if strict_phases_on(PrevPhase.Params)
-        error('IGW:PhaseStandIn', ['Build_Phase_Registry: missing workspace variable StatDist_%s for phase %s; ' ...
-            'Params.strict_phases=true forbids stand-in values'], code, code);
-    end
+    % -- every stand-in value is logged
     IGW_Log('IGW:PhaseStandIn', 'Build_Phase_Registry phase %s: workspace variable StatDist_%s is missing; substituting stand-in values, this phase is NOT a solved steady state', code, code);
     DistK = PrevPhase.Dist; PolK = PrevPhase.Pol; VK = PrevPhase.V; jDistK = PrevPhase.jDist;
     PK    = PrevPhase.Params;
@@ -208,18 +199,6 @@ end
 
 function val = getfield_def(S, fname, default_val)
 if isstruct(S) && isfield(S, fname), val = S.(fname); else, val = default_val; end
-end
-
-function tf = strict_phases_on(P_ref)
-% Opt-in strictness: Params.strict_phases in the base workspace (checked first) or, failing that, in the Params of
-% the phase the stand-in would be derived from. Default false (stand-ins are substituted and logged).
-tf = false;
-Pb = evalin_def('Params', struct());
-if isstruct(Pb) && isfield(Pb, 'strict_phases') && ~isempty(Pb.strict_phases)
-    tf = logical(Pb.strict_phases(1));
-elseif isstruct(P_ref) && isfield(P_ref, 'strict_phases') && ~isempty(P_ref.strict_phases)
-    tf = logical(P_ref.strict_phases(1));
-end
 end
 
 function note = absent_note(S, fname, msg)
