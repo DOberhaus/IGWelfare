@@ -54,46 +54,69 @@ for r_idx = 1:N_reg
 end
 
 %% 1. EVALUATE THE 6 DISCRETE BENCHMARK SCENARIOS
+% Construct canonical SS0, SS1, and SS2 regional parameter structs from Single Source of Truth:
+P_SS0 = Params;
+P_SS0.G_ece_stage1_base   = Params.G_ece1_sched(1);
+P_SS0.G_ece_stage2_base   = Params.G_ece2_sched(1);
+P_SS0.active_phi_local_vec = Params.phi_local_SS0;
+P_SS0 = Configure_TimeGrid_Params(P_SS0);
+
+P_SS1 = Params;
+P_SS1.G_ece_stage1_base   = Params.G_ece1_sched(2);
+P_SS1.G_ece_stage2_base   = Params.G_ece2_sched(2);
+P_SS1.active_phi_local_vec = Params.phi_local_SS1;
+P_SS1 = Configure_TimeGrid_Params(P_SS1);
+
+P_SS2 = Params;
+P_SS2.G_ece_stage1_base   = Params.G_ece1_sched(3);
+P_SS2.G_ece_stage2_base   = Params.G_ece2_sched(3);
+P_SS2.active_phi_local_vec = Params.phi_local_SS2;
+P_SS2 = Configure_TimeGrid_Params(P_SS2);
+
 for s_idx = 1:N_scen
     super_age_s = A_base;
     p_super_s   = Params.p_super;
-    Q_mult      = [1.00, 1.00, 1.00, 1.00];
+    Q_mult      = Params.Q_mult_SS0;
     is_ss2_flag = false;
 
     switch s_idx
         case 1 % Baseline Status Quo (Super Age 65)
             beta_hyp  = 1.00;
             chi_f_pen = 0.24;
-            G_ece1_s  = Params.G_ece_stage1;
-            G_ece2_s  = Params.G_ece_stage2;
+            G_ece1_s  = P_SS0.G_ece_stage1;
+            G_ece2_s  = P_SS0.G_ece_stage2;
         case 2 % Hyperbolic Procrastination (No Commitment, Cao & Li 2022)
             beta_hyp  = 0.72;
             chi_f_pen = 0.26;
-            G_ece1_s  = Params.G_ece_stage1;
-            G_ece2_s  = Params.G_ece_stage2;
-        case 3 % Barnardos Stage-1 ECE Bargaining Relief
+            G_ece1_s  = P_SS0.G_ece_stage1;
+            G_ece2_s  = P_SS0.G_ece_stage2;
+        case 3 % Barnardos Stage-1 ECE Bargaining Relief (PE ECE1/ECE2 expansion, SS0 prices/kai)
             beta_hyp  = 0.92;
             chi_f_pen = 0.15;
-            G_ece1_s  = Params.G_ece_stage1 + 0.065;
-            G_ece2_s  = Params.G_ece_stage2 + 0.020;
+            P_s3      = P_SS0;
+            P_s3.G_ece_stage1_base = Params.G_ece1_sched(2);
+            P_s3.G_ece_stage2_base = Params.G_ece2_sched(2);
+            P_s3      = Configure_TimeGrid_Params(P_s3);
+            G_ece1_s  = P_s3.G_ece_stage1;
+            G_ece2_s  = P_s3.G_ece_stage2;
         case 4 % Phase 1 (SS1) Full Package at Age 65
             beta_hyp  = 1.00;
             chi_f_pen = 0.145;
-            G_ece1_s  = Params.G_ece_stage1 + 0.065;
-            G_ece2_s  = Params.G_ece_stage2 + 0.035;
-            Q_mult    = [0.990, 0.975, 0.950, 0.925];
+            G_ece1_s  = P_SS1.G_ece_stage1;
+            G_ece2_s  = P_SS1.G_ece_stage2;
+            Q_mult    = Params.Q_mult_SS1;
         case 5 % Fiscal Austerity Alternative: Raise NZ Super Age to 70 under Status Quo (SS0)
             beta_hyp    = 1.00;
             chi_f_pen   = 0.24;
-            G_ece1_s    = Params.G_ece_stage1;
-            G_ece2_s    = Params.G_ece_stage2;
+            G_ece1_s    = P_SS0.G_ece_stage1;
+            G_ece2_s    = P_SS0.G_ece_stage2;
             super_age_s = 70.0;
         case 6 % Phase 2 (SS2) Harvest at Parametric Super Age
             beta_hyp    = 1.00;
             chi_f_pen   = 0.132;
-            G_ece1_s    = 0.130;
-            G_ece2_s    = 0.105;
-            Q_mult      = [0.985, 0.955, 0.925, 0.895];
+            G_ece1_s    = P_SS2.G_ece_stage1;
+            G_ece2_s    = P_SS2.G_ece_stage2;
+            Q_mult      = Params.Q_mult_SS2;
             super_age_s = super_age_ss2_target;
             is_ss2_flag = true;
     end
@@ -135,9 +158,10 @@ Tax_UCurve_SS0 = zeros(n_ug, 1);
 base_struggle_mean = mean(Struggling_mat(1, :));
 for u_i = 1:n_ug
     a_u = SuperAge_Grid(u_i);
+
     % 1) Phase 2 (SS2) Harvest Package across Super Age 60..75:
-    [tfr_u, ~, stn_u, dep_u, tax_u] = eval_super_age_point(a_u, 1.00, 0.132, 0.130, 0.105, ...
-        [0.985, 0.955, 0.925, 0.895], Params.p_super, true, ...
+    [tfr_u, ~, stn_u, dep_u, tax_u] = eval_super_age_point(a_u, 1.00, 0.132, P_SS2.G_ece_stage1, P_SS2.G_ece_stage2, ...
+        Params.Q_mult_SS2, Params.p_super, true, ...
         Params, Dist_Reg_Cell, w_Reg_Vec, Q_Base_Vec, K_base_vec, base_struggle_vec, sj_ref, Reg_HH_Shares, h_vec, j_fert_vec, base_struggle_mean);
     Tax_UCurve_SS2(u_i) = tax_u;
     Dep_UCurve_SS2(u_i) = dep_u;
@@ -160,8 +184,8 @@ for u_i = 1:n_ug
     Tax_UCurve_SS0(u_i) = tax_ss0_u;
 end
 
-% Anchor CE_UCurve_SS2 so Age 64 matches T1 National SS2 (+24.24% CE) and Age 65 = +24.07% CE:
-ce_anchor_64  = 24.243125; % Default n_z = 7 Rouwenhorst SS2 National CE%
+% Anchor CE_UCurve_SS2 so Age 64 matches T1 National SS2 (+24.54% CE) and Age 65 = +24.37% CE:
+ce_anchor_64  = 24.699335; % Default n_z = 7 Rouwenhorst SS2 National CE% with z_l -> z_h & 85% T_k retirement
 ce_anchor_why = 'T1 not in workspace'; % T1 is created by WelfareDecomposition_4Region.m (Run_All Step 6, after this Step 3)
 if evalin('base', 'exist(''T1'', ''var'')')
     T1_ws = evalin('base', 'T1');
@@ -322,16 +346,22 @@ else
     elder_time_mult = 1.0 + Params.kappa_kuia_max * tanh((A_base - super_age_s) / Params.tau_kuia_sat);
 end
 
-M_mentor_s = min(1.0, max(0.0, (G_ece2_s - 0.045) / (0.085 - 0.045)));
-M_mentor_0 = min(1.0, max(0.0, (Params.G_ece_stage2 - 0.045) / (0.085 - 0.045)));
-
-N_reg     = numel(Dist_Reg_Cell);
-n_h       = numel(h_vec);
-tfr_row   = zeros(1, N_reg);
-diff_row  = zeros(1, N_reg);
+Reg_Names    = {'Rural', 'Small', 'Large', 'Auckland'};
+N_reg        = numel(Dist_Reg_Cell);
+n_h          = numel(h_vec);
+tfr_row      = zeros(1, N_reg);
+diff_row     = zeros(1, N_reg);
 struggle_row = zeros(1, N_reg);
 
 for r_idx = 1:N_reg
+    hh_t       = ['HH_', Reg_Names{r_idx}];
+    g1_r       = G_ece1_s.(hh_t);
+    g2_r       = G_ece2_s.(hh_t);
+    g1_0       = Params.G_ece_stage1.(hh_t);
+    g2_0       = Params.G_ece_stage2.(hh_t);
+    M_mentor_s = min(1.0, max(0.0, (g2_r - 0.045) / (0.085 - 0.045)));
+    M_mentor_0 = min(1.0, max(0.0, (g2_0 - 0.045) / (0.085 - 0.045)));
+
     Dist_k = Dist_Reg_Cell{r_idx};
     w_k    = w_Reg_Vec(r_idx);
     Q_k    = Q_Base_Vec(r_idx) * Q_mult(r_idx);
@@ -342,11 +372,13 @@ for r_idx = 1:N_reg
 
     fert_by_h = zeros(n_h, 1);
     mass_by_h = zeros(n_h, 1);
+
     for jj = j_fert_vec
         for ih = 1:n_h
             m_cell = sum(Dist_k(:, ih, :, :, jj), 'all');
-            opp_cost_mother = chi_f_pen * w_k * h_vec(ih) / max(0.50, 1 + 2.5 * G_ece1_s + 0.65 * dK_r);
+            opp_cost_mother = chi_f_pen * w_k * h_vec(ih) / max(0.50, 1 + 2.5 * g1_r + 0.65 * dK_r);
             housing_drag    = 0.22 * log(max(1.0, Q_k));
+
             n_opt = (beta_hyp ^ 0.65) * 2.28 / (1 + opp_cost_mother + housing_drag * (Q_k > 1.8));
             n_opt = max(0.85, min(2.60, n_opt));
 
@@ -354,12 +386,13 @@ for r_idx = 1:N_reg
             mass_by_h(ih) = mass_by_h(ih) + m_cell;
         end
     end
+
     avg_fert_h     = fert_by_h ./ max(1e-12, mass_by_h);
     tfr_row(r_idx) = sum(fert_by_h) / max(1e-12, sum(mass_by_h));
     diff_row(r_idx)= mean(avg_fert_h(1:2)) - mean(avg_fert_h(6:7));
 
     reg_weight         = 0.75 + 0.10 * r_idx;
-    ece_relief         = 115.0 * (G_ece1_s - Params.G_ece_stage1) * reg_weight ...
+    ece_relief         = 115.0 * (g1_r - g1_0) * reg_weight ...
         +  18.0 * (M_mentor_s - M_mentor_0) * reg_weight;
     whanau_gain        = 22.5 * max(0.0, dK_r);
     yrs_late_r         = max(0.0, super_age_s - A_base);

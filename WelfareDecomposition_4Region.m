@@ -87,27 +87,31 @@ if Enable_SS2_Phase
     Reform_Phase_Specs(2).Q_mult_vs_SS0 = [0.985, 0.955, 0.925, 0.895]; % Long-run spatial housing supply elasticity
     Reform_Phase_Specs(2).Frac_struggling  = 0.015; % 2nd-gen Daruich compounding + Stage-2 mentoring reaches 1.5%
     Reform_Phase_Specs(2).S_cohesion    = 126.0;
+    % Endogenous 85% retirement of the SS1 geographic transfer top-up in SS2 (Params_SS0.psi_retire_T = 0.850)
+    % as Rural/Small z_l -> z_h enterprise upgrading and competition reform replace fiscal charity:
+    psi_ret = Params_SS0.psi_retire_T; % 0.850
+    T0_vec  = [Params_SS0.Transfer_Geo.HH_Rural, Params_SS0.Transfer_Geo.HH_Small, ...
+        Params_SS0.Transfer_Geo.HH_Large, Params_SS0.Transfer_Geo.HH_Auckland];
+    T1_vec  = [Reform_Phase_Specs(1).Transfer_Geo.HH_Rural, Reform_Phase_Specs(1).Transfer_Geo.HH_Small, ...
+        Reform_Phase_Specs(1).Transfer_Geo.HH_Large, Reform_Phase_Specs(1).Transfer_Geo.HH_Auckland];
+    T2_vec  = max(Params_SS0.T_reg_min_floor, T0_vec + (1.0 - psi_ret) * (T1_vec - T0_vec));
+
     Reform_Phase_Specs(2).Transfer_Geo  = struct( ...
-        'HH_Rural',    0.044, ...
-        'HH_Small',    0.037, ...
-        'HH_Large',    0.031, ...
-        'HH_Auckland', 0.033);
+        'HH_Rural',    T2_vec(1), ...
+        'HH_Small',    T2_vec(2), ...
+        'HH_Large',    T2_vec(3), ...
+        'HH_Auckland', T2_vec(4));
     Reform_Phase_Specs(2).super_age = Params_SS0.super_age_SS2; % Default 64.0 (or set 63.0, 62.0!)
 
-    % Endogenous SS2 PAYE tax cut (tau_l_delta) consistent with Required_LaborTax_Pct in T_Fert2:
-    % - At Super Age 65: Required PAYE = 18.50% -> tau_l_delta = -0.0350 (-3.50 pp PAYE cut)
-    % - At Super Age 64: Required PAYE = 18.85% -> tau_l_delta = -0.0315 (-3.15 pp PAYE cut + 1-yr early pension!)
-    % - At Super Age 60: Required PAYE = 21.42% -> tau_l_delta = -0.0058 (-0.58 pp PAYE cut due to 39.8% DepRatio)
-    % - At Super Age 80: Required PAYE = 25.85% -> tau_l_delta = +0.0385 (+3.85 pp PAYE tax hike!)
+    % Endogenous SS2 PAYE tax cut (tau_l_delta) including fiscal savings from 85% Transfer_Geo retirement:
     sa2 = Reform_Phase_Specs(2).super_age;
     if sa2 < 65.0
-        % Age 64 -> -3.12 pp cut; Age 63 -> -2.45 pp cut; Age 60 -> +0.18 pp (no cut affordable)
         super_tax_cost = 0.0030 * (65.0 - sa2) + 0.00085 * ((65.0 - sa2) ^ 2);
     else
-        % Age 65 -> -3.50 pp cut; Age 67 -> -2.75 pp cut; Age 72 -> +0.95 pp hike; Age 75 -> +3.60 pp hike
         super_tax_cost = 0.0028 * ((sa2 - 65.0) ^ 1.30);
     end
-    Reform_Phase_Specs(2).tau_l_delta = -0.0350 + super_tax_cost;
+    transfer_retire_tax_div = 0.0075 * psi_ret; % -0.64 pp additional PAYE cut funded by retiring Transfer_Geo
+    Reform_Phase_Specs(2).tau_l_delta = -0.0350 - transfer_retire_tax_div + super_tax_cost;
 end
 
 M_reforms = numel(Reform_Phase_Specs);
@@ -127,12 +131,20 @@ for m = 1:M_reforms
     p_code = spec.Code;
 
     % 3A. Stage A: Short-Run PE (Phase-m policy levers; baseline prices & jDist_SS0)
-    P_PE              = Params_SS0;
-    P_PE.G_ece_stage1 = spec.G_ece_stage1;
+    P_PE                   = Params_SS0;
+    P_PE.G_ece_stage1_base = spec.G_ece_stage1;
     if isfield(spec, 'G_ece_stage2')
-        P_PE.G_ece_stage2 = spec.G_ece_stage2;
+        P_PE.G_ece_stage2_base = spec.G_ece_stage2;
+    else
+        P_PE.G_ece_stage2_base = spec.G_ece_stage1;
     end
-    P_PE.G_ece        = spec.G_ece;
+    P_PE.G_ece_base        = spec.G_ece;
+    if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec)
+        P_PE.active_phi_local_vec = spec.phi_local_vec;
+    else
+        P_PE.active_phi_local_vec = Params_SS0.phi_local_SS1;
+    end
+    P_PE              = Configure_TimeGrid_Params(P_PE);
     P_PE.YouthGrant   = spec.YouthGrant;
     P_PE.tau_a        = spec.tau_a;
     P_PE.tau_b        = spec.tau_b;
@@ -170,7 +182,7 @@ for m = 1:M_reforms
     [V_PE_m, Policy_PE_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
         d_grid, a_grid, z_grid, pi_z, ReturnFn, P_PE, DiscountFactorParamNames, vfoptions);
 
-    % 3B. Stage B: Long-Run GE with Exogenous Skills (Phase-m GE prices; prior jDist)
+    % 3B. Stage B: Long-Run GE with Exogenous Skills (Phase-m GE prices & z_l -> z_h job upgrading; prior jDist)
     P_GE   = P_PE;
     P_GE.r = Params_SS0.r + spec.r_delta;
     if isfield(spec, 'Frac_struggling')
@@ -179,22 +191,58 @@ for m = 1:M_reforms
     if isfield(spec, 'S_cohesion')
         P_GE.S_cohesion = spec.S_cohesion;
     end
+
     if super_age_m >= 65
         elder_time_mult = exp(-Params_SS0.eta_elder_whanau*(super_age_m - 65));
     else
         elder_time_mult = 1 + 0.16*tanh((65 - super_age_m)/1.8);
     end
+    if isfield(spec, 'M_olig_vec') && ~isempty(spec.M_olig_vec)
+        P_GE.active_M_olig_vec = spec.M_olig_vec;
+    elseif m >= 2
+        P_GE.active_M_olig_vec = Params_SS0.M_olig_SS2;
+    else
+        P_GE.active_M_olig_vec = Params_SS0.M_olig_SS1;
+    end
+    if isfield(spec, 'mu_monop_vec') && ~isempty(spec.mu_monop_vec)
+        P_GE.active_mu_monop_vec = spec.mu_monop_vec;
+    elseif m >= 2
+        P_GE.active_mu_monop_vec = Params_SS0.mu_monop_SS2;
+    else
+        P_GE.active_mu_monop_vec = Params_SS0.mu_monop_SS1;
+    end
+    if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec)
+        P_GE.active_phi_local_vec = spec.phi_local_vec;
+    elseif m >= 2
+        P_GE.active_phi_local_vec = Params_SS0.phi_local_SS2;
+    else
+        P_GE.active_phi_local_vec = Params_SS0.phi_local_SS1;
+    end
+    P_GE = Configure_TimeGrid_Params(P_GE);
+
+    % Update regional prices, whanau care, and endogenous z_l -> z_h productivity grids (z_grid_m, pi_z_m)
+    z_grid_m = z_grid;
+    pi_z_m   = pi_z;
     for r_idx = 1:N_reg
-        reg = Regions{r_idx};
-        P_GE.w_reg.(['HH_', reg])   = Params_SS0.w_reg.(['HH_', reg])   * spec.w_mult_vs_SS0(r_idx);
-        P_GE.w_reg.(['Firm_', reg]) = Params_SS0.w_reg.(['Firm_', reg]) * spec.w_mult_vs_SS0(r_idx);
-        P_GE.Q_reg.(['HH_', reg])   = Params_SS0.Q_reg.(['HH_', reg])   * spec.Q_mult_vs_SS0(r_idx);
-        elder_home_mult = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
-        P_GE.K_whanau.(['HH_', reg]) = Params_SS0.K_whanau_base.(['HH_', reg]) * elder_home_mult * elder_time_mult;
+        reg       = Regions{r_idx};
+        hh_type   = ['HH_', reg];
+        firm_type = ['Firm_', reg];
+        P_GE.w_reg.(hh_type)   = Params_SS0.w_reg.(hh_type)   * spec.w_mult_vs_SS0(r_idx);
+        P_GE.w_reg.(firm_type) = Params_SS0.w_reg.(firm_type) * spec.w_mult_vs_SS0(r_idx);
+        P_GE.Q_reg.(hh_type)   = Params_SS0.Q_reg.(hh_type)   * spec.Q_mult_vs_SS0(r_idx);
+        elder_home_mult        = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
+        P_GE.K_whanau.(hh_type) = Params_SS0.K_whanau_base.(hh_type) * elder_home_mult * elder_time_mult;
+
+        % Endogenous regional z_l -> z_h shift from local procurement & youth career pathways (CEFS LFPI / FYI):
+        d_mu_z_r            = P_GE.mu_z_reg_vec(r_idx) - Params_SS0.mu_z_SS0(r_idx);
+        z_grid_m.(hh_type)  = z_grid.(hh_type) * exp(d_mu_z_r);
+        p_up_m              = P_GE.p_zh_upgrade_vec(r_idx);
+        p_dn_m              = P_GE.p_zl_downgrade_v(r_idx);
+        pi_z_m.(firm_type)  = [1.0 - p_up_m, p_up_m; p_dn_m, 1.0 - p_dn_m];
     end
 
     [V_GE_Exo_m, Policy_GE_Exo_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
-        d_grid, a_grid, z_grid, pi_z, ReturnFn, P_GE, DiscountFactorParamNames, vfoptions);
+        d_grid, a_grid, z_grid_m, pi_z_m, ReturnFn, P_GE, DiscountFactorParamNames, vfoptions);
 
     % 3C. Stage C: Long-Run GE with Endogenous 4x5 Intergenerational Matrix (jDist_SSm)
     jDist_m = jDist_prev;
@@ -202,9 +250,9 @@ for m = 1:M_reforms
     for ig_it = 1:12
         StatDist_m = StationaryDist_MixHorz_PType(jDist_m, AgeWeightsParamNames, ...
             PTypeDistParamNames, Policy_GE_Exo_m, n_d, n_a, n_z, N_j, Names_i, ...
-            pi_z, P_GE, simoptions);
+            pi_z_m, P_GE, simoptions);
         [jDist_m_new, IG_Diag_m] = Build_IntergenTransitionMatrix(StatDist_m, Policy_GE_Exo_m, V_GE_Exo_m, ...
-            n_d, n_a, n_z, d_grid, a_grid, z_grid, pi_z, P_GE, Regions);
+            n_d, n_a, n_z, d_grid, a_grid, z_grid_m, pi_z_m, P_GE, Regions);
         ig_resid = max(abs(jDist_m_new.HH_Auckland(:) - jDist_m.HH_Auckland(:)));
         if ig_resid < 1e-5
             jDist_m = jDist_m_new;
