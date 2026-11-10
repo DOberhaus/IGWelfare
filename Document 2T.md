@@ -134,6 +134,14 @@ When a policy simulation raises the NZ Superannuation eligibility age (`Jr`) abo
 
 ---
 
+### 4.5 Rouwenhorst Markov Drift Conditioning ($\Delta \mu_{z,k}$): Regional $z_l \to z_h$ Job Upgrading & Endogenous 85% Transfer Retirement
+
+In a deterministic spreadsheet, a regional household transfer ($T_k$) is treated as a permanent fiscal subsidy against a static average wage $\bar{w}_k$. Under our 7-point Rouwenhorst Markov discretization (`n_z = 7`), breaking wholesale farm-gate monopsony and retail duopoly markups [Ref 49] while anchoring $1.60\times$–$2.16\times$ local food-hub procurement multipliers [Ref 56] applies a dimension-free upward drift $\Delta \mu_{z,k} = [+0.0408, +0.0307, +0.0170, +0.0102]$ directly to the regional Rouwenhorst grid `z_grid_k`:
+
+$$z_{k}^{\mathrm{eff}}(i_z) = z_{k,\mathrm{base}}(i_z) + \Delta \mu_{z,k}, \qquad T_k^{\mathrm{SS2}} = T_k^{\mathrm{SS0}} + (1 - \psi_{\mathrm{retire},T})\bigl(T_k^{\mathrm{SS1}} - T_k^{\mathrm{SS0}}\bigr)$$
+
+Because the Labrousse–Perdereau transfer schedule is concentrated in the lower tail $(z_1, z_2)$ where $a < 0.12 Q_k$, shifting probability mass $\mu_k(a,h,\theta_c,z,j)$ out of low-wage $z_l$ monopsony states into high-productivity $z_h$ enterprise jobs raises Rural welfare by **+2.81 pp in `SS1`** and **+2.42 pp in `SS2`**, allowing **$\psi_{\mathrm{retire},T} = 85\%$ of the Phase-1 geographic transfer top-up to retire in `SS2`** and recycling **$-0.64\text{ pp}$** into the working-age PAYE tax cut ($\tau_l: 22.0\% \to 18.25\%$) without adding a single exogenous grid dimension.
+
 ## 5. Companion Codebase & Suite Navigation
 
 * **For the Full 8-PType Mixed-Horizon Bellman Specification, SMM Identification Matrix, & 22-File Codebase Manifest:** See **[Document 2A](Document%202A.md) and [Document 2B](Document%202B.md) (*Technical Documentation & Model Specification Guides*)**.

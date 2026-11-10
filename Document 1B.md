@@ -41,7 +41,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 | **2. Coupled Markets** *(Property-to-Enterprise Tax Shift)* | `ReturnFn_Firm.m`, `WelfareDecomposition_4Region.m` ($`\tau_a = 1.5\%, \tau_b = 25\% \to 18\%, E = 0.065 \to 0.080`$) | +0.0% Wage; 28.0% Young Own; 10.93% Nat. Emig ($`S_t = 100`$) | **+3.2% to +5.5% Wage; 38.2% Own; 8.56% Emig** ($`S_t = 112.0\text{--}118.4`$) | **+6.8% to +9.6% Wage; 41.2%–41.5% Own; 7.60% Emig** ($`S_t = 126.0`$) | `Table1`, `Table3`, `Fig2_Kiyotaki_*`, `Fig3_BrainDrain_*` |
 | **3. Sankey Fiscal Ledger** *(18-Node Pop & 29-Node Fiscal)* | `Plot_ChildFates_SSankey.m`, `Plot_ChildFiscal_SSankey.m` ( Ω fiscal ) | 14.0%–14.6% $z_l$ Rent-Seekers vs. 6.8%–7.1% $z_h$ Builders; +2.1 to +3.2 kNZD/yr Base Balance (NZD 17.7B/yr Exits) | *39.9% *z*<sub>h</sub> Builders (7.7% *z*<sub>l</sub>); +27.0 to +28.0 kNZD/yr Net Surplus (+13.5k–14.0k Debt Sink + Reinvest)* | *52.0% $z_h$ Builders (3.6% $z_l$); +29.9 to +31.2 kNZD/yr Net Surplus (+15.0k–15.6k Debt Sink + Reinvest)* | Table14 , Table15 , Fig_ChildFiscal_6Gate_* |
 | **4. Actuarial Valuation** *(ACC-Style Continuation Value)* | `Plot_ActuarialContinuationValuation.m` ($`\mathcal{V}_{k,t_0}^{(L)}, r_{\mathrm{disc}} = 0.02`$) | Cash breakeven takes **18.8 yrs** (46.4 yrs direct savings) | **Yr 5: NZD 35.25B Fiscal (3.84x) / NZD 85.40B GDP** (1.16x cost avoidance alone) | **60-Yr Cash: NZD 702.3B Fiscal / NZD 1,510.7B GDP (6.86x)** | `Table16_Actuarial_*`, `Fig_Actuarial_*` |
-| **5. The *SS2* Dividend Harvest** *(2050 50/50 Debt & Infra + Super U-Curve)* | `FertilityBargaining_Module.m`, `Plot_Counterfactuals_And_MirrorInvestments.m` ($`\Omega_{\mathrm{debt}}, \Omega_{\mathrm{infra}}`$) | 1.66 TFR; **23.60%–28.20% PAYE req.**; 22.0% actual PAYE | 1.85–1.93 TFR; **20.84% PAYE req.** (at 22.0% actual → Sinks Debt) | **Super Age 64 (+24.24% CE Peak, 18.85% PAYE) or Age 65 (18.57% PAYE Min)**; NZD 21.85B Debt + 14.90B Infra/Wave | `Table7`, `Table8`, `Table8B`, `Table19`, `Table20`, `FigFert_*` |
+| **5. The *SS2* Dividend Harvest** *(2050 50/50 Debt & Infra + Super U-Curve)* | `FertilityBargaining_Module.m`, `Plot_Counterfactuals_And_MirrorInvestments.m` ($`\Omega_{\mathrm{debt}}, \Omega_{\mathrm{infra}}`$) | 1.66 TFR; **23.60%–28.20% PAYE req.**; 22.0% actual PAYE | 1.85–1.93 TFR; **20.84% PAYE req.** (at 22.0% actual → Sinks Debt) | **Super Age 64 (+24.70% CE Peak, 18.25% PAYE) or Age 65 (17.97% PAYE Min)**; NZD 21.85B Debt + 14.90B Infra/Wave | `Table7`, `Table8`, `Table8B`, `Table19`, `Table20`, `FigFert_*` |
 
 ```text
 +-----------------------------------------------------------------------------------+
@@ -63,7 +63,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
 
 2. **Audience 2 — Venture Capitalists, Founders, & Growth Investors (Doc 1A Part I.2):**
    * *Productive Capital Reallocation:* Replaces distortionary capital-income taxation ($`\tau_k`$) with a **1.5% book-value land/wealth levy** (*τ_a* = 0.015 (1.5%)) on dormant equity and a **25% peak estate levy** ($`\tau_b = 25\%`$, stepping down to `0.18` in `SS2`) on the **NZD 1.6T intergenerational property transfer wave** (Guvenen et al., 2023, *QJE* 138(2)).
-   * *Talent Retention:* Roughly **19.5%** of educated young adults in metropolitan hubs (`19.29%` in Auckland, `23.41%` in Large regional cities) emigrate at ages 20–35 in `SS0`. Recycling estate revenues into a universal **Youth Capital Grant** at age 20 ($`E = 0.065`$ in `SS1`, $`0.080`$ in `SS2`) and a **-3.5 pp working-age PAYE cut** (`22.0% -> 18.5%`) in `SS2` expands the thriving domestic talent pool ($`h_6`$–$`h_7`$) from **23.2%–23.5% to 57.3%–61.0%+ in `SS1` and 65.0% in `SS2`**.
+   * *Talent Retention:* Roughly **19.5%** of educated young adults in metropolitan hubs (`19.29%` in Auckland, `23.41%` in Large regional cities) emigrate at ages 20–35 in `SS0`. Recycling estate revenues into a universal **Youth Capital Grant** at age 20 ($`E = 0.065`$ in `SS1`, $`0.080`$ in `SS2`) and a **-3.75 to -4.03 pp working-age PAYE cut** (`22.0% -> 17.97%–18.25%`) in `SS2` expands the thriving domestic talent pool ($`h_6`$–$`h_7`$) from **23.2%–23.5% to 57.3%–61.0%+ in `SS1` and 65.0% in `SS2`**.
    * *Occupational Talent Allocation & The Rent-Seeking Extraction Wedge (Murphy, Shleifer, & Vishny, 1991, *QJE* 106(2): 503–530):* **Document 1A & 1C Claim:** Pairing the Guvenen et al. (2023) property-to-enterprise tax rebalance (*τ_a* = 0.015 (1.5%), $`\tau_b = 25\% \rightarrow 18\%`$) with the universal Youth Capital Grant ($`E = 0.065 \rightarrow 0.080`$) and front-loaded human capability ($`G_{\text{ECE},1}, G_{\text{ECE},2}`$) reverses both external youth emigration (`Nat_Emig_Abroad_Pct`: $`10.93\% \rightarrow 7.60\%`$) and internal talent misallocation into unproductive property speculation ($`z_\ell`$).
    * **Theoretical & Empirical Mapping:** In Murphy, Shleifer, and Vishny's (1991, Sec. I–III) Lucas-style superstar model, productive entrepreneurs with ability $`A > A^*`$ earn $`\pi_{\text{ent}}(A) = (1 - T)[s \cdot A \cdot F(H) - wH]`$, while rent-seekers extract a share $`T \cdot Y`$ of existing wealth and output via $`R_{\text{rent}}(A) = \frac{A \cdot G(H) \cdot T \cdot Y}{\int A G(H) f(A) dA} - wH`$. In an economy with a large existing wealth stock (NZD 1.6T residential land) and slow baseline productivity growth ($`0.9\%/\text{yr}`$ in Treasury *AN 26/01*), $`R_{\text{rent}}(A)`$ dominates $`\pi_{\text{ent}}(A)`$ at the top of the ability distribution *a*, drawing potential innovators into zero-sum wealth redistribution and permanently lowering endogenous TFP growth $`g_s = s(t)/s(t-1) - 1`$. Lowering the effective rent-seeking wedge $T$ on productive firms (via corporate tax relief, $`-60\text{ bps}`$ credit crowding-in, and the *τ_a* = 0.015 (1.5%) land/wealth levy on $`z_\ell`$) shifts the marginal and top-tail ability thresholds back into productive entrepreneurship—Validated empirically by MSV (1991, Tables III–VI, $N=55$), where engineering share raises real per-capita growth ($`\beta_{\text{eng}} = +0.054\text{ direct}, +0.125\text{ total}`$) and strongly co-moves with primary human-capital investment ($`+1.02, \text{SE } 0.408`$) and physical investment ($`+0.432, \text{SE } 0.119`$), whereas rent-seeking law concentration directly depresses growth ($`\beta_{\text{law}} = -0.078, \text{SE } 0.040`$).
 
@@ -85,7 +85,7 @@ Every strategic claim, welfare percentage, fertility shift, migration flow, weal
    * *Parametric & Economic Channels Empowering the Creative Sector:*
      * **1. Narrative & Civic Credibility ($\lambda_{\text{cred}}(t)$ in `TransPath_4Region_Master.m`):** Translating the 18 nodes of the Population Sankey and 29 nodes of the Fiscal Sankey into living *pūrākau* accelerates public and youth belief convergence ($\lambda_{\text{cred}}(t) \to 1$), pulling forward brain-drain reversal (`Regime B/C`).
      * **2. Creative Agency at Gate 2 ($`\Delta_{\mathrm{Tuakana}} = +0.11 \to +0.14`$ in `Build_IntergenTransitionMatrix.m`):** Music, storytelling, *kapa haka*, design, and maker micro-economies are the active non-cognitive inputs inside *Montessori / Tuakana–Teina* and *Stars / Project K* adolescent communities at ages 12–14.
-     * **3. The Creative Endowment & Urban Rent Relief ($`E = 0.065 \to 0.080`$, $`Q_{\mathrm{Akl}} -7.5\% \to -10.5\%`$, $`\tau_l: 22.0\% \to 18.5\%`$):** Cooling metropolitan rental user costs ($`rr_k`$) in Auckland and Large regional cities (Wellington, Christchurch, Hamilton, Tauranga, Dunedin) while providing every 20-year-old with the universal **Youth Capital Grant** (*E*) gives young artists, game developers, filmmakers, and cultural founders the economic runway to stay and build IP in Aotearoa rather than emigrating to Melbourne, Sydney, London, or Los Angeles.
+     * **3. The Creative Endowment & Urban Rent Relief ($`E = 0.065 \to 0.080`$, $`Q_{\mathrm{Akl}} -7.5\% \to -10.5\%`$, $`\tau_l: 22.0\% \to 18.25\%`$):** Cooling metropolitan rental user costs ($`rr_k`$) in Auckland and Large regional cities (Wellington, Christchurch, Hamilton, Tauranga, Dunedin) while providing every 20-year-old with the universal **Youth Capital Grant** (*E*) gives young artists, game developers, filmmakers, and cultural founders the economic runway to stay and build IP in Aotearoa rather than emigrating to Melbourne, Sydney, London, or Los Angeles.
 
 ---
 
@@ -183,12 +183,12 @@ Putting this all together, we construct Gates 1-3 with the following constraints
 * **8-PType Regional Household & Firm Architecture (A3 Two-Column Reference Comparison):**
   * Initialized in `NZ_4Region_Master.m` via `Params.PTypeWeights(1:4)` (Stats NZ June 2025 Subnational Population Estimates) and `Params.PTypeWeights(5:8)` (Stats NZ Feb 2025 Business Demography):
 
-| Regional Tier (*k*) | Household PType (`Names_i(1:4)`) | Base HH Pop Share | House Price *Q_k* (`SS0` → `SS1` → `SS2`) | Transport Floor $`\bar{e}_k`$ |Geo Transfer *T_k* (`SS0` → `SS1`) | Firm PType (`Names_i(5:8)`) | Base Firm Share | Firm Prod Grid $`[z_{\ell,k}, z_{h,k}]`$ | Annual Trend $`G_{k,\mathrm{ann}}`$ |
+| Regional Tier (*k*) | Household PType (`Names_i(1:4)`) | Base HH Pop Share | House Price *Q_k* (`SS0` → `SS1` → `SS2`) | Transport Floor $`\bar{e}_k`$ |Geo Transfer *T_k* (`SS0` → `SS1` → `SS2`) | Firm PType (`Names_i(5:8)`) | Base Firm Share | Firm Prod Grid $`[z_{\ell,k}, z_{h,k}]`$ | Annual Trend $`G_{k,\mathrm{ann}}`$ |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1. Rural** | `HH_Rural` | **16.0%** | `1.05` → `1.04` → `1.03` | `0.048` (2.7x–3.0x) | `0.025` → `0.038` | `Firm_Rural` | **15.0%** | `[0.70, 1.15]` | `1.007` (+0.7%/yr) |
-| **2. Small (<100k)** | `HH_Small` | **24.0%** | `1.40` → `1.36` → `1.34` | `0.036` (2.3x) | `0.020` → `0.031` | `Firm_Small` | **23.0%** | `[0.75, 1.28]` | `1.011` (+1.1%/yr) |
-| **3. Large (>100k)** | `HH_Large` | **25.9%** | `2.05` → `1.95` → `1.90` | `0.022` (1.4x) | `0.016` → `0.025` | `Firm_Large` | **26.9%** | `[0.83, 1.50]` | `1.018` (+1.8%/yr) |
-| **4. Auckland** | `HH_Auckland` | **34.1%** | `3.10` → `2.87` → `2.77` | `0.016` (1.0x base) | `0.014` → `0.028` | `Firm_Auckland` | **35.1%** | `[0.90, 1.75]` | `1.025` (+2.5%/yr) |
+| **1. Rural** | `HH_Rural` | **16.0%** | `1.05` → `1.04` → `1.03` | `0.048` (2.7x–3.0x) | `0.015` → `0.038` → `0.018` (85% retired) | `Firm_Rural` | **15.0%** | `[0.70, 1.15]` | `1.007` (+0.7%/yr) |
+| **2. Small (<100k)** | `HH_Small` | **24.0%** | `1.40` → `1.36` → `1.34` | `0.036` (2.3x) | `0.010` → `0.031` → `0.013` (85% retired) | `Firm_Small` | **23.0%** | `[0.75, 1.28]` | `1.011` (+1.1%/yr) |
+| **3. Large (>100k)** | `HH_Large` | **25.9%** | `2.05` → `1.95` → `1.90` | `0.022` (1.4x) | `0.005` → `0.025` → `0.008` (85% retired) | `Firm_Large` | **26.9%** | `[0.83, 1.50]` | `1.018` (+1.8%/yr) |
+| **4. Auckland** | `HH_Auckland` | **34.1%** | `3.10` → `2.87` → `2.77` | `0.016` (1.0x base) | `0.000` → `0.028` → `0.004` (85% retired) | `Firm_Auckland` | **35.1%** | `[0.90, 1.75]` | `1.025` (+2.5%/yr) |
 
 * **Guvenen et al. (2023) Tax Shift & Wage / House Price Multipliers (`WelfareDecomposition_4Region.m`):**
   * Shifting from corporate/capital income tax $`\tau_k`$ to a book-value wealth/land levy (*τ_a* = 0.015 (1.5%)) and estate levy ($`\tau_b = 25\%`$ in `SS1`, `18%` in `SS2`) on the NZD 1.6T property transfer wave yields `SS1` general-equilibrium wage multipliers `w_mult_GE = [1.032, 1.038, 1.048, 1.055]` (**+3.2% to +5.5%**, rising to **+6.8% to +9.6%** in `SS2`) and house-price cooling multipliers `Q_mult_GE = [0.990, 0.975, 0.950, 0.925]` (**-1.0% to -7.5%** in `SS1`, and **-7.5% to -10.5%** in `SS2`).
@@ -467,29 +467,28 @@ Every behavioral, demographic, and fiscal elasticity governing the statutory ret
 
 #### 3.4.7 Audited Retirement-Age U-Curve (`Table8B_SuperAge_UCurve_60to75.csv` from `FertilityBargaining_Module.m`)
 
-Evaluating the unified government budget identity and household welfare decomposition across statutory retirement ages $`A_{\mathrm{super}} \in [60, 75]`$ reveals a textbook **U-curve in required working-age PAYE taxation** (minimized at **Age 65 = 18.57%** and **Age 64 = 18.85%**) and an **Inverted-U in national household welfare** (peaking at **Age 64 = +24.24 CE**):
+Evaluating the unified government budget identity and household welfare decomposition across statutory retirement ages $`A_{\mathrm{super}} \in [60, 75]`$ reveals a textbook **U-curve in required working-age PAYE taxation** (minimized at **Age 65 = 17.97%** and **Age 64 = 18.25%**) and an **Inverted-U in national household welfare** (peaking at **Age 64 = +24.70% CE**):
 
-| **Statutory NZ Super Age ($`A_{\mathrm{super}}`$)** | ***SS2* Required PAYE Tax ($`\tau_l`$)** | ***SS2* Effective Dependency Ratio** | ***SS2* National TFR** | ***SS2* Mean Struggling Share** | ***SS2* National Welfare Gain (CE%)** | ***SS0* Status Quo Required PAYE Tax** | **Structural & Fiscal Regime Interpretation** |
+| **Statutory NZ Super Age ($A_{\mathrm{super}}$)** | **SS2 Required PAYE Tax ($\tau_l$)** | **SS2 Effective Dependency Ratio** | **SS2 National TFR** | **SS2 Mean Struggling Share** | **SS2 National Welfare Gain (CE%)** | **SS0 Status Quo Required PAYE Tax** | **Structural & Fiscal Regime Interpretation** |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Age 60** | 21.05% | 39.80% | 1.871 | 2.22% | +21.61% | 26.40% | **Too Early:** Moving 60–64 peak earners onto Super swells DepRatio to 39.8%, consuming +2.48 pp of the PAYE tax cut. |
-| **Age 61** | 20.43% | 36.95% | 1.871 | 2.23% | +22.51% | 25.68% | Prime-earner denominator loss still outweighs marginal *Kuia* time gain. |
-| **Age 62** | 19.85% | 34.31% | 1.871 | 2.24% | +23.29% | 25.03% | Unlocks a -2.15 pp PAYE cut alongside 3 years of early retirement. |
-| **Age 63** | 19.32% | 31.87% | 1.870 | 2.29% | +23.91% | 24.45% | Strong +12.9% *Kuia/Koroua* time boost + -2.68 pp PAYE tax cut. |
-| **★ Age 64** | **18.85%** | **29.68%** | **1.869** | **2.41%** | **+24.24% (PEAK)** | 23.97% | **★ Global Welfare Peak:** 1 yr early retirement + +8.1% *Kuia* boost + **-3.15 pp PAYE cut** (costs only +0.28 pp vs Age 65). |
-| **★ Age 65** | **18.57% (MIN)** | **27.81%** | **1.866** | **2.60%** | **+24.07%** | 23.61% | **★ Global Tax Minimum:** Full **-3.43 pp PAYE cut** at current statutory retirement age 65. |
-| **Age 66** | 18.98% | 27.45% | 1.864 | 3.21% | +21.63% | 23.65% | **Inflection Point:** Losing grandparent care (-8.6%) & late-life wear turns tax curve UP and welfare DOWN. |
-| **Age 67** | 19.63% | 27.55% | 1.861 | 4.06% | +18.34% | 23.81% | Disability leak & *whānau* squeeze (-16.5%) erode +1.06 pp of tax relief and -5.90% CE of welfare. |
-| **Age 68** | 20.45% | 28.10% | 1.859 | 5.00% | +14.59% | 24.10% | Sandwich care drag on 40–55-year-old adult children begins shrinking the effective working denominator. |
-| **Age 69** | 21.40% | 29.07% | 1.857 | 6.01% | +10.47% | 24.50% | Almost the entire *SS2* PAYE cut is wiped out by geriatric/disability leaks and hardship rebound. |
-| **Age 70** | **22.48%** | 30.44% | 1.855 | 7.07% | +6.04% | 25.01% | **Crosses Above 22.0% PAYE:** Forcing 65–69-year-olds to work (-36.2% *whānau* care) forces a net tax hike. |
-| **Age 71** | 23.66% | 32.11% | 1.853 | 8.19% | +1.36% | 25.60% | Nearly 100% of the generational welfare gain is eroded by pension confiscation and hardship. |
-| **Age 72** | 24.94% | 34.10% | 1.851 | 9.34% | -3.55% | 26.28% | Severe pension confiscation + sandwich drag pulls long-run household welfare negative (-3.55% CE). |
-| **Age 73** | 26.32% | 36.39% | 1.849 | 10.52% | -8.68% | 27.05% | Compounding morbidity and benefit substitution drive required PAYE above 26.3%. |
-| **Age 74** | 27.78% | 38.99% | 1.848 | 11.73% | -14.01% | 27.89% | Approaches Status Quo LTFM tax cliff while confiscating 9 years of retirement. |
-| **Age 75** | **29.33%** | 41.89% | 1.847 | 12.95% | -19.53% | 28.82% | Total collapse of intergenerational *whānau* scaffolding and geriatric safety-net overload (+7.33 pp tax hike). |
+| **Age 60** | 20.45% | 39.80% | 1.871 | 2.22% | +22.72% | 26.40% | *Too Early:* Moving 60–64 peak earners onto Super swells DepRatio to 39.8%, consuming +2.48 pp of the PAYE tax cut. |
+| **Age 61** | 19.83% | 36.95% | 1.871 | 2.23% | +23.62% | 25.68% | Prime-earner denominator loss still outweighs marginal *Kuia* time gain. |
+| **Age 62** | 19.25% | 34.31% | 1.871 | 2.24% | +24.40% | 25.03% | Unlocks a -2.75 pp PAYE cut alongside 3 years of early retirement. |
+| **Age 63** | 18.72% | 31.87% | 1.870 | 2.29% | +24.56% | 24.45% | Strong +12.9% *Kuia/Koroua* time boost + -3.28 pp PAYE tax cut. |
+| **★ Age 64** | **18.25%** | **29.68%** | **1.869** | **2.41%** | **+24.70% (PEAK)** | 23.97% | **★ Global Welfare Peak:** 1 yr early retirement + +8.1% *Kuia* boost + **-3.75 pp PAYE cut** (incl. -0.64 pp from 85% $T_k$ retirement). |
+| **★ Age 65** | **17.97% (MIN)** | **27.81%** | **1.866** | **2.60%** | **+24.53%** | 23.61% | **★ Global Tax Minimum:** Full **-4.03 pp PAYE cut** at current statutory retirement age 65. |
+| **Age 66** | 18.38% | 27.45% | 1.864 | 3.21% | +22.74% | 23.65% | *Inflection Point:* Losing grandparent care (-8.6%) & late-life wear turns tax curve UP and welfare DOWN. |
+| **Age 67** | 19.03% | 27.55% | 1.861 | 4.06% | +19.45% | 23.81% | Disability leak & *whānau* squeeze (-16.5%) erode +1.06 pp of tax relief and -5.25% CE of welfare. |
+| **Age 68** | 19.85% | 28.10% | 1.859 | 5.00% | +15.70% | 24.10% | Sandwich care drag on 40–55-year-old adult children begins shrinking the effective working denominator. |
+| **Age 69** | 20.80% | 29.07% | 1.857 | 6.01% | +11.58% | 24.50% | Almost the entire *SS2* PAYE cut is wiped out by geriatric/disability leaks and hardship rebound. |
+| **Age 70** | **21.88%** | 30.44% | 1.855 | 7.07% | +7.15% | 25.01% | *Wipes Out Tax Relief:* Forcing 65–69-year-olds to work (-36.2% *whānau* care) destroys the PAYE dividend. |
+| **Age 71** | 23.06% | 32.11% | 1.853 | 8.19% | +2.47% | 25.60% | Crosses above 22.0% baseline PAYE while eroding >90% of the generational welfare gain. |
+| **Age 72** | 24.34% | 34.10% | 1.851 | 9.34% | -2.44% | 26.28% | Severe pension confiscation + sandwich drag pulls long-run household welfare negative (-2.44% CE). |
+| **Age 73** | 25.72% | 36.39% | 1.849 | 10.52% | -7.57% | 27.05% | Compounding morbidity and benefit substitution drive required PAYE above 25.7%. |
+| **Age 74** | 27.18% | 38.99% | 1.848 | 11.73% | -12.90% | 27.89% | Approaches Status Quo LTFM tax cliff while confiscating 9 years of retirement. |
+| **Age 75** | **28.73%** | 41.89% | 1.847 | 12.95% | -18.42% | 28.82% | Total collapse of intergenerational *whānau* scaffolding and geriatric safety-net overload (+6.73 pp tax hike). |
 
----
-
+### 
 #### 3.4.8 Cohort Distribution Drift and Transience Haircuts Across the 4-Region + Abroad Framework (`Dunedin_22` vs. `MetroSqueeze_GUiNZ`)
 
 Let $`s_1 = (a_1, h_1, \theta_c, z, k)`$ denote the initial household state vector at Gate 1 (ages 0–5) across the four domestic regions $`k \in \lbrace 1, 2, 3, 4 \rbrace`$ (`Rural`, `Small`, `Large`, `Auckland`), with dimension *k* = 5 denoting `Abroad`. Under Stone–Geary non-homothetic preferences with regional housing subsistence requirement $`p_{H,k}(j)\bar{h}`$ and mandatory transport/energy floor $`\bar{e}_k`$, private parental cash enrichment $`i_c^\star(s_1, t)`$ satisfies the Kuhn–Tucker condition:
@@ -539,46 +538,38 @@ Finally, note that in `SS1` and `SS2`, the critical disposable-income boundary $
 <img src="./Output_NZ_4Region_Intergen/Fig1_Daruich_Cohort_Welfare_4Region.png" alt="Cohort Welfare Transition Path Across 4 Regions" width="68%" style="display: block; width: 68%; margin: 1.2rem auto; break-inside: avoid; page-break-inside: avoid;" />
 
 * **Jump 1 (*c* = 0, Phase 1 *SS1* Launch):** Immediate surge in incoming cohort welfare driven by universal First-2,000-Days wraparound ($`G_{\mathrm{ece},1} = 0.110`$), Montessori / *Tuakana–Teina* & Graeme Dingle adolescent mentoring ($`G_{\mathrm{ece},2} = 0.085`$), the age-20 Youth Capital Grant ($E = 0.065$), and Guvenen et al. firm capital reallocation.
-* **Jump 2 (*c* = +25, Phase 2 *SS2* Harvest):** Second structural leap 20–25 years into the transition when the children of the first reformed cohort enter parenthood with thriving human capital ($`\mu_1^{SS2}`$) and the Crown activates the **2050 50/50 Debt-Sinking and Infrastructure Protocol** alongside **lowering universal NZ Superannuation to Age 64** (+8.1% *Kuia / Whānau* boost) and the **-3.15 percentage-point working-age PAYE tax cut** (22.00% down to 18.85%).
+* **Jump 2 (*c* = +25, Phase 2 *SS2* Harvest):** Second structural leap 20–25 years into the transition when the children of the first reformed cohort enter parenthood with thriving human capital ($`\mu_1^{SS2}`$) and the Crown activates the **2050 50/50 Debt-Sinking and Infrastructure Protocol** alongside **lowering universal NZ Superannuation to Age 64** (+8.1% *Kuia / Whānau* boost) and the **-3.75 percentage-point working-age PAYE tax cut** (22.00% down to 18.25%, including -0.64 pp from retiring 85% of the SS1 geographic transfer as regional $z_l \to z_h$ enterprises mature).
 
-| **Row Label (`T1`)** | **`Rural_CE_Pct`** | **`Small_CE_Pct`** | **`Large_CE_Pct`** | **`Auckland_CE_Pct`** | **`National_CE_Pct`** | **Share of Phase Gain from Endogenous Intergenerational Matrix** |
+| **Row Label (`T1`)** | **Rural_CE_Pct** | **Small_CE_Pct** | **Large_CE_Pct** | **Auckland_CE_Pct** | **National_CE_Pct** | **Share of Phase Gain from Endogenous Intergenerational Matrix** |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **`SS1_1_ShortRun_PE`** | **+2.45%** (`2.454`) | **+2.37%** (`2.371`) | **+2.92%** (`2.918`) | **+4.53%** (`4.531`) | **+3.26%** | Direct policy levers ($`G_{\mathrm{ece},1}=0.110`$, $`G_{\mathrm{ece},2}=0.085`$, $E=0.065$, *T_k*) at fixed *SS0* prices & $`\mu_1`$ |
-| **`SS1_2_LongRun_GE_ExoSkills`** | **+3.75%** (`3.751`) | **+4.72%** (`4.719`) | **+6.40%** (`6.402`) | **+9.00%** (`9.004`) | **+6.46%** | Guvenen firm reallocation ($`w_k \uparrow`$) + housing cooling ($`Q_{\mathrm{Akl}} -7.5\%`$) at fixed $`\mu_1^{SS0}`$ |
-| **`SS1_3_LongRun_GE_EndoIntergen`** | **+9.48%** (`9.479`) | **+12.18%** (`12.184`) | **+14.38%** (`14.384`) | **+17.73%** (`17.728`) | **+14.21%** | **60.4% (*Rural*), 61.3% (*Small*), 55.5% (*Large*), 49.2% (*Auckland*)** from $`\mu_1^{SS1}`$ shift |
-| **`SS2_1_ShortRun_PE`** | **+6.32%** (`6.318`) | **+6.55%** (`6.549`) | **+7.09%** (`7.091`) | **+9.15%** (`9.152`) | **+7.54%** | Adds -3.12 pp PAYE tax cut ($`\tau_l: 22.0\% \to 18.88\%`$), Super Age 64, $`G_{\mathrm{ece},1}=0.130`$, $`G_{\mathrm{ece},2}=0.105`$, $E=0.080$ |
-| **`SS2_2_LongRun_GE_ExoSkills`** | **+9.55%** (`9.551`) | **+11.65%** (`11.652`) | **+13.61%** (`13.610`) | **+17.17%** (`17.174`) | **+13.70%** | Adds 2050 Debt-Sinking ($`\Delta r = -0.006`$), 1.65x infra wage lift ($`w_k +6.8\%\text{ to }+9.6\%`$), $`Q_{\mathrm{Akl}} -10.5\%`$ |
-| **`SS2_3_LongRun_GE_EndoIntergen`** | **+18.21%** (`18.213`) | **+21.75%** (`21.750`) | **+24.41%** (`24.414`) | **+28.70%** (`28.697`) | **+24.24%** | **43.5% of Total National *SS2* Gain (+10.54% out of +24.24%)** stems from $`\mu_1^{SS2}`$ dynastic & *Kuia/Whānau* compounding |
+| **`SS1_1_ShortRun_PE`** | **+2.02%** (`2.0163`) | **+2.15%** (`2.1464`) | **+2.51%** (`2.5056`) | **+3.21%** (`3.2097`) | **+2.58%** (`2.5812`) | Direct policy levers ($G_{\mathrm{ece},1} = 0.110$, $G_{\mathrm{ece},2} = 0.085$, $E = 0.065$, `Transfer_Geo`) at fixed *SS0* prices & $\mu_1$ |
+| **`SS1_2_LongRun_GE_ExoSkills`** | **+6.23%** (`6.2319`) | **+6.28%** (`6.2786`) | **+6.77%** (`6.7684`) | **+7.71%** (`7.7093`) | **+6.89%** (`6.8858`) | Guvenen firm reallocation ($w_k \uparrow$) + regional $z_l \to z_h$ procurement lift ($1.60\times$--$2.16\times$) + housing cooling ($Q_{\mathrm{Akl}} -7.5\%$) at fixed $\mu_1^{\mathrm{SS0}}$ |
+| **`SS1_3_LongRun_GE_EndoIntergen`** | **+11.95%** (`11.945`) | **+13.74%** (`13.739`) | **+14.89%** (`14.888`) | **+17.52%** (`17.515`) | **+15.04%** (`15.037`) | **47.8% (`Rural`), 54.3% (`Small`), 54.5% (`Large`), 56.0% (`Auckland`)** from $\mu_1^{\mathrm{SS1}}$ shift |
+| **`SS2_1_ShortRun_PE`** | **+5.64%** (`5.6376`) | **+5.82%** (`5.8241`) | **+6.26%** (`6.2614`) | **+6.93%** (`6.9250`) | **+6.28%** (`6.2829`) | Retires 85% of SS1 `Transfer_Geo` top-up to fund **-3.75 pp PAYE tax cut** ($\tau_l: 22.0\% \to 18.25\%$), Super Age 64, $G_{\mathrm{ece},1} = 0.130$, $G_{\mathrm{ece},2} = 0.105$, $E = 0.080$ |
+| **`SS2_2_LongRun_GE_ExoSkills`** | **+12.70%** (`12.700`) | **+12.91%** (`12.907`) | **+13.61%** (`13.606`) | **+14.59%** (`14.588`) | **+13.63%** (`13.628`) | Adds 2050 Debt-Sinking ($\Delta r = -0.006$), mature $z_l \to z_h$ regional enterprise upgrading (+4.1% Rural), 1.65x infra wage lift, $Q_{\mathrm{Akl}} -10.5\%$ |
+| **`SS2_3_LongRun_GE_EndoIntergen`** | **+20.63%** (`20.628`) | **+22.98%** (`22.984`) | **+24.57%** (`24.574`) | **+27.91%** (`27.913`) | **+24.70%** (`24.699`) | **44.8% of Total National `SS2` Gain (+11.07% out of +24.70%)** stems from $\mu_1^{\mathrm{SS2}}$ dynastic & *Kuia/Whānau* compounding |
 
----
+### 
+| **Wealth Quintile** | **Rural_CE_Pct** | **Small_CE_Pct** | **Large_CE_Pct** | **Auckland_CE_Pct** | **National_CE_Pct** | **Primary Mechanism Driving Quintile Payoff** |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **`Q1_Bottom20`** *(Hardship Renters)* | **+29.91%** (`29.911`) | **+33.33%** (`33.326`) | **+35.63%** (`35.633`) | **+40.47%** (`40.473`) | **+35.81%** | Elimination of $i_c = 0$ corner (`a < 0.12*Q_k`) via $G_{\mathrm{ECE}}$, SS1 `Transfer_Geo` bridge, Youth Grant $E$, & rent relief |
+| **`Q2_20to40`** | **+25.17%** (`25.166`) | **+28.04%** (`28.040`) | **+29.98%** (`29.980`) | **+34.05%** (`34.053`) | **+30.13%** | Montessori / *Tuakana–Teina* mentoring + regional $z_l \to z_h$ job upgrading + lower metropolitan rental user cost $r_{h,k}, r_{r,k}$ |
+| **`Q3_Middle20`** | **+21.04%** (`21.041`) | **+23.44%** (`23.443`) | **+25.07%** (`25.066`) | **+28.47%** (`28.471`) | **+25.19%** | Wage lift ($w_k \uparrow$) + accelerated homeownership entry ($\xi_k \uparrow$) + **-3.75 pp `SS2` PAYE cut** |
+| **`Q4_60to80`** | **+16.91%** (`16.915`) | **+18.85%** (`18.847`) | **+20.15%** (`20.151`) | **+22.89%** (`22.888`) | **+20.25%** | Higher enterprise equity returns & child skill compounding outweigh modest property cooling |
+| **`Q5_Top20`** *(Property/Business Owners)* | **+11.96%** (`11.964`) | **+13.33%** (`13.330`) | **+14.25%** (`14.253`) | **+16.19%** (`16.189`) | **+14.33%** | High-$z_{h,k}$ firm reallocation + relational utility $u_{\mathrm{rel}}$ (children retained in NZ) offset $\tau_b$ |
 
-### 4.2 Table 2: Labrousse & Perdereau (2025) Spatial Wealth Quintile Welfare Gains (CE %)
-
-*Source File:* [`Table2_4Region_LabroussePerdereau_SpatialQuintiles.csv`](https://github.com/MichaelTiemann/IGWelfare/blob/main/Output_NZ_4Region_Intergen/Table2_4Region_LabroussePerdereau_SpatialQuintiles.csv)
-
-| Wealth Quintile | `Rural_CE_Pct` | `Small_CE_Pct` | `Large_CE_Pct` | `Auckland_CE_Pct` | Primary Mechanism Driving Quintile Payoff |
-| :--- | :---: | :---: | :---: | :---: | :--- |
-| **`Q1_Bottom20`** *(Hardship Renters)* | +14.8% | +16.2% | +19.5% | +22.4% | Elimination of *i_c* = 0 corner via universal $`G_{\mathrm{ECE}}`$, `Transfer_Geo`, Youth Grant *E*, & rent relief |
-| **`Q2_20to40`** | +10.2% | +12.1% | +14.3% | +17.1% | Montessori / *Tuakana–Teina* mentoring + lower metropolitan rental user cost $`rh_k, rr_k`$ |
-| **`Q3_Middle20`** | +7.9% | +9.8% | +11.6% | +14.2% | Wage lift ($`w_k \uparrow`$) + accelerated homeownership entry ($`\xi_k \uparrow`$) + `SS2` PAYE cut |
-| **`Q4_60to80`** | +5.4% | +6.9% | +8.2% | +10.1% | Higher enterprise equity returns & child skill compounding outweigh modest property cooling |
-| **`Q5_Top20`** *(Property/Business Owners)* | +2.1% | +2.8% | +3.4% | +4.2% | High-$`z_{h,k}`$ firm reallocation gain + relational utility $`u_{\mathrm{rel}}`$ (children retained in NZ) offset $`\tau_b`$ |
-
----
-
+### 
 ### 4.3 Table 3 & Table 3B: Kiyotaki et al. (2024) Housing Tenure Cleavage & Steady-State Summary
 
 *Source Files:* [`Table3_4Region_Kiyotaki_TenureGenerationalCleavage.csv`](Output_NZ_4Region_Intergen/Table3_4Region_Kiyotaki_TenureGenerationalCleavage.csv), [`Table3B_4Region_Abroad_SteadyState_Summary.csv`](Output_NZ_4Region_Intergen/Table3B_4Region_Abroad_SteadyState_Summary.csv), and 60-year transition path [`Table_Trans2_Kiyotaki_Housing_PopShares_4Region.csv`](Output_NZ_4Region_Intergen/Table_Trans2_Kiyotaki_Housing_PopShares_4Region.csv) / [`Table9_4Region_Dynamic_Population_Shares.csv`](Output_NZ_4Region_Intergen/Table9_4Region_Dynamic_Population_Shares.csv) *(Figure: `Fig2_Kiyotaki_Housing_Estates_4Region.png`)*
 
 <img src="./Output_NZ_4Region_Intergen/Fig2_Kiyotaki_Housing_Estates_4Region.png" alt="Housing Prices, Homeownership, and Estate Flows" width="92%" style="display: block; width: 92%; margin: 1.0rem auto; break-inside: avoid; page-break-inside: avoid;" />
 
-| Tenure / Generation Group (`T3`) | `Rural_CE_Pct` | `Small_CE_Pct` | `Large_CE_Pct` | `Auckland_CE_Pct` | Regional House Price *Q_k* (`SS0 -> SS1 -> SS2`) & Young Ownership ($`\xi_k`$) |
-| :--- | :---: | :---: | :---: | :---: | :--- |
-| **`1_Young_Renters_20to44`** | +9.8% | +11.4% | +13.9% | +16.4% | $`Q_{\mathrm{Rural}}: 1.05 \to 1.04 \to 1.03`$; Young ownership: `58.0%` → `64.5%` |
-| **`2_Young_Leveraged_Owners`** | +4.2% | +5.1% | +6.0% | +6.9% | $`Q_{\mathrm{Small}}: 1.40 \to 1.36 \to 1.34`$; Young ownership: `49.0%` → `57.2%` |
-| **`3_Older_Retirees_Landlords_65plus`** | -1.1% | -1.8% | -2.5% | -3.4% | $`Q_{\mathrm{Large}}: 2.05 \to 1.95 \to 1.90`$; $`Q_{\mathrm{Akl}}: 3.10 \to 2.87 \to 2.77`$ (Young own: `28.0%` → `41.2%`) |
+| **Tenure / Generation Group (`T3`)** | **Rural_CE_Pct** | **Small_CE_Pct** | **Large_CE_Pct** | **Auckland_CE_Pct** | **National_CE_Pct** | **Regional House Price $Q_k$ (`SS0 -> SS1 -> SS2`) & Young Ownership ($\xi_k$)** |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **`1_Young_Renters_20to44`** | **+28.47%** (`28.467`) | **+31.72%** (`31.717`) | **+33.91%** (`33.912`) | **+38.52%** (`38.520`) | **+34.09%** | $Q_{\mathrm{Rural}}: 1.05 \to 1.04 \to 1.03$; Young ownership: `58.0
 
-```text
+
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
 |                                                                                   |
@@ -655,7 +646,7 @@ At or near the Stone–Geary corner ($`\mathbb{I}(i_c^\star > 0) = 0`$), the mar
 
 ### 4.5.4 Empirical Mapping Across the 10 Survey-Anchored Benchmarks
 
-For each tier $`m \in \{1, \dots, 10\}`$, total Consumption-Equivalent welfare change ($`\Delta\mathrm{CE}_m`$) is decomposed into **3 Tax & Valuation-Cooling Channels** (House-price cooling $`\Delta Q_k`$, the annual book-value land/wealth levy *τ_a* = 0.015 (1.5%) above the family-home exemption, and the Estate levy $`\tau_b`$) and **4 Economic & Cohesion Gain Channels** (ECE/Rent relief + Youth Grant *E*, the **-3.12 to -3.43 pp *SS2* PAYE cut** + **-60 bps** credit relief, the Firm productive return boost $`\Delta R_k(z_{h,k})`$, and the Social Cohesion / retained-family dividend $`\Delta u_{\mathrm{rel}}`$), reporting separate trajectories for **Active Growth Entrepreneurs** ($`z_f = z_{h,k}`$, 80% operating equity share) versus **Passive Residential Land Hoarders** ($`z_f = z_{\ell,k}`$, 85% passive property share):
+For each tier $`m \in \{1, \dots, 10\}`$, total Consumption-Equivalent welfare change ($`\Delta\mathrm{CE}_m`$) is decomposed into **3 Tax & Valuation-Cooling Channels** (House-price cooling $`\Delta Q_k`$, the annual book-value land/wealth levy *τ_a* = 0.015 (1.5%) above the family-home exemption, and the Estate levy $`\tau_b`$) and **4 Economic & Cohesion Gain Channels** (ECE/Rent relief + Youth Grant *E*, the **-3.75 to -4.03 pp *SS2* PAYE cut** + **-60 bps** credit relief, the Firm productive return boost $`\Delta R_k(z_{h,k})`$, and the Social Cohesion / retained-family dividend $`\Delta u_{\mathrm{rel}}`$), reporting separate trajectories for **Active Growth Entrepreneurs** ($`z_f = z_{h,k}`$, 80% operating equity share) versus **Passive Residential Land Hoarders** ($`z_f = z_{\ell,k}`$, 85% passive property share):
 
 ![Fiscal Give vs Economic Gain and Net Worth Resilience Across 10 Survey-Anchored Tiers](Output_NZ_4Region_Intergen/Fig_WealthBrackets_2Panel_GiveAndGain_Dunedin_22.png)
 
@@ -736,7 +727,7 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 | **3. Barnardos ECE Bargaining Relief** | `1.94` / `1.92` / `1.66` / `1.53` *(Nat: 1.72)* | `0.17` / `0.16` | `6.3%` / `3.1%` / `2.2%` / `2.2%` *(Mean: 3.4%)* | `30.52%` | **`21.37%`** *(-0.63 pp cut)* |
 | **4. Phase 1 (*SS1*) Full Package (Age 65)** | `2.06` / `2.03` / `1.78` / `1.64` *(Nat: 1.84)* | `0.18` / `0.17` | `5.8%` / `2.5%` / `2.2%` / `2.2%` *(Mean: 3.2%)* | `28.33%` | **`20.84%`** *(-1.16 pp surplus sinks debt)* |
 | **5. Status Quo Austerity (Raise Super to 70)** | `1.86` / `1.82` / `1.58` / `1.45` *(Nat: 1.64)* | `0.30` / `0.28` | **`25.4%` / `23.2%` / `19.9%` / `18.0%`** *(Rises)* | `35.15%` | **`25.00%`** *(+3.00 pp hike; backfires)* |
-| **6. ★ Phase 2 (*SS2*) Harvest (Lower Super to 64)** | **`2.09` / `2.06` / `1.81` / `1.67`** *(Nat: 1.87)* | **`0.16` / `0.16`** | **`3.0%` / `2.2%` / `2.2%` / `2.2%`** *(Mean: 2.4%)* | **`29.66%`** | **`18.85%` (-3.15 pp PAYE Cut)** |
+| **6. ★ Phase 2 (*SS2*) Harvest (Lower Super to 64)** | **`2.09` / `2.06` / `1.81` / `1.67`** *(Nat: 1.87)* | **`0.16` / `0.16`** | **`3.0%` / `2.2%` / `2.2%` / `2.2%`** *(Mean: 2.4%)* | **`29.66%`** | **`18.25%` (-3.75 pp PAYE Cut)** |
 
 *(For the complete year-by-year continuous Retirement-Age U-Curve from **Age 60 to Age 75** plotted in Panel D above, see **Section 3.4.7 / Table 8B**.)*
 
@@ -818,7 +809,7 @@ Table 16 below disaggregates the Year 5 Parliamentary Audit (*t* = 1) across all
 
 ### 5.5 Credibility-Weighted Belief Blending & Multiphase Policy Announcement Answer Key (`TransPath_4Region_Master.m`)
 
-* **The Credibility Weight $`\lambda_{\mathrm{cred}}(t) \in [0, 1]`$ and Perceived Continuation Value $`\tilde{V}_{k,t+1}`$:** Let $`V_{k,t+1}^{\mathrm{perm,SS1}}`$ denote the backward-induction continuation value if agents believe Phase 1 (`SS1`) parameters remain frozen forever, and let $`V_{k,t+1}^{\mathrm{full,SS2}}`$ denote the continuation value under perfect foresight of the Phase 2 (`SS2`) **-3.5 pp PAYE tax-relief and infrastructure dividend** at transition seam $`T_1`$ (Year 25). At every transition period $`t < T_1`$, households and firms evaluate the credibility-weighted continuation value:
+* **The Credibility Weight $`\lambda_{\mathrm{cred}}(t) \in [0, 1]`$ and Perceived Continuation Value $`\tilde{V}_{k,t+1}`$:** Let $`V_{k,t+1}^{\mathrm{perm,SS1}}`$ denote the backward-induction continuation value if agents believe Phase 1 (`SS1`) parameters remain frozen forever, and let $`V_{k,t+1}^{\mathrm{full,SS2}}`$ denote the continuation value under perfect foresight of the Phase 2 (`SS2`) **-3.75 pp PAYE tax-relief and infrastructure dividend** at transition seam $`T_1`$ (Year 25). At every transition period $`t < T_1`$, households and firms evaluate the credibility-weighted continuation value:
 
 ```math
 \tilde{V}_{k,t+1}(a', h', z', j+1) = \bigl(1 - \lambda_{\mathrm{cred}}(t)\bigr) V_{k,t+1}^{\mathrm{perm,SS1}}(a', h', z', j+1) + \lambda_{\mathrm{cred}}(t) V_{k,t+1}^{\mathrm{full,SS2}}(a', h', z', j+1)
@@ -832,7 +823,7 @@ where the time-*t* credibility weight $`\lambda_{\mathrm{cred}}(t)`$ evolves bet
 
 * **Three Nested Policy Announcement Regimes in `TransPath_4Region_Master.m`:**
   1. **Regime A — Unanticipated Sequential Reform (MIT Shock at $`T_1`$, $`\lambda_{\mathrm{cred}}(t) = 0`$ for $`t < T_1`$):** Agents solve Phase 1 believing `SS1` is permanent. At $`t = T_1`$ (Year 25), the Crown observes the realized cash surplus ($`\Omega_{\mathrm{reform}} > 0`$) and enacts `SS2` as an unanticipated fiscal dividend.
-  2. **Regime B — Fully Credible Pre-Announced Multiphase Plan ($`t_{\mathrm{ann}} = 1, \bar{\lambda}_0 = 1.0`$):** Full commitment from Day 1 maximizes immediate youth retention ($`P_{\mathrm{emig},t} \downarrow`$ at $`t = 1`$) as 20-to-35-year-old graduates price in future career PAYE tax relief ($`\tau_l = 18.5\%`$).
+  2. **Regime B — Fully Credible Pre-Announced Multiphase Plan ($`t_{\mathrm{ann}} = 1, \bar{\lambda}_0 = 1.0`$):** Full commitment from Day 1 maximizes immediate youth retention ($`P_{\mathrm{emig},t} \downarrow`$ at $`t = 1`$) as 20-to-35-year-old graduates price in future career PAYE tax relief ($`\tau_l = 18.25\%`$).
   3. **Regime C — Earned Fiscal Credibility via the Year 5 Actuarial Audit ($`\bar{\lambda}_0 = 0.25, \kappa_{\mathrm{cred}} > 0`$):** Private agents initially discount the Phase-2 tax-cut promise ($`\bar{\lambda}_0 = 0.25`$). However, when the **Year 5 Parliamentary Actuarial Audit (`Plot_ActuarialContinuationValuation.m`)** verifies **NZD 35.25B** in recognised fiscal returns (**3.84x** cumulative outlays) and **NZD 10.68B** in direct cost avoidance alone (**1.16x**), $`\lambda_{\mathrm{cred}}(t)`$ surges upward—accelerating skilled youth retention (`Emig_Large_Pct`: `23.41%` down to `18.26%`; `Nat_Emig_Abroad_Pct`: `10.93%` down to `8.56%`) and parental Stage-2 engagement fifteen years before the cash tax cut takes effect.
 
 ```text
@@ -847,68 +838,23 @@ where the time-*t* credibility weight $`\lambda_{\mathrm{cred}}(t)`$ evolves bet
 
 ---
 
-## 5.6 Synthesis of Parts IV & V: The Mirror Investment Ledger (`Table 20`), 11-Layer Constructive Synergy Attribution (`Table 19`), & Document 3 Coalition Matrix (`Tables 21 & 22`)
+### 5.6 Synthesis of Parts IV & V: The Mirror Investment Ledger (`Table 20`), 11-Layer Constructive Synergy Attribution (`Table 19`), & Document 3 Coalition Matrix (`Tables 21 & 22`)
 
-*Source Scripts:* [`Plot_Counterfactuals_And_MirrorInvestments.m`](Plot_Counterfactuals_And_MirrorInvestments.m) and [`Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m`](Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m)  
-*Output CSVs:* `Table19_Constructive_Synergy_Wedges_Dunedin_22.csv`, `Table20_Annual_MirrorInvestments_Vs_7SegmentWelfare_Dunedin_22.csv`, `Table21_Doc3_LTFM_Sinkhole_Defense_Trajectories_Dunedin_22.csv`, and `Table22_Doc3_2D_Coalition_Complementarity_Matrix_Dunedin_22.csv`  
-*Figures:* [`Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png) and [`Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png)
+*Source Scripts:* `Plot_Counterfactuals_And_MirrorInvestments.m` and `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m`
+*Output CSVs:* `Table19_Constructive_Synergy_Wedges_Dunedin_22.csv`, `Table20_Annual_MirrorInvestments_Vs_7SegmentWelfare_Dunedin_22.csv`, `Table21_Doc3_LTFM_Sinkhole_Defense_Trajectories_Dunedin_22.csv`, and `Table22_Doc3_2D_Coalition_Complementarity_Matrix_Dunedin_22.csv`
+*Figures:* `Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png` and `Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png`
 
 ![Constructive 11-Layer Synergy Attribution](Output_NZ_4Region_Intergen/Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png)
 
-### How the 11-Layer Attribution and 4 Synergy Wedges Are Calculated (`Plot_Counterfactuals_And_MirrorInvestments.m`)
+#### How the 11-Layer Attribution and 4 Synergy Wedges Are Calculated (`Plot_Counterfactuals_And_MirrorInvestments.m`)
 
-Rather than treating policy interactions as an unexplained residual, `Plot_Counterfactuals_And_MirrorInvestments.m` computes each row of **Table 5.6A (`Table 19`)** by solving the mixed-horizon general-equilibrium system (`Solve_Spatial_GE_Loop.m` and `Build_IntergenTransitionMatrix.m`) across a structured sequence of isolated and combined parameter vectors $\Phi$:
+Rather than treating policy interactions as an unexplained residual, `Plot_Counterfactuals_And_MirrorInvestments.m` computes each row of **Table 5.6A (`Table 19`)** by pinning the **7 Isolated Policy Factors** strictly to their standalone budget and VFI elasticities (so isolated childhood programs never artificially inflate in `SS2`, and isolated Geographic Transfers `L06` retire by 82% in 1-to-1 lockstep with `-Inv 4`), while the **4 Synergy Wedges** capture the exact VFI supermodular complementarity residual:
 
-1. **7 Isolated Policy Factors (+12.79% CE National, 52.7% of the Total Prize):** Layers `L01`, `L02`, `L04`, `L05`, `L06`, `L09`, and `L10` evaluate each policy instrument standalone while holding complementary stacks at their *SS0* baseline. Deploying early-years wraparound without adolescent mentoring (`P0_Early_0to5` in **Tables 4 & 5**) loses **22%** of unbanked gains to adolescent fade-out ($\delta_{\mathrm{fade}} = 0.22$), while deploying late-school investments without early foundations (`P1P2_Late_6to17`) hits the Cunha–Heckman Stage-2 harmonic-mean bottleneck ($\varphi_2 = -0.95$, $\sigma_2 = 0.513 < 1$, cross-derivative $1 - \varphi_2 = 1.95 > 0$), reducing the national IGE by only **-3.4%** (**+0.31% CE** in Rural, **+0.24% CE** in Auckland).
-2. **★ Wedge 1 — Dual-Gate Human Capital Synergy (`L03` = +3.26% CE Nat., +3.86% Akl, 13.4% Share):** Computed from the difference between the joint Dual-Gate solve and the sum of the two isolated gates:
-
-$$\Delta \mathrm{CE}_{k,\mathrm{Wedge1}} = \mathrm{CE}_k\left(\mathrm{Gate1} \cup \mathrm{Gate2}\right) - \mathrm{CE}_k\left(\mathrm{Gate1}_{\mathrm{iso}}\right) - \mathrm{CE}_k\left(\mathrm{Gate2}_{\mathrm{iso}}\right)$$
-
-   Gate 1 ($G_{\mathrm{ECE1}}$) supplies the retained early skill stock $\theta_c^{\mathrm{ret}}$ required for Stage-2 complementarity, while Gate 2 ($M_{\mathrm{mentor}}$) halts $\delta_{\mathrm{fade}}$, buffers **80%** of family unemployment distress ($\psi_{\mathrm{unemp}}$), and feeds downward *tuakana* role-modeling ($G_{\mathrm{ECE1}}^{\mathrm{eff}}$) back into Stage 1.
-3. **★ Wedge 2 — 20% LVR-Clearance & Whānau-Anchoring Synergy (`L07` = +2.28% CE Nat., +2.82% Akl, 9.4% Share):** Computed as the joint welfare gain of combining the property-to-enterprise tax rebalance (`L04`), the Age-20 Youth Capital Grant *E* (`L05`), and geographic transfers *T_k* (`L06`) minus their isolated sum. Because young-adult homeownership requires clearing the non-linear Kiyotaki 20% deposit threshold ($a_1 + E \geq 0.20 Q_k$), cooling metropolitan house prices ($Q_{\mathrm{Akl}}$ down **-10.5%**) and endowing $E = 0.080$ act as supermodular complements that lift Auckland young ownership from **28.0% to 41.2%** (**Table 3**) while stabilizing elder *whānau* housing tenure ($\Phi_{\mathrm{home}} > 1$).
-4. **★ Wedge 3 — Cross-Stack Human Capital $\times$ Spatial/Enterprise Synergy (`L08` = +3.95% CE Nat., +5.04% Akl, 16.3% Share):** The single largest synergy wedge in the framework, computed across the two macro stacks:
-
-$$\Delta \mathrm{CE}_{k,\mathrm{Wedge3}} = \mathrm{CE}_k\left(\Phi_{\mathrm{HC}} \cup \Phi_{\mathrm{Spatial}}\right) - \mathrm{CE}_k\left(\Phi_{\mathrm{HC}}\right) - \mathrm{CE}_k\left(\Phi_{\mathrm{Spatial}}\right)$$
-
-   Without housing and enterprise reforms (as in the devolved Scotland benchmark in **Table 6B**), newly thriving *h*₆–*h*₇ graduates face uncooled metropolitan rents and capital-starved $z_\ell$ firms, leaking abroad via the 4 × 5 Gumbel migration matrix $\Pi_{\mathrm{mig}}$. Coupling the Dual-Gate Human Capital Stack with Guvenen et al. firm capital reallocation ($\Gamma_k \to z_{h,k}$) and housing cooling retains $\sim 3,550$ skilled young adults per year (**Table 10**) and matches them with expanding domestic enterprises.
-5. **★ Wedge 4 — 2050 Actuarial Solvency, Super-64 Kuia Dividend & 2nd-Generation Daruich Closure (`L11` = +1.97% CE Nat., +2.50% Akl, 8.1% Share):** Captures the Phase-2 (`Jump 2` in **Table 1**) general-equilibrium feedback loop connecting the 50% Sovereign Debt-Sinking Fund ($\Omega_{\mathrm{debt}} \Rightarrow \Delta r = -60\text{ bps}$, `L09`), the **-3.15 pp** PAYE cut and Age-64 *Kuia/Koroua* time boost ($\Phi_{\mathrm{time}}(64) = 1.081$, `L10` and **Table 8B**), cooperative fertility recovery ($\mathrm{TFR}: 1.66 \to 1.87$ under $\beta_{\mathrm{hyp}} = 0.72$, **Table 7**), and second-generation dynastic skill transmission ($\mu_1^{SS2}$ via $T_{\mathrm{IG}}: Q_h \times Q_a \times \Pi_{\mathrm{mig}}$). *(For the formal operator derivations governing all four wedges, see [Document 2B](Document%202B.md), and for the 4 × 4 inter-coalition projection, see [Document 3](Document%203.md).)*
-
-### Table 5.6A: 11-Layer Constructive Synergy Attribution of Phase 1 (*SS1*) and Phase 2 (*SS2*) Long-Run Welfare Gains (`Table 19`)
-
-To provide an exact constructive accounting of the **+18.21% (*Rural*), +21.75% (*Small*), +24.41% (*Large*), +28.70% (*Auckland*), and +24.24% (*National*)** long-run Consumption-Equivalent (CE %) welfare gains in row `SS2_3_LongRun_GE_EndoIntergen` of `Table 1`, `Plot_Counterfactuals_And_MirrorInvestments.m` evaluates the **7 isolated policy factors** standalone and interleaves the **4 supermodular Dynamic Complementarity Wedges**:
-
-| **Layer Code (`Table 19`)** | **Component Type** | ***SS1* Nat. CE %** | ***SS2* Rural** | ***SS2* Small** | ***SS2* Large** | ***SS2* Auckland** | ***SS2* National** | **Cumulative *SS2* Nat.** | **Share of *SS2* Prize** |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **L01_Iso_ECE1_First2000d** | Isolated_Factor | +2.61% | +2.91% | +3.29% | +3.60% | +4.05% | **+3.57%** | +3.57% | 14.7% |
-| **L02_Iso_Tuakana_Mentoring** | Isolated_Factor | +1.56% | +1.75% | +1.96% | +2.14% | +2.42% | **+2.13%** | +5.70% | 8.8% |
-| **L03_WEDGE1_DualGate_HC_Synergy** | **SYNERGY_WEDGE** | **+2.35%** | **+2.44%** | **+2.91%** | **+3.29%** | **+3.86%** | **+3.26%** | **+8.96%** | **13.4%** |
-| **L04_Iso_EstateProperty_Rebal** | Isolated_Factor | +1.79% | +1.86% | +2.28% | +2.66% | +3.21% | **+2.63%** | +11.59% | 10.9% |
-| **L05_Iso_YouthGrant_Age20** | Isolated_Factor | +0.98% | +1.05% | +1.22% | +1.36% | +1.53% | **+1.33%** | +12.92% | 5.5% |
-| **L06_Iso_GeoTransfer_Income** | Isolated_Factor | +0.83% | +1.34% | +1.17% | +1.04% | +0.99% | **+1.10%** | +14.03% | 4.5% |
-| **L07_WEDGE2_LVR_Whanau_Synergy** | **SYNERGY_WEDGE** | **+1.39%** | **+1.57%** | **+1.96%** | **+2.30%** | **+2.82%** | **+2.28%** | **+16.30%** | **9.4%** |
-| **L08_WEDGE3_CrossStack_HC_x_Spatial** | **SYNERGY_WEDGE** | **+2.09%** | **+2.50%** | **+3.29%** | **+4.02%** | **+5.04%** | **+3.95%** | **+20.25%** | **16.3%** |
-| **L09_Iso_DebtSinking_Interest** | Isolated_Factor | +0.25% | +0.64% | +0.74% | +0.84% | +0.94% | **+0.82%** | +21.07% | 3.4% |
-| **L10_Iso_PAYE_SuperAge_64** | Isolated_Factor | +0.00% | +1.05% | +1.11% | +1.20% | +1.33% | **+1.20%** | +22.27% | 5.0% |
-| **L11_WEDGE4_Fiscal_TFR_2ndGen_Closure** | **SYNERGY_WEDGE** | **+0.35%** | **+1.10%** | **+1.82%** | **+1.95%** | **+2.50%** | **+1.97%** | **+24.24%** | **8.1%** |
-| **TOTAL INTEGRATED REFORM (`T1`)** | **7 Iso (`+12.79%`) + 4 Wedges (`+11.46%`)** | **+14.21%** | **+18.21%** | **+21.75%** | **+24.41%** | **+28.70%** | **+24.24%** | **+24.24%** | **100.0%** *(47.3% Wedges)* |
-
----
-
-### Table 5.6B: Mirror-Image Annual Public Investments (-Below 0) vs. 11-Layer Household Welfare Gains (+Above 0) (`Table 20`)
-
-![Mirror-Image 11-Layer Welfare Gains vs Annual Public Investments](Output_NZ_4Region_Intergen/Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png)
-
-Anchored to the national household consumption base (`NZD_Billion_Per_CE_Pct = NZD 2.38B/yr per 1.0% CE`), `Table 20` tracks the four annual public investment pillars against total welfare gains and the Net Unrecovered Public Outlay (`Net_Fiscal_Outlay_Mirror_CE`, which hits strictly **0.00% at Year 18.8 Cash Breakeven**):
-
-| **Transition Milestone (`Table 20`)** | **Gross Inv 1: Universal ECE ($`\Delta G_{\mathrm{ece},1}`$)** | **Gross Inv 2: Tuakana Mentoring ($`\Delta G_{\mathrm{ece},2}`$)** | **Gross Inv 3: Youth Grant ($`\Delta E`$)** | **Gross Inv 4: Geo Transfer ($`\Delta T_k`$)** | **Total Gross Public Investment (CE% / NZD B/yr)** | **Net Unrecovered Public Cost (CE%)** | **Total Household Welfare Gain (CE% / NZD B/yr)** |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Year 0 (2026 Launch)** | -0.94% | -0.34% | -0.44% | -0.42% | **-2.15% (-NZD 5.11B/yr)** | -2.06% | **+2.07% (+NZD 4.94B/yr)** |
-| **Year 5 (1st Audit)** | -1.38% | -0.50% | -0.65% | -0.62% | **-3.14% (-NZD 7.48B/yr)** | -2.86% | **+5.58% (+NZD 13.27B/yr)** |
-| **Year 15 (Full Pipe)** | -1.45% | -0.52% | -0.68% | -0.65% | **-3.30% (-NZD 7.85B/yr)** | -1.38% | **+10.86% (+NZD 25.85B/yr)** |
-| **★ Year 18.8 (Cash Breakeven)** | -1.45% | -0.52% | -0.68% | -0.65% | **-3.30% (-NZD 7.85B/yr)** | **0.00% (BREAKEVEN)** | **+12.18% (+NZD 28.99B/yr)** |
-| **Year 25 (*SS2* Trigger)** | -1.45% | -0.52% | -0.68% | -0.65% | **-3.30% (-NZD 7.85B/yr)** | **0.00% (Self-Financing)** | **+13.48% (+NZD 32.08B/yr)** |
-| **Year 60 (*SS2* Steady State)** | -1.72% | -0.78% | -0.92% | -0.82% | **-4.24% (-NZD 10.09B/yr)** | **0.00% (+Surplus Sinks Debt)** | **+24.07%–24.24% (+NZD 57.28B–57.70B/yr, 5.72x)** |
-
+1. **7 Isolated Policy Factors (`+11.23% CE` National, `45.5%` of the Total Prize):** Layers `L01`, `L02`, `L04`, `L05`, `L06`, `L09`, and `L10` evaluate each policy instrument standalone while holding complementary stacks at their *SS0* baseline. Deploying early-years wraparound without adolescent mentoring (`P0_Early_0to5` in *Tables 4 & 5*) loses **22%** of unbanked gains to adolescent fade-out ($\delta_{\mathrm{fade}} = 0.22$), while deploying late-school investments without early foundations (`P1P2_Late_6to17`) hits the Cunha–Heckman Stage-2 harmonic-mean bottleneck ($\varphi_2 = -0.95$, $\sigma_2 = 0.513 < 1$). Crucially, **`L06_Iso_GeoTransfer_Income`** bridges acute rural/provincial hardship in *SS1* (`+0.81% CE`) and then **retires by 82% down to `+0.15% CE` in *SS2*** alongside `-Inv 4` as regional $z_l \to z_h$ jobs (`L08`) and the expanded **-3.75 pp PAYE tax cut** (`L10` = **+2.69% CE**) replace transfer dependency.
+2. **★ Wedge 1 — Dual-Gate Human Capital Synergy (`L03` = `+3.32% CE` Nat., `+3.85%` Akl, `13.4%` Share):** Computed from the difference between the joint Dual-Gate solve and the sum of the two isolated gates: $\Delta \mathrm{CE}_{k,\mathrm{Wedge1}} = \mathrm{CE}_k(\mathrm{Gate1} \cup \mathrm{Gate2}) - \mathrm{CE}_k(\mathrm{Gate1}_{\mathrm{iso}}) - \mathrm{CE}_k(\mathrm{Gate2}_{\mathrm{iso}})$. Gate 1 ($G_{\mathrm{ECE1}}$ + *Ka Ora, Ka Ako* / CEFS Farm-to-ECE nutrition [Ref 56]) supplies the retained early skill stock $\theta_c^{\mathrm{ret}}$ required for Stage-2 complementarity, while Gate 2 ($M_{\mathrm{mentor}}$ + CEFS FYI / GrowingChange agricultural leadership [Ref 56]) halts $\delta_{\mathrm{fade}}$ and buffers **80%** of family unemployment distress ($\psi_{\mathrm{unemp}}$).
+3. **★ Wedge 2 — 20% LVR-Clearance & Whānau-Anchoring Synergy (`L07` = `+2.33% CE` Nat., `+2.79%` Akl, `9.4%` Share):** Because young-adult homeownership requires clearing the non-linear Kiyotaki 20% deposit threshold ($a_1 + E \ge 0.20 Q_k$), cooling metropolitan house prices ($Q_{\mathrm{Akl}}$ down **-10.5%**) and endowing $E = 0.080$ act as supermodular complements that lift Auckland young ownership from **28.0% to 41.2%** (*Table 3*) while stabilizing elder *whānau* housing tenure ($\Phi_{\mathrm{home}} > 1$).
+4. **★ Wedge 3 — Cross-Stack Human Capital $\times$ Spatial/Enterprise Synergy (`L08` = `+5.20% CE` Nat., `+5.63%` Akl, `21.1%` Share):** The single largest synergy wedge in the framework ($\Delta \mathrm{CE}_{k,\mathrm{Wedge3}} = \mathrm{CE}_k(\Phi_{\mathrm{HC}} \cup \Phi_{\mathrm{Spatial}}) - \mathrm{CE}_k(\Phi_{\mathrm{HC}}) - \mathrm{CE}_k(\Phi_{\mathrm{Spatial}})$). Coupling the Dual-Gate Human Capital Stack with Guvenen et al. firm capital reallocation, competition reform [Ref 49], and **1.60x–2.16x regional food-hub procurement multipliers** [Ref 56] upgrades rural and provincial enterprises from $z_l$ to $z_h$ (`+4.08
+- 
 * **Literature & Equation Defense of Layer 9 (Sovereign Debt-Service Interest Relief):**
   1. *Direct Crown Budget Relief ($`r_t d_t \downarrow`$):* Following Ferriere et al. (2025, Sec. 4.2 & 6.1), where government debt service $`r_t d_t`$ absorbs ~2.8%–3.1% of public outlays in the intertemporal budget constraint $`(1 + r_t)d_t + G_t + T_t = d_{t+1} + T_{\mathrm{rev},t}`$, locking 50% of post-breakeven surpluses ($`\Omega_{\mathrm{debt},g}`$) into sovereign debt retirement saves **NZD 0.22k to NZD 0.38k/yr per worker** in deadweight bond interest.
   2. *Domestic Bond-Market Crowding-In ($`\Delta r = -60\text{ bps}`$):* In the national asset market clearing condition $`\sum_k \omega_{F,k} \int (k_k - a_f) d\Gamma_k + B_{\mathrm{gov}} = \sum_k \omega_{HH,k} \int a_{\mathrm{fin}} d\mu_k`$, retiring $`B_{\mathrm{gov}}`$ reduces sovereign crowding-out of private capital, lowering equilibrium interest rates (`r_delta = -0.006`) and reducing SME credit and young-homeowner mortgage costs (Kiyotaki et al., 2024, Fig. 9).
