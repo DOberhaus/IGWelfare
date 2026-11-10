@@ -193,11 +193,8 @@ is_reform_panel = (reform_intensity > 0);
 eta_ref         = min(1.18, max(0.0, double(reform_intensity)));
 
 if is_reform_panel
-    if G_ece <= 0.06, G_ece = G_ece + 0.14 * eta_ref; end
-    G_ece_eff       = G_ece * (1.0 + 0.15 * eta_ref); % Montessori / Tuakana downward multiplier
     montessori_bank = 0.05 + 0.06 * eta_ref;          % +0.05 in SS0, +0.11 in SS1, +0.12 in SS2
 else
-    G_ece_eff       = G_ece;
     montessori_bank = +0.05;
 end
 
@@ -247,6 +244,27 @@ for r_i = 1:length(reg_list)
         K_whanau_k = P_Sim.K_whanau.(hh_type);
     else
         K_whanau_k = getfield_def(K_whanau_Map, reg, 0.34) * ((Q_base / max(0.5, Q_house)) ^ 0.35);
+    end
+
+    G_ece_base = getfield_def(P_Sim, 'G_ece', 0.05);
+    if isstruct(G_ece_base) && isfield(G_ece_base, hh_type)
+        G_ece_k = G_ece_base.(hh_type);
+    elseif isnumeric(G_ece_base) && numel(G_ece_base) >= length(reg_list) && ~isscalar(G_ece_base)
+        G_ece_k = G_ece_base(r_i);
+    elseif isfield(P_Sim, 'G_ece_reg') && isnumeric(P_Sim.G_ece_reg) && numel(P_Sim.G_ece_reg) >= length(reg_list)
+        G_ece_k = P_Sim.G_ece_reg(r_i);
+    else
+        G_ece_k = double(G_ece_base(1));
+        if is_reform_panel && G_ece_k <= 0.06
+            G_ece_k = G_ece_k + 0.14 * eta_ref;
+        end
+    end
+    zeta_kaiako = getfield_def(P_Sim, 'zeta_kaiako', 0.25);
+    kaiako_defl = (Q_base / max(0.5, Q_house)) ^ zeta_kaiako;
+    if is_reform_panel
+        G_ece_eff_k = G_ece_k * (1.0 + 0.15 * eta_ref) * kaiako_defl;
+    else
+        G_ece_eff_k = G_ece_k * kaiako_defl;
     end
 
     % Vectorized [n_a1 x 4] continuous sub-grid linear interpolation weights:
@@ -319,7 +337,7 @@ for r_i = 1:length(reg_list)
 
     % --- STAGE 3 (3 Nodes) & STAGE 4 (3 Nodes) VECTORIZED CONTRACTION ---
     ic_eff_4D  = (1.0 - m_corner) .* max(ic_4D, 0.185) + m_corner .* (lift_s2 * 0.145);
-    inv_gap_4D = log(ic_eff_4D + G_ece_eff + 0.02) - log(0.27);
+    inv_gap_4D = log(ic_eff_4D + G_ece_eff_k + 0.02) - log(0.27);
     if strcmpi(Calibration_Anchor, 'Dunedin_22')
         base_log_h = rho_hc .* log(h_G) + gamma_ic .* inv_gap_4D - 0.14 * log(max(1.0, Q_house)) .* m_corner - 0.035;
     else
