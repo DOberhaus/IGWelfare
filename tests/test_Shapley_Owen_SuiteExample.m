@@ -1,13 +1,16 @@
 function test_Shapley_Owen_SuiteExample()
 % TEST_SHAPLEY_OWEN_SUITEEXAMPLE
-% Worked example on the suite's own typed numbers (national SS2 long-run CE %, +24.24% headline).
+% Worked example on the suite's own typed numbers (national SS2 long-run CE %, +24.70% headline).
 % Throws on the first failure and prints nothing on success. No toolboxes; MATLAB and Octave.
 %
-% SOURCES (constants below are copied, not recomputed; the .m scripts themselves are not run):
-%   Raw_Nat_11   Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m, "Raw_Nat_11" (= Table A.1 national column
-%                of Document 3 / Table 5.6A of Document 1B).
-%   Raw_Mat_4x4  Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m, "Raw_Mat_4x4" (+ Pop_Weights, SS2_Target_Reg).
-%   H_Comp       Plot_Hierarchical_Complementarity_Wedges.m, "H_Comp" (older 12-layer build, +20.49% total).
+% SOURCES (constants below are copied, not recomputed; the .m scripts themselves are not run).
+% Values are those typed in the scripts at upstream commit c23787e:
+%   Raw_Nat_11     Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m line 55, "Raw_Nat_11" (two-decimal values of the
+%                  national column of Table A.1, Document 3.md lines 247-261, and of Document 1A.md lines 582-593).
+%   Pop_Weights    same file, line 36;  SS2_Target_Reg  same file, line 38.
+%   Raw_Mat_4x4    same file, lines 331-335 (rescaled there to SS2_Nat, lines 337-339).
+%   H_Comp         Plot_Hierarchical_Complementarity_Wedges.m lines 98-104 (older 12-layer build, +20.49% total).
+% Rounding: the eleven typed values sum to 24.71, SS2_Nat computed from the regional values is 24.70 (24.6996).
 %
 % WHICH COALITIONS OF THE 7 LEVERS THE SUITE ACTUALLY VALUES.  Lever numbering used here:
 %   1 ECE_1 (L01)   2 Tuakana (L02)   3 Estate/Property rebalance (L04)   4 Youth Grant E (L05)
@@ -17,7 +20,7 @@ function test_Shapley_Owen_SuiteExample()
 %   v({1,2})          = L01+L02+Wedge1  (joint Dual-Gate model run)
 %   v({3,4,5})        = L04+L05+L06+Wedge2  (CE of Phi_Spatial)
 %   v({1,2,3,4,5})    = v({1,2}) + v({3,4,5}) + Wedge3  (CE of Phi_HC u Phi_Spatial)
-%   v({1..7})         = 24.24, with Wedge4 the closing residual
+%   v({1..7})         = 24.71 (sum of the typed layers), with Wedge4 the closing residual
 %   v({})             = 0 (SS0 baseline)
 % That is 12 of the 2^7 = 128 coalition values. The Doc 3 "8 scenarios" are mostly not lever subsets:
 % 1 = grand coalition, 7 = baseline under LTFM drift, 4 and 5 = {1,2} and {3,4,5} netted against drift
@@ -26,37 +29,41 @@ function test_Shapley_Owen_SuiteExample()
 addpath(fileparts(fileparts(mfilename('fullpath'))));
 tol = 1e-9;
 
-L = [3.57; 2.13; 3.26; 2.63; 1.33; 1.10; 2.28; 3.95; 0.82; 1.20; 1.97];   % Raw_Nat_11, layers L01..L11
+L = [2.46; 1.56; 3.32; 2.24; 0.89; 0.15; 2.33; 5.20; 1.25; 2.69; 2.62];   % Raw_Nat_11, layers L01..L11
 iso_rows = [1 2 4 5 6 9 10];   wedge_rows = [3 7 8 11];
+Pop_Weights    = [0.160, 0.240, 0.259, 0.341];
+SS2_Target_Reg = [20.628, 22.984, 24.574, 27.913];
+SS2_Nat        = sum(SS2_Target_Reg .* Pop_Weights);
 
 % =========================================================================
 % 1. HEADLINE ARITHMETIC: THE TOTAL WEDGE SHARE IS ORDER-INVARIANT
 % =========================================================================
 % Sum of wedges = v(N) - sum_i v({i}) whenever the 7 isolated layers are the singleton values, so the
-% 47.3% total does not depend on any ordering; only its split across Wedges 1-4 and levers does.
+% 54.5% total does not depend on any ordering; only its split across Wedges 1-4 and levers does.
 total = sum(L);
-check(abs(total - 24.24) < tol, 'layers sum to 24.24');
-check(abs(sum(L(iso_rows)) - 12.78) < tol && abs(sum(L(wedge_rows)) - 11.46) < tol, 'iso 12.78 / wedges 11.46');
+check(abs(total - 24.71) < tol, 'typed layers sum to 24.71');
+check(abs(SS2_Nat - 24.70) < 5e-3 && abs(total - SS2_Nat) < 0.02, 'SS2_Nat is 24.70; typed layers within two-decimal rounding of it');
+check(abs(sum(L(iso_rows)) - 11.24) < tol && abs(sum(L(wedge_rows)) - 13.47) < tol, 'iso 11.24 / wedges 13.47');
 check(abs(sum(L(wedge_rows)) - (total - sum(L(iso_rows)))) < tol, 'wedge total = v(N) - sum of singletons');
-check(abs(100 * sum(L(wedge_rows)) / total - 47.2772) < 1e-3, 'wedge share 47.28%');
+check(abs(100 * sum(L(wedge_rows)) / total - 54.5123) < 1e-3, 'wedge share 54.5%');
 
 % =========================================================================
 % 2. COMPLETE SUB-LATTICES: 2 LEVERS (DUAL GATE) AND 2 BLOCKS (HC STACK, SPATIAL STACK)
 % =========================================================================
-% 2^2 lattice over {ECE_1, Tuakana}: v = [{} {1} {2} {1,2}] = [0, 3.57, 2.13, 3.57+2.13+3.26].
+% 2^2 lattice over {ECE_1, Tuakana}: v = [{} {1} {2} {1,2}] = [0, 2.46, 1.56, 2.46+1.56+3.32].
 vg = [0, L(1), L(2), L(1) + L(2) + L(3)];
 [pg, ig] = Shapley_Owen_Attribution(vg, 2);
-check(abs(ig.interactions(1, 2) - L(3)) < tol, 'two-way interaction equals typed Wedge 1 (3.26)');
+check(abs(ig.interactions(1, 2) - L(3)) < tol, 'two-way interaction equals typed Wedge 1 (3.32)');
 check(max(abs(pg - [L(1) + L(3) / 2; L(2) + L(3) / 2])) < tol, 'Shapley splits Wedge 1 equally');
-check(abs(pg(1) - 5.20) < tol && abs(pg(2) - 3.76) < tol, 'Dual-Gate Shapley = [5.20 3.76]');
+check(abs(pg(1) - 4.12) < tol && abs(pg(2) - 3.22) < tol, 'Dual-Gate Shapley = [4.12 3.22]');
 
 % 2^2 lattice over the two stacks {HC = levers 1,2 ; Spatial = levers 3,4,5}.
-v_hc = L(1) + L(2) + L(3);                    % 8.96
-v_sp = L(4) + L(5) + L(6) + L(7);             % 7.34 (Document 3 prints the Tier-2 subtotal as 7.35 after rounding)
-vb   = [0, v_hc, v_sp, v_hc + v_sp + L(8)];   % 20.25 = printed cumulative at L08
+v_hc = L(1) + L(2) + L(3);                    % 7.34 (Document 3 prints the Tier-1 subtotal as 7.33 after rounding)
+v_sp = L(4) + L(5) + L(6) + L(7);             % 5.61 (Document 3 prints the Tier-2 subtotal as 5.60 after rounding)
+vb   = [0, v_hc, v_sp, v_hc + v_sp + L(8)];   % 18.15 (Document 1A.md prints the cumulative at L08 as 18.14)
 [pb, ib] = Shapley_Owen_Attribution(vb, 2);
-check(abs(ib.interactions(1, 2) - L(8)) < tol, 'two-way interaction equals typed Wedge 3 (3.95)');
-check(abs(pb(1) - 10.935) < tol && abs(pb(2) - 9.315) < tol, 'Stack Shapley = [10.935 9.315]');
+check(abs(ib.interactions(1, 2) - L(8)) < tol, 'two-way interaction equals typed Wedge 3 (5.20)');
+check(abs(pb(1) - 9.94) < tol && abs(pb(2) - 8.21) < tol, 'Stack Shapley = [9.94 8.21]');
 
 % =========================================================================
 % 3. WHY SINGLE-PATH WEDGES ARE PATH-DEPENDENT (3-PLAYER ILLUSTRATION, SAME GAME AS THE UNIT TEST)
@@ -71,11 +78,8 @@ check(sum(w_abc) == sum(w_cba), 'but their total is order-invariant');
 % =========================================================================
 % 4. PAIRWISE-ONLY ACCOUNTING OF THE SUITE'S OWN MATRICES (SHAPLEY = DIAGONAL + HALF EACH WEDGE)
 % =========================================================================
-% The 4x4 coalition matrix (Table 22) is a quadratic game: v(S) = sum diag(S) + sum of wedges inside S.
+% The 4x4 coalition matrix (Table 22, Plot_Doc3_...m lines 331-372) is a quadratic game: v(S) = sum diag(S) + sum of wedges inside S.
 % Assumption flagged: no 3-way or higher dividend beyond what the matrix entries already absorb.
-Pop_Weights    = [0.160, 0.240, 0.259, 0.341];
-SS2_Target_Reg = [18.213, 21.750, 24.414, 28.697];
-SS2_Nat        = sum(SS2_Target_Reg .* Pop_Weights);
 Raw_Mat_4x4    = [7.52 2.15 1.95 1.45; 2.15 5.06 1.15 0.65; 1.95 1.15 2.10 0.65; 1.45 0.65 0.65 0.95];
 Mat            = Raw_Mat_4x4 * SS2_Nat / (trace(Raw_Mat_4x4) + sum(sum(triu(Raw_Mat_4x4, 1))));
 off            = Mat - diag(diag(Mat));
@@ -83,11 +87,13 @@ v4 = quadratic_game(diag(Mat), Mat);
 p4 = Shapley_Owen_Attribution(v4, 4);
 check(max(abs(p4 - (diag(Mat) + 0.5 * sum(off, 2)))) < tol, '4x4: Shapley = diag + half of each wedge');
 check(abs(sum(p4) - SS2_Nat) < tol, '4x4: Shapley sums to the national total');
+check(isequal(round(100 * p4'), [1076 735 415 243]), '4x4: equal-split values 10.76 / 7.35 / 4.15 / 2.43');
 p4o = Shapley_Owen_Attribution(v4, 4, {[1 2], [3 4]});
 check(max(abs(p4o - p4)) < tol, '4x4: pairwise game, so Owen == Shapley for any partition');
 full_row = diag(Mat) + sum(off, 2);                            % the "own base + 3 neighbour wedges" row totals
 check(abs(sum(full_row) - (SS2_Nat + sum(sum(triu(off)))) ) < tol, '4x4: row totals count every wedge twice');
-check(sum(full_row) > SS2_Nat + 8, '4x4: row totals exceed the national total');
+check(isequal(round(100 * full_row'), [1366 942 611 387]), '4x4: row totals 13.66 / 9.42 / 6.11 / 3.87');
+check(round(100 * sum(full_row)) == 3306 && sum(full_row) > SS2_Nat + 8, '4x4: row totals sum to 33.06, above the national total');
 
 H = [4.65 1.42 0.95 0.55 0.42 0.28 0.00; 1.42 1.15 0.57 0.25 0.08 0.04 0.00; 0.95 0.57 1.45 0.20 0.05 0.03 0.00; ...
      0.55 0.25 0.20 1.20 0.00 0.00 0.00; 0.42 0.08 0.05 0.00 1.45 1.10 0.00; 0.28 0.04 0.03 0.00 1.10 1.90 0.00; ...
@@ -113,7 +119,7 @@ V(bitmask(1:5) + 1)         = v_hc + v_sp + L(8);
 V(bitmask(1:7) + 1)         = total;
 known = find(~isnan(V)) - 1;
 check(numel(known) == 12, '12 of 128 coalition values exist');
-check(abs(V(bitmask(1:5) + 1) - 20.25) < tol, 'v({1..5}) = 20.25');
+check(abs(V(bitmask(1:5) + 1) - 18.15) < tol, 'v({1..5}) = 18.15');
 
 unions4 = {[1 2], [4 5], 3, [6 7]};     % Document 3 coalitions: C1 Barnardos, C2 WellBeing, C3 GrowthNZ, C4 Fiscal
 unions3 = {[1 2], [3 4 5], [6 7]};      % the suite's own HC / Spatial / Fiscal stacks
