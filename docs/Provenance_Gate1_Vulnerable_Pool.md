@@ -1,18 +1,18 @@
 # Provenance: the Gate-1 "vulnerable newborn pool" (25.1%)
 
-**Purpose.** This sheet records where the Gate-1 share quoted as 25.1% comes from, what it measures, and how it relates to published child-poverty measures. Citations of the form `Doc:line` (for example `1B:279`) refer to the repository documents (`1A` = `Document 1A.md`, and so on) at commit `9fc339a`.
+**Purpose.** This sheet records where the Gate-1 share quoted as 25.1% comes from, what it measures, and how it relates to published child-poverty measures. Citations of the form `Doc:line` (for example `1B:279`) refer to the repository documents (`1A` = `Document 1A.md`, and so on) at commit `c23787e`.
 
 ## 1. Three different objects
 
 | Object | What it is | Population | Value | Repository location |
 |---|---|---|---|---|
-| Official child-poverty and hardship measures | Stats NZ annual measures under the Child Poverty Reduction Act | Children 0-17, year ended June 2025 (provisional) | Material hardship **14.3%** (169,300); severe hardship **6.0%** (71,000); AHC50 anchored **17.8%**; AHC50 relative **21.5%**; AHC60 **29.9%**; both hardship and below 60% AHC **8.6%** | 14.3% and 6.0%: `1A:57`; AHC60 29.9%: `2B:207` |
-| Dunedin "22%" | An outcome-defined segment of one birth cohort (207 of 940): membership of three or more high-cost groups by age 38, predicted by childhood risks including brain health at age 3 (Caspi et al. 2016). It accounts for 66% of welfare benefits, 81% of convictions and 57% of hospital nights | 1972-73 Dunedin cohort, followed to about age 38 | 22% of the cohort | `1A:304`; `1B:256`; `2B:206` |
-| GUiNZ-era "28.5%" | A model anchor: the struggling-launch share at age 20 under `MetroSqueeze_GUiNZ` housing assumptions (3.10x metropolitan housing cost, 37% damp/mould, over 45% private-rental transience) | Model cohort | 28.5% national; 34.0%-36.6% Auckland | `1A:304`; `1B:256`; `2B:207` |
+| Official child-poverty and hardship measures | Stats NZ annual measures under the Child Poverty Reduction Act | Children 0-17, year ended June 2025 (provisional) | Material hardship **14.3%** (169,300); severe hardship **6.0%** (71,000); AHC50 anchored **17.8%**; AHC50 relative **21.5%**; AHC60 **29.9%**; both hardship and below 60% AHC **8.6%** | 14.3% and 6.0%: `1A:57`; AHC60 29.9%: `2B:208` |
+| Dunedin "22%" | An outcome-defined segment of one birth cohort (207 of 940): membership of three or more high-cost groups by age 38, predicted by childhood risks including brain health at age 3 (Caspi et al. 2016). It accounts for 66% of welfare benefits, 81% of convictions and 57% of hospital nights | 1972-73 Dunedin cohort, followed to about age 38 | 22% of the cohort | `1A:304`; `1B:256`; `2B:207` |
+| GUiNZ-era "28.5%" | A model anchor: the struggling-launch share at age 20 under `MetroSqueeze_GUiNZ` housing assumptions (3.10x metropolitan housing cost, 37% damp/mould, over 45% private-rental transience) | Model cohort | 28.5% national; 34.0%-36.6% Auckland | `1A:304`; `1B:256`; `2B:208` |
 
 Neither 22% nor 28.5% is a hardship prevalence, so neither conflicts with the 14.3% hardship rate. The 25.1% reads as a Stats NZ-type prevalence if presented as the share of newborns in hardship; no published measure gives that value.
 
-Wording note: `2B:206` describes the Dunedin segment as "identified at age 3". In Caspi et al. adult outcomes define the segment and age-3 measures predict it.
+Wording note: `2B:207` describes the Dunedin segment as "identified at age 3". In Caspi et al. adult outcomes define the segment and age-3 measures predict it.
 
 ## 2. How 25.1% is constructed
 
@@ -45,13 +45,13 @@ Not yet reflected in the monographs:
 
 ## 5. The two anchors side by side
 
-One option is to show both anchors as a range (22.0% / 28.5%; Year-5 return 3.84x / 4.26x; remediation NZD 17.7B / 28.5B per year); the documents currently present `Dunedin_22` as the default conservative anchor (`1A:304`, `2B:206`). The switch is `Params.Calibration_Anchor` (`2B:205`).
+One option is to show both anchors as a range (22.0% / 28.5%; Year-5 return 3.84x / 4.26x; remediation NZD 17.7B / 28.5B per year); the documents currently present `Dunedin_22` as the default conservative anchor (`1A:304`, `2B:207`). The switch is `Params.Calibration_Anchor` (`2B:206`).
 
 | Quantity | `Dunedin_22` | `MetroSqueeze_GUiNZ` | Location |
 |---|---|---|---|
 | Struggling launch share, age 20 | 22.0% | 28.5% | `1B:256`; `1A:304` |
-| Year-5 actuarial return | 3.84x (NZD 35.25B) | 4.26x (NZD 39.14B) | `1A:304`; `1B:523`; `1B:810-811` |
-| 2050 remediation burden (Exits 1, 2, 4) | NZD 17.7B/yr | NZD 28.5B/yr | `1B:523`; `1C:83` |
+| Year-5 actuarial return | 3.84x (NZD 35.25B) | 4.26x (NZD 39.14B) | `1A:304`; `1B:522`; `1B:801-802` |
+| 2050 remediation burden (Exits 1, 2, 4) | NZD 17.7B/yr | NZD 28.5B/yr | `1B:522`; `1C:81` |
 
 ## 6. Two notes on comparability
 
