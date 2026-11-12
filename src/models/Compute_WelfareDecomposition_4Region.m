@@ -165,6 +165,10 @@ for m = 1:M_reforms
     % 3C. Stage C: Long-Run GE with Endogenous 4x5 Intergenerational Matrix (jDist_SSm)
     jDist_m  = jDist_prev;
     ig_resid = Inf;
+    ig_dX    = [];
+    ig_dF    = [];
+    ig_xprev = [];
+    ig_fprev = [];
     for ig_it = 1:n_igm_iters
         StatDist_m = StationaryDist_MixHorz_PType(jDist_m, AgeWeightsParamNames, ...
             PTypeDistParamNames, Policy_GE_Exo_m, n_d, n_a, n_z, N_j, Names_i, ...
@@ -172,9 +176,44 @@ for m = 1:M_reforms
         [jDist_m_new, IG_Diag_m] = Build_IntergenTransitionMatrix(StatDist_m, Policy_GE_Exo_m, V_GE_Exo_m, ...
             n_d, n_a, n_z, d_grid, a_grid, z_grid_m, pi_z_m, P_GE, Regions);
         ig_resid = max(cellfun(@(r) max(abs(jDist_m_new.(['HH_', r])(:) - jDist_m.(['HH_', r])(:))), Regions));
-        jDist_m  = jDist_m_new;
         if ig_resid < 1e-5
+            jDist_m = jDist_m_new;
             break;
+        end
+        if isfield(Params_SS0, 'Use_Anderson') && Params_SS0.Use_Anderson
+            % Type-II Anderson acceleration across the stacked regional jDist simplexes
+            x_cur = []; g_cur = [];
+            for r_i = 1:N_reg
+                hf = ['HH_', Regions{r_i}];
+                x_cur = [x_cur; double(gather(jDist_m.(hf)(:)))]; %#ok<AGROW>
+                g_cur = [g_cur; double(gather(jDist_m_new.(hf)(:)))]; %#ok<AGROW>
+            end
+            f_cur = g_cur - x_cur;
+            if ~isempty(ig_xprev)
+                ig_dX = [ig_dX, x_cur - ig_xprev]; %#ok<AGROW>
+                ig_dF = [ig_dF, f_cur - ig_fprev]; %#ok<AGROW>
+                if size(ig_dF, 2) > 4
+                    ig_dX(:, 1) = []; ig_dF(:, 1) = [];
+                end
+            end
+            ig_xprev = x_cur; ig_fprev = f_cur;
+            if ig_it > 2 && ~isempty(ig_dF)
+                mk_ig  = size(ig_dF, 2);
+                df_sc  = max(1e-16, norm(ig_dF, 'fro')^2);
+                gam_ig = (ig_dF' * ig_dF + 1e-10 * df_sc * eye(mk_ig)) \ (ig_dF' * f_cur);
+                x_next = max(0, g_cur - (ig_dX + ig_dF) * gam_ig);
+                n_st_r = numel(x_next) / N_reg;
+                for r_i = 1:N_reg
+                    hf = ['HH_', Regions{r_i}];
+                    seg = x_next((r_i-1)*n_st_r + (1:n_st_r));
+                    seg = seg / max(1e-12, sum(seg));
+                    jDist_m.(hf) = reshape(seg, size(jDist_m_new.(hf)));
+                end
+            else
+                jDist_m = jDist_m_new;
+            end
+        else
+            jDist_m = jDist_m_new;
         end
     end
     if ~(ig_resid < 1e-5) && n_igm_iters >= 6

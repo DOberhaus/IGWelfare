@@ -1,9 +1,11 @@
 # GE closure: specification for wiring `Solve_Spatial_GE_Loop.m`
 
-Status: **scaffold / proposal**. `Solve_Spatial_GE_Loop.m` is a toolkit-independent
-solver tested on an analytic toy economy (`tests/test_ge_loop_toy.m`). It is **not yet
-wired** to the VFI Toolkit household block. No existing file is modified by this branch.
-All `file:line` references are to `main` at c23787e and were re-read for this document.
+Status: **Prototyped (PR #14)**.
+- `Solve_Spatial_GE_Loop.m` supports `'damped'`, `'broyden'` (Good Broyden with halving line search), and `'anderson'` (Type-II Anderson acceleration with scale-free Tikhonov regularization matching VFI Toolkit's `AndersonAcceleration.m`), verified in `tests/test_ge_loop_toy.m`.
+- `Configure_TimeGrid_Params.m` enforces a single-source-of-truth naming and dimension contract (`*_reg_base` / `*_reg` for PType structs; `*_base_reg_vec` / `*_reg_vec` for `1 x N_reg` vectors) with coalesced `N_reg` validation, eliminating the parameter drift across `NZ_4Region_Master.m`, `WelfareDecomposition_4Region.m`, `TransPath_4Region_Master.m`, and `Build_IntergenTransitionMatrix.m`.
+- `WelfareDecomposition_4Region.m` (Stage 3B/3C) and `TransPath_4Region_Master.m` (Section 4 & Section 6 `PricePath` export) are wired to `Solve_Spatial_GE_Loop.m` (and `TransitionPath_MixHorz_PType` with `GEnewprice = 2` Anderson acceleration in `VFIToolkit-matlab`) via `Params.ge_closure` (`'fixed_price'` | `'keynesian'` | `'neoclassical'`) and `Params.ge_method` (`'anderson'` | `'broyden'` | `'damped'`).
+
+TODO: All `file:line` references are to `main` at c23787e and will be resync'd before merging.
 
 ## 0. Starting point
 
@@ -118,7 +120,7 @@ VFI -> stationary distribution -> (intergenerational `jDist` fixed point) -> agg
 
 ## (c) Three closures as selectable modes
 
-Proposed selector: `Params.closure` in `{'neoclassical','keynesian','fixed_price'}` (default
+Proposed selector: `Params.ge_closure` in `{'neoclassical','keynesian','fixed_price'}` (default
 `'fixed_price'`, which is intended to reproduce the present behaviour once wired). One-line residual definitions:
 
 - **neoclassical**: unknowns `(w_k, Q_k, r)`; residuals `Z^L_k = (L^d_k(w_k,r) - L^s_k)/L^s_k`, `Z^H_k = (H^d_k - H^s_k(Q_k))/H^s_k`, `Z^r = (A^s - K^d - B)/A^s`, all set to 0. Wages clear labour, `r` clears the asset market, `Q` clears housing.

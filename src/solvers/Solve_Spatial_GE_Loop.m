@@ -18,15 +18,19 @@ function [prices, res, hist] = Solve_Spatial_GE_Loop(prices0, excess_demand_fn, 
 %                       numel(z) == numel(prices0) (square system). SIGN
 %                       CONVENTION: z = demand - supply, so z_i > 0 pushes price i UP.
 %   opts (all optional; unknown field names are an error, to catch typos):
-%     .method    'damped' (default) | 'broyden'
-%                'damped' : p <- p + lambda .* step .* z, with adaptive lambda:
-%                           a step that does not lower ||z||_2 is rejected and
-%                           lambda is multiplied by opts.shrink; an accepted step
-%                           multiplies lambda by opts.grow (capped at damping_max).
-%                'broyden': quasi-Newton on z(p) = 0 with the "good" Broyden
-%                           update of the inverse Jacobian and a halving line
-%                           search on ||z||_2 (resets to the initial Jacobian
-%                           if the line search fails).
+%     .method    'damped' (default) | 'broyden' | 'anderson'
+%                'damped'  : p <- p + lambda .* step .* z, with adaptive lambda:
+%                            a step that does not lower ||z||_2 is rejected and
+%                            lambda is multiplied by opts.shrink; an accepted step
+%                            multiplies lambda by opts.grow (capped at damping_max).
+%                'broyden' : quasi-Newton on z(p) = 0 with the "good" Broyden
+%                            update of the inverse Jacobian and a halving line
+%                            search on ||z||_2 (resets to the initial Jacobian
+%                            if the line search fails).
+%                'anderson': Type-II Anderson acceleration on the shooting map
+%                            G(p) = p + damping .* step .* z with scale-free
+%                            Tikhonov regularization relative to ||DeltaF||_F^2
+%                            and ||z||_2 safeguard fallback to G(p).
 %     .tol       convergence tolerance on ||z||_inf          (default 1e-8)
 %                (steps are accepted on the 2-norm merit ||z||_2: with coupled
 %                markets the max-norm can rise for every small step even when
@@ -52,6 +56,9 @@ function [prices, res, hist] = Solve_Spatial_GE_Loop(prices0, excess_demand_fn, 
 %                (-1/damping on the diagonal; no extra evaluations), or a
 %                numeric n-by-n matrix dz/dp.
 %     .fd_step   relative finite-difference step for jac0='fd' (default 1e-6)
+%     .memory    'anderson' history depth m                  (default 5)
+%     .warmup    'anderson' initial plain shooting steps     (default 2)
+%     .regularization 'anderson' relative Tikhonov parameter (default 1e-10)
 %
 % OUTPUTS
 %   prices : final price vector (same shape as prices0)
@@ -129,16 +136,16 @@ if strcmp(opt.method, 'damped')
             fprintf('  GE damped  iter %3d  |z|_inf = %.3e  lambda = %.3g  %s\n', it, nz, used, igw_tag(acc));
         end
     end
-else
+elseif strcmp(opt.method, 'broyden')
     %% GOOD-BROYDEN QUASI-NEWTON WITH HALVING LINE SEARCH
     [H0, n_extra] = igw_initial_inverse(opt, excess_demand_fn, p, z, shape0, n, step);
     n_eval = n_eval + n_extra;
-    Hinv   = H0;
+    Hinv = H0;
     while nz >= opt.tol && it < opt.max_iter
-        it     = it + 1;
+        it = it + 1;
         s_full = -Hinv * z;
-        t      = 1;
-        ok     = false;
+        t = 1;
+        ok = false;
         while true
             p_try = max(p + t * s_full, floor_p);
             z_try = igw_eval(excess_demand_fn, p_try, shape0, n);
@@ -146,7 +153,7 @@ else
             nz_try = norm(z_try, Inf);
             mz_try = norm(z_try, 2);
             if isfinite(mz_try) && mz_try <= (1 - 1e-4 * t) * mz
-                ok = true;  break;
+                ok = true; break;
             end
             t = t / 2;
             if t < 1e-4, break; end
@@ -155,13 +162,13 @@ else
             s = p_try - p;  y = z_try - z;
             Hy = Hinv * y;  den = s' * Hy;
             if abs(den) > 1e-14 * norm(s) * norm(Hy)
-                Hinv = Hinv + ((s - Hy) * (s' * Hinv)) / den;   % good Broyden (inverse form)
+                Hinv = Hinv + ((s - Hy) * (s' * Hinv)) / den; % good Broyden (inverse form)
             end
             p = p_try;  z = z_try;  nz = nz_try;  mz = mz_try;  acc = true;
         else
             acc = false;
             if ~isequal(Hinv, H0)
-                Hinv = H0;                                      % line search failed: restart from H0
+                Hinv = H0; % line search failed: restart from H0
             elseif isfinite(mz_try)
                 p = p_try;  z = z_try;  nz = nz_try;  mz = mz_try;  acc = true; % H0 already: take the smallest step
             end
@@ -169,7 +176,75 @@ else
         [H_price, H_inf, H_two, H_step, H_acc] = igw_record(H_price, H_inf, H_two, H_step, H_acc, ...
             it, p, z, nz, mz, t, acc);
         if opt.verbose
-            fprintf('  GE broyden iter %3d  |z|_inf = %.3e  t = %.3g  %s\n', it, nz, t, igw_tag(acc));
+            fprintf('GE broyden  iter %3d |z|_inf = %.3e t = %.3g %s\n', it, nz, t, igw_tag(acc));
+        end
+    end
+else
+    %% TYPE-II ANDERSON ACCELERATION ON SHOOTING MAP G(p) = max(p + damping*step*z, floor_p)
+    DeltaX = zeros(n, 0);
+    DeltaF = zeros(n, 0);
+    p_prev = [];
+    f_prev = [];
+    lam = opt.damping;
+    while nz >= opt.tol && it < opt.max_iter
+        it = it + 1;
+        g = max(p + lam .* step .* z, floor_p);
+        f = g - p;
+        if ~isempty(p_prev)
+            DeltaX = [DeltaX, p - p_prev]; %#ok<AGROW>
+            DeltaF = [DeltaF, f - f_prev]; %#ok<AGROW>
+            if size(DeltaF, 2) > opt.memory
+                DeltaX(:, 1) = [];
+                DeltaF(:, 1) = [];
+            end
+        end
+        p_prev = p;
+        f_prev = f;
+
+        took_aa = false;
+        if it > opt.warmup && ~isempty(DeltaF)
+            mk = size(DeltaF, 2);
+            DeltaFscale = norm(DeltaF, 'fro')^2;
+            if DeltaFscale == 0, DeltaFscale = 1; end
+            gamma = (DeltaF' * DeltaF + opt.regularization * DeltaFscale * eye(mk)) \ (DeltaF' * f);
+            p_aa = max(g - (DeltaX + DeltaF) * gamma, floor_p);
+            took_aa = true;
+        else
+            p_aa = g;
+        end
+
+        z_try = igw_eval(excess_demand_fn, p_aa, shape0, n);
+        n_eval = n_eval + 1;
+        nz_try = norm(z_try, Inf);
+        mz_try = norm(z_try, 2);
+
+        if isfinite(mz_try) && mz_try < mz
+            p = p_aa;  z = z_try;  nz = nz_try;  mz = mz_try;
+            used = 1.0;  acc = true;
+        elseif took_aa
+            % Safeguard: Anderson trial did not reduce ||z||_2; fall back to plain shooting step g and reset history
+            DeltaX = zeros(n, 0);  DeltaF = zeros(n, 0);
+            p_prev = [];           f_prev = [];
+            z_g = igw_eval(excess_demand_fn, g, shape0, n);
+            n_eval = n_eval + 1;
+            nz_g = norm(z_g, Inf);
+            mz_g = norm(z_g, 2);
+            if isfinite(mz_g) && mz_g < mz
+                p = g;  z = z_g;  nz = nz_g;  mz = mz_g;
+                used = lam;  acc = true;
+            else
+                lam = max(opt.damping_min, lam * opt.shrink);
+                used = lam;  acc = false;
+            end
+        else
+            % Warmup plain step did not reduce ||z||_2: shrink damping
+            lam = max(opt.damping_min, lam * opt.shrink);
+            used = lam;  acc = false;
+        end
+        [H_price, H_inf, H_two, H_step, H_acc] = igw_record(H_price, H_inf, H_two, H_step, H_acc, ...
+            it, p, z, nz, mz, used, acc);
+        if opt.verbose
+            fprintf('GE anderson iter %3d |z|_inf = %.3e step = %.3g %s\n', it, nz, used, igw_tag(acc));
         end
     end
 end
@@ -199,7 +274,8 @@ if ~isstruct(opts), error('IGW:BadInput', 'Solve_Spatial_GE_Loop: opts must be a
 opt = struct('method', 'damped', 'tol', 1e-8, 'max_iter', 200, 'damping', 0.5, ...
     'verbose', false, 'bounds', [], 'on_fail', 'warn', 'step', 1, ...
     'damping_max', 1, 'damping_min', 1e-8, 'grow', 1.2, 'shrink', 0.5, ...
-    'jac0', 'fd', 'fd_step', 1e-6);
+    'jac0', 'fd', 'fd_step', 1e-6, ...
+    'memory', 5, 'warmup', 2, 'regularization', 1e-10);
 fn = fieldnames(opts);
 for k = 1:numel(fn)
     if ~isfield(opt, fn{k})
@@ -208,8 +284,8 @@ for k = 1:numel(fn)
     opt.(fn{k}) = opts.(fn{k});
 end
 opt.method = lower(opt.method);
-if ~any(strcmp(opt.method, {'damped', 'broyden'}))
-    error('IGW:BadOption', 'Solve_Spatial_GE_Loop: method must be ''damped'' or ''broyden'' (got "%s")', opt.method);
+if ~any(strcmp(opt.method, {'damped', 'broyden', 'anderson'}))
+    error('IGW:BadOption', 'Solve_Spatial_GE_Loop: method must be ''damped'', ''broyden'' or ''anderson'' (got "%s")', opt.method);
 end
 if ~any(strcmpi(opt.on_fail, {'error', 'warn'}))
     error('IGW:BadOption', 'Solve_Spatial_GE_Loop: on_fail must be ''error'' or ''warn''');
