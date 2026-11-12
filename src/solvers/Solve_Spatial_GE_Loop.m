@@ -1,7 +1,11 @@
 function [prices, res, hist] = Solve_Spatial_GE_Loop(prices0, excess_demand_fn, opts)
 %% SOLVE_SPATIAL_GE_LOOP  TOOLKIT-INDEPENDENT MARKET-CLEARING SOLVER
 % File: Solve_Spatial_GE_Loop.m
-% Scaffold: solver logic tested on an analytic toy economy; not yet wired to the VFI Toolkit household block (see docs/GE_Closure_Spec.md).
+% 
+% Now wired to WelfareDecomposition_4Region.m and TransPath_4Region_Master.m
+% via Params.ge_method ('anderson' | 'broyden' | 'damped' ) and
+% an appropriate Params.ge_closure ( 'neoclassical' | 'keynesian' ).
+% A ge_method of 'none' or a ge_closure of 'fixed_priced' means no GE.
 %
 % Finds the price vector p* such that excess_demand_fn(p*) = 0. The caller
 % assembles the residual vector (regional labour markets, regional housing
