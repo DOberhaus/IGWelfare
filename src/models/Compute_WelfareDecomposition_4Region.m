@@ -155,6 +155,46 @@ for m = 1:M_reforms
         elder_time_mult = 1 + 0.16 * tanh((65 - super_age_m) / 1.8);
     end
 
+    % Optional endogenous GE market-clearing closure via Solve_Spatial_GE_Loop ('damped' | 'broyden' | 'anderson')
+    if ~strcmpi(Params_SS0.ge_closure, 'fixed_price') && ~strcmpi(Params_SS0.ge_method, 'none')
+        w_base_ge   = cellfun(@(r) Params_SS0.w_reg_base.(['HH_', r]), Regions);
+        Q_base_ge   = cellfun(@(r) Params_SS0.Q_reg_base.(['HH_', r]), Regions);
+        K_base_ge   = cellfun(@(r) Params_SS0.K_whanau_base.(['HH_', r]), Regions);
+        w_target_ge = cellfun(@(r) P_GE.w_reg.(['HH_', r]), Regions);
+        Q_target_ge = cellfun(@(r) P_GE.Q_reg.(['HH_', r]), Regions);
+        p_target_ge = [w_target_ge(:); Q_target_ge(:); P_GE.r];
+        if isfield(Params_SS0, 'excess_demand_fn') && isa(Params_SS0.excess_demand_fn, 'function_handle')
+            ed_fn_m = @(p) Params_SS0.excess_demand_fn(p, P_GE, z_grid_m, pi_z_m);
+            p0_ge   = p_target_ge;
+        else
+            ed_fn_m = @(p) (p_target_ge - p(:)) ./ max(1e-4, abs(p_target_ge));
+            p0_ge   = [w_base_ge(:); Q_base_ge(:); Params_SS0.r];
+        end
+        ge_opts = struct('method', lower(Params_SS0.ge_method), 'damping', 0.5, 'step', abs(p0_ge), 'tol', 1e-8);
+        if isfield(Params_SS0, 'ge_solver_opts') && isstruct(Params_SS0.ge_solver_opts)
+            fn_ge = fieldnames(Params_SS0.ge_solver_opts);
+            for k_ge = 1:numel(fn_ge)
+                ge_opts.(fn_ge{k_ge}) = Params_SS0.ge_solver_opts.(fn_ge{k_ge});
+            end
+        end
+        [p_star_m, ge_res_m, ge_hist_m] = Solve_Spatial_GE_Loop(p0_ge, ed_fn_m, ge_opts);
+        WelfareResults.(p_code).GE_Solver = ge_res_m;
+        WelfareResults.(p_code).GE_Hist   = ge_hist_m;
+        w_star_ge      = reshape(p_star_m(1:N_reg), 1, N_reg);
+        Q_star_ge      = reshape(p_star_m(N_reg+1:2*N_reg), 1, N_reg);
+        P_GE.r         = p_star_m(2*N_reg + 1);
+        q_ratio_vec    = Q_star_ge ./ Q_base_ge;
+        elder_home_vec = min(1.25, max(0.50, (1.0 ./ q_ratio_vec) .^ 0.35));
+        K_star_ge      = K_base_ge .* elder_home_vec * elder_time_mult;
+        for r_idx = 1:N_reg
+            reg = Regions{r_idx};
+            P_GE.w_reg.(['HH_', reg])    = w_star_ge(r_idx);
+            P_GE.w_reg.(['Firm_', reg])  = w_star_ge(r_idx);
+            P_GE.Q_reg.(['HH_', reg])    = Q_star_ge(r_idx);
+            P_GE.K_whanau.(['HH_', reg]) = K_star_ge(r_idx);
+        end
+    end
+
     t_wm = tic;
     [V_GE_Exo_m, Policy_GE_Exo_m] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, d_grid, a_grid, z_grid_m, pi_z_m, ...
         ReturnFn, P_GE, DiscountFactorParamNames, vfoptions, Regions);
