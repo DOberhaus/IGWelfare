@@ -282,9 +282,10 @@ for m = 1:M_reforms
         end
 
         % Optional endogenous GE market-clearing closure via Solve_Spatial_GE_Loop ('damped' | 'broyden' | 'anderson')
-        if ~strcmpi(Params_SS0.ge_closure, 'fixed_price')
-            p_target_ge = [P_GE.w_reg_vec(:); P_GE.Q_reg_vec(:); P_GE.r];
-            if isfield(Params_SS0, 'excess_demand_fn') && isa(Params_SS0.excess_demand_fn, 'function_handle')
+        if ~strcmpi(Params_SS0.ge_closure, 'fixed_price') && ~strcmpi(Params_SS0.ge_method, 'none')
+            w_target_ge = P_GE.w_reg_vec(:);
+            p_target_ge = [w_target_ge; P_GE.Q_reg_vec(:); P_GE.r];
+            if isfield(Params_SS0, 'excess_demand_fn') && isa(Params_SS0, 'function_handle')
                 ed_fn_m = @(p) Params_SS0.excess_demand_fn(p, P_GE, z_grid_m, pi_z_m);
                 p0_ge   = p_target_ge;
             else
@@ -307,49 +308,9 @@ for m = 1:M_reforms
             q_ratio_vec    = P_GE.Q_reg_vec ./ Params_SS0.Q_base_reg_vec;
             elder_home_vec = min(1.25, max(0.50, (1.0 ./ q_ratio_vec) .^ 0.35));
             P_GE.K_whanau_reg_vec = Params_SS0.K_whanau_base_reg_vec .* elder_home_vec * elder_time_mult;
-            for r_idx = 1:N_reg
-                reg = Regions{r_idx};
-                P_GE.w_reg.(['HH_', reg])    = P_GE.w_reg_vec(r_idx);
-                P_GE.w_reg.(['Firm_', reg])  = P_GE.w_reg_vec(r_idx);
-                P_GE.Q_reg.(['HH_', reg])    = P_GE.Q_reg_vec(r_idx);
-                P_GE.K_whanau.(['HH_', reg]) = P_GE.K_whanau_reg_vec(r_idx);
-            end
+            P_GE = rmfield(P_GE, {'w_reg', 'Q_reg', 'K_whanau'});
+            P_GE = Configure_TimeGrid_Params(P_GE);
         end
-    end
-
-    % Optional GE solver via Solve_Spatial_GE_Loop; fixed
-    if ~strcmpi(Params_SS0.ge_closure, 'fixed_price')
-        % In Long-Run Steady State (Stage 3B), both 'neoclassical' and 'keynesian' reach the full long-run wage equilibrium
-        % (nominal wage stickiness in 'keynesian' operates along the transition path in TransPath_4Region_Master.m, not at t = infinity)
-        w_target_ge = P_GE.w_reg_vec(:);
-        p_target_ge = [w_target_ge; P_GE.Q_reg_vec(:); P_GE.r];
-        if isfield(Params_SS0, 'excess_demand_fn') && isa(Params_SS0.excess_demand_fn, 'function_handle')
-            ed_fn_m = @(p) Params_SS0.excess_demand_fn(p, P_GE, z_grid_m, pi_z_m);
-            p0_ge   = p_target_ge;
-        else
-            % Default reduced-form spatial market-clearing residual around calibrated equilibrium target p_target_ge
-            % (starts from SS0 prices p0_ge and converges to p_target_ge via Anderson / Broyden / Damped):
-            ed_fn_m = @(p) (p_target_ge - p(:)) ./ max(1e-4, abs(p_target_ge));
-            p0_ge   = [Params_SS0.w_base_reg_vec(:); Params_SS0.Q_base_reg_vec(:); Params_SS0.r];
-        end
-        ge_opts = struct('method', Params_SS0.ge_method, 'damping', 0.5, 'step', abs(p0_ge), 'tol', 1e-8);
-        if isfield(Params_SS0, 'ge_solver_opts') && isstruct(Params_SS0.ge_solver_opts)
-            fn_ge = fieldnames(Params_SS0.ge_solver_opts);
-            for k_ge = 1:numel(fn_ge)
-                ge_opts.(fn_ge{k_ge}) = Params_SS0.ge_solver_opts.(fn_ge{k_ge});
-            end
-        end
-        [p_star_m, ge_res_m, ge_hist_m] = Solve_Spatial_GE_Loop(p0_ge, ed_fn_m, ge_opts);
-        WelfareResults.(p_code).GE_Solver = ge_res_m;
-        WelfareResults.(p_code).GE_Hist   = ge_hist_m;
-        P_GE.w_reg_vec = reshape(p_star_m(1:N_reg), 1, N_reg);
-        P_GE.Q_reg_vec = reshape(p_star_m(N_reg+1:2*N_reg), 1, N_reg);
-        P_GE.r         = p_star_m(2*N_reg + 1);
-        q_ratio_vec    = P_GE.Q_reg_vec ./ Params_SS0.Q_base_reg_vec;
-        elder_home_vec = min(1.25, max(0.50, (1.0 ./ q_ratio_vec) .^ 0.35));
-        P_GE.K_whanau_reg_vec = Params_SS0.K_whanau_base_reg_vec .* elder_home_vec * elder_time_mult;
-        P_GE = rmfield(P_GE, {'w_reg', 'Q_reg', 'K_whanau'});
-        P_GE = Configure_TimeGrid_Params(P_GE);
     end
 
     [V_GE_Exo_m, Policy_GE_Exo_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
@@ -373,7 +334,7 @@ for m = 1:M_reforms
             jDist_m = jDist_m_new;
             break;
         end
-        if isfield(Params_SS0, 'Use_Anderson') && Params_SS0.Use_Anderson
+        if strcmp(Params_SS0.ge_method, 'anderson')
             % Type-II Anderson acceleration across the stacked regional jDist simplexes
             x_cur = []; g_cur = [];
             for r_i = 1:N_reg
@@ -408,6 +369,9 @@ for m = 1:M_reforms
         else
             jDist_m = jDist_m_new;
         end
+    end
+    if ~(ig_resid < 1e-5)
+        IGW_Log('IGW:NoConvergence', 'WelfareDecomposition_4Region phase %s intergenerational fixed point: %d iterations, residual %.3g', p_code, ig_it, double(gather(ig_resid)));
     end
     V_m = V_GE_Exo_m;
 

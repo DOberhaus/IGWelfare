@@ -383,19 +383,6 @@ Emig_path     = 100 * Emig_Rate_Path;
 Nat_Emig_path = sum(s_HH_path .* Emig_path, 2);
 Cohesion_St   = Cohesion_Index(:);
 
-% Populate PricePath struct in workspace for downstream consumers (e.g. Plot_CumulativeTransitionPayoffs.m)
-w_init_vec    = Params.w_base_reg_vec;
-w_end_SS1_vec = w_init_vec .* Params.w_mult_SS1_reg_vec;
-w_end_SS2_vec = w_init_vec .* Params.w_mult_SS2_reg_vec;
-w_path        = zeros(T_trans, N_reg);
-for t = 1:T_trans
-    yr = Trans_Years(t);
-    w_t = w_init_vec + (1 - exp(-yr / 10)) * (w_end_SS1_vec - w_init_vec);
-    if has_SS2 && yr >= T_phase2_yr
-        w_t = w_t + (1 - exp(-(yr - T_phase2_yr) / 9)) * (w_end_SS2_vec - w_end_SS1_vec);
-    end
-    w_path(t, :) = w_t;
-end
 % Construct canonical PricePath struct in workspace (consumed by Plot_CumulativeTransitionPayoffs.m)
 PricePath = struct();
 PricePath.Years      = Years_grid;
