@@ -14,14 +14,22 @@
 % Preserve optional command-line overrides across workspace clear:
 if exist('Force_Recompute_All', 'var'), cmd_Force_Recompute = Force_Recompute_All; end
 if exist('Use_Saved_Cache', 'var'),     cmd_Use_Cache       = Use_Saved_Cache;     end
-if exist('Params', 'var') && isstruct(Params) && isfield(Params, 'Enable_Duopoly_Kai')
-    cmd_Enable_Duopoly_Kai = Params.Enable_Duopoly_Kai;
-end
-if exist('Params', 'var') && isstruct(Params) && isfield(Params, 'dt')
-    cmd_dt = Params.dt;
+if exist('Params', 'var')
+    if isfield(Params, 'Enable_Duopoly_Kai')
+        cmd_Enable_Duopoly_Kai = Params.Enable_Duopoly_Kai;
+    end
+    if isfield(Params, 'dt')
+        cmd_dt = Params.dt;
+    end
+    if isfield(Params, 'ge_method')
+        cmd_ge_method = Params.ge_method;
+    end
+    if isfield(Params, 'ge_closure')
+        cmd_ge_closure = Params.ge_closure;
+    end
 end
 
-clearvars -except cmd_Force_Recompute cmd_Use_Cache cmd_Enable_Duopoly_Kai cmd_dt;
+clearvars -except cmd_Force_Recompute cmd_Use_Cache cmd_Enable_Duopoly_Kai cmd_dt cmd_ge_method cmd_ge_closure;
 clc; close all;
 suite_timer = tic;
 
@@ -30,7 +38,9 @@ if exist('cmd_dt', 'var'),                 Params.dt = cmd_dt;                  
 if exist('cmd_Enable_Duopoly_Kai', 'var'), Params.Enable_Duopoly_Kai = cmd_Enable_Duopoly_Kai;                            end
 if exist('cmd_Use_Cache', 'var'),          Use_Saved_Cache = cmd_Use_Cache;          else, Use_Saved_Cache = true;        end
 if exist('cmd_Force_Recompute', 'var'),    Force_Recompute_All = cmd_Force_Recompute; else, Force_Recompute_All = false;  end
-clear cmd_Force_Recompute cmd_Use_Cache cmd_Enable_Duopoly_Kai cmd_dt;
+if exist('cmd_ge_method', 'var'),          Params.ge_method = cmd_ge_method;                                              end
+if exist('cmd_ge_closure', 'var'),         Params.ge_closure = cmd_ge_closure;                                            end
+clear cmd_Force_Recompute cmd_Use_Cache cmd_Enable_Duopoly_Kai cmd_dt cmd_ge_method cmd_ge_closure;
 
 Use_ExpAsset_Pipeline  = true;  % true = Full 5D Experience-Asset Lifecycle Human Capital Pipeline
 Run_SMM_Calibration    = false; % true = Run Sobol global pre-screening + local fminsearch SMM

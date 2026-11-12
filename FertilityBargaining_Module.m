@@ -36,7 +36,7 @@ n_th  = n_a_5D.HH_Rural(3);
 n_z1  = n_z.HH_Rural;
 h_vec = a_grid_5D.HH_Rural(n_a1+1 : n_a1+n_h);
 
-K_base_vec = Params.K_whanau_base_vec;
+K_base_vec = Params.K_whanau_base_reg_vec;
 base_struggle_vec = Params.base_struggle_vec;
 sj_ref = Params.sj_5yr_ref;
 

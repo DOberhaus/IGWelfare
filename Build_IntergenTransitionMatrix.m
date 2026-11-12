@@ -45,13 +45,8 @@ if ~isfield(Params, 'gamma_ic'),    Params.gamma_ic    = 0.35; end
 if ~isfield(Params, 'sigma_hc_ig'), Params.sigma_hc_ig = 0.24; end
 
 % Extract Regional Extended Family / Whanau Network Intensity K_whanau(k) in [0, 1]:
-K_base_vec = Params.K_whanau_base_vec; % Canonical SS0 baseline [Rural, Small, Large, Auckland]
-K_reg_vec  = K_base_vec;
-for r_i = 1:N_reg
-    f_name = ['HH_', Regions{r_i}];
-    if isfield(Params.K_whanau_base, f_name), K_base_vec(r_i) = Params.K_whanau_base.(f_name); end
-    if isfield(Params.K_whanau, f_name),      K_reg_vec(r_i)  = Params.K_whanau.(f_name);      end
-end
+K_base_reg_vec = Params.K_whanau_base_reg_vec; % Canonical SS0 baseline [Rural, Small, Large, Auckland]
+K_reg_vec  = Params.K_whanau_reg_vec;
 
 % Precompute sub-grid cell spans [n_a1 x 1] and threshold vector tau_cuts [1 x 4]:
 a_dbl    = double(a_vec(:));
@@ -87,7 +82,7 @@ for r_idx = 1:N_reg
     reg     = Regions{r_idx};
     hh_type = ['HH_', reg];
     K_reg   = min(1.0, max(0.0, K_reg_vec(r_idx)));
-    dK_reg  = K_reg - K_base_vec(r_idx);
+    dK_reg  = K_reg - K_base_reg_vec(r_idx);
 
     Dist_raw = double(gather(StationaryDist.(hh_type)));
     Pol_raw  = double(gather(Policy.(hh_type)));
@@ -250,8 +245,8 @@ end
 % Bilateral migration cost matrix kappa_4x5 [Origin x (Rural, Small, Large, Auckland, Abroad)]
 % Reproduces empirical baseline: Rural Emig ~1.8%, Small ~9.1%, Large ~23.4%, Auckland ~7.0%
 % and responds endogenously as domestic wages w_k, housing Q_k, YouthGrant, and K_whanau improve!
-w_akl_ratio = Params.w_reg.HH_Auckland / 1.180;
-Q_akl_ratio = Params.Q_reg.HH_Auckland / 3.100;
+w_akl_ratio = Params.w_reg.HH_Auckland / Params.w_base_reg_vec(4);
+Q_akl_ratio = Params.Q_reg.HH_Auckland / Params.Q_base_reg_vec(4);
 reform_pull = 3.20 * (w_akl_ratio - 1.0) - 2.40 * (Q_akl_ratio - 1.0) ...
     + 2.50 * (Params.YouthGrant - Params.YouthGrant_sched(1));
 

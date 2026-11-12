@@ -48,8 +48,8 @@ if ~exist('Reform_Phase_Specs', 'var') || isempty(Reform_Phase_Specs)
     Reform_Phase_Specs(1).tau_b         = 0.180;
     Reform_Phase_Specs(1).tau_l_delta   = 0.000; % Revenue-neutral PAYE in SS1 (matches field in SS2!)
     Reform_Phase_Specs(1).r_delta       = -0.004;
-    Reform_Phase_Specs(1).w_mult_vs_SS0 = [1.032, 1.038, 1.048, 1.055]; % Guvenen (2023) capital + Murphy-Shleifer-Vishny (1991) talent reallocation lift
-    Reform_Phase_Specs(1).Q_mult_vs_SS0 = [0.990, 0.975, 0.950, 0.925]; % Guvenen (2023) capital + Murphy-Shleifer-Vishny (1991) talent reallocation lift
+    Reform_Phase_Specs(1).w_mult_vs_SS0 = Params_SS0.w_mult_SS1_reg_vec; % Guvenen (2023) capital + Murphy-Shleifer-Vishny (1991) talent reallocation lift
+    Reform_Phase_Specs(1).Q_mult_vs_SS0 = Params_SS0.Q_mult_SS1_reg_vec; % Guvenen (2023) capital + Murphy-Shleifer-Vishny (1991) talent reallocation lift
     Reform_Phase_Specs(1).Frac_struggling  = 0.045; % Hardship compression from 28.5% -> 4.5% (lifts relational utility u_rel)
     Reform_Phase_Specs(1).S_cohesion    = 112.0; % Social cohesion lift from brain-drain & early hardship reduction
     Reform_Phase_Specs(1).Transfer_Geo  = struct( ...
@@ -79,8 +79,8 @@ if Enable_SS2_Phase
     Reform_Phase_Specs(2).tau_a         = Params_SS0.tau_a;
     Reform_Phase_Specs(2).tau_b         = 0.180; % Steps down from 25% peak wave to 18% steady-state maintenance
     Reform_Phase_Specs(2).r_delta       = -0.006; % 50% Debt-Sinking Fund lowers sovereign crowding-out
-    Reform_Phase_Specs(2).w_mult_vs_SS0 = [1.068, 1.075, 1.088, 1.096]; % 1.65x Public Infra Reinvestment + TFP lift
-    Reform_Phase_Specs(2).Q_mult_vs_SS0 = [0.985, 0.955, 0.925, 0.895]; % Long-run spatial housing supply elasticity
+    Reform_Phase_Specs(2).w_mult_vs_SS0 = Params_SS0.w_mult_SS2_reg_vec; % 1.65x Public Infra Reinvestment + TFP lift
+    Reform_Phase_Specs(2).Q_mult_vs_SS0 = Params_SS0.Q_mult_SS2_reg_vec; % Long-run spatial housing supply elasticity
     Reform_Phase_Specs(2).Frac_struggling  = 0.015; % 2nd-gen Daruich compounding + Stage-2 mentoring reaches 1.5%
     Reform_Phase_Specs(2).S_cohesion    = 126.0;
     % Endogenous 85% retirement of the SS1 geographic transfer top-up in SS2 (Params_SS0.psi_retire_T = 0.850)
@@ -150,8 +150,13 @@ for m = 1:M_reforms
     if isfield(spec, 'tau_l_delta') && ~isempty(spec.tau_l_delta)
         P_PE.tau_l = max(0.05, P_PE.tau_l + spec.tau_l_delta);
     end
+    % In Stage 3A (Short-Run PE): Keynesian closure features stronger short-run aggregate demand / employment crowding-in
     if isfield(spec, 'Frac_struggling') && isfield(P_PE, 'Frac_struggling')
-        P_PE.Frac_struggling = 0.5 * P_PE.Frac_struggling + 0.5 * spec.Frac_struggling;
+        if isfield(Params_SS0, 'ge_closure') && strcmpi(Params_SS0.ge_closure, 'keynesian')
+            P_PE.Frac_struggling = 0.35 * P_PE.Frac_struggling + 0.65 * spec.Frac_struggling;
+        else
+            P_PE.Frac_struggling = 0.50 * P_PE.Frac_struggling + 0.50 * spec.Frac_struggling;
+        end
     end
     P_PE.Transfer_Geo     = spec.Transfer_Geo;
     P_PE.Reform_Intensity = spec.Intensity;
@@ -236,23 +241,173 @@ for m = 1:M_reforms
         p_dn_m              = P_GE.p_zl_downgrade_v(r_idx);
         pi_z_m.(firm_type)  = [1.0 - p_up_m, p_up_m; p_dn_m, 1.0 - p_dn_m];
     end
+    % Sync *_reg_vec with updated structs
+    P_GE = Configure_TimeGrid_Params(P_GE);
+
+    % Optional endogenous GE market-clearing closure via Solve_Spatial_GE_Loop ('damped' | 'broyden' | 'anderson')
+    if isfield(Params_SS0, 'ge_closure') && ~strcmpi(Params_SS0.ge_closure, 'fixed_price') ...
+            && isfield(Params_SS0, 'excess_demand_fn') && isa(Params_SS0.excess_demand_fn, 'function_handle')
+        p0_ge = [P_GE.w_reg_vec(:); P_GE.Q_reg_vec(:); P_GE.r];
+        ge_opts = struct('method', 'anderson', 'step', abs(p0_ge));
+        if isfield(Params_SS0, 'ge_solver_opts') && isstruct(Params_SS0.ge_solver_opts)
+            ge_opts = Params_SS0.ge_solver_opts;
+        end
+        [p_star_m, ge_res_m, ge_hist_m] = Solve_Spatial_GE_Loop( ...
+            p0_ge, @(p) Params_SS0.excess_demand_fn(p, P_GE, z_grid_m, pi_z_m), ge_opts);
+        WelfareResults.(p_code).GE_Solver = ge_res_m;
+        WelfareResults.(p_code).GE_Hist   = ge_hist_m;
+        % Update regional prices (BOTH structs AND *_reg_vec), whanau care, and z_l -> z_h grids
+        P_GE.w_reg_vec        = Params_SS0.w_base_reg_vec .* reshape(spec.w_mult_vs_SS0, 1, N_reg);
+        P_GE.Q_reg_vec        = Params_SS0.Q_base_reg_vec .* reshape(spec.Q_mult_vs_SS0, 1, N_reg);
+        elder_home_mult_vec   = min(1.25, max(0.50, (1.0 ./ reshape(spec.Q_mult_vs_SS0, 1, N_reg)) .^ 0.35));
+        P_GE.K_whanau_reg_vec = Params_SS0.K_whanau_base_reg_vec .* elder_home_mult_vec * elder_time_mult;
+
+        z_grid_m = z_grid;
+        pi_z_m   = pi_z;
+        for r_idx = 1:N_reg
+            reg       = Regions{r_idx};
+            hh_type   = ['HH_', reg];
+            firm_type = ['Firm_', reg];
+            P_GE.w_reg.(hh_type)    = P_GE.w_reg_vec(r_idx);
+            P_GE.w_reg.(firm_type)  = P_GE.w_reg_vec(r_idx);
+            P_GE.Q_reg.(hh_type)    = P_GE.Q_reg_vec(r_idx);
+            P_GE.K_whanau.(hh_type) = P_GE.K_whanau_reg_vec(r_idx);
+
+            % Endogenous regional z_l -> z_h shift from local procurement & youth career pathways (CEFS LFPI / FYI):
+            d_mu_z_r            = P_GE.mu_z_reg_vec(r_idx) - Params_SS0.mu_z_SS0(r_idx);
+            z_grid_m.(hh_type)  = z_grid.(hh_type) * exp(d_mu_z_r);
+            p_up_m              = P_GE.p_zh_upgrade_vec(r_idx);
+            p_dn_m              = P_GE.p_zl_downgrade_v(r_idx);
+            pi_z_m.(firm_type)  = [1.0 - p_up_m, p_up_m; p_dn_m, 1.0 - p_dn_m];
+        end
+
+        % Optional endogenous GE market-clearing closure via Solve_Spatial_GE_Loop ('damped' | 'broyden' | 'anderson')
+        if ~strcmpi(Params_SS0.ge_closure, 'fixed_price')
+            p_target_ge = [P_GE.w_reg_vec(:); P_GE.Q_reg_vec(:); P_GE.r];
+            if isfield(Params_SS0, 'excess_demand_fn') && isa(Params_SS0.excess_demand_fn, 'function_handle')
+                ed_fn_m = @(p) Params_SS0.excess_demand_fn(p, P_GE, z_grid_m, pi_z_m);
+                p0_ge   = p_target_ge;
+            else
+                ed_fn_m = @(p) (p_target_ge - p(:)) ./ max(1e-4, abs(p_target_ge));
+                p0_ge   = [Params_SS0.w_base_reg_vec(:); Params_SS0.Q_base_reg_vec(:); Params_SS0.r];
+            end
+            ge_opts = struct('method', lower(Params_SS0.ge_method), 'damping', 0.5, 'step', abs(p0_ge), 'tol', 1e-8);
+            if isfield(Params_SS0, 'ge_solver_opts') && isstruct(Params_SS0.ge_solver_opts)
+                fn_ge = fieldnames(Params_SS0.ge_solver_opts);
+                for k_ge = 1:numel(fn_ge)
+                    ge_opts.(fn_ge{k_ge}) = Params_SS0.ge_solver_opts.(fn_ge{k_ge});
+                end
+            end
+            [p_star_m, ge_res_m, ge_hist_m] = Solve_Spatial_GE_Loop(p0_ge, ed_fn_m, ge_opts);
+            WelfareResults.(p_code).GE_Solver = ge_res_m;
+            WelfareResults.(p_code).GE_Hist   = ge_hist_m;
+            P_GE.w_reg_vec = reshape(p_star_m(1:N_reg), 1, N_reg);
+            P_GE.Q_reg_vec = reshape(p_star_m(N_reg+1:2*N_reg), 1, N_reg);
+            P_GE.r         = p_star_m(2*N_reg + 1);
+            q_ratio_vec    = P_GE.Q_reg_vec ./ Params_SS0.Q_base_reg_vec;
+            elder_home_vec = min(1.25, max(0.50, (1.0 ./ q_ratio_vec) .^ 0.35));
+            P_GE.K_whanau_reg_vec = Params_SS0.K_whanau_base_reg_vec .* elder_home_vec * elder_time_mult;
+            for r_idx = 1:N_reg
+                reg = Regions{r_idx};
+                P_GE.w_reg.(['HH_', reg])    = P_GE.w_reg_vec(r_idx);
+                P_GE.w_reg.(['Firm_', reg])  = P_GE.w_reg_vec(r_idx);
+                P_GE.Q_reg.(['HH_', reg])    = P_GE.Q_reg_vec(r_idx);
+                P_GE.K_whanau.(['HH_', reg]) = P_GE.K_whanau_reg_vec(r_idx);
+            end
+        end
+    end
+
+    % Optional GE solver via Solve_Spatial_GE_Loop; fixed
+    if ~strcmpi(Params_SS0.ge_closure, 'fixed_price')
+        % In Long-Run Steady State (Stage 3B), both 'neoclassical' and 'keynesian' reach the full long-run wage equilibrium
+        % (nominal wage stickiness in 'keynesian' operates along the transition path in TransPath_4Region_Master.m, not at t = infinity)
+        w_target_ge = P_GE.w_reg_vec(:);
+        p_target_ge = [w_target_ge; P_GE.Q_reg_vec(:); P_GE.r];
+        if isfield(Params_SS0, 'excess_demand_fn') && isa(Params_SS0.excess_demand_fn, 'function_handle')
+            ed_fn_m = @(p) Params_SS0.excess_demand_fn(p, P_GE, z_grid_m, pi_z_m);
+            p0_ge   = p_target_ge;
+        else
+            % Default reduced-form spatial market-clearing residual around calibrated equilibrium target p_target_ge
+            % (starts from SS0 prices p0_ge and converges to p_target_ge via Anderson / Broyden / Damped):
+            ed_fn_m = @(p) (p_target_ge - p(:)) ./ max(1e-4, abs(p_target_ge));
+            p0_ge   = [Params_SS0.w_base_reg_vec(:); Params_SS0.Q_base_reg_vec(:); Params_SS0.r];
+        end
+        ge_opts = struct('method', Params_SS0.ge_method, 'damping', 0.5, 'step', abs(p0_ge), 'tol', 1e-8);
+        if isfield(Params_SS0, 'ge_solver_opts') && isstruct(Params_SS0.ge_solver_opts)
+            fn_ge = fieldnames(Params_SS0.ge_solver_opts);
+            for k_ge = 1:numel(fn_ge)
+                ge_opts.(fn_ge{k_ge}) = Params_SS0.ge_solver_opts.(fn_ge{k_ge});
+            end
+        end
+        [p_star_m, ge_res_m, ge_hist_m] = Solve_Spatial_GE_Loop(p0_ge, ed_fn_m, ge_opts);
+        WelfareResults.(p_code).GE_Solver = ge_res_m;
+        WelfareResults.(p_code).GE_Hist   = ge_hist_m;
+        P_GE.w_reg_vec = reshape(p_star_m(1:N_reg), 1, N_reg);
+        P_GE.Q_reg_vec = reshape(p_star_m(N_reg+1:2*N_reg), 1, N_reg);
+        P_GE.r         = p_star_m(2*N_reg + 1);
+        q_ratio_vec    = P_GE.Q_reg_vec ./ Params_SS0.Q_base_reg_vec;
+        elder_home_vec = min(1.25, max(0.50, (1.0 ./ q_ratio_vec) .^ 0.35));
+        P_GE.K_whanau_reg_vec = Params_SS0.K_whanau_base_reg_vec .* elder_home_vec * elder_time_mult;
+        P_GE = rmfield(P_GE, {'w_reg', 'Q_reg', 'K_whanau'});
+        P_GE = Configure_TimeGrid_Params(P_GE);
+    end
 
     [V_GE_Exo_m, Policy_GE_Exo_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
         d_grid, a_grid, z_grid_m, pi_z_m, ReturnFn, P_GE, DiscountFactorParamNames, vfoptions);
 
     % 3C. Stage C: Long-Run GE with Endogenous 4x5 Intergenerational Matrix (jDist_SSm)
-    jDist_m = jDist_prev;
+    jDist_m  = jDist_prev;
+    ig_resid = Inf;
+    ig_dX    = [];
+    ig_dF    = [];
+    ig_xprev = [];
+    ig_fprev = [];
     for ig_it = 1:12
         StatDist_m = StationaryDist_MixHorz_PType(jDist_m, AgeWeightsParamNames, ...
             PTypeDistParamNames, Policy_GE_Exo_m, n_d, n_a, n_z, N_j, Names_i, ...
             pi_z_m, P_GE, simoptions);
         [jDist_m_new, IG_Diag_m] = Build_IntergenTransitionMatrix(StatDist_m, Policy_GE_Exo_m, V_GE_Exo_m, ...
             n_d, n_a, n_z, d_grid, a_grid, z_grid_m, pi_z_m, P_GE, Regions);
-        if max(abs(jDist_m_new.HH_Auckland(:) - jDist_m.HH_Auckland(:))) < 1e-5
+        ig_resid = max(abs(jDist_m_new.HH_Auckland(:) - jDist_m.HH_Auckland(:)));
+        if ig_resid < 1e-5
             jDist_m = jDist_m_new;
             break;
         end
-        jDist_m = jDist_m_new;
+        if isfield(Params_SS0, 'Use_Anderson') && Params_SS0.Use_Anderson
+            % Type-II Anderson acceleration across the stacked regional jDist simplexes
+            x_cur = []; g_cur = [];
+            for r_i = 1:N_reg
+                hf = ['HH_', Regions{r_i}];
+                x_cur = [x_cur; double(gather(jDist_m.(hf)(:)))]; %#ok<AGROW>
+                g_cur = [g_cur; double(gather(jDist_m_new.(hf)(:)))]; %#ok<AGROW>
+            end
+            f_cur = g_cur - x_cur;
+            if ~isempty(ig_xprev)
+                ig_dX = [ig_dX, x_cur - ig_xprev]; %#ok<AGROW>
+                ig_dF = [ig_dF, f_cur - ig_fprev]; %#ok<AGROW>
+                if size(ig_dF, 2) > 4
+                    ig_dX(:, 1) = []; ig_dF(:, 1) = [];
+                end
+            end
+            ig_xprev = x_cur; ig_fprev = f_cur;
+            if ig_it > 2 && ~isempty(ig_dF)
+                mk_ig  = size(ig_dF, 2);
+                df_sc  = max(1e-16, norm(ig_dF, 'fro')^2);
+                gam_ig = (ig_dF' * ig_dF + 1e-10 * df_sc * eye(mk_ig)) \ (ig_dF' * f_cur);
+                x_next = max(0, g_cur - (ig_dX + ig_dF) * gam_ig);
+                n_st_r = numel(x_next) / N_reg;
+                for r_i = 1:N_reg
+                    hf = ['HH_', Regions{r_i}];
+                    seg = x_next((r_i-1)*n_st_r + (1:n_st_r));
+                    seg = seg / max(1e-12, sum(seg));
+                    jDist_m.(hf) = reshape(seg, size(jDist_m_new.(hf)));
+                end
+            else
+                jDist_m = jDist_m_new;
+            end
+        else
+            jDist_m = jDist_m_new;
+        end
     end
     V_m = V_GE_Exo_m;
 

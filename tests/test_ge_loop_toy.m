@@ -47,6 +47,14 @@ o = struct('method', 'broyden', 'jac0', 'diag', 'damping', 0.5, 'step', abs(p0),
 [p2b, ~, h2b] = Solve_Spatial_GE_Loop(p0, F, o);
 assert(h2b.converged && max(abs(p2b - truth)) < tol_price, 'broyden(diag): did not recover analytic prices');
 
+% --- 2c. Type-II Anderson acceleration -------------------------------------
+o = struct('method', 'anderson', 'damping', 0.5, 'step', abs(p0), 'tol', 1e-10, 'max_iter', 100);
+[p2c, res2c, h2c] = Solve_Spatial_GE_Loop(p0, F, o);
+r2c = res2c.residual;
+assert(res2c.converged && h2c.converged && norm(r2c, Inf) < 1e-10, 'anderson: residual not below tol');
+assert(max(abs(p2c - truth)) < tol_price, 'anderson: prices differ from analytic by > 1e-8');
+assert(h2c.n_iter < 40, 'anderson: iteration count above regression ceiling');
+
 % --- 3. non-convergence at max_iter = 1 ------------------------------------
 % 3a. DEFAULT (on_fail='warn'): warning IGW:NoConvergence, converged == false,
 %     last iterate returned. The warning is captured by promoting it to an error
@@ -54,7 +62,7 @@ assert(h2b.converged && max(abs(p2b - truth)) < tol_price, 'broyden(diag): did n
 %     lastwarn, so lastwarn is not used); the outputs are then checked in a second
 %     call with the warning switched off. Nothing is printed.
 wid_nc = 'IGW:NoConvergence';
-for m = {'damped', 'broyden'}
+for m = {'damped', 'broyden', 'anderson'}
     for explicit = [false true]
         o = struct('method', m{1}, 'tol', 1e-10, 'max_iter', 1);
         if explicit, o.on_fail = 'warn'; end
@@ -92,7 +100,7 @@ warning(ws);
 assert(isempty(caught) && resok.converged, 'a converged run raised a warning or did not converge');
 
 % 3b. on_fail = 'error' raises IGW:NoConvergence with the contract message
-for m = {'damped', 'broyden'}
+for m = {'damped', 'broyden', 'anderson'}
     caught = [];
     try
         Solve_Spatial_GE_Loop(p0, F, struct('method', m{1}, 'tol', 1e-10, 'max_iter', 1, 'on_fail', 'error'));
@@ -106,16 +114,21 @@ for m = {'damped', 'broyden'}
 end
 expect_id(@() Solve_Spatial_GE_Loop(p0, F, struct('on_fail', 'ignore')), 'IGW:BadOption');
 
-% --- 4. price floors are respected, and actually bind (both methods) --------
-fl = truth .* [0.95; 0.8; 0.95; 0.7; 0.9];       % all strictly below the equilibrium
+% --- 4. price floors are respected, and actually bind (all methods) ---------
+fl = truth .* [0.95; 0.8; 0.95; 0.7; 0.9]; % all strictly below the equilibrium
 [p4, ~, h4] = Solve_Spatial_GE_Loop(p0, F, struct('tol', 1e-10, 'max_iter', 500, 'bounds', fl, 'step', abs(p0)));
 assert(h4.converged && max(abs(p4 - truth)) < tol_price, 'bounds(damped): prices differ from analytic');
 assert(all(all(h4.price >= repmat(fl', size(h4.price, 1), 1))), 'bounds(damped): a floor was violated');
 assert(any(abs(h4.price(:, 1) - fl(1)) <= 1e-12), 'bounds(damped): floor on w1 never bound (test no longer exercises projection)');
+
 [p4b, ~, h4b] = Solve_Spatial_GE_Loop(p0, F, struct('method', 'broyden', 'tol', 1e-10, 'max_iter', 200, 'bounds', fl));
 assert(h4b.converged && max(abs(p4b - truth)) < tol_price, 'bounds(broyden): prices differ from analytic');
 assert(all(all(h4b.price >= repmat(fl', size(h4b.price, 1), 1))), 'bounds(broyden): a floor was violated');
 assert(any(abs(h4b.price(:, 5) - fl(5)) <= 1e-12), 'bounds(broyden): floor on r never bound (test no longer exercises projection)');
+
+[p4c, ~, h4c] = Solve_Spatial_GE_Loop(p0, F, struct('method', 'anderson', 'tol', 1e-10, 'max_iter', 200, 'bounds', fl, 'step', abs(p0)));
+assert(h4c.converged && max(abs(p4c - truth)) < tol_price, 'bounds(anderson): prices differ from analytic');
+assert(all(all(h4c.price >= repmat(fl', size(h4c.price, 1), 1))), 'bounds(anderson): a floor was violated');
 
 % --- 5. shape is preserved ---------------------------------------------------
 Frow = @(pp) F(pp(:))';
@@ -134,6 +147,7 @@ if report
     fprintf('test_ge_loop_toy: broyden  n_iter=%d n_eval=%d |z|=%.2e max|p-p*|=%.2e (jac0=fd)\n', h2.n_iter, h2.n_eval, norm(r2, Inf), max(abs(p2 - truth)));
     fprintf('test_ge_loop_toy: broyden  n_iter=%d n_eval=%d max|p-p*|=%.2e (jac0=diag)\n', h2b.n_iter, h2b.n_eval, max(abs(p2b - truth)));
     fprintf('test_ge_loop_toy: floors   damped n_iter=%d, broyden n_iter=%d (floors binding)\n', h4.n_iter, h4b.n_iter);
+    fprintf('test_ge_loop_toy: anderson n_iter=%d n_eval=%d |z|=%.2e max|p-p*|=%.2e\n', h2c.n_iter, h2c.n_eval, norm(r2c, Inf), max(abs(p2c - truth)));
 end
 end
 

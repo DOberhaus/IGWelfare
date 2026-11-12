@@ -177,7 +177,7 @@ Params.b1_beq = 4.20; Params.b2_beq = 0.45; Params.YouthGrant = 0.03;
 Params.tau_l = 0.22; Params.tau_c = 0.15; Params.tau_k = 0.20; Params.tau_a = 0.005; Params.tau_b = 0.15;
 Params.alpha_k = 0.33; Params.lambda_col = 1.80; Params.sigma_hc_ig = 0.18;
 
-% Update active regional whanau capacity Params.K_whanau(k) from fixed Params.K_whanau_base(k)
+% Update active regional whanau capacity Params.K_whanau(k) from fixed Params.K_whanau_base_reg_vec(k)
 % as a function of current NZ Super age (Jr), pension rate (p_super), and current house prices (Params.Q_reg):
 super_age_eff   = 20 + (Params.Jr - 1) * Params.dt;
 elder_time_mult = exp(-0.09 * max(0, super_age_eff - 65)); % -9%/yr loss of grandparent time when Super age > 65
