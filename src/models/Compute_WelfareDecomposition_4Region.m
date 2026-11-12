@@ -180,7 +180,7 @@ for m = 1:M_reforms
             jDist_m = jDist_m_new;
             break;
         end
-        if isfield(Params_SS0, 'Use_Anderson') && Params_SS0.Use_Anderson
+        if strcmp(Params_SS0.ge_method, 'anderson')
             % Type-II Anderson acceleration across the stacked regional jDist simplexes
             x_cur = []; g_cur = [];
             for r_i = 1:N_reg
