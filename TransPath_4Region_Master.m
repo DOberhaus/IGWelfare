@@ -416,8 +416,9 @@ else
     OutputDir = pwd;
 end
 
-writetable(T_PopShares,     fullfile(OutputDir, 'Table9_4Region_Kiyotaki_Housing_And_PopShares_Path.csv'));
-writetable(T_CohortWelfare, fullfile(OutputDir, 'Table10_4Region_Daruich_Cohort_Welfare_Path.csv'));
+writetable(T_PopShares,     fullfile(OutputDir, 'Table9_4Region_Dynamic_Population_Shares.csv'));
+writetable(T_PopShares,     fullfile(OutputDir, 'Table_Trans2_Kiyotaki_Housing_PopShares_4Region.csv'));
+writetable(T_CohortWelfare, fullfile(OutputDir, 'Table_Trans1_Daruich_Cohort_Welfare_4Region.csv'));
 
 for fh = [fig1, fig2, fig3]
     if isgraphics(fh)

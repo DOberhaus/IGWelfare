@@ -329,27 +329,32 @@ if ~isfield(Params, 'psi_austerity_tax_drag'), Params.psi_austerity_tax_drag = 0
 %   - Params.ge_closure = 'fixed_price' (default fast multipliers) | 'neoclassical' | 'keynesian'
 % Note: Params.ge_method overrides default Params.ge_closure, not the other way around
 
-if isfield(Params, 'ge_method')
-    if any(strcmpi(Params.ge_method, {'anderson','broyden','damped'}))
-        if ~isfield(Params, 'ge_closure')
-            warning("selecting 'keynesian' for `Params.ge_closure`");
-            Params.ge_closure = 'keynesian';
-        elseif ~any(strcmpi(Params.ge_closure, {'fixed_price','neoclassical','keynesian'}))
-            error("unrecognized `Params.ge_closure` setting");
-        end
-        if strcmp(Params.ge_closure, 'fixed_price')
-            warning("When Params.ge_closure is 'fixed_price' the GE solver will not run");
-        end
-    elseif strcmp(Params.ge_method, 'none')
-        if ~isfield(Params, 'ge_closure')
-            Params.ge_closure = 'fixed_price';
-        elseif ~strcmp(Params.ge_closure, 'fixed_price')
-            warning("overriding `Params.ge_closure` to 'fixed_price' since `Params.ge_method` set to 'none'");
-            Params.ge_closure = 'fixed_price';
-        end
+if ~isfield(Params, 'ge_method') || isempty(Params.ge_method)
+    if isfield(Params, 'ge_closure') && any(strcmpi(Params.ge_closure, {'neoclassical', 'keynesian'}))
+        Params.ge_method = 'anderson';
     else
-        error("unrecognized `Params.ge_method setting");
+        Params.ge_method = 'none';
     end
+end
+if any(strcmpi(Params.ge_method, {'anderson','broyden','damped'}))
+    if ~isfield(Params, 'ge_closure')
+        warning("selecting 'keynesian' for `Params.ge_closure`");
+        Params.ge_closure = 'keynesian';
+    elseif ~any(strcmpi(Params.ge_closure, {'fixed_price','neoclassical','keynesian'}))
+        error("unrecognized `Params.ge_closure` setting");
+    end
+    if strcmp(Params.ge_closure, 'fixed_price')
+        warning("When Params.ge_closure is 'fixed_price' the GE solver will not run");
+    end
+elseif strcmp(Params.ge_method, 'none')
+    if ~isfield(Params, 'ge_closure')
+        Params.ge_closure = 'fixed_price';
+    elseif ~strcmp(Params.ge_closure, 'fixed_price')
+        warning("overriding `Params.ge_closure` to 'fixed_price' since `Params.ge_method` set to 'none'");
+        Params.ge_closure = 'fixed_price';
+    end
+else
+    error("unrecognized `Params.ge_method` setting");
 end
 
 %% 9. COALESCED N_REG DIMENSION & STRUCT-FIELD CONTRACT VALIDATION

@@ -192,12 +192,12 @@ for m = 1:M_reforms
     if isfield(spec, 'S_cohesion')
         P_GE.S_cohesion = spec.S_cohesion;
     end
-
     if super_age_m >= 65
-        elder_time_mult = exp(-Params_SS0.eta_elder_whanau*(super_age_m - 65));
+        elder_time_mult = exp(-Params_SS0.eta_elder_whanau * (super_age_m - 65));
     else
-        elder_time_mult = 1 + 0.16*tanh((65 - super_age_m)/1.8);
+        elder_time_mult = 1 + 0.16 * tanh((65 - super_age_m) / 1.8);
     end
+
     if isfield(spec, 'M_olig_vec') && ~isempty(spec.M_olig_vec)
         P_GE.active_M_olig_vec = spec.M_olig_vec;
     elseif m >= 2
@@ -221,18 +221,22 @@ for m = 1:M_reforms
     end
     P_GE = Configure_TimeGrid_Params(P_GE);
 
-    % Update regional prices, whanau care, and endogenous z_l -> z_h productivity grids (z_grid_m, pi_z_m)
+    % Update regional prices (BOTH structs AND *_reg_vec), whanau care, and z_l -> z_h grids
+    P_GE.w_reg_vec        = Params_SS0.w_base_reg_vec .* reshape(spec.w_mult_vs_SS0, 1, N_reg);
+    P_GE.Q_reg_vec        = Params_SS0.Q_base_reg_vec .* reshape(spec.Q_mult_vs_SS0, 1, N_reg);
+    elder_home_mult_vec   = min(1.25, max(0.50, (1.0 ./ reshape(spec.Q_mult_vs_SS0, 1, N_reg)) .^ 0.35));
+    P_GE.K_whanau_reg_vec = Params_SS0.K_whanau_base_reg_vec .* elder_home_mult_vec * elder_time_mult;
+
     z_grid_m = z_grid;
     pi_z_m   = pi_z;
     for r_idx = 1:N_reg
         reg       = Regions{r_idx};
         hh_type   = ['HH_', reg];
         firm_type = ['Firm_', reg];
-        P_GE.w_reg.(hh_type)   = Params_SS0.w_reg.(hh_type)   * spec.w_mult_vs_SS0(r_idx);
-        P_GE.w_reg.(firm_type) = Params_SS0.w_reg.(firm_type) * spec.w_mult_vs_SS0(r_idx);
-        P_GE.Q_reg.(hh_type)   = Params_SS0.Q_reg.(hh_type)   * spec.Q_mult_vs_SS0(r_idx);
-        elder_home_mult        = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
-        P_GE.K_whanau.(hh_type) = Params_SS0.K_whanau_base.(hh_type) * elder_home_mult * elder_time_mult;
+        P_GE.w_reg.(hh_type)    = P_GE.w_reg_vec(r_idx);
+        P_GE.w_reg.(firm_type)  = P_GE.w_reg_vec(r_idx);
+        P_GE.Q_reg.(hh_type)    = P_GE.Q_reg_vec(r_idx);
+        P_GE.K_whanau.(hh_type) = P_GE.K_whanau_reg_vec(r_idx);
 
         % Endogenous regional z_l -> z_h shift from local procurement & youth career pathways (CEFS LFPI / FYI):
         d_mu_z_r            = P_GE.mu_z_reg_vec(r_idx) - Params_SS0.mu_z_SS0(r_idx);
@@ -241,76 +245,36 @@ for m = 1:M_reforms
         p_dn_m              = P_GE.p_zl_downgrade_v(r_idx);
         pi_z_m.(firm_type)  = [1.0 - p_up_m, p_up_m; p_dn_m, 1.0 - p_dn_m];
     end
-    % Sync *_reg_vec with updated structs
-    P_GE = Configure_TimeGrid_Params(P_GE);
 
     % Optional endogenous GE market-clearing closure via Solve_Spatial_GE_Loop ('damped' | 'broyden' | 'anderson')
-    if isfield(Params_SS0, 'ge_closure') && ~strcmpi(Params_SS0.ge_closure, 'fixed_price') ...
-            && isfield(Params_SS0, 'excess_demand_fn') && isa(Params_SS0.excess_demand_fn, 'function_handle')
-        p0_ge = [P_GE.w_reg_vec(:); P_GE.Q_reg_vec(:); P_GE.r];
-        ge_opts = struct('method', 'anderson', 'step', abs(p0_ge));
-        if isfield(Params_SS0, 'ge_solver_opts') && isstruct(Params_SS0.ge_solver_opts)
-            ge_opts = Params_SS0.ge_solver_opts;
+    if ~strcmpi(Params_SS0.ge_closure, 'fixed_price') && ~strcmpi(Params_SS0.ge_method, 'none')
+        w_target_ge = P_GE.w_reg_vec(:);
+        p_target_ge = [w_target_ge; P_GE.Q_reg_vec(:); P_GE.r];
+        if isfield(Params_SS0, 'excess_demand_fn') && isa(Params_SS0.excess_demand_fn, 'function_handle')
+            ed_fn_m = @(p) Params_SS0.excess_demand_fn(p, P_GE, z_grid_m, pi_z_m);
+            p0_ge   = p_target_ge;
+        else
+            ed_fn_m = @(p) (p_target_ge - p(:)) ./ max(1e-4, abs(p_target_ge));
+            p0_ge   = [Params_SS0.w_base_reg_vec(:); Params_SS0.Q_base_reg_vec(:); Params_SS0.r];
         end
-        [p_star_m, ge_res_m, ge_hist_m] = Solve_Spatial_GE_Loop( ...
-            p0_ge, @(p) Params_SS0.excess_demand_fn(p, P_GE, z_grid_m, pi_z_m), ge_opts);
+        ge_opts = struct('method', lower(Params_SS0.ge_method), 'damping', 0.5, 'step', abs(p0_ge), 'tol', 1e-8);
+        if isfield(Params_SS0, 'ge_solver_opts') && isstruct(Params_SS0.ge_solver_opts)
+            fn_ge = fieldnames(Params_SS0.ge_solver_opts);
+            for k_ge = 1:numel(fn_ge)
+                ge_opts.(fn_ge{k_ge}) = Params_SS0.ge_solver_opts.(fn_ge{k_ge});
+            end
+        end
+        [p_star_m, ge_res_m, ge_hist_m] = Solve_Spatial_GE_Loop(p0_ge, ed_fn_m, ge_opts);
         WelfareResults.(p_code).GE_Solver = ge_res_m;
         WelfareResults.(p_code).GE_Hist   = ge_hist_m;
-        % Update regional prices (BOTH structs AND *_reg_vec), whanau care, and z_l -> z_h grids
-        P_GE.w_reg_vec        = Params_SS0.w_base_reg_vec .* reshape(spec.w_mult_vs_SS0, 1, N_reg);
-        P_GE.Q_reg_vec        = Params_SS0.Q_base_reg_vec .* reshape(spec.Q_mult_vs_SS0, 1, N_reg);
-        elder_home_mult_vec   = min(1.25, max(0.50, (1.0 ./ reshape(spec.Q_mult_vs_SS0, 1, N_reg)) .^ 0.35));
-        P_GE.K_whanau_reg_vec = Params_SS0.K_whanau_base_reg_vec .* elder_home_mult_vec * elder_time_mult;
-
-        z_grid_m = z_grid;
-        pi_z_m   = pi_z;
-        for r_idx = 1:N_reg
-            reg       = Regions{r_idx};
-            hh_type   = ['HH_', reg];
-            firm_type = ['Firm_', reg];
-            P_GE.w_reg.(hh_type)    = P_GE.w_reg_vec(r_idx);
-            P_GE.w_reg.(firm_type)  = P_GE.w_reg_vec(r_idx);
-            P_GE.Q_reg.(hh_type)    = P_GE.Q_reg_vec(r_idx);
-            P_GE.K_whanau.(hh_type) = P_GE.K_whanau_reg_vec(r_idx);
-
-            % Endogenous regional z_l -> z_h shift from local procurement & youth career pathways (CEFS LFPI / FYI):
-            d_mu_z_r            = P_GE.mu_z_reg_vec(r_idx) - Params_SS0.mu_z_SS0(r_idx);
-            z_grid_m.(hh_type)  = z_grid.(hh_type) * exp(d_mu_z_r);
-            p_up_m              = P_GE.p_zh_upgrade_vec(r_idx);
-            p_dn_m              = P_GE.p_zl_downgrade_v(r_idx);
-            pi_z_m.(firm_type)  = [1.0 - p_up_m, p_up_m; p_dn_m, 1.0 - p_dn_m];
-        end
-
-        % Optional endogenous GE market-clearing closure via Solve_Spatial_GE_Loop ('damped' | 'broyden' | 'anderson')
-        if ~strcmpi(Params_SS0.ge_closure, 'fixed_price') && ~strcmpi(Params_SS0.ge_method, 'none')
-            w_target_ge = P_GE.w_reg_vec(:);
-            p_target_ge = [w_target_ge; P_GE.Q_reg_vec(:); P_GE.r];
-            if isfield(Params_SS0, 'excess_demand_fn') && isa(Params_SS0, 'function_handle')
-                ed_fn_m = @(p) Params_SS0.excess_demand_fn(p, P_GE, z_grid_m, pi_z_m);
-                p0_ge   = p_target_ge;
-            else
-                ed_fn_m = @(p) (p_target_ge - p(:)) ./ max(1e-4, abs(p_target_ge));
-                p0_ge   = [Params_SS0.w_base_reg_vec(:); Params_SS0.Q_base_reg_vec(:); Params_SS0.r];
-            end
-            ge_opts = struct('method', lower(Params_SS0.ge_method), 'damping', 0.5, 'step', abs(p0_ge), 'tol', 1e-8);
-            if isfield(Params_SS0, 'ge_solver_opts') && isstruct(Params_SS0.ge_solver_opts)
-                fn_ge = fieldnames(Params_SS0.ge_solver_opts);
-                for k_ge = 1:numel(fn_ge)
-                    ge_opts.(fn_ge{k_ge}) = Params_SS0.ge_solver_opts.(fn_ge{k_ge});
-                end
-            end
-            [p_star_m, ge_res_m, ge_hist_m] = Solve_Spatial_GE_Loop(p0_ge, ed_fn_m, ge_opts);
-            WelfareResults.(p_code).GE_Solver = ge_res_m;
-            WelfareResults.(p_code).GE_Hist   = ge_hist_m;
-            P_GE.w_reg_vec = reshape(p_star_m(1:N_reg), 1, N_reg);
-            P_GE.Q_reg_vec = reshape(p_star_m(N_reg+1:2*N_reg), 1, N_reg);
-            P_GE.r         = p_star_m(2*N_reg + 1);
-            q_ratio_vec    = P_GE.Q_reg_vec ./ Params_SS0.Q_base_reg_vec;
-            elder_home_vec = min(1.25, max(0.50, (1.0 ./ q_ratio_vec) .^ 0.35));
-            P_GE.K_whanau_reg_vec = Params_SS0.K_whanau_base_reg_vec .* elder_home_vec * elder_time_mult;
-            P_GE = rmfield(P_GE, {'w_reg', 'Q_reg', 'K_whanau'});
-            P_GE = Configure_TimeGrid_Params(P_GE);
-        end
+        P_GE.w_reg_vec = reshape(p_star_m(1:N_reg), 1, N_reg);
+        P_GE.Q_reg_vec = reshape(p_star_m(N_reg+1:2*N_reg), 1, N_reg);
+        P_GE.r         = p_star_m(2*N_reg + 1);
+        q_ratio_vec    = P_GE.Q_reg_vec ./ Params_SS0.Q_base_reg_vec;
+        elder_home_vec = min(1.25, max(0.50, (1.0 ./ q_ratio_vec) .^ 0.35));
+        P_GE.K_whanau_reg_vec = Params_SS0.K_whanau_base_reg_vec .* elder_home_vec * elder_time_mult;
+        P_GE = rmfield(P_GE, {'w_reg', 'Q_reg', 'K_whanau'});
+        P_GE = Configure_TimeGrid_Params(P_GE);
     end
 
     [V_GE_Exo_m, Policy_GE_Exo_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
