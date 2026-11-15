@@ -7,9 +7,9 @@ function [Params_Out, pi_z_Out, ShockMeta] = Apply_Coalition_2024_Shocks(Params_
 %   2. 'austerity_landlord_only' : Shocks #1-#8 + #12-#13, #14 (Austerity + Landlord Relief + Teacher/KS squeeze)
 %   3. 'pro_growth_only'         : Shocks #9-#11 Only (Income Tax Cut + AIP Visa + 20% Investment Boost)
 %   4. 'rates_cap_3_waters'      : Shock #14 (Council Rates Cap and 3 Waters repeal)
-%   4. 'arts_and_civic_cuts'     : Shock #15 (Three Waters and Arts+Civic Cuts)
-%   4. 'full_15_shocks'          : All 15 Shocks Combined (Default Coalition Package)
-%   5. 'custom'                  : Uses user-supplied boolean switches in ShockOpts
+%   5. 'arts_and_civic_cuts'     : Shock #15 (Three Waters and Arts+Civic Cuts)
+%   6. 'full_15_shocks'          : All 15 Shocks Combined (Default Coalition Package)
+%   7. 'custom'                  : Uses user-supplied boolean switches in ShockOpts
 
 if nargin < 3 || isempty(Mode)
     Mode = 'full_15_shocks';
@@ -21,15 +21,23 @@ end
 % -------------------------------------------------------------------------
 % Configure Preset Bundles for 3-Way Decomposition
 % -------------------------------------------------------------------------
+default_14 = false; default_15 = false;
 switch lower(strtrim(Mode))
-    case 'reanchor_2023'
+    case {'reanchor_2023', 'custom'}
         default_aust = false; default_growth = false;
-    case 'austerity_landlord_only'
+    case 'austerity_landlord_only' % Original 10-shock Group A (Table B.1 Col 1)
         default_aust = true;  default_growth = false;
-    case 'pro_growth_only'
+    case 'pro_growth_only'         % 3-shock Group B (Table B.1 Col 2)
         default_aust = false; default_growth = true;
-    otherwise % 'full_15_shocks' or 'custom'
+    case 'coalition_13_shocks'     % 13-shock baseline (Table B.1 Col 3 = -21.85% CE)
         default_aust = true;  default_growth = true;
+    case 'rates_cap_3_waters'      % Isolate Shock #14 (Appendix B.3)
+        default_aust = false; default_growth = false; default_14 = true;
+    case 'arts_and_civic_cuts'     % Isolate Shock #15 (Appendix B.4)
+        default_aust = false; default_growth = false; default_15 = true;
+    otherwise % 'full_15_shocks'
+        default_aust = true;  default_growth = true;
+        default_14   = true;  default_15     = true;
 end
 
 % Group A: Austerity, Rent-Seeking, Infrastructure & Skill-Formation Erosion Shocks
@@ -359,28 +367,31 @@ end
 end
 
 function P = sync_regional_fields(P, Regions)
-Q_vec    = getfield_def(P, 'Q_k_vec',    [1.03, 1.37, 2.00, 3.02]);
-w_vec    = getfield_def(P, 'w_k_vec',    [0.85, 0.93, 1.05, 1.18]);
-ebar_vec = getfield_def(P, 'ebar_k_vec', [0.048, 0.036, 0.022, 0.016]);
-k_defl   = getfield_def(P, 'Kaiako_Deflator_Vec', [1, 1, 1, 1]);
-G1_base  = getfield_def(P, 'G_ECE_1', 0.045);
-G2_base  = getfield_def(P, 'G_ECE_2', 0.065);
+    Q_vec    = getfield_def(P, 'Q_k_vec',       [1.03, 1.37, 2.00, 3.02]);
+    w_vec    = getfield_def(P, 'w_k_vec',       [0.85, 0.93, 1.05, 1.18]);
+    ebar_vec = getfield_def(P, 'ebar_k_vec',    [0.048, 0.036, 0.022, 0.016]);
+    ups_base = getfield_def(P, 'upsilon_h',     0.0095) - 0.0095; % Net scalar shift from Shock #1
+    ups_vec  = getfield_def(P, 'upsilon_h_vec', [0.012, 0.014, 0.016, 0.015]) + ups_base;
+    k_defl   = getfield_def(P, 'Kaiako_Deflator_Vec', [1, 1, 1, 1]);
+    G1_base  = getfield_def(P, 'G_ECE_1', 0.045);
+    G2_base  = getfield_def(P, 'G_ECE_2', 0.065);
 
-for k = 1:4
-    reg     = Regions{k};
-    hh_tp   = ['HH_', reg];
-    firm_tp = ['Firm_', reg];
+    for k = 1:4
+        reg     = Regions{k};
+        hh_tp   = ['HH_', reg];
+        firm_tp = ['Firm_', reg];
+        P.Q_reg.(hh_tp)        = Q_vec(k);
+        P.w_reg.(hh_tp)        = w_vec(k);
+        P.w_reg.(firm_tp)      = w_vec(k);
+        P.ebar_energy.(hh_tp)  = ebar_vec(k);
+        P.upsilon_h_reg.(hh_tp)= max(0.001, ups_vec(k));
+        P.G_ECE_1_eff.(hh_tp)  = G1_base * k_defl(k);
+        P.G_ECE_2_eff.(hh_tp)  = G2_base * k_defl(k);
 
-    P.Q_reg.(hh_tp)       = Q_vec(k);
-    P.w_reg.(hh_tp)       = w_vec(k);
-    P.w_reg.(firm_tp)     = w_vec(k);
-    P.ebar_energy.(hh_tp) = ebar_vec(k);
-    P.G_ECE_1_eff.(hh_tp) = G1_base * k_defl(k);
-    P.G_ECE_2_eff.(hh_tp) = G2_base * k_defl(k);
-
-    zf_field = ['z_f_', reg];
-    if isfield(P, zf_field)
-        P.z_f_grid.(firm_tp) = P.(zf_field)(:);
+        zf_field = ['z_f_', reg];
+        if isfield(P, zf_field)
+            P.z_f_grid.(firm_tp) = P.(zf_field)(:);
+        end
     end
 end
 
