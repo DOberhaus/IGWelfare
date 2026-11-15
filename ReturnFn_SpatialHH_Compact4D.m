@@ -8,7 +8,7 @@ function F = ReturnFn_SpatialHH_Compact4D(l, Ih, ic, aprime, hprime, a, h, z, ..
 
 F = -Inf;
 scale_dt      = dt / 5;
-tol_hc        = max(0.18, 0.16 * h);
+tol_hc = max(0.21, 0.18 * h);
 age_start_yrs = 20 + (agej - 1) * dt;
 age_end_yrs   = age_start_yrs + dt;
 super_age_yrs = 20 + (Jr - 1) * dt; % Exact continuous statutory retirement age (e.g. 60, 64, 65, 70, 75)

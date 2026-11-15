@@ -1,7 +1,11 @@
 % VERIFY_ARTSCIVIC_GEARINGSYMMETRY
 % Pure CPU matrix check reconciling Document 1E (+Delta T1E) vs. Shock #15 Disinvestment
-Pop_W = [0.160; 0.240; 0.259; 0.341]; % [Rural; Small; Large (WCC); Auckland]
-NZD_Per_CE = 2.38;                    % NZD Billions/yr per 1.0% CE
+
+if ~exist('Params', 'var') || ~isfield(Params, 'Pop_Weights_4')
+    Params = Configure_TimeGrid_Params(struct());
+end
+Pop_W      = Params.Pop_Weights_4(:); % [4 x 1] from launch SSOT
+NZD_Per_CE = Params.NZD_Per_CE_Nat;   % 2.38 BNZD/yr per 1% CE from launch SSOT
 
 % 1. Positive Investment (Doc 1E Table 19E: -0.14% CE / -NZD 0.33B/yr seed) [4 Wedges x 4 Regions]
 Pos_Arts_4x4 = [ ...

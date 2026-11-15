@@ -14,7 +14,10 @@ function Out = Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole(Params)
 %        2-Term Stop-Go Policy Cycling vs. Static Baseline vs. Unified SS1->SS2 Compact).
 %   3) Exports Table21 and Table22 CSVs into Output_NZ_4Region_Intergen/.
 
-if nargin < 1 || isempty(Params), Params = struct(); end
+if ~isfield(Params, 'Pop_Weights_4')
+    Params = Configure_TimeGrid_Params(Params);
+end
+Pop_Weights = Params.Pop_Weights_4(:)'; % [1 x 4] from launch SSOT
 if isfield(Params, 'Calibration_Anchor') && ~isempty(Params.Calibration_Anchor)
     AnchorTag = Params.Calibration_Anchor;
 else
@@ -33,7 +36,6 @@ if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
 % =========================================================================
 % 1. SYNC HEADLINE NATIONAL SS1 & SS2 TARGETS FROM WORKSPACE T1 (IF PRESENT)
 % =========================================================================
-Pop_Weights    = [0.160, 0.240, 0.259, 0.341]; % [Rural, Small, Large, Auckland]
 SS1_Target_Reg = [9.479, 12.184, 14.384, 17.728];  % Matches +14.21% National (n_z = 7)
 SS2_Target_Reg = [18.213, 21.750, 24.414, 28.697]; % Matches +24.24% National (n_z = 7)
 
@@ -76,7 +78,6 @@ W_Surf_Base       = Debt_Drag_Surf + Tax_Drag_Surf + 0.82 * HC_Lift_Potential;
 
 % Define 60-Year Time Grid for Trajectories (-5 to +60)
 Yr_Vec = (-5:1:60)';
-n_yr   = numel(Yr_Vec);
 t_pos  = max(0, Yr_Vec);
 s_60   = t_pos / 60.0;
 
@@ -109,20 +110,29 @@ Debt_Unified = 42.0 + 3.5 * sin(min(pi, pi * t_pos / 18.8)) ...
     - 20.0 * max(0, (t_pos - 18.8) / 41.2) .^ 0.85;
 Tax_Unified  = 22.0 - 3.12 * (1 ./ (1 + exp(-(Yr_Vec - 26.5) / 2.2))) .* (Yr_Vec >= 18);
 
-CE_Unified = zeros(n_yr, 1);
-for i = 1:n_yr
-    y = Yr_Vec(i);
-    if y < 0
-        CE_Unified(i) = 0.15 * exp(y / 4.0);
-    elseif y < 25
-        CE_Unified(i) = SS1_Nat * (0.18 + 0.82 * (1 - exp(-y / 9.5)));
-    else
-        base25 = SS1_Nat * (0.18 + 0.82 * (1 - exp(-25 / 9.5)));
-        CE_Unified(i) = base25 + (SS2_Nat - base25) * (1 - exp(-(y - 25) / 8.5));
-    end
-end
-% Pin Year 60 to exact SS2_Nat (+24.24% CE) so callouts & tables match to 2 decimal places:
-CE_Unified(Yr_Vec >= 25) = CE_Unified(Yr_Vec >= 25) * (SS2_Nat / CE_Unified(end));
+m_neg  = (Yr_Vec < 0);
+m_ss1  = (Yr_Vec >= 0) & (Yr_Vec < 25);
+m_ss2  = (Yr_Vec >= 25);
+base25 = SS1_Nat * (0.18 + 0.82 * (1.0 - exp(-25.0 / 9.5)));
+
+CE_Unified = m_neg .* (0.15 * exp(Yr_Vec / 4.0)) ...
+    + m_ss1 .* (SS1_Nat * (0.18 + 0.82 * (1.0 - exp(-t_pos / 9.5)))) ...
+    + m_ss2 .* (base25 + (SS2_Nat - base25) * (1.0 - exp(-max(0.0, Yr_Vec - 25.0) / 8.5)));
+CE_Unified(m_ss2) = CE_Unified(m_ss2) * (SS2_Nat / CE_Unified(end));
+
+% Construct an exact unit sawtooth wave in [-1, +1] over any cycle period P_cyc:
+%   Rises linearly from -1 to +1 during the "On" half-cycle (0 <= mod(t, P) < P/2),
+%   and decays from +1 back to -1 during the "Off" half-cycle (P/2 <= mod(t, P) < P).
+% 6A: One-Term (3-Yr On / 3-Yr Off = 6-Yr Period) Sawtooth (1-period 22.0% fade-out -> +6.58% CE at Yr 60)
+m6      = mod(t_pos, 6.0);
+saw_6yr = (~m_neg) .* ((m6 <= 3.0) .* (-1.0 + (2.0 / 3.0) * m6) + (m6 > 3.0) .* (1.0 - (2.0 / 3.0) * (m6 - 3.0)));
+
+% 6B: Two-Term (6-Yr On / 6-Yr Off = 12-Yr Period) Sawtooth (2-period 39.2% compound fade-out + LTFM slide)
+%     Climbs during each 6-Yr On phase (peaks ~+6.2% to +6.6% CE, strictly below the +11.82% Thin Mean),
+%     then drops ~-3.0 pp during each 6-Yr Off phase as 2-term fade-out (39.2%) & LTFM drift bite,
+%     landing at exact +3.84% CE at Year 60 (83.7% of the +24.24% prize lost):
+m12      = mod(t_pos, 12.0);
+saw_12yr = (~m_neg) .* ((m12 <= 6.0) .* (-1.0 + (2.0 / 6.0) * m12) + (m12 > 6.0) .* (1.0 - (2.0 / 6.0) * (m12 - 6.0)));
 
 % --- Trajectory 5: Unified Coalition Carrying the 3.0% GDP (+NZD 8.0B/yr) Defense Commitment in SS2 ---
 CE_Unified_With_Defense = CE_Unified - 3.52 * def_ramp .* (0.65 + 0.35 * s_60); % Exact +20.11% CE at Year 60
@@ -130,44 +140,12 @@ CE_Unified_With_Defense = CE_Unified - 3.52 * def_ramp .* (0.65 + 0.35 * s_60); 
 % --- Trajectory 6: "Stop-Go" Policy Cycling (Linear Mean vs. 1-Term 3-Yr vs. 2-Term 6-Yr Sawtooth) ---
 CE_StopGo_Thin = 0.50 * CE_Unified; % Linear spreadsheet assumes 50% duty cycle = +11.82% CE
 
-% Construct an exact unit sawtooth wave in [-1, +1] over any cycle period P_cyc:
-%   Rises linearly from -1 to +1 during the "On" half-cycle (0 <= mod(t, P) < P/2),
-%   and decays from +1 back to -1 during the "Off" half-cycle (P/2 <= mod(t, P) < P).
-% 6A: One-Term (3-Yr On / 3-Yr Off = 6-Yr Period) Sawtooth (1-period 22.0% fade-out -> +6.58% CE at Yr 60)
-saw_6yr = zeros(n_yr, 1);
-for i = 1:n_yr
-    y = Yr_Vec(i);
-    if y >= 0
-        m6 = mod(y, 6);
-        if m6 <= 3
-            saw_6yr(i) = -1.0 + (2.0 / 3.0) * m6;      % 3-Yr On: climbs from trough to peak
-        else
-            saw_6yr(i) =  1.0 - (2.0 / 3.0) * (m6 - 3); % 3-Yr Off: 22% 1-term fade-out drop
-        end
-    end
-end
 envelope_1t     = 6.58 * (1 - exp(-t_pos / 14.0));
 CE_StopGo_1Term = envelope_1t + 0.95 * (1 - exp(-t_pos / 8.0)) .* (saw_6yr + 1.0) * 0.5 ...
     - 0.95 * (1 - exp(-t_pos / 8.0)) .* (1.0 - (saw_6yr + 1.0) * 0.5);
 CE_StopGo_1Term(Yr_Vec < 0) = 0.08 * exp(Yr_Vec(Yr_Vec < 0) / 4.0);
 CE_StopGo_1Term(end)        = 6.58; % Exact +6.58% CE at Year 60
 
-% 6B: Two-Term (6-Yr On / 6-Yr Off = 12-Yr Period) Sawtooth (2-period 39.2% compound fade-out + LTFM slide)
-%     Climbs during each 6-Yr On phase (peaks ~+6.2% to +6.6% CE, strictly below the +11.82% Thin Mean),
-%     then drops ~-3.0 pp during each 6-Yr Off phase as 2-term fade-out (39.2%) & LTFM drift bite,
-%     landing at exact +3.84% CE at Year 60 (83.7% of the +24.24% prize lost):
-saw_12yr = zeros(n_yr, 1);
-for i = 1:n_yr
-    y = Yr_Vec(i);
-    if y >= 0
-        m12 = mod(y, 12);
-        if m12 <= 6
-            saw_12yr(i) = -1.0 + (2.0 / 6.0) * m12;       % 6-Yr On: climbs from trough to peak
-        else
-            saw_12yr(i) =  1.0 - (2.0 / 6.0) * (m12 - 6); % 6-Yr Off: 39.2% 2-term compound fade-out drop
-        end
-    end
-end
 % Center envelope rises to +5.34% CE, with a +/- 1.50 pp (3.0 pp peak-to-trough) 12-year sawtooth,
 % so peaks reach ~+6.84% CE (Years 6, 18, 30, 42, 54) and troughs drop to +3.84% CE (Years 12, 24, 36, 48, 60):
 center_2t       = 5.34 * (1 - exp(-t_pos / 12.0));
@@ -219,15 +197,15 @@ patch(ax1, [15, 200, 200, 15], [17, 17, 34, 34], [0, 0, 0, 0], [0.55 0.55 0.55],
 
 % Plot the 4 3D Trajectories elevated +0.8 above the surface
 p3_ss0 = plot3(ax1, Debt_SS0_LTFM, Tax_SS0_LTFM, CE_SS0_LTFM + 0.8, '-o', ...
-    'Color', [0.75 0.12 0.12], 'MarkerFaceColor', [0.85 0.20 0.20], 'MarkerIndices', 1:10:n_yr, ...
+    'Color', [0.75 0.12 0.12], 'MarkerFaceColor', [0.85 0.20 0.20], 'MarkerIndices', 1:10:numel(Yr_Vec), ...
     'LineWidth', 2.8, 'MarkerSize', 6, 'DisplayName', sprintf('1. SS0 Treasury LTFM Drift (Debt -> 185%%, PAYE -> 28.2%%, CE: %+.2f%%)', CE_SS0_LTFM(end)));
 
 p3_def = plot3(ax1, Debt_SS0_Def, Tax_SS0_Def, CE_SS0_Def + 0.8, '--v', ...
-    'Color', [0.35 0.00 0.45], 'MarkerFaceColor', [0.55 0.10 0.65], 'MarkerIndices', 1:10:n_yr, ...
+    'Color', [0.35 0.00 0.45], 'MarkerFaceColor', [0.55 0.10 0.65], 'MarkerIndices', 1:10:numel(Yr_Vec), ...
     'LineWidth', 2.8, 'MarkerSize', 6, 'DisplayName', sprintf('2. SS0 + 3.0%% GDP Defense (+$8.0B/yr Unfunded -> CE: %+.2f%%)', CE_SS0_Def(end)));
 
 p3_aus = plot3(ax1, Debt_Aust_First, Tax_Aust_First, CE_Aust_First + 0.8, '-.s', ...
-    'Color', [0.85 0.45 0.05], 'MarkerFaceColor', [0.95 0.55 0.10], 'MarkerIndices', 1:10:n_yr, ...
+    'Color', [0.85 0.45 0.05], 'MarkerFaceColor', [0.95 0.55 0.10], 'MarkerIndices', 1:10:numel(Yr_Vec), ...
     'LineWidth', 2.5, 'MarkerSize', 6, 'DisplayName', sprintf('3. "Debt-First" Consolidation (Age 70 + Early Cuts -> CE: %+.2f%%)', CE_Aust_First(end)));
 
 p3_uni = plot3(ax1, Debt_Unified, Tax_Unified, CE_Unified + 0.8, '-p', ...

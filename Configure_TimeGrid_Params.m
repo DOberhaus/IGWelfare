@@ -61,20 +61,61 @@ else
 end
 
 %% 4. COMPOUNDED DISCOUNT, RETURN, DEPRECIATION, & TRANSITION RATES
-if ~isfield(Params, 'beta_hh');   Params.beta_hh   = 0.96^dt; else; Params.beta_hh   = (Params.beta_hh^(1/5))^dt; end
-if ~isfield(Params, 'beta_firm'); Params.beta_firm = 0.95^dt; else; Params.beta_firm = (Params.beta_firm^(1/5))^dt; end
-if ~isfield(Params, 'r');         Params.r         = (1 + 0.20)^scale_dt - 1; end
-if ~isfield(Params, 'delta_hc');  Params.delta_hc  = 1 - (1 - 0.087)^scale_dt; end
-if ~isfield(Params, 'delta_k');   Params.delta_k   = 1 - (1 - 0.06)^dt; end
+% Supports 2-Phase Calibration Audit:
+%   - 'historic_096' : Legacy codebase anchor (beta_hh = 0.96^dt, beta_firm = 0.95^dt)
+%   - 'launch_0985'  : Treasury Circular 2024/15 SRTP-aligned (0.985^dt, 0.9815^dt)
+if ~isfield(Params, 'Discount_Regime') || isempty(Params.Discount_Regime)
+    Params.Discount_Regime = 'historic_096'; % Default to Phase 1 first
+end
+
+switch lower(strtrim(Params.Discount_Regime))
+    case 'launch_0985'
+        ann_beta_hh   = 0.9850;
+        ann_beta_firm = 0.9815;
+    otherwise % 'historic_096'
+        ann_beta_hh   = 0.9600;
+        ann_beta_firm = 0.9500;
+end
+Params.beta_hh_ann   = ann_beta_hh;
+Params.beta_firm_ann = ann_beta_firm;
+Params.beta_hh       = ann_beta_hh   ^ dt;
+Params.beta_firm     = ann_beta_firm ^ dt;
+
+if ~isfield(Params, 'r');        Params.r        = (1 + 0.20)^scale_dt - 1; end
+if ~isfield(Params, 'delta_hc'); Params.delta_hc = 1 - (1 - 0.087)^scale_dt; end
+if ~isfield(Params, 'delta_k');  Params.delta_k  = 1 - (1 - 0.06)^dt; end
 
 Params.T_trans_years = 60;
 Params.T_trans       = round(Params.T_trans_years / dt); % 12 (dt=5), 20 (dt=3), 30 (dt=2)
 Params.zeta_cohort   = 1 - (1 - 0.085)^scale_dt;
 
-%% 5. CANONICAL 4-REGION WHANAU, HARDSHIP, & MIGRATION CALIBRATION (SINGLE SOURCE OF TRUTH)
+%% 5. CANONICAL 4-REGION POPULATION, WHANAU, HARDSHIP, & MIGRATION CALIBRATION (SINGLE SOURCE OF TRUTH)
+Params.Reg_Names_4    = {'Rural', 'Small', 'Large', 'Auckland'};
+Params.Reg_Names_5    = {'Rural', 'Small', 'Large', 'Auckland', 'National'};
+Params.HH_Names_4     = strcat('HH_',   Params.Reg_Names_4);
+Params.Firm_Names_4   = strcat('Firm_', Params.Reg_Names_4);
+
+if ~isfield(Params, 'Pop_Weights_4'),  Params.Pop_Weights_4  = [0.160, 0.240, 0.259, 0.341]; end % Stats NZ HH shares [Rural, Small, Large, Auckland]
+if ~isfield(Params, 'Firm_Weights_4'), Params.Firm_Weights_4 = [0.150, 0.230, 0.269, 0.351]; end % Stats NZ Firm shares [Rural, Small, Large, Auckland]
+Params.Pop_Weights_4  = Params.Pop_Weights_4  / sum(Params.Pop_Weights_4);
+Params.Firm_Weights_4 = Params.Firm_Weights_4 / sum(Params.Firm_Weights_4);
+Params.Pop_Weights_5  = [Params.Pop_Weights_4, 1.000]; % 5th column = National (100% population weight)
+Params.Pop_Weights_3  = [Params.Pop_Weights_4(1) + Params.Pop_Weights_4(2), Params.Pop_Weights_4(3), Params.Pop_Weights_4(4)]; % [Rural+Small, Large, Auckland]
+Params.NZD_Per_CE_Nat = 2.38;  % National 1.0% CE equivalent in Real 2025 BNZD/yr
+Params.GDP_2026_BNZD  = 430.0; % National 2026 GDP anchor in Real 2025 BNZD/yr
+
+% Canonical PType Weight Structs (derived directly from Pop_Weights_4 & Firm_Weights_4)
+Params.Pop_Weight_HH  = cell2struct(num2cell(Params.Pop_Weights_4(:)'),  Params.HH_Names_4,   2);
+Params.Firm_Weight    = cell2struct(num2cell(Params.Firm_Weights_4(:)'), Params.Firm_Names_4, 2);
+
+% Canonical National Policy Schedules across [SS0, SS1, SS2] (from launch Section 7):
+Params.G_ece1_sched     = [0.045, 0.110, 0.130]; % Gate 1 (Ages 0-5) national public investment schedule
+Params.G_ece2_sched     = [0.065, 0.085, 0.105]; % Gate 2 (Ages 6-17) national public investment schedule
+Params.YouthGrant_sched = [0.030, 0.065, 0.080]; % Age-20 Opportunity Endowment schedule
+
 Params.K_whanau_base_vec = [0.42, 0.38, 0.32, 0.28]; % [Rural, Small, Large, Auckland]
 if ~isfield(Params, 'K_whanau_base')
-    Params.K_whanau_base = struct('HH_Rural', 0.42, 'HH_Small', 0.38, 'HH_Large', 0.32, 'HH_Auckland', 0.28);
+    Params.K_whanau_base = cell2struct(num2cell(Params.K_whanau_base_vec), Params.HH_Names_4, 2);
 end
 if ~isfield(Params, 'K_whanau')
     Params.K_whanau = Params.K_whanau_base;

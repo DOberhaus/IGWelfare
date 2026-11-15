@@ -5,17 +5,19 @@ function Out = Evaluate_NDC_Branch_Ledger(Params)
 % spatial energy incidence [Rural, Small, Large, Auckland], and 2050 50/50
 % Sovereign Debt-Sinking integration across 2.0% SRTP and 8.0% hurdle rates.
 
-if nargin < 1 || isempty(Params), Params = struct(); end
+if nargin < 1 || isempty(Params) || ~isfield(Params, 'Pop_Weights_4')
+    Params = Configure_TimeGrid_Params(struct());
+end
+Pop_W_row = Params.Pop_Weights_4(:)'; % [1 x 4] from launch SSOT
+Pop_W_col = Pop_W_row(:);             % [4 x 1]
 
 % =========================================================================
 % 1. SPATIAL ENERGY & PARIS NDC PARAMETERS (COLUMN TIME x ROW REGION)
 % =========================================================================
-Pop_W_row  = [0.160, 0.240, 0.259, 0.341]; % [1 x 4] [Rural, Small, Large, Auckland]
-Pop_W_col  = Pop_W_row(:);                 % [4 x 1]
 t_yr       = (2025:2060)';                 % [36 x 1] Calendar transition grid
 dt_col     = t_yr - 2025;                  % [36 x 1] Years since 2025 baseline
 
-e_bar_row  = [0.048, 0.036, 0.022, 0.016]; % [1 x 4] Regional energy subsistence (Rural = 3x Akl)
+ebar_row  = [0.048, 0.036, 0.022, 0.016]; % [1 x 4] Regional energy subsistence (Rural = 3x Akl)
 gamma_h    = [0.620, 0.500, 0.340, 0.220]; % [1 x 4] HH fossil share (Labrousse & Perdereau)
 omega_y    = [0.090, 0.070, 0.050, 0.020]; % [1 x 4] Firm emissions share (Rural = 4.5x Akl)
 xk_rebate  = [2.070, 2.080, 2.380, 2.270]; % [1 x 4] Optimal Income x Geography rebate curvature
@@ -68,9 +70,9 @@ PV_Offshore_3x2 = Cost_BNZD(m_ndc12, :)' * disc_2_8;                       % [3 
 % Spatial Household Net Climate Dividend in SS2 (t = 2050, row idx = 26): Income x Geo Rebate minus Energy Drag
 idx_2050       = (t_yr == 2050);
 CTR_2050_BNZD  = 3.85; % Domestic ETS revenue at 2050 before 65% Geo-Rebate / 35% Debt-Sinking split
-Geo_Mult_row   = (xk_rebate / mean(xk_rebate)) .* (e_bar_row / mean(e_bar_row));
+Geo_Mult_row   = (xk_rebate / mean(xk_rebate)) .* (ebar_row / mean(ebar_row));
 Net_Geo_CE_row = 0.62 * Geo_Mult_row ./ sum(Geo_Mult_row .* Pop_W_row) ...
-               - 4.20 * e_bar_row .* (P_E_Tx4(idx_2050, :) - 1.0) ...
+               - 4.20 * ebar_row .* (P_E_Tx4(idx_2050, :) - 1.0) ...
                + [1.35, 1.42, 1.48, 1.46]; % Clean z_h demand-shaping + avoided offshore debt service
 
 Regime_Names = {'Coalition_Shock16_NDC'; 'Foiling_Aotearoa_NDC'; 'Arts_Civic_Taiao_NDC'};

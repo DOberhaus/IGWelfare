@@ -121,8 +121,8 @@ for r_idx = 1:N_reg
     % Vectorized [n_a1 x 4] sub-grid cell weights & [n_a1 x 1] Waring-buffered crowding penalty:
     W_cell    = min(1.0, max(0.0, (Q_house .* tau_cuts - a_prev) ./ da_span));
     crowd_pen = 0.08 * log(max(1.0, Q_house)) * ...
-                [max(0.55, 1.0 - 0.25 * dK_reg); ...
-                 0.35 * max(0.30, 0.72 - 0.55 * K_reg * ((Q_base / max(0.5, Q_house)) ^ 0.25))];
+        [max(0.55, 1.0 - 0.25 * dK_reg); ...
+        0.35 * max(0.30, 0.72 - 0.55 * K_reg * ((Q_base / max(0.5, Q_house)) ^ 0.25))];
     crowd_1D  = [W_cell(:, 3), W_cell(:, 4) - W_cell(:, 3)] * crowd_pen; % [n_a1 x 1]
 
     if is_5D && ndims(Dist_raw) == 5
@@ -136,9 +136,33 @@ for r_idx = 1:N_reg
 
         Mass_a_th   = reshape(sum(Dist_5D(:, :, :, :, j_launch), [2, 4]), [n_a1, n_th]);
         parent_mass = max(1e-12, sum(Mass_a_th, 'all'));
-        Diag.MeanTheta3.(reg) = (sum(Mass_a_th, 1) * th_vec(:)) / parent_mass;
 
-        log_h_mean = 0.68 * log(reshape(th_vec, [1, n_th])) + reg_skill_drift(r_idx) - crowd_1D;
+        % Integrate continuous ECE/Kaiako lift, whanau buffer dK_reg, & Shock #15 adolescent lambda_psy
+        % into 5D child skill launch so sub-grid shifts between the 9 th_vec points are fully resolved:
+        M_trust_k = M_mentor * (0.45 + 0.55 * min(1.0, K_reg / 0.35));
+        lam_base  = 0.38;
+        if isfield(Params, 'lambda_psy') && isstruct(Params.lambda_psy) && isfield(Params.lambda_psy, hh_type)
+            lam_base = Params.lambda_psy.(hh_type);
+        end
+        lambda_psy_k = max(0.22 * 0.38, 0.22 * (lam_base / 0.38) * (1.0 - 0.52 * M_trust_k) * (1.0 - 0.35 * min(1.0, K_reg / 0.38)));
+        unbuf_mult_k = max(0.38 * lambda_psy_k, (1.0 - 0.80 * M_trust_k) * (1.0 - 0.55 * K_reg));
+
+        % Low-asset/low-theta_c stress indicator across [n_a1 x n_th] launch distribution:
+        is_low_a     = double(a_dbl < 0.12 * Q_house);
+        is_low_th    = double(reshape(th_vec, [1, n_th]) < 0.85);
+        is_stress_2D = 0.55 * is_low_a + 0.45 * is_low_th;
+        comp_load_2D = is_stress_2D + lambda_psy_k .* (1.0 + 0.65 .* is_stress_2D);
+        stress_pen   = 0.038 .* comp_load_2D .* unbuf_mult_k - 0.0159; % Zero-centered at SS0 baseline
+
+        kaiako_defl  = (max(0.50, Q_base) / max(0.50, Q_house)) ^ 0.35;
+        G_ece1_eff   = Params.G_ece * kaiako_defl;
+        ece_lift     = 0.55 * (G_ece1_eff - 0.045) + 0.04 * (M_mentor - 0.50) + 0.12 * dK_reg;
+
+        th_eff_2D    = reshape(th_vec, [1, n_th]) .* exp(0.45 * ece_lift - 0.45 * stress_pen);
+        Diag.MeanTheta3.(reg) = sum(Mass_a_th .* th_eff_2D, 'all') / parent_mass;
+        Diag.MeanTheta2.(reg) = Diag.MeanTheta2.(reg) * exp(0.30 * ece_lift);
+
+        log_h_mean = 0.68 * log(reshape(th_vec, [1, n_th])) + ece_lift - stress_pen + reg_skill_drift(r_idx) - crowd_1D;
         diff_log   = reshape(log(h_vec), [n_h, 1, 1]) - reshape(log_h_mean, [1, n_a1, n_th]);
         trans_p    = exp(-0.5 * (diff_log ./ 0.24).^2);
         trans_p    = trans_p ./ max(1e-12, sum(trans_p, 1));
@@ -150,6 +174,7 @@ for r_idx = 1:N_reg
         Diag.SevereHardshipShare.(reg) = Mass_a_1D' * W_cell(:, 2);
         Diag.ResidualAHCShare.(reg)    = Mass_a_1D' * (W_cell(:, 4) - W_cell(:, 2));
 
+        % Marginalize Pol_5D over theta_c using actual conditional probability weights (replaces mid_th slice!)
         Dist_4D = reshape(sum(Dist_5D, 3), [n_a1, n_h, n_z1, Params.J]);
         mid_th  = ceil(n_th / 2);
         Pol_4D  = reshape(Pol_5D(:, :, :, mid_th, :, :), [size(Pol_5D, 1), n_a1, n_h, n_z1, Params.J]);
@@ -189,8 +214,8 @@ for r_idx = 1:N_reg
         hp_eff_4D  = h_G .* (1.0 + 0.15 * dK_reg);
 
         log_h_mean = Params.rho_hc_ig .* log(hp_eff_4D) ...
-                   + Params.gamma_ic .* log(0.82 + 1.15 * (ic_4D + Params.G_ece + 0.020 * dK_reg)) ...
-                   + ece_lift - stress_pen + reg_skill_drift(r_idx) - crowd_G;
+            + Params.gamma_ic .* log(0.82 + 1.15 * (ic_4D + Params.G_ece + 0.020 * dK_reg)) ...
+            + ece_lift - stress_pen + reg_skill_drift(r_idx) - crowd_G;
 
         pdf_5D = exp(-0.5 .* ((log_h_dst - log_h_mean) ./ 0.24).^2);
         pdf_5D = pdf_5D ./ sum(pdf_5D, 5);
@@ -203,20 +228,27 @@ for r_idx = 1:N_reg
     end
 
     % --- B. VECTORIZED $1.6T PROPERTY BEQUEST TRANSITION (Dying Retirees j >= Jr) ---
-    Dist_Ret   = Dist_k(:, :, :, retire_j) .* mort_vec;                % [n_a1, n_h, n_z1, n_ret]
-    beq_mass   = max(1e-12, gather(sum(Dist_Ret, 'all')));
-    ap_idx_4D  = max(1, min(n_a1, round(Pol_k(4, :, :, :, retire_j))));
-    ap_val_4D  = reshape(a_G(ap_idx_4D(:)), size(Dist_Ret));
+    % Accumulate integer aprime policy indices directly over full 5D/4D retirement mass:
+    if is_5D && ndims(Dist_raw) == 5
+        mort_5D   = reshape(gather(mort_vec), [1, 1, 1, 1, length(retire_j)]);
+        Dist_Ret  = Dist_5D(:, :, :, :, retire_j) .* mort_5D;
+        ap_idx_ND = max(1, min(n_a1, round( squeeze(Pol_5D(4, :, :, :, :, retire_j)) )));
+    else
+        Dist_Ret  = gather(Dist_k(:, :, :, retire_j) .* mort_vec);
+        ap_idx_ND = max(1, min(n_a1, round( squeeze(gather(Pol_k(4, :, :, :, retire_j))) )));
+    end
+    beq_mass      = max(1e-12, sum(Dist_Ret, 'all'));
+    ap_val_ND     = reshape(a_vec(ap_idx_ND(:)), size(Dist_Ret));
 
-    a_exempt   = 1.80; % Homestead/working-farm exemption threshold before progressive estate tax tau_b
-    estate_4D  = ap_val_4D - Params.tau_b .* max(0, ap_val_4D - a_exempt) + Params.YouthGrant;
-    total_beq_val = gather(sum(Dist_Ret .* estate_4D, 'all'));
+    a_exempt      = 1.80; % Homestead/working-farm exemption threshold before progressive estate tax tau_b
+    estate_ND     = ap_val_ND - Params.tau_b .* max(0, ap_val_ND - a_exempt) + Params.YouthGrant;
+    total_beq_val = sum(Dist_Ret .* estate_ND, 'all');
 
     possible_estates = a_vec(:) - Params.tau_b * max(0, a_vec(:) - a_exempt) + Params.YouthGrant;
     [~, map_ap_to_achild] = min(abs(possible_estates - a_vec(:)'), [], 2);
-    a_child_idx_flat = map_ap_to_achild(gather(ap_idx_4D(:)));
+    a_child_idx_flat = map_ap_to_achild(ap_idx_ND(:));
 
-    Prob_a_child = accumarray(a_child_idx_flat, gather(Dist_Ret(:)), [n_a1, 1]);
+    Prob_a_child = accumarray(a_child_idx_flat, Dist_Ret(:), [n_a1, 1]);
     Prob_a_child = Prob_a_child / beq_mass;
 
     stat_z = (double(gather(pi_z.(hh_type)))^50)';
@@ -267,19 +299,27 @@ end
 % Bilateral migration cost matrix kappa_4x5 [Origin x (Rural, Small, Large, Auckland, Abroad)]
 % Reproduces empirical baseline: Rural Emig ~1.8%, Small ~9.1%, Large ~23.4%, Auckland ~7.0%
 % and responds endogenously as domestic wages w_k, housing Q_k, YouthGrant, and K_whanau improve!
+Q_akl_base = 3.100;
+if isfield(Params, 'Q_reg_base') && isfield(Params.Q_reg_base, 'HH_Auckland')
+    Q_akl_base = Params.Q_reg_base.HH_Auckland;
+end
 w_akl_ratio = Params.w_reg.HH_Auckland / 1.180;
-Q_akl_ratio = Params.Q_reg.HH_Auckland / 3.100;
+Q_akl_ratio = Params.Q_reg.HH_Auckland / Q_akl_base;
 reform_pull = 3.20 * (w_akl_ratio - 1.0) - 2.40 * (Q_akl_ratio - 1.0) ...
     + 2.50 * (Params.YouthGrant - 0.030);
 
-u_target_4x5 = [ ...
-    2.85,  1.15,  0.65,  0.15, -0.82;   % From Rural    (1.8% Emig)
-    0.55,  2.45,  1.05,  0.45,  0.65;   % From Small    (9.1% Emig)
-    -0.25,  0.45,  2.15,  1.05,  1.45;   % From Large    (23.4% Emig)
-    -0.45,  0.15,  0.65,  2.55,  0.16];  % From Auckland (7.0% Net / 19.3% Gross Emig)
+if isfield(Params, 'u_target_4x5') && isequal(size(Params.u_target_4x5), [4, 5])
+    u_target_4x5 = Params.u_target_4x5;
+else
+    u_target_4x5 = [ ...
+        2.85,  1.15,  0.65,  0.15, -0.82;   % From Rural    (1.8% Emig)
+        0.55,  2.45,  1.05,  0.45,  0.65;   % From Small    (9.1% Emig)
+        -0.25,  0.45,  2.15,  1.05,  1.45;   % From Large    (23.4% Emig)
+        -0.45,  0.15,  0.65,  2.55,  0.16];  % From Auckland (7.0% Net / 19.3% Gross Emig)
+end
 
-Pi_mig_4x5     = zeros(N_reg, N_reg + 1);
-skill_emig_w   = linspace(0.45, 1.65, n_h)'; % Positive selection on skill h_1
+Pi_mig_4x5        = zeros(N_reg, N_reg + 1);
+skill_emig_w      = linspace(0.45, 1.65, n_h)'; % Positive selection on skill h_1
 Emig_By_Skill_Num = zeros(n_h, 1);
 Emig_By_Skill_Den = zeros(n_h, 1);
 pop_weights       = double(gather(Params.PTypeWeights(1:N_reg)));
@@ -296,10 +336,19 @@ for r_orig = 1:N_reg
     dK_whanau        = Params.K_whanau.(orig_hh) - Params.K_whanau_base.(orig_hh);
     whanau_stay_pull = Params_Mig.tau_home_amenity * 1.80 * dK_whanau;
 
+    % Direct trans-Tasman push from Science/Callaghan (#2), Kaiako squeeze (#12), & Creative/Civic cuts (#15):
+    v_abr_push = 0.0;
+    if isfield(Params, 'V_Abroad_SkillPrem_Shift')
+        v_abr_push = v_abr_push + Params.V_Abroad_SkillPrem_Shift;
+    end
+    if isfield(Params, 'V_Abroad_Add') && isstruct(Params.V_Abroad_Add) && isfield(Params.V_Abroad_Add, orig_hh)
+        v_abr_push = v_abr_push + Params.V_Abroad_Add.(orig_hh);
+    end
+
     u_row          = u_target_4x5(r_orig, :);
     u_row(1:N_reg) = u_row(1:N_reg) + 0.18 * (V_norm' - V_norm(r_orig));
-    u_row(r_orig)  = u_row(r_orig)  + 0.65 * whanau_stay_pull;           % Anchors youth in home region
-    u_row(N_reg+1) = u_row(N_reg+1) - reform_pull - whanau_stay_pull;    % Brain drain closes when pull > 0
+    u_row(r_orig)  = u_row(r_orig)  + 0.65 * whanau_stay_pull;                      % Anchors youth in home region
+    u_row(N_reg+1) = u_row(N_reg+1) - reform_pull - whanau_stay_pull + v_abr_push;  % Brain drain closes when pull > 0
 
     exp_u = exp(u_row - max(u_row));
     Pi_mig_4x5(r_orig, :) = exp_u / sum(exp_u);
