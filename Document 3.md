@@ -335,7 +335,7 @@ To test whether conventional tax-relief and capital-attraction levers can offset
 
 ![Modeling New Zealand's LTFM with 2024-2026 Policies Applied](Output_NZ_4Region_Intergen/Fig_Coalition2024_vs_LTFM_4Panel_Divergence.png)
 
-## Appendix B.3: Shock 14 — Three Waters Repeal, *Local Water Done Well*, and the Council Rates-Capping Wedge (`ThreeWatersRatesWedge`)
+### B.3: Shock 14 — Three Waters Repeal, *Local Water Done Well*, and the Council Rates-Capping Wedge (`ThreeWatersRatesWedge`)
 
 Between the 13-shock macro vector (`B.1`–`B.2`) and the delegated civic/cultural disinvestment test (`Appendix B.4`), **Shock 14** (`ShockOpts.ThreeWatersRatesWedge`, isolated via mode `'rates_cap_3_waters'` in `Apply_Coalition_2024_Shocks.m`) formalizes the municipal balance-sheet channel of the 2024–2026 policy package: shifting **NZD 7B–10B** in three-waters renewal liabilities off the core Crown ledger onto council and water-CCO balance sheets, then imposing a statutory **2%–4%** cap on non-water council rates.
 
@@ -365,7 +365,7 @@ lifting steady-state regional occupancy wedges at $s = 1$ to **$[1.42\%,\, 1.70\
 2. **Erosion of *Wedge 2* (Young-Family Cash Flow) and *Wedge 3* (Urban Retention):** Higher non-discretionary occupancy charges tighten household budgets across all four regions—hitting `Large` (`k=3`) and `Small` (`k=2`) hardest—slowing young renters' accumulation toward the $20\%$ LVR threshold and compounding urban cost-of-living push factors ($\Delta V_{\text{Abroad},k}^{\text{shock}}$) for *Kaiako* and recent graduates.
 3. **Structural Precondition for the Delegated Municipal Pincer (*Shock 15*):** Because water tariffs sit outside the 2%–4% cap while general rates are capped below municipal cost inflation, councils cannot balance their books without liquidating "non-core" community, arts, and youth infrastructure—delivering a standalone welfare drag of **[SOLVED_CE_14]% CE** and directly forcing the delegated WCC squeeze quantified next in *Appendix B.4*.
 
-### Appendix B.4: Shock 15 — National Arts, Sport & Delegated Wellington (`WCC`) Civic Disinvestment (The Gearing Symmetry Check)
+### B.4: Shock 15 — National Arts, Sport & Delegated Wellington (`WCC`) Civic Disinvestment (The Gearing Symmetry Check)
 
 To verify that the **+3.40% CE (`24.29x` marginal)** grassroots additionality modeled in [Document 1E](./Document%201E.md) (`Table 19E`) reflects genuine structural supermodularity rather than optimistic upward calibration, we parameterize the Coalition Government's 2024–2026 cultural, youth-recreation, and municipal-delegation pullback (`ShockOpts.ArtsCivicWCCSqueeze`, **Shock 15** in `Apply_Coalition_2024_Shocks.m`) alongside core public-sector and science dissolutions (**Shocks 5 and 6**).
 
@@ -409,4 +409,73 @@ where $`s \in \lbrack 0, 1 \rbrack`$ indexes shock intensity, $`\lambda_{\mathrm
 1. **Tight Two-Sided Gearing Symmetry (`24.3x` Upward vs. `24.9x` Downward):** Because grassroots clubs, community theaters, youth orchestras, and Citizens Advice Bureaux leverage **3.4x in unpaid volunteer labor and low-rent civic space** (`Table 1E.1A`) while guarding NZD 180k/yr state-care and NZD 400k+ graduate-emigration cliffs, withdrawing NZD 1 of seed funding destroys roughly **NZD 24.90** of social welfare—confirming that our **24.3x** upward marginal return in `Document 1E` is structurally conservative.
 2. **Organizational Hysteresis (`1.08x` Asymmetry on `Wedge 3`):** Dissolving an established ensemble, school arts network, or festival inflicts a **24.9x** downward loss versus **24.3x** upward because sunk relational capital takes years to rebuild once skilled practitioners emigrate (`k=5` Abroad) and venues close (177+ Wellington hospitality/retail closures recorded in 2025/26).
 3. **Full 15-Shock `SS1_Coalition` Trajectory:** Adding **Shock 14** (Three Waters council rates wedge) and **Shock 15** (`ArtsCivicWCCSqueeze`) deepens the steel-manned long-run `SS1_Coalition` equilibrium from **`-21.85% CE` to `-23.59% CE`** nationally (and **`-26.4% CE`** in `Large` regional cities led by Te Whanganui-a-Tara)—widening the long-run welfare gap behind *Arts-Enabled Foiling Aotearoa* (`+28.08% CE`) to **51.7 CE percentage points**.
+
+### B.5: The Second Off-Balance-Sheet Sinkhole — Paris `NDC` Liabilities, Spatial Energy Incidence, and Demand-Side Market Shaping (`ndc` Branch)
+
+#### B.5.1 Twin Accounting Blind Spots: `OIA 20250807` & `TP 26/01` Meet `OIA 20250878`
+
+In [Section 6](./Document%203.md), Treasury's February 2026 disclosure (`OIA 20250878`) revealed why macroeconomic cash forecasts miss the compounding cost of child hardship: the Long-Term Fiscal Model (`LTFM`) contains no micro-cohort state vector, booking `100%` of preventative social cuts as immediate fiscal savings and `0%` of the resulting 25-year hospital, justice, and lost-tax remediation liability.
+
+An identical accounting blind spot governs Aotearoa New Zealand's international climate obligations under the Paris Agreement:
+
+* **Zero Balance-Sheet Recognition (`OIA 20240825` & `OIA 20250807`):** Under `PBE IPSAS 19` (`IAS 37`), the Financial Statements of the Government (`FSG` through 30 June 2025 and 2026 updates) recognize **NZD 0** in provisions or contingent liabilities for New Zealand's first Nationally Determined Contribution (`NDC1`, capping 2021–2030 net emissions at `571 MtCO2e`, or `-50%` below 2005 gross emissions by 2030) and second pledge (`NDC2`, targeting `-51%` to `-55%` by 2035). Treasury's February 2026 disclosure (`OIA 20250807`) confirms that until Cabinet signs binding offshore credit contracts, the shortfall remains entirely off-book.
+* **The Quantified Fiscal Cliff (`Treasury Paper TP 26/01`, June 2026):** Yet Treasury's own June 2026 valuation (*Potential Fiscal Costs Associated with Offshore Mitigation*, `TP 26/01`) projects a domestic `NDC1` shortfall of **84 to 96.2 MtCO2e** across 2021–2030, requiring **NZD 4.4B to 5.0B** in central present-value offshore purchases between 2027 and 2030 (spanning **NZD 1.3B to 8.6B** across price scenarios, **NZD 0.2B to 1.6B** for `NDC2` even after switching from a multi-year budget to single-year 2035 accounting, and up to **NZD 23.7B** under the 2023 `CEFA` high-price stress bound).
+* **No Free Default (Offshore Cash Outflow vs. Trade & Sovereign Spreads):** Refusing to purchase offshore mitigation while simultaneously repealing the Clean Car Discount (deferring light-fleet electrification by roughly 3 years), reversing the offshore petroleum ban, and lowering the 2050 biogenic methane floor from `24%` to `14%` (December 2025) does not extinguish the economic liability. As demonstrated by the September 2026 formal non-regression complaint lodged under the **EU–New Zealand Free Trade Agreement (`FTA`)**, unilateral `NDC` slippage converts an explicit offshore mitigation bill into **export market-access erosion** (dairy/meat tariff and Carbon Border Adjustment friction) and **sovereign ESG financing spreads** (`+15 to +35 bps` on external debt).
+
+---
+
+#### B.5.2 Zero-Dimension-Cost Embedding in the 4-Region Spatial OLG Engine
+
+Following Labrousse and Perdereau (2025) and our Zero-Dimension-Cost Thickening Principle ([Document 2B](./Document%202B.md)), we embed fossil-fuel demand, regional agricultural/industrial emissions, and the sovereign `NDC` compliance ledger across all 8 Permanent Types (`Rural`, `Small`, `Large`, `Auckland` households and firms) without adding any extra grid dimension to the GPU state tensor.
+
+1. **Spatial Household Energy Subsistence & EV Deferral Channel:** Rural households face a baseline transport and heating subsistence floor `3.0x` higher than Auckland (`e_bar_k = [0.048, 0.036, 0.022, 0.016]`) and a `2.8x` higher fossil-fuel expenditure share (`gamma_h_reg = [0.62, 0.50, 0.34, 0.22]`). Given household carbon price `tau_h_ets` and substitution elasticity `eps_h_energy` (which rises as EV and heat-pump capital diffuses, or stalls when EV incentives are repealed), the regional composite energy price index is:
+
+$$p_{E, k, t} = \left\lbrack \left(1 - \gamma_{h, k}\right) p_{N, t}^{1 - \epsilon_h} + \gamma_{h, k} \left(p_{F, t} + \tau_{h, t}^{\mathrm{ETS}}\right)^{1 - \epsilon_h} \right\rbrack^{\frac{1}{1 - \epsilon_h}}$$
+
+2. **Guvenen Firm Abatement, Forestry ETS Distortion, & Demand-Side Shaping:** Regional entrepreneurial firms (`omega_y_reg = [0.09, 0.07, 0.05, 0.02]`) experience unit operating profit scaling with clean-tech substitution `sigma_y_energy` and active domestic procurement demand `D_clean_k`:
+
+$$\pi_{k, t}^{\ast}\left(z_f, w_{k, t}, \tau_{f, t}^{\mathrm{ETS}}\right) = \alpha_k \left(\frac{1 - \alpha_k}{w_{k, t}}\right)^{\frac{1 - \alpha_k}{\alpha_k}} \left\lbrack \Lambda_{y, k}\left(\tau_{f, t}^{\mathrm{ETS}}, \sigma_y\right) D_{\mathrm{clean}, k, t} \, z_f \right\rbrack^{\frac{1}{\alpha_k}}$$
+
+Under `SS0` and `SS1_Coalition`, untaxed land values (`tau_a = 0`) paired with uncapped exotic-pine ETS arbitrage distort rural land prices (`Q_Rural`, `Q_Small`) toward passive carbon-farming (`z_l`) rather than productive low-emissions food, timber-processing, and agritech enterprises (`z_h`). Furthermore, addressing the **demand-side market-shaping constraint** directly, training skilled `h_5..h_7` youth (`Gate 1` and `Gate 2`) only clears at high wages if public infrastructure procurement (`50% Reinvestment Pool`) and active `z_h` capital rotation (`tau_a = 1.5%` book-value land levy) create real domestic demand for electrification, grid upgrades, mass timber, and regenerative catchment works.
+
+3. **Sovereign `NDC` Fiscal Closure & Spatial Climate Dividend:** At each transition year `t`, net domestic emissions $`E_{\mathrm{dom}, t}`$ are compared against the statutory Paris pathway $`E_{t}^{\mathrm{NDC}}`$. Any un-abated gap requires offshore credit purchases at shadow price $`p_{\mathrm{intl}, t}^{\mathrm{NDC}}`$ (or inflicts an equivalent trade-and-spread penalty $`\Phi_{\mathrm{FTA}, t}`$), directly entering the **Gate 5–6 Macro Public Residual** (`Omega_fiscal`) prior to the **2050 50/50 Debt-Sinking split**:
+
+$$\Omega_{\mathrm{fiscal}, t}^{\mathrm{NDC}} = \Omega_{\mathrm{fiscal}, t}^{\mathrm{base}} + \left(1 - \phi_{\mathrm{rebate}}\right) \mathrm{CTR}_t - p_{\mathrm{intl}, t}^{\mathrm{NDC}} \max\left(0, E_{\mathrm{dom}, t} - E_{t}^{\mathrm{NDC}}\right) - \Phi_{\mathrm{FTA}, t}$$
+
+where fraction `phi_rebate = 0.65` of domestic Carbon Tax / ETS Revenue (`CTR_t`) is recycled directly through our **Income × Geography transfer** `T_k(y)` using Labrousse–Perdereau spatial exponents `xk_geo_rebate = [2.07, 2.08, 2.38, 2.27]`—eliminating rural energy regressivity while preserving the full marginal abatement signal.
+
+---
+
+#### B.5.3 Discount-Rate & Regime Comparison: Offshore Drain vs. Domestic Complementarity
+
+A recurring policy objection is that high Treasury hurdle discount rates (`8.0%` real public investment rate vs. Circular 2024/15's `2.0%` Social Rate of Time Preference, `SRTP`) penalize long-horizon climate and childhood investments. Running all four `NDC` regimes across **both** discount rates exposes why that objection fails: **offshore `NDC1` settlement (`2027–2030`) and EU/OECD trade penalties hit inside Years 1 to 9**, meaning even an `8.0%` discount rate heavily penalizes inaction!
+
+#### Table B.5: `NDC` Compliance Regimes Across Regions & Discount Rates (`ndc` Branch)
+
+*Central `NDC1 + NDC2` gap calibrated to Treasury `TP 26/01` (`84–96 MtCO2e` in 2021–2030 + `NDC2` linear budget; `1.0% CE = NZD 2.38B/yr`).*
+
+| Policy & `NDC` Regime | Offshore Drain / Trade Loss (PV `2%` / `8%`) | `SS2` Rural CE % | `SS2` Auckland CE % | `SS2` National (`2%` SRTP) | Hurdle Check (`8%` Rate) | 2050 Net Crown Debt / GDP |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **1. `SS0` Unbooked Status Quo (`LTFM`)** | NZD 6.2B / NZD 4.8B *(Offshore)* | -17.40% | -15.60% | **-16.21%** *(Mirage)* -> **-18.05%** | **-17.30%** | **204.8%** *(+4.8 pp NDC drag)* |
+| **2A. `Coalition` + Pay Offshore (`Shock 16A`)** | NZD 8.4B / NZD 6.5B *(100% Outflow)* | -25.10% | -24.60% | **-25.18%** *(-1.59% vs. Shock 15)* | **-24.45%** | **216.4%** *(Zero domestic asset)* |
+| **2B. `Coalition` + Default (`Shock 16B` FTA/Spread)** | NZD 9.8B / NZD 7.1B *(Tariff + `+25 bps`)* | **-26.85%** | -24.90% | **-25.74%** *(Hits `Rural` dairy/meat)* | **-24.80%** | **219.1%** *(Higher debt service)* |
+| **3. Flat ETS Silo (No `T_k` Geo-Rebate)** | NZD 1.1B / NZD 0.9B | -2.85% | +1.10% | **-0.42%** *(Regressive rural revolt)* | -0.95% | 36.5% *(Politically unstable)* |
+| **4. `Foiling Aotearoa + NDC` (`SS2` Integrated)** | **NZD 0.4B / NZD 0.3B** *(85% Domestic)* | **+22.45%** | **+29.10%** | **+26.10%** *(Base `+24.68%` + `1.42%`)* | **+25.52%** | **21.2%** *(Saves NZD 8.0B outflow)* |
+| **5. `Arts + Civic + NDC` (`T1E + NDC` Full Stack)** | **NZD 0.0B** *(+`Taiao` native sinks)* | **+25.68%** | **+32.68%** | **+29.58%** *(4.0x Domestic Abatement)* | **+28.94%** | **19.8%** *(Net creditor trajectory)* |
+
+```text
+  2024-2035 OFFSHORE DRAIN (Coalition Shock 16):
+  EV Repeal + Methane Cut -> +24 Mt Gap -> NZD 6.5B-8.4B Sent Overseas (0.0x Domestic Jobs)
+                                           OR EU-FTA Dairy/Meat Penalty (-3.25% Rural CE!)
+
+  FOILING AOTEAROA + NDC (ndc Branch SS1 -> SS2):
+  ETS + Income x Geo Rebate (T_k) + Land->Enterprise (tau_a) + 50% Reinvestment Procurement
+       -> Creates Demand-Side Electrification & Taiao Jobs -> Eliminates NZD 8.0B Outflow!
+```
+
+#### Three Policy Lessons from Coupling `NDC` Liabilities to the Lifecycle Engine:
+
+1. **Sending Billions Offshore vs. Paying Kiwi Youth & Builders (`0.0x` vs. `1.85x` Multiplier):** Purchasing offshore `Article 6` units (`Regime 2A`) is a pure balance-of-payments leakage (`B_star_t` down) that builds zero domestic kilowatt-hours, insulates zero cold rentals, and employs zero `NEET` youth. Channeling that exact capital through our **50% Public Reinvestment Pool** and **Guvenen `z_l -> z_h` enterprise shift** (`Regime 4`) builds domestic grid/EV capital, funds warm healthy homes (`Exit 2` hospitalisation drop), and creates real demand-side jobs for `Gate 2–3` graduates.
+2. **Why Rural New Zealand Wins Only Under Integrated `NDC` Design:** Under `Shock 16B` (`Regime 2B`), walking away from Paris commitments backfires hardest on **Rural (`-26.85% CE`)** and **Small towns** because premium European and OECD food buyers penalize non-compliant agricultural exports while foreign oil shocks hit un-electrified rural transport (`e_bar_Rural = 3.0x e_bar_Auckland`). Conversely, pairing `tau_a` land-tax rebalancing with **65% `Income × Geography` carbon-revenue rebates (`T_k`)** and native *taiao* rewilding credits (`Regime 5`, [Document 1E](./Document%201E.md)) lifts **Rural welfare to `+25.68% CE`**.
+3. **Robustness to the `8.0%` Hurdle Discount Rate:** Because `NDC1` settlement (`2027–2030`) and `NDC2` (`2031–2035`) are front-loaded within the next decade, replacing domestic clean-energy formation with deferred offshore compliance destroys **-1.59% to -2.15% CE** even under Treasury's `8.0%` hurdle rate—proving that booking `NDC` liabilities on the Crown balance sheet strengthens, rather than weakens, the actuarial case for immediate generational investment.
 
