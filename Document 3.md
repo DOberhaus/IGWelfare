@@ -335,6 +335,36 @@ To test whether conventional tax-relief and capital-attraction levers can offset
 
 ![Modeling New Zealand's LTFM with 2024-2026 Policies Applied](Output_NZ_4Region_Intergen/Fig_Coalition2024_vs_LTFM_4Panel_Divergence.png)
 
+## Appendix B.3: Shock 14 — Three Waters Repeal, *Local Water Done Well*, and the Council Rates-Capping Wedge (`ThreeWatersRatesWedge`)
+
+Between the 13-shock macro vector (`B.1`–`B.2`) and the delegated civic/cultural disinvestment test (`Appendix B.4`), **Shock 14** (`ShockOpts.ThreeWatersRatesWedge`, isolated via mode `'rates_cap_3_waters'` in `Apply_Coalition_2024_Shocks.m`) formalizes the municipal balance-sheet channel of the 2024–2026 policy package: shifting **NZD 7B–10B** in three-waters renewal liabilities off the core Crown ledger onto council and water-CCO balance sheets, then imposing a statutory **2%–4%** cap on non-water council rates.
+
+### 1. Empirical Calibration of the Crown-to-Council Balance-Sheet Shift (2024–2026)
+
+- **Off-Crown Water Debt Migration (*Local Water Done Well*):** Repealing Three Waters (*Water Services Acts Repeal Act 2024*) and enacting *Local Water Done Well* (*Local Government (Water Services) Act 2025*) kept drinking-water, wastewater, and stormwater debt off core Crown OBEGAL while returning pipe-renewal deficits to council and LGFA-backed water entities alongside cancellation of the **NZD 500M** *Better Off* Tranche 2 fund. Nationally, median council rates surged **14.2% in 2024/25** and **9.2% in 2025/26** (triggering S&P Global Ratings' March 2025 downgrade of 18 councils), while Wellington City Council (`k=3`) absorbed an immediate **NZD 68M+** Years 1–3 LTP shortfall.
+- **The Asymmetric Rates-Cap & Water Carve-Out Vise:** Pairing the *Local Government (System Improvements) Amendment Act 2026* ("core services" mandate) with the *Local Government (Rates Capping) Amendment Bill* (2%–4% cap on general/targeted `rates price`, with water charges explicitly excluded under Section 26A) creates a one-way ratchet: uncapped water and pipe-service charges continue to escalate on household bills while non-water civic, library, youth, and cultural budgets are compressed in real terms.
+
+### 2. Structural Mapping into the 4-Region OLG Engine
+
+In `Apply_Coalition_2024_Shocks.m`, `ShockOpts.ThreeWatersRatesWedge` perturbs the regional annual housing user-cost wedge $\boldsymbol{\upsilon}_h = [\upsilon_{h,\text{Rural}},\, \upsilon_{h,\text{Small}},\, \upsilon_{h,\text{Large}},\, \upsilon_{h,\text{Auckland}}]$:
+
+$$\upsilon_{h,k}^{\text{shock}} = \upsilon_{h,k}^{0} + s\,\Delta \upsilon_{h,k} = [0.0120,\, 0.0140,\, 0.0160,\, 0.0150] + s\,[0.0022,\, 0.0030,\, 0.0042,\, 0.0026]$$
+
+lifting steady-state regional occupancy wedges at $s = 1$ to **$[1.42\%,\, 1.70\%,\, 2.02\%,\, 1.76\%]$**:
+
+| Model Region ($k$) | Baseline $\upsilon_{h,k}^0$ | Shock $\Delta \upsilon_{h,k}$ | Post-Shock $\upsilon_{h,k}^{\text{shock}}$ | Incidence Mechanism |
+| ----- | ----- | ----- | ----- | ----- |
+| `Rural` ($k=1$) | 1.20% | +22 bps (+18.3%) | **1.42%** | Dispersed rural roading & scheme water upgrades |
+| `Small` ($k=2$) | 1.40% | +30 bps (+21.4%) | **1.70%** | High pipe-length per ratepayer across provincial towns |
+| `Large` ($k=3$) | 1.60% | **+42 bps (+26.3%)** | **2.02%** | Acute metro pipe deficit (WCC +NZD 68M LTP hole; *Tiaki Wai*) |
+| `Auckland` ($k=4$) | 1.50% | +26 bps (+17.3%) | **1.76%** | Watercare balance-sheet scale partially moderates spike |
+
+### 3. Three General-Equilibrium Channels & Link to Shock 15
+
+1. **Asymmetric Incidence Against Shock 1 (`upsilon_h` vs. `upsilon_h_vec`):** Whereas *Shock 1* (`LandlordTaxBreak`) lowers leveraged investor carrying costs ($\Delta \upsilon_h = -35\text{ bps}$) while inflating regional house price-to-income multiples $Q_k$ by $+2.5\%$ to $+6.8\%$, *Shock 14* raises unavoidable per-dwelling municipal and water charges (`+22` to `+42 bps`) **without cooling speculative land values $Q_k$**.
+2. **Erosion of *Wedge 2* (Young-Family Cash Flow) and *Wedge 3* (Urban Retention):** Higher non-discretionary occupancy charges tighten household budgets across all four regions—hitting `Large` (`k=3`) and `Small` (`k=2`) hardest—slowing young renters' accumulation toward the $20\%$ LVR threshold and compounding urban cost-of-living push factors ($\Delta V_{\text{Abroad},k}^{\text{shock}}$) for *Kaiako* and recent graduates.
+3. **Structural Precondition for the Delegated Municipal Pincer (*Shock 15*):** Because water tariffs sit outside the 2%–4% cap while general rates are capped below municipal cost inflation, councils cannot balance their books without liquidating "non-core" community, arts, and youth infrastructure—delivering a standalone welfare drag of **[SOLVED_CE_14]% CE** and directly forcing the delegated WCC squeeze quantified next in *Appendix B.4*.
+
 ### Appendix B.4: Shock 15 — National Arts, Sport & Delegated Wellington (`WCC`) Civic Disinvestment (The Gearing Symmetry Check)
 
 To verify that the **+3.40% CE (`24.29x` marginal)** grassroots additionality modeled in [Document 1E](./Document%201E.md) (`Table 19E`) reflects genuine structural supermodularity rather than optimistic upward calibration, we parameterize the Coalition Government's 2024–2026 cultural, youth-recreation, and municipal-delegation pullback (`ShockOpts.ArtsCivicWCCSqueeze`, **Shock 15** in `Apply_Coalition_2024_Shocks.m`) alongside core public-sector and science dissolutions (**Shocks 5 and 6**).
