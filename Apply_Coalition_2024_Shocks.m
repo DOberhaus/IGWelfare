@@ -1,5 +1,5 @@
 function [Params_Out, pi_z_Out, ShockMeta] = Apply_Coalition_2024_Shocks(Params_In, pi_z_In, Mode, ShockOpts)
-% APPLY_COALITION_2024_SHOCKS (Full 15-Shock Edition)
+% APPLY_COALITION_2024_SHOCKS (Full 16-Shock Edition)
 % Standalone parameterization module for branch: "coalition_2024_shocks"
 %
 % Supported Modes:
@@ -8,11 +8,13 @@ function [Params_Out, pi_z_Out, ShockMeta] = Apply_Coalition_2024_Shocks(Params_
 %   3. 'pro_growth_only'         : Shocks #9-#11 Only (Income Tax Cut + AIP Visa + 20% Investment Boost)
 %   4. 'rates_cap_3_waters'      : Shock #14 (Council Rates Cap and 3 Waters repeal)
 %   5. 'arts_and_civic_cuts'     : Shock #15 (Three Waters and Arts+Civic Cuts)
-%   6. 'full_15_shocks'          : All 15 Shocks Combined (Default Coalition Package)
-%   7. 'custom'                  : Uses user-supplied boolean switches in ShockOpts
+%   6. 'all_but_ndc'             : All shocks #1-#15
+%   7. 'ndc'                     : Shock #16 (Off-Book Paris NDC1/NDC2 Liability + Clean Car Discount Repeal)
+%   8. 'full_16_shocks'          : All 16 Shocks Combined (Default Coalition Package)
+%   9. 'custom'                  : Uses user-supplied boolean switches in ShockOpts
 
 if nargin < 3 || isempty(Mode)
-    Mode = 'full_15_shocks';
+    Mode = 'full_16_shocks';
 end
 if nargin < 4 || isempty(ShockOpts)
     ShockOpts = struct();
@@ -21,7 +23,7 @@ end
 % -------------------------------------------------------------------------
 % Configure Preset Bundles for 3-Way Decomposition
 % -------------------------------------------------------------------------
-default_14 = false; default_15 = false;
+default_14 = false; default_15 = false; default_ndc = false;
 switch lower(strtrim(Mode))
     case {'reanchor_2023', 'custom'}
         default_aust = false; default_growth = false;
@@ -35,9 +37,15 @@ switch lower(strtrim(Mode))
         default_aust = false; default_growth = false; default_14 = true;
     case 'arts_and_civic_cuts'     % Isolate Shock #15 (Appendix B.4)
         default_aust = false; default_growth = false; default_15 = true;
-    otherwise % 'full_15_shocks'
+    case 'all_but_ndc'             % All shocks except NDC
+        default_aust = true;  default_growth = true;  default_14 = true;  default_15 = true;
+    case 'ndc'                     % Isolate Shock #16 (Appendix B.5)
+        default_aust = false; default_growth = false; default_14 = false; default_15 = false;
+        default_ndc = true;
+    otherwise % 'full_16_shocks'
         default_aust = true;  default_growth = true;
         default_14   = true;  default_15     = true;
+        default_ndc  = true;
 end
 
 % Group A: Austerity, Rent-Seeking, Infrastructure & Skill-Formation Erosion Shocks
@@ -53,6 +61,8 @@ ShockOpts = set_default_opt(ShockOpts, 'TeacherKaiakoPaySqueeze',default_aust); 
 ShockOpts = set_default_opt(ShockOpts, 'KiwiSaverMatchCut',      default_aust);   % #13: Halving Govt KiwiSaver match + 4% default + 30% IRR
 ShockOpts = set_default_opt(ShockOpts, 'ThreeWatersRatesWedge',  default_aust);   % #14: NZD 7B-10B council water debt shift + 12%-20%/yr rates & IRR 30%
 ShockOpts = set_default_opt(ShockOpts, 'ArtsCivicWCCSqueeze',    default_aust);   % #15: Vote Arts/Sport + Creatives in Schools axed + delegated WCC squeeze
+ShockOpts = set_default_opt(ShockOpts, 'ParisNDCLiabilityAndEVRollback', true); % #16: Off-book TP 26/01 NDC1/2 gap + Clean Car repeal + methane/oil-gas rollback
+ShockOpts = set_default_opt(ShockOpts, 'NDC_Settlement_Mode', 'hybrid');        % 'offshore_pay' | 'default_fta_penalty' | 'hybrid' (50/50 split)
 
 % Group B: Coalition "Pro-Growth / Tax Relief / Foreign Capital" Levers
 ShockOpts = set_default_opt(ShockOpts, 'IncomeTaxBracketCut',    default_growth); % #9:  $14.7B/4yr personal income tax cut (debt/cut funded)
@@ -260,6 +270,38 @@ if ShockOpts.ArtsCivicWCCSqueeze
     % (e) Hysteresis & Social Cohesion erosion (Wedge 4: asymmetric organizational loss = 1.08x):
     Params_Out.Civic_Hysteresis_Mult = 1.08;
     Params_Out.Cohesion_Shock_Pts    = getfield_def(Params_Out, 'Cohesion_Shock_Pts', 0.0) - s * 4.80;
+end
+
+% SHOCK 16: Off-Book Paris NDC1/NDC2 Liability + Clean Car Discount Repeal
+% Empirical Anchor: NZ Treasury Paper TP 26/01 (11 June 2026) & OIA 20250807:
+%   Baseline 84-96 MtCO2e NDC1 shortfall (NZD 4.4B-5.0B PV) widened +22-28 Mt
+%   by Clean Car EV repeal (3-yr EV deferral), ETS auction floor/forestry
+%   uncertainty, offshore gas co-investment, & Dec 2025 methane cut (14%-24%).
+% Vectorized 1x4 Regional Channels [Rural, Small, Large, Auckland]:
+%   (a) EV deferral locks in higher household fossil share gamma_h_reg &
+%       raises imported oil vulnerability across Rural (3.0x) & Small (2.25x).
+%   (b) 'offshore_pay' books deadweight sovereign debt outflow (+1.8% GDP);
+%       'default_fta_penalty' triggers EU-NZ FTA non-regression export drag
+%       on Rural/Small z_h agribusiness & +20 bps sovereign risk spread.
+% -------------------------------------------------------------------------
+if ShockOpts.ParisNDCLiabilityAndEVRollback
+    ndc_mode = lower(ShockOpts.NDC_Settlement_Mode);
+    w_pay    = double(strcmp(ndc_mode, 'offshore_pay')) + 0.5 * double(strcmp(ndc_mode, 'hybrid'));
+    w_def    = double(strcmp(ndc_mode, 'default_fta_penalty')) + 0.5 * double(strcmp(ndc_mode, 'hybrid'));
+
+    % (a) Clean Car Discount repeal -> lower HH clean-switch elasticity & higher rural fuel drag:
+    Params_Out.eps_h_energy = max(0.15, getfield_def(Params_Out, 'eps_h_energy', 0.350) - s * 0.120);
+    ebar_curr               = getfield_def(Params_Out, 'e_bar_k_vec', [0.048, 0.036, 0.022, 0.016]);
+    Params_Out.e_bar_k_vec  = ebar_curr .* (1.0 + s * [0.065, 0.052, 0.030, 0.022]);
+
+    % (b) Offshore Article 6 credit outflow (TP 26/01 NZD 6.5B-8.4B widened gap -> sovereign debt):
+    Params_Out.Debt_to_GDP_Init        = getfield_def(Params_Out, 'Debt_to_GDP_Init', 0.405) + s * w_pay * 0.0185;
+    Params_Out.Offshore_NDC_Drain_BNZD = getfield_def(Params_Out, 'Offshore_NDC_Drain_BNZD', 0.0) + s * w_pay * 1.45;
+
+    % (c) Default / non-regression channel (Sept 2026 EU-FTA complaint -> Rural/Small z_h export penalty + r_sov):
+    zh_curr                  = getfield_def(Params_Out, 'Z_h_reg_mult', [1.00, 1.00, 1.00, 1.00]);
+    Params_Out.Z_h_reg_mult  = zh_curr .* (1.0 - s * w_def * [0.034, 0.024, 0.008, 0.006]);
+    Params_Out.r_sov_spread  = getfield_def(Params_Out, 'r_sov_spread', 0.0) + s * w_def * 0.0022;
 end
 
 %% ========================================================================
