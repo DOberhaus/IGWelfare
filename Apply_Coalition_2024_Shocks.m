@@ -1,16 +1,18 @@
 function [Params_Out, pi_z_Out, ShockMeta] = Apply_Coalition_2024_Shocks(Params_In, pi_z_In, Mode, ShockOpts)
-% APPLY_COALITION_2024_SHOCKS (Full 13-Shock Edition)
+% APPLY_COALITION_2024_SHOCKS (Full 15-Shock Edition)
 % Standalone parameterization module for branch: "coalition_2024_shocks"
 %
 % Supported Modes:
 %   1. 'reanchor_2023'           : Pre-Coalition late-2023 baseline (SS0_2023)
-%   2. 'austerity_landlord_only' : Shocks #1-#8 + #12-#13 (Austerity + Landlord Relief + Teacher/KS squeeze)
+%   2. 'austerity_landlord_only' : Shocks #1-#8 + #12-#13, #14 (Austerity + Landlord Relief + Teacher/KS squeeze)
 %   3. 'pro_growth_only'         : Shocks #9-#11 Only (Income Tax Cut + AIP Visa + 20% Investment Boost)
-%   4. 'full_13_shocks'          : All 13 Shocks Combined (Default Coalition Package)
+%   4. 'rates_cap_3_waters'      : Shock #14 (Council Rates Cap and 3 Waters repeal)
+%   4. 'arts_and_civic_cuts'     : Shock #15 (Three Waters and Arts+Civic Cuts)
+%   4. 'full_15_shocks'          : All 15 Shocks Combined (Default Coalition Package)
 %   5. 'custom'                  : Uses user-supplied boolean switches in ShockOpts
 
 if nargin < 3 || isempty(Mode)
-    Mode = 'full_13_shocks';
+    Mode = 'full_15_shocks';
 end
 if nargin < 4 || isempty(ShockOpts)
     ShockOpts = struct();
@@ -26,7 +28,7 @@ switch lower(strtrim(Mode))
         default_aust = true;  default_growth = false;
     case 'pro_growth_only'
         default_aust = false; default_growth = true;
-    otherwise % 'full_13_shocks' or 'custom'
+    otherwise % 'full_15_shocks' or 'custom'
         default_aust = true;  default_growth = true;
 end
 
@@ -41,6 +43,8 @@ ShockOpts = set_default_opt(ShockOpts, 'TertiaryFeesFreeCut',    default_aust); 
 ShockOpts = set_default_opt(ShockOpts, 'TobaccoTaxFreeze',       default_aust);   % #8:  HTP tax cut & tobacco excise freeze
 ShockOpts = set_default_opt(ShockOpts, 'TeacherKaiakoPaySqueeze',default_aust);   % #12: 2026 PTCA/STCA 2.5%/2.0% vs 4.0% CPI + ECE parity risk
 ShockOpts = set_default_opt(ShockOpts, 'KiwiSaverMatchCut',      default_aust);   % #13: Halving Govt KiwiSaver match + 4% default + 30% IRR
+ShockOpts = set_default_opt(ShockOpts, 'ThreeWatersRatesWedge',  default_aust);   % #14: NZD 7B-10B council water debt shift + 12%-20%/yr rates & IRR 30%
+ShockOpts = set_default_opt(ShockOpts, 'ArtsCivicWCCSqueeze',    default_aust);   % #15: Vote Arts/Sport + Creatives in Schools axed + delegated WCC squeeze
 
 % Group B: Coalition "Pro-Growth / Tax Relief / Foreign Capital" Levers
 ShockOpts = set_default_opt(ShockOpts, 'IncomeTaxBracketCut',    default_growth); % #9:  $14.7B/4yr personal income tax cut (debt/cut funded)
@@ -196,6 +200,58 @@ end
 if ShockOpts.KiwiSaverMatchCut
     Params_Out.YouthGrant = getfield_def(Params_Out, 'YouthGrant', 0.030) * (1 - s * 0.150);
     Params_Out.gbar_ECE   = getfield_def(Params_Out, 'gbar_ECE', 0.020) * (1 + s * 0.085);
+end
+
+% SHOCK 14: Three Waters Repeal + Council Rates-Capping Wedge (NZD 7B-10B Shift)
+if ShockOpts.ThreeWatersRatesWedge
+    % Mechanism: Moves water balance sheets onto councils (forcing 14.2% -> 9.2%/yr
+    % median rates hikes) while capping non-water "non-core" council spend, raising
+    % regional housing user-cost wedge upsilon_h_vec [Rural, Small, Large, Auckland].
+
+    ups_curr = getfield_def(Params_Out, 'upsilon_h_vec', [0.012, 0.014, 0.016, 0.015]);
+    % Highest municipal rates & water-pipe user-cost spike in Large (k=3, WCC +68M) & Small (k=2):
+    Params_Out.upsilon_h_vec = ups_curr + s * [0.0022, 0.0030, 0.0042, 0.0026];
+end
+
+% SHOCK 15: Vote Arts/Culture/Sport Cuts + Delegated WCC Civic Squeeze (~NZD 0.16B/yr)
+if ShockOpts.ArtsCivicWCCSqueeze
+    % Claimed Cash Saving: +0.067% CE (+NZD 0.16B/yr across Vote Arts -101.7M/4yr,
+    %   Creatives in Schools & Arts Coordinators axed, Tu Manawa youth sport cut,
+    %   Fale Malae NZD 7M halt, Better Off freeze, and WCC Creative/Civic Square/CAB cuts).
+    % Four-Wedge Transmission Channels (Vectorized 1x4 Regional Incidence):
+    %   (i)   Wedge 1 (L03): Axing Creatives in Schools & Tu Manawa cuts Gate-2 non-cognitive
+    %         retention (-3.8% G_ECE_2) and raises adolescent psychosocial hazard lambda_psy (+11%).
+    %   (ii)  Wedge 2 (L07): Squeezing CAB (>50% WCC cut), community halls & volunteer clubs
+    %         raises isolation mortality/morbidity hazard and erodes unpaid civic co-production.
+    %   (iii) Wedge 3 (L08): Collapsing urban venue/festival gig ecology (concentrated 2.1x in
+    %         Large k=3 Poneke & 1.35x in Auckland k=4) accelerates age 20-35 creative z_h exit
+    %         to Melbourne/Sydney (+V_Abroad_Creative_Shift) & trims urban z_h span productivity.
+    %   (iv)  Wedge 4 (L11): Erodes Social Cohesion Index (-4.8 pts nationally; -7.6 pts in k=3)
+    %         while automatic stabilizers claw back ~62% of claimed cash OBEGAL savings by Yr 3.
+
+    reg_civic_wt = [0.75, 0.85, 2.10, 1.35]; % [Rural, Small, Large (WCC Poneke), Auckland]
+
+    % (a) Narrow Year-1 cash budget saving (~NZD 0.16B/yr = 0.035% of GDP before clawback):
+    Params_Out.Debt_to_GDP_Init = getfield_def(Params_Out, 'Debt_to_GDP_Init', 0.405) - s * 0.0004;
+
+    % (b) Gate 2 & Gate 3 adolescent creative/sport mentoring & psychosocial hazard (Wedge 1):
+    Params_Out.G_ECE_2        = getfield_def(Params_Out, 'G_ECE_2', 0.065) * (1.0 - s * 0.038);
+    lam_psy_curr              = getfield_def(Params_Out, 'lambda_psy_vec', [0.38, 0.38, 0.38, 0.38]);
+    Params_Out.lambda_psy_vec = min(0.65, lam_psy_curr .* (1.0 + s * 0.085 * reg_civic_wt));
+
+    % (c) Join-or-Die adult/kaumatua club & CAB safety-net erosion (Wedge 2):
+    mort_iso_curr                = getfield_def(Params_Out, 'psi_club_buffer_vec', [1.0, 1.0, 1.0, 1.0]);
+    Params_Out.psi_club_buffer_vec = mort_iso_curr .* (1.0 - s * 0.065 * [1.15, 1.10, 1.45, 0.95]);
+
+    % (d) Creative venue/festival contraction -> z_h enterprise & trans-Tasman exit (Wedge 3):
+    zh_mult_curr              = getfield_def(Params_Out, 'Z_h_reg_mult', [1.00, 1.00, 1.00, 1.00]);
+    Params_Out.Z_h_reg_mult   = zh_mult_curr .* (1.0 - s * 0.011 * reg_civic_wt);
+    v_abr_reg                 = getfield_def(Params_Out, 'V_Abroad_Reg_Shift', [0.0, 0.0, 0.0, 0.0]);
+    Params_Out.V_Abroad_Reg_Shift = v_abr_reg + s * 0.018 * reg_civic_wt;
+
+    % (e) Hysteresis & Social Cohesion erosion (Wedge 4: asymmetric organizational loss = 1.08x):
+    Params_Out.Civic_Hysteresis_Mult = 1.08;
+    Params_Out.Cohesion_Shock_Pts    = getfield_def(Params_Out, 'Cohesion_Shock_Pts', 0.0) - s * 4.80;
 end
 
 %% ========================================================================
