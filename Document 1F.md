@@ -1,0 +1,271 @@
+# Polycentric Democracy, Contingent Endorsements, and the Citizens' Assembly Compact
+
+**Document 1F: Building Credible Political Permission and Economic Continuity Beyond Zero-Sum Party Bargaining**
+
+**Author:** Michael Tiemann (`mdtiemann@gmail.com`)  
+**Date:** November 2026 | **Code & Replication Repository:** [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)
+
+**Companion Suite Navigation:** [Document 1A (Master Monograph)](./Document%201A.md) | [Document 1B (Empirical Answer Key)](./Document%201B.md) | [Document 1C (Executive Brief)](./Document%201C.md) | [Document 1D (Te Kāhui Waka Sequencing)](./Document%201D.md) | [Document 1E (Grassroots Civic Mycelium)](./Document%201E.md) | [Document 3 (Leaving Our Silos)](./Document%203.md)
+
+**Disclaimer:** No people nor organizations mentioned herein have endorsed this work unless stated otherwise. This is the work of the author, and all errors and omissions are his alone.
+
+---
+
+## Executive Summary: Solving the Twin Bottlenecks of Big Reform and Deliberative Democracy
+
+*A shared design blueprint for Trust Democracy NZ, Mana Whenua & Tangata Tiriti Facilitators, Civic Innovators, Local Councils, and Cross-Partisan Stewards*
+
+> *"A political compromise is traditionally judged 'fair' when nobody leaves the room happy. A deliberative compact is successful when everyone sees how the whole system works—and unlocks enough new value that every community gets what it genuinely needs."*
+
+Aotearoa New Zealand is caught in a democratic catch-22.
+
+Across [Documents 1A through 1E](./Document%201A.md) and [Document 3](./Document%203.md), our open-source intergenerational ledger proves that New Zealand does not suffer from a shortage of economic energy or fiscal capacity. If we implement Phase 1 (`SS1`) and Phase 2 (`SS2`) as a **connected whole**—investing early in children and teenagers, cooling housing speculation, rotating tax pressure off productive businesses and onto dormant land, revitalizing neighborhood clubs, and booking verified long-term savings—there is more than enough prosperity generated to give **every major political constituency** its core aspiration:
+* **World-class healthcare and thriving schools** (cutting childhood hardship and youth crisis inflows by more than three-quarters);
+* **Lower public debt** (sinking net Crown debt from a projected 185%–200% of GDP down to 22% of GDP);
+* **Lower taxes on work and enterprise** (cutting corporate tax drag and lowering working-age PAYE taxes by nearly 4 percentage points to 18.25%);
+* **Dignified, universal retirement** (keeping universal New Zealand Superannuation at Age 65—and earning the fiscal room to lower it to Age 64); and
+* **Resilient water, transport, and civic infrastructure** across every rural district, provincial town, regional city, and metropolitan suburb.
+
+**Why, then, can our political system not simply enact it?**
+
+Because in an unsettled Westminster MMP environment, political parties do not win elections by optimizing an 80-year national balance sheet. Every party faces intense electoral incentives to promise short-term gains to its own voting bloc—often paid for by raiding, deferring, or repealing investments valued by rival constituencies. In our repository's empirical policy stress test (`coalition_2024_shocks`), repealing coordinated water infrastructure reform (*Three Waters*) while simultaneously disinvesting in public service, arts, and civic institutions inflicted economic and wellbeing losses on the Wellington region roughly **40% worse than the national average**. Even more destructively, as shown in [Document 3](./Document%203.md), swinging back and forth in six-year (two-term) partisan "Stop–Go" pendulums destroys **84.2% of the long-run generational dividend**.
+
+One could reasonably conclude that implementing a multi-decade national renewal is **too important to leave to zero-sum party politics alone**.
+
+At the same time, advocates for **Citizens' Assemblies**—including **Trust Democracy NZ**, *Te Tiriti*-based civic innovators in Porirua and Tairāwhiti, and international pioneers in Melbourne, Wales, and Paris—have been asking a mirror-image question: *How can deliberative democracy scale from local single-issue topics to full-scale national economic strategy without overwhelming participants or producing uncosted wish-lists that Treasury and Cabinet ignore?*
+
+**Document 1F** unites these two movements through a single governance breakthrough: **Divide and Conquer via Contingent Endorsements**.
+
+Rather than asking one giant assembly to master every policy in New Zealand—or trapping citizens in disconnected silos—we partition the reform suite into **Five Parallel Citizens' Assemblies**, grounded in a shared literacy module on **compounding deferred maintenance** and stitched together by **rational economic logic**:
+1. Each Assembly deliberates deeply on one coherent lane of national life.
+2. Instead of issuing unconditional demands or watered-down compromises, each Assembly issues a **Contingent, Ranged Endorsement**: *"Provided our neighboring Assemblies deliver inputs X, Y, and Z within agreed ranges, we endorse policies A, B, and C to deliver verified outcomes U, V, and W within these ranges."*
+3. An open-source **Economic Clearinghouse** and **Joint Citizen Plenary** verify that the five input-and-output ranges lock together with zero fiscal holes—handing Parliament a coherent, democratically legitimate mandate that no backroom horse-trade could ever assemble.
+
+---
+
+## Part I: Why Party Horse-Trading Breaks Coupled Systems
+
+To understand why Citizens' Assemblies are essential economic infrastructure—not merely a "nice-to-have" consultation exercise—we have to look honestly at how adversarial party bargaining mangles interconnected policy.
+
+Across our monograph suite, **54.5% to 60.0% of the entire national wellbeing gain** comes not from individual policies acting alone, but from **synergy wedges**—the compounding lift unlocked when early childhood care, teen mentoring, affordable housing, grassroots clubs, enterprise tax relief, and infrastructure work *together*.
+
+When party leaders negotiate a budget or post-election coalition agreement behind closed doors, three structural habits systematically destroy those synergies:
+
+1. **"Splitting the Difference" Starves Critical Thresholds:** If engineers calculate that a bridge needs 100 meters of steel to span a river, a political compromise to fund 50 meters of steel does not build half a bridge—it drops steel into the river. Similarly, giving 20-year-olds a housing and startup grant *without* cooling speculative land prices or mentoring them at ages 12–14 wastes billions in landlord rent capture and skill mismatch ([Document 1D](./Document%201D.md)).
+2. **Regional and Sectoral Collateral Damage:** Adversarial coalitions routinely balance three-year cash budgets by targeting regions or sectors outside their voter base. As the Wellington shock illustrates—where pulling back water-infrastructure finance collided with public-sector and creative/civic cuts to produce outcomes **40% worse than the national baseline**—raiding one community's civic and physical foundations weakens an entire regional talent engine, accelerating youth emigration to Australia and shrinking the Crown's own future tax base.
+3. **The Three-Year Cash Blind Spot:** Politicians face voters every 36 months under Crown accounting rules that treat fixing a leaking pipe or supporting a newborn child as an immediate "expense," while leaving the massive downstream cost of burst mains, emergency hospital admissions, and youth prisons completely off the books.
+
+Deliberative Citizens' Assemblies invert all three incentives. Selected by **stratified civic lottery (sortition)** to mirror the real country—across age, gender, *whakapapa*, income, and geography—assembly members do not have to win re-election in 36 months, appease party donors, or perform outrage for the evening news. When given honest numbers, time to question competing experts, and structured facilitation, everyday citizens consistently outperform partisan bargaining on long-horizon stewardship.
+
+---
+
+## Part II: Shared Pre-Assembly Literacy — The "Tooth Cavity" Physics of Deferred Maintenance
+
+Before splitting into their five topic lanes, members of all five Citizens' Assemblies complete a shared, two-day **Intergenerational Stewardship & Fiscal Prudence Module**. Its centerpiece is a universal real-world phenomenon every citizen intuitively understands—yet conventional government spreadsheets ignore: **the compounding cost of deferred maintenance**.
+
+In traditional political debates, delaying maintenance is framed as a simple, linear time-shift: *"Do we spend $1 today, or hold taxes down now and let future taxpayers spend a discounted $1 in ten years?"*
+
+Any homeowner, mechanic, farmer, or dentist knows that framing is false. Deferred maintenance behaves **like an untreated cavity in a tooth**:
+
+* **Stage 1 (Routine Prevention — Pennies):** Brushing, fluoridated water, and a routine check-up cost almost nothing and preserve the natural tooth indefinitely.
+* **Stage 2 (Early Enamel Filling — $200):** Ignore prevention, and a small cavity forms. Caught early, a simple 20-minute filling stops decay in its tracks.
+* **Stage 3 (Deep Decay & Root Canal — $2,500):** Defer the $200 filling for three years to "save money," and decay does not grow at 3% inflation. Bacteria breach the pulp, failure probability spikes, and saving the tooth now requires a root canal and crown at **more than 10 times the cost**.
+* **Stage 4 (Systemic Emergency — $15,000+):** Defer the root canal for one more electoral term, and an acute abscess lands the patient in a hospital emergency department requiring IV antibiotics, surgical extraction, jawbone grafting, and an implant—at **75 times the cost of the original filling**, alongside weeks of lost work and acute pain.
+
+Crucially, **this exact geometric escalation curve governs every major asset Aotearoa manages**—physical, human, health, and civic alike:
+
+### Table 1F.1: The Compounding Cost of Deferred Maintenance Across Four National Foundations
+
+| Asset Domain | Stage 1–2: Timely Stewardship & Prevention (Low Unit Cost) | Stage 3: Deferred Upkeep & Degrading Resilience (Rising Failure Risk) | Stage 4: Catastrophic Failure & Emergency Remediation (5x to 100x Unit Cost) |
+| :--- | :--- | :--- | :--- |
+| **1. Physical Infrastructure**<br>*(Water Pipes, Roads, Schools, Grid)* | Routine leak detection, pipe relining, bridge painting, and predictable ring-fenced renewal budgets. | Water loss climbs past 35%–40%; soil washes out beneath tarmac; insurance and borrowing risk premiums rise. | Pressurized mains burst under city streets; sinkholes close commuter arteries; emergency night-shift excavation costs **5x to 10x** planned renewal. |
+| **2. Children & Youth**<br>*(First 2,000 Days & Ages 12–14)* | Universal *whānau* wraparound (ages 0–5), fresh school meals, and *Tuakana–Teina* peer mentoring (ages 12–14). | Early language/executive-function gaps widen; 6-year policy interruptions erase **39.2%** of early childhood gains; truancy rises. | Entry into Oranga Tamariki state care (**~NZD 180,000/yr**) and long-term youth justice/NEET detachment (**NZD 450,000+** lifetime fiscal loss). |
+| **3. Preventative Health & Housing**<br>*(Warm Homes & Primary Care)* | Insulated, dry, affordable housing; maternal/infant checks; community mental-health support. | Cold, damp rental transience triggers chronic childhood asthma, rheumatic fever risk, and untreated teen distress. | Repeated acute hospital admissions (**NZD 6,500–14,500** per episode) and decades of lost adult working capacity. |
+| **4. Grassroots Civic & Arts Mycelium**<br>*(Clubs, Halls, Marae, Ensembles)* | **NZD 180–2,800/yr** club participation (*Joiner Passport*) and $1/yr peppercorn leases of vacant spaces ([Doc 1E](./Document%201E.md)). | Volunteer burnout, venue closures, social isolation across all income brackets, and creative talent fleeing to Australia. | **2x higher adult mortality hazard** from isolation; premature entry into aged residential care (**NZD 78,000–115,000/yr**); fractured social trust. |
+
+### Upgrading the Dashboard for Citizens: ACC-Style Actuarial Honesty
+
+Once assembly members see this curve parameterized with real New Zealand unit costs, they immediately spot the flaw in conventional parliamentary budgeting: **trimming $1 billion from Stage 1 prevention looks like a "saving" on a 3-year cash ledger only because the $5 billion to $12 billion Stage 4 emergency bill hasn't arrived yet** ([Document 1C](./Document%201C.md)).
+
+To give Citizens' Assemblies an honest instrument panel, we equip them with New Zealand's own **Accident Compensation Corporation (ACC) actuarial rule**:
+* Whenever an Assembly cuts or defers maintenance on pipes, children, health, or civic life, the dashboard immediately books the conservatively discounted 25-year repair liability.
+* Conversely, whenever an Assembly invests in proven prevention that verifiably moves children, infrastructure, or communities off the failure track, the dashboard books the audited long-term savings (using Treasury's official `CBAx` 2.0% real discount rate alongside a tough 8.0% stress-test rate and a 30% safety haircut).
+
+Equipped with this shared foundation, everyday citizens are ready to deliberate—not over ideological slogans, but over genuine multi-generational prudence.
+
+---
+
+## Part III: Standing on Proven Ground — Lessons from Porirua, Tairāwhiti, Melbourne, Wales, and Paris
+
+Advocates at **Trust Democracy NZ** and across Aotearoa have already shown that deliberative democracy is not an untried theory; it is a working practice that adapts flexibly to local culture and constitutional context. Our Five-Assembly architecture draws directly on five real-world breakthroughs:
+
+1. **Porirua's 2025 *Te Tiriti* Citizens' Assembly (Indigenous Partnership, *Talanoa*, & Youth Voice):** Co-designed from the ground up by **Te Rūnanga o Toa Rangatira (Ngāti Toa)**, **Te Reo o Ngā Tāngata / The People Speak**, and the **Porirua Community Leaders Forum**, Porirua pioneered Aotearoa's first explicitly *Te Tiriti o Waitangi*-grounded assembly.Fifty *Mana Whenua* participants and a 50-person demographically representative Whole Community lottery panel—crucially **including *rangatahi* aged 15 and over** and weaving Pacific *talanoa* and *tikanga* throughout—deliberated in parallel and together on complex climate resilience choices, publishing an open-source *koha* toolkit for the nation.
+2. **Tairāwhiti's 2024 Land-Use Citizens' Assembly (Navigating High-Stakes Regional Transitions):** Convened by Gisborne District Council and **Te Weu Charitable Trust**, everyday residents selected by civic lottery worked alongside *iwi*, forestry, farming, and ecological experts to forge consensus recommendations on contested post-cyclone land-use transitions—proving sortition can bridge rural-provincial divides where adversarial submissions deadlock.
+3. **Melbourne's People's Panel (Everyday Citizens Mastering Multi-Billion-Dollar Infrastructure Finance):** Facilitated with oversight from Australia's **newDemocracy Foundation**, 43 randomly selected Melbourne residents, students, and business owners were handed the open financial books for a **AUD 5 billion, 10-year municipal financial plan**. Far from demanding free lunches, the citizens recommended disciplined rate increases, asset recycling, and targeted borrowing specifically for *"major asset renewal where prompt action can prevent rapidly escalating costs"*—seeing the "tooth cavity" trap clearly and winning **10-out-of-11 adoption** from an unanimous City Council.
+4. **Wales's *Well-being of Future Generations Act* & Assemblies (Statutory Duty of Prevention):** Wales paired deliberative citizen panels (such as the Blaenau Gwent assembly and national future-trends forums) with a statutory **Future Generations Commissioner** and legal duties requiring every public body to demonstrate long-term thinking, prevention, and cross-sector integration—creating a legal home for citizen mandates.
+5. **Paris's Permanent *Assemblée citoyenne* (Institutional Permanence & Agenda-Setting Power):** Building on Belgium's *Ostbelgien* model, Paris established a permanent, rotating 100-member Citizens' Assembly drawn by lot—explicitly including **16- and 17-year-olds** and non-EU residents alongside registered voters. Crucially, Paris gave its assembly formal legislative teeth: the right to question the executive, table official recommendations (*vœux*), and draft actual municipal resolutions (*propositions de délibération*) placed directly onto the *Conseil de Paris* voting agenda.
+
+**The Synthesis for Aotearoa:** Combine **Porirua and Tairāwhiti's** *Te Tiriti* co-governance and 15+ youth inclusion, **Melbourne's** open-book infrastructure-and-tax realism, **Wales's** statutory future-generations protection, and **Paris's** direct parliamentary resolution pathway—and apply them to a modular, five-lane national compact.
+
+---
+
+## Part IV: Divide and Conquer Without Silos — The Five Contingent Citizens' Assemblies
+
+No single 100-person assembly can meaningfully deliberate on early childhood neuroscience, land-value taxation, youth orchestras, water pipes, and sovereign debt schedules all in four weekends. Yet splitting them into isolated panels risks recreating the exact ministry silos criticized in [Document 3](./Document%203.md).
+
+Our solution is **Modular Partitioning with Contingent Input–Output Contracts**.
+
+Each of the **Five Citizens' Assemblies** (comprising *Mana Whenua* and stratified *Tangata Tiriti* chambers aged 15+, weighted across `Rural` 16.0%, `Small` 24.0%, `Large` 25.9%, and `Auckland` 34.1%) owns one clear domain. Rather than guessing what other sectors might do, each Assembly negotiates a **Contingent Endorsement**:
+* **"Provided We Receive (`Assumptions X, Y, Z`)":** The specific support ranges this Assembly needs from neighboring Assemblies for its policies to work on the ground.
+* **"We Endorse & Deliver (`Outcomes U, V, W`)":** The policy settings and verified outcome ranges this Assembly commits to deliver in return.
+
+---
+
+### Assembly 1: Early Potential & *Rangatahi* Agency
+*(Drawn from [Document 1A, Aspect 1](./Document%201A.md) & [Document 1D](./Document%201D.md) — Gates 1 & 2 Human Capability)*
+
+* **Core Question Before Citizens:** *How do we ensure every child born in Aotearoa arrives at school ready to thrive—and navigates the vulnerable early-teen years (ages 12–14) with mentorship, purpose, and skill?*
+* **Policy Levers in Scope:** Universal First-2,000-Days *whānau* wraparound (*Te Korowai Mokopuna*, *Whānau Ora*, *Kōhanga Reo*, *A'oga Amata*), fresh local *Farm-to-ECE* / *Ka Ora, Ka Ako* nutrition, and scaling two-way adolescent mentoring (*Tuakana–Teina*, Graeme Dingle Foundation *Stars/Project K*, Montessori adolescent micro-enterprises).
+* **Contingent Contract:**
+  * **Assumes (`X, Y, Z`):** Cooler urban rents from *Assembly 2* (so early-childhood educators and *whānau* aren't priced out of neighborhoods); vibrant local sports, arts, and service clubs from *Assembly 3* (to host after-school teen belonging); and multi-term funding protected by ACC actuarial accounting from *Assembly 5* (ending destructive 6-year Stop–Go cuts).
+  * **Delivers (`U, V, W`):** Cuts the share of 20-year-olds launching into adulthood struggling from **22%–23.5% down to 3.5%–4.5% in Phase 1 (and 1.5%–2.5% in Phase 2)**; nearly triples thriving young-adult launches (**23.5% to 57%–65%**); and slashes downstream state care, hospital, and youth-justice inflows by **over 75%**.
+
+### Assembly 2: Housing Affordability, *Whānau* Anchoring & Dignified Retirement
+*(Drawn from [Document 1A, Aspects 2–3](./Document%201A.md) & [Document 3](./Document%203.md) — Spatial Fairness & The Superannuation U-Curve)*
+
+* **Core Question Before Citizens:** *How do we make homes affordable for young renters and families, bridge regional cost-of-living pressures fairly, and set New Zealand Superannuation so elders retire with dignity while anchoring extended whānau?*
+* **Policy Levers in Scope:** Housing-affordability targets across major cities and provinces, design and eligibility of the universal **Age-20 Youth Capital Grant** (for first-home deposits, enterprise seed capital, or skill craft), transitional *Income × Geography* cost-of-living transfers, and testing the **NZ Superannuation eligibility age across ages 60 to 75**.
+* **Contingent Contract:**
+  * **Assumes (`X, Y, Z`):** Mentored, financially prepared 20-year-olds graduating from *Assembly 1* (preventing unmentored grant waste); a steady land-and-estate tax shift plus regional high-wage jobs from *Assembly 4*; and post-breakeven debt reduction from *Assembly 5*.
+  * **Delivers (`U, V, W`):** Cools metropolitan house-price-to-income overvaluation by **7.5% to 10.5%**; lifts young-adult Auckland homeownership from **28% to ~41%**; rejects false-economy pension hikes to Age 70 in favor of **protecting universal Super at Age 65 in Phase 1 and lowering it to Age 64 in Phase 2** (unlocking an **+8.1% *kuia/koroua* caregiving boost**); and agrees to **retire 82%–85% of temporary regional cash transfers in Phase 2** once regional jobs lift wages, freeing funds for broad PAYE tax cuts.
+
+### Assembly 3: Grassroots Civic Mycelium, Creative Arts & Pro-Social Belonging
+*(Drawn from [Document 1E](./Document%201E.md) — Curing Loneliness & Rebuilding Social Cohesion)*
+
+* **Core Question Before Citizens:** *How do we rebuild the neighborhood clubs, marae gardens, choirs, amateur theaters, conservation groups, and volunteer brigades that cut isolation across all income brackets and make Aotearoa an irresistible place to stay?*
+* **Policy Levers in Scope:** The six grassroots club pillars (*māra kai* food commons, service brigades, rewilding hubs, outdoor/*waka*/boxing clubs, theater/*kapa haka*, youth orchestras/choirs), the **Universal NZD 500/yr Youth Joiner Passport**, peppercorn $1/yr leases of vacant buildings, and optional Age-20 Creative/Civic Founder fellowships.
+* **Contingent Contract:**
+  * **Assumes (`X, Y, Z`):** Unhurried evening and weekend volunteer hours freed up by cooler rents and Age-64 Super from *Assembly 2*; a **Civic Stewardship Land-Tax Offset** on vacant commercial space from *Assembly 4*; and **~NZD 330M–350M/yr** in demand-side voucher capitation (zero grant-writing bureaucracy) from *Assembly 5*.
+  * **Delivers (`U, V, W`):** Scales active youth club and creative participation from **17.3% to 57%–65%+**; cuts adolescent anxiety/psychosocial distress by **~42%** across low-income and affluent suburbs alike; lifts the national **Social Cohesion Index from 81 to 126–134.5**; retains **+1,150 additional young creatives and founders per year**; and accelerates national cash breakeven by **1.4 years** via rapid health and truancy savings.
+
+### Assembly 4: Productive Enterprise, Fair Tax Rotation & Regional Job Upgrading
+*(Drawn from [Document 1A](./Document%201A.md), [Document 1D](./Document%201D.md), & [Document 3](./Document%203.md) — "Where Will the Good Jobs Come From?")*
+
+* **Core Question Before Citizens:** *How do we stop punishing productive work and business investment while rewarding passive property hoarding—unlocking high-wage enterprises across rural towns and cities without shocking family homeowners?*
+* **Policy Levers in Scope:** The "Use-It-Or-Lose-It" tax rebalance—pairing corporate/business tax cuts (**20% down to 12%**) with a phased **1.5% Land Value Levy** (above family-home protections) and **25% peak estate/capital-gains levy** on the NZD 1.6 trillion property transfer wave—plus household/rural electrification, regional food-hub procurement, and breaking wholesale/retail duopoly markups.
+* **Contingent Contract:**
+  * **Assumes (`X, Y, Z`):** A **57%–65% thriving domestic graduate pool** from *Assembly 1* to staff expanding companies; urban housing relief and Youth Capital Grants from *Assembly 2* so young engineers and tradespeople stay in NZ; and **-60 bps cheaper business credit** plus reliable water/transport/grid infrastructure from *Assembly 5*.
+  * **Delivers (`U, V, W`):** Synchronizes a predictable **10-year Land Value Levy ramp (+0.15%/yr)** and **3-year estate/CGT ramp** in 1-to-1 lockstep with business tax cuts (ensuring **90% of households win unconditionally** and **active business builders stay net-positive or breakeven right up to NZD 140M**); expands productive enterprise builders from **~7% to 40%–56% of every cohort**; lifts real wages by **+6.8% to +9.6%**; and retains **3,550+ skilled young Kiwis per year**.
+
+### Assembly 5: Sovereign Stewardship, Infrastructure Maintenance & Launch Sequencing
+*(Drawn from [Document 1A, Part V](./Document%201A.md) & [Document 1D](./Document%201D.md) — Keeping the Boat Stable and Paying Down the Debt)*
+
+* **Core Question Before Citizens:** *How do we pace these investments safely so we never blow out public debt, end deferred infrastructure decay permanently, handle geopolitical shocks (like a 3%-of-GDP defense requirement), and lock in tax cuts once the dividends arrive?*
+* **Policy Levers in Scope:** Adopting ACC-style `CBAx` Actuarial Valuation on the Crown books; pacing the **13-Wave *Te Kāhui Waka* rollout** (stepping regional capacity in thirds rather than risky Day-1 cannon shots); locking in the **2050 50/50 Surplus Rule** (half to Debt Sinking, half to ring-fenced Infrastructure & Health renewal); and setting the **Two-Key Trigger** for Phase-2 working-age PAYE tax cuts.
+* **Contingent Contract:**
+  * **Assumes (`X, Y, Z`):** Independent IDI-verified hardship exits at Age 5 and Age 14 from *Assemblies 1 & 3*; retirement of 82%–85% of temporary regional cash transfers in Phase 2 from *Assembly 2*; and reliable dual-speed land/estate tax revenue from *Assembly 4*.
+  * **Delivers (`U, V, W`):** Cuts Year-3 fiscal capital-at-risk by **75%** and eliminates **88.9% of workforce bottlenecks** via the 13-wave *Te Kāhui Waka* rollout; caps Crown debt gently at **~43.4% of GDP** before driving it down to **21%–22% of GDP**; books an audited **3.84x fiscal return by Year 5** (reaching full cash self-financing by **Year 16.8–18.8**); permanently funds Three Waters, roading, and hospital maintenance via the 50% Infrastructure Pool; and triggers a **working-age PAYE tax cut down to 18.0%–18.25%** once statutory debt and breakeven keys turn.
+
+---
+
+### Table 1F.2: Master Matrix of the Five Contingent Citizens' Assembly Mandates
+
+| Citizens' Assembly Lane | Core Constituency Tension Resolved | Key Inputs Required from Neighbors (`Assumes X, Y, Z`) | Verified Ranged Deliverables (`Delivers U, V, W`) |
+| :--- | :--- | :--- | :--- |
+| **1. Early Potential & *Rangatahi* Agency** | Symptom firefighting vs. First-2,000-Days & teen prevention | Cooler educator/*whānau* rents (`A2`); club hubs (`A3`); multi-term actuarial budget shield (`A5`) | Struggling Age-20 launches cut **22% → 1.5%–4%**; thriving youth **23.5% → 57%–65%**; **>75% drop** in care/justice inflows |
+| **2. Housing, *Whānau* & Retirement** | Young renters vs. older homeowners; Super age austerity vs. *whānau* care | Mentored 20-yr-olds (`A1`); land-tax & regional jobs (`A4`); post-breakeven debt relief (`A5`) | Urban housing cooled **-7.5% to -10.5%**; Akl young ownership **28% → 41%**; **Super at 65 → 64**; retires **82%–85%** geo transfer in `SS2` |
+| **3. Grassroots Civic & Creative Mycelium** | Affluent & low-income loneliness; creative brain drain vs. bureaucracy | Parent/*kaumātua* free time (`A2`); vacant-space tax offset (`A4`); **NZD 330M–350M/yr** voucher (`A5`) | Youth club belonging **17.3% → 65%**; teen distress **-42%**; Social Cohesion **81 → 126–134.5**; breakeven **1.4 yrs faster** |
+| **4. Productive Enterprise & Tax Rotation** | Property speculation vs. active business builders; regional job starvation | Skilled domestic graduates (`A1`); youth retention (`A2`); **-60 bps** credit & infrastructure (`A5`) | 10-yr LVT ramp (`+0.15%/yr`) funds **20% → 12%** corp tax cut; active builders **7% → 40%–56%**; real wages **+6.8% to +9.6%** |
+| **5. Sovereign Balance Sheet & Infrastructure** | Short-term cash austerity vs. long-term solvency & pipe/road renewal | Verified IDI cohort exits (`A1, A3`); geo-transfer step-down (`A2`); dual-speed revenue (`A4`) | 13-wave rollout cuts Yr-3 risk **-75%**; **3.84x Yr-5** actuarial ROI; debt sunk to **21%–22% GDP**; **PAYE cut to 18.0%–18.25%** |
+
+---
+
+## Part V: Stitching the Pieces Together — Rational Economic Logic vs. Political Horse-Trading
+
+How do five separate Citizens' Assemblies avoid producing five incompatible wish-lists—without handing the pen back to partisan lobbyists?
+
+By using an open-source **Economic Clearinghouse** and a **Joint Citizen Reconciliation Plenary** to stitch their ranged commitments together through transparent cause-and-effect accounting:
+
+```text
++---------------------------------------------------------------------------------------+
+|              SHARED PRE-ASSEMBLY FOUNDATION (ALL 5 ASSEMBLIES TOGETHER)               |
+|  * Te Tiriti & Talanoa Kawa  * "Tooth Cavity" Deferred Maintenance  * ACC Dashboard   |
++-------------------------------------------+-------------------------------------------+
+                                            |
+        +-----------------+-----------------+-----------------+-----------------+
+        v                 v                 v                 v                 v
+  +-----------+     +-----------+     +-----------+     +-----------+     +-----------+
+  | ASSEMBLY 1|     | ASSEMBLY 2|     | ASSEMBLY 3|     | ASSEMBLY 4|     | ASSEMBLY 5|
+  | Childhood |<--->|  Housing, |<--->| Civic Arts|<--->| Enterprise|<--->| Debt, Tax |
+  | & Teen    |     | Whānau &  |     | & Club    |     | Tax Shift |     | Pacing &  |
+  | Mentoring |     | Super 64  |     | Belonging |     | & Reg Jobs|     | Infra Pool|
+  +-----+-----+     +-----+-----+     +-----+-----+     +-----+-----+     +-----+-----+
+        |                 |                 |                 |                 |
+        +-----------------+-----------------+-----------------+-----------------+
+                                            |
+                                            v
++---------------------------------------------------------------------------------------+
+|         OPEN-SOURCE ECONOMIC CLEARINGHOUSE & JOINT CITIZEN PLENARY (5 x 6 REPS)       |
+|  * Checks that every Assembly's "Delivered Range (U,V,W)" satisfies its neighbors'    |
+|    "Assumed Range (X,Y,Z)" with zero uncosted cash deficits or workforce bottlenecks  |
++-------------------------------------------+-------------------------------------------+
+                                            |
+                                            v
++---------------------------------------------------------------------------------------+
+|          THE CONDITIONAL INTERGENERATIONAL COMPACT (PRESENTED TO PARLIAMENT)          |
+|  * Paris-Style Formal Resolution + Statutory Two-Key Lock (Te Ture Whakatere)         |
+|  * Gives all parties political permission to enact the whole—and exposes cherry-picks |
++---------------------------------------------------------------------------------------+
+```
+
+### How Reconciliation Solves Real Tensions (Without Splitting the Baby)
+
+During deliberation, each Assembly has live access to an intuitive, plain-English dashboard powered by the `IGWelfare` model (audited jointly by independent Treasury, Social Investment Agency, *iwi*, and academic economists). Whenever a tension arises between two lanes, **evidence resolves the sequencing rather than political horse-trading**:
+
+* **Example 1 — Sequencing the Age-20 Youth Capital Grant (`Assembly 2` × `Assembly 1` × `Assembly 5`):** Suppose *Assembly 2* initially wants to give every 20-year-old in New Zealand a full Youth Capital Grant on Day 1 to help young renters immediately. When plugged into the Clearinghouse alongside *Assembly 1* and *Assembly 5*, the dashboard flags a concrete problem: 82.7% of 20-year-olds in Year 1 have *not yet* come through the new teen mentoring pipeline, creating **NZD 3.8 billion in skill-mismatch waste** and spiking Year-3 Crown borrowing ([Document 1D](./Document%201D.md)). Instead of killing the grant in a political fight, delegates discover the **Early-Adopter Bridge**: fund the **17.3%** of youth already graduating from proven *Tuakana–Teina*, Graeme Dingle, and *Kura* mentoring in Years 1–6 (zero waste, tiny cost), and scale seamlessly to **100% universal grants across Waves 7–13** right as newly mentored teenagers turn 20!
+* **Example 2 — Pacing the Land-to-Enterprise Tax Shift (`Assembly 4` × `Assembly 2`):** Suppose *Assembly 2* wants rapid cooling of urban rents, while *Assembly 4* worries that an overnight 1.5% Land Value Levy would shock recently mortgaged homeowners. Testing ranges together, delegates lock in a **10-year smooth ramp (+0.15% per year)** paired 1-to-1 with annual business tax cuts, plus a **3-year ramp on estate and capital-gains settlements** (taxed only when cash changes hands). Rents begin cooling immediately via market expectations, businesses invest from Year 1, and leveraged homeowners get a full decade to adjust smoothly.
+
+### Table 1F.3: Party-Political Horse-Trading vs. Contingent Citizens' Assembly Reconciliation
+
+| Governance Dimension | Zero-Sum Party-Political Bargaining | Contingent Citizens' Assembly Compact |
+| :--- | :--- | :--- |
+| **Core Bargaining Currency** | Trading Ministerial baubles and pet projects; cutting out-group regions (e.g., Wellington's -40% shock). | Explicit contingent contracts (`Assume X,Y,Z → Deliver U,V,W`) verified on one shared national ledger. |
+| **Treatment of Deferred Maintenance** | Raids water pipes, preventative health, ECE, and arts to fund 3-year election tax bribes. | Prices the "tooth cavity" curve via ACC-style actuarial rules; protects 50% infrastructure & social upkeep. |
+| **Handling Thresholds & Synergies** | "Splits the difference" (50% budget = broken bridge), losing **55%–84%** of potential national gains. | Sequences waves in thirds (*Te Kāhui Waka*) so every region gets **100% effective capability** over 13 waves. |
+| **Definition of "Fairness"** | *"Fair because nobody is happy"* (lowest common denominator). | **Positive-sum additionality:** **90% of households unconditionally ahead**, active builders positive/breakeven to NZD 140M. |
+| **Durability Across Elections** | Swings violently every 3–6 years ("Stop–Go"), scarring youth cohorts and investor confidence. | Anchored by cross-demographic public legitimacy and statutory Two-Key milestones (*Te Ture Whakatere*). |
+
+### Why Politicians Will Actually Welcome This Gift: "Credible Political Permission"
+
+At first glance, asking Parliament to share agenda-setting power with five Citizens' Assemblies might sound threatening to elected MPs. In practice—as seen in Ireland's constitutional assemblies, Melbourne's 10-year budget plan, and Paris's *Assemblée citoyenne*—thoughtful politicians across the spectrum quietly **crave** this exact mechanism.
+
+Every senior Cabinet Minister knows that untaxed property speculation, child hardship, and decaying water pipes are unsustainable. Yet under adversarial media incentives, **the first party to propose a Land Value Levy, a 13-year phased youth endowment, or long-term infrastructure charges gets attacked ruthlessly by the Opposition**.
+
+When five representative Citizens' Assemblies—comprising farmers, renters, landlords, *kaumātua*, *rangatahi*, nurses, and small-business owners who look like the entire country—deliberate over the evidence and jointly present a **Conditional Intergenerational Compact**:
+1. **It De-Risks Courage:** MPs are no longer stepping out alone on an ideological limb; they are enacting a balanced, solvent compact endorsed by everyday New Zealanders across all regions and wealth brackets.
+2. **It Protects the Package Against Cherry-Picking:** Because every Assembly's endorsement is *explicitly contingent* on the others—*"Assembly 4's business tax cut and Assembly 5's PAYE cut are only endorsed if Assembly 1's childhood gates, Assembly 2's housing relief, and Assembly 3's civic passport are funded in lockstep"*—no party in post-election coalition talks can strip out the preventative maintenance without publicly voiding the entire citizen mandate and booking an immediate actuarial liability on the Crown balance sheet.
+
+---
+
+## Part VI: Practical Ignition Roadmap — An Invitation to Trust Democracy NZ & Civic Partners
+
+We do not need to wait for a unanimous Act of Parliament to begin proving this architecture. Just as Porirua's *Te Tiriti* Assembly and Tairāwhiti's Land-Use Assembly were initiated by local *Mana Whenua*, community trusts, and civic innovators, Aotearoa's deliberative democracy community can prototype and scale this framework in four practical steps:
+
+1. **Step 1 — Convene a Methodological Design Table (Q1 2027):** Invite **Trust Democracy NZ**, facilitators and *Mana Whenua* architects from the **Porirua** and **Tairāwhiti** Assemblies, **Koi Tū: The Centre for Informed Futures**, **WEAll Aotearoa**, and *iwi* and youth networks to co-design the *Te Tiriti & Intergenerational Sortition Charter* (adapting Porirua's open-source *koha* toolkit and Paris's 15+ youth representation rule for national four-region balance).
+2. **Step 2 — Field-Test the "Tooth Cavity" Deferred Maintenance Module in Regional Workshops (Q2 2027):** Host half-day deliberative workshops—starting in **Te Whanganui-a-Tara / Wellington**, where citizens have lived through the acute collision of water-pipe failures and civic/arts disinvestment, paired with a `Rural` and `Small` provincial catchment—to refine which real-world maintenance analogies and `CBAx` visual dashboards communicate clearest across backgrounds.
+3. **Step 3 — Run a Two-Lane Contingent Prototype Assembly (Mid-2027):** Before launching all five lanes nationally, philanthropically seed a **Two-Lane Contingent Pilot** (for example, pairing *Assembly 1: Early Potential & Rangatahi* with *Assembly 4: Productive Enterprise & Tax Rotation*, or *Assembly 2: Housing* with *Assembly 5: Infrastructure & Debt*). Demonstrate live in front of media and MPs that two everyday citizen panels can negotiate contingent input/output ranges (`Assume X → Deliver U`) and reconcile them cleanly on the open-source `IGWelfare` ledger.
+4. **Step 4 — Scale to the Full Five-Assembly National Compact & Parliamentary Resolution:** Present the reconciled Five-Assembly Compact to all parliamentary parties ahead of the next Budget Policy Statement—backed by statutory **Paris-style resolution rights** and the **Wales-style Future Generations / Two-Key Audit Lock** ([Document 1D](./Document%201D.md))—turning an unsettled electoral landscape into Aotearoa's greatest democratic renewal.
+
+When we stop asking adversarial party politics to do a job it was never designed to do—and instead trust informed, representative everyday New Zealanders to steward the whole system together—we unlock both **credible political permission** and **credible economic execution**. We stop pulling down each other's work every three years, and we start building a country worthy of our *mokopuna*.
+
+---
+
+## References & Precedent Resources
+
+* **Porirua Te Tiriti Citizens' Assembly (2025):** Te Rūnanga o Toa Rangatira, Te Reo o Ngā Tāngata / The People Speak, & Porirua Community Leaders Forum. *Porirua Assembly Toolkit & Public Evaluation Report* (`porirualocality.co.nz/poriruaassembly`).
+* **Tairāwhiti Citizens' Assembly on Land Use (2024):** Te Weu Charitable Trust & Gisborne District Council. *Calls to Action on Fair Land-Use Transitions*.
+* **Trust Democracy NZ (2025–2026):** *Deliberative Methods at a National Scale in Aotearoa* & *Trust Both Ways: Citizens' Assemblies and the Future of Political Agreement* (`trustdemocracy.nz`).
+* **Melbourne People's Panel (2014–2015):** newDemocracy Foundation & City of Melbourne. *10-Year Financial Plan People's Panel Final Report* (endorsing long-term asset renewal where prompt action prevents rapidly escalating costs).
+* **Wales Future Generations Framework (2015–2026):** *Well-being of Future Generations (Wales) Act 2015* & Office of the Future Generations Commissioner for Wales.
+* **Assemblée citoyenne de Paris (2021–2026):** City of Paris & Federation for Innovation in Democracy Europe (FIDE). *Institutionalized Permanent Citizens' Assembly Charter* (incorporating Ostbelgien rotation, 16–17-year-old and non-EU resident sortition, and formal *propositions de délibération*).
+* **Polycentric Commons Governance:** Ostrom, E. (2010). *Beyond Markets and States: Polycentric Governance of Complex Economic Systems*. American Economic Review, 100(3), 641–672.
