@@ -430,7 +430,10 @@ $$
 * **Unified PAYE Tax Solvency Identity ($`\tau_l^{\mathrm{req}}`$):** Anchored to the 2026 statutory baseline $`\tau_{l,0} = 22.00\%`$ at $`\mathrm{Dep}_{2026} = 24.50\%`$:
 
 $$
-\tau_l^{\mathrm{req}}\left(A_{\mathrm{super}}\right) = 0.22 + \beta_{\mathrm{dep}}\left(\mathrm{DepRatio}_{\mathrm{eff}}\left(A_{\mathrm{super}}\right) - \mathrm{Dep}_{2026}\right) - \beta_{\mathrm{hardship}}\Delta\overline{\mathrm{Struggling}} - \mathbb{I}_{SS2}\left[\Delta\tau_{\mathrm{harvest}}^{SS2}\min\left(1.05, \Phi_{\mathrm{time}}\right) - \psi_{\mathrm{aust}}\max\left(0, A_{\mathrm{super}} - 65\right)^{1.35}\right]
+\begin{array}{rl}
+\tau_l^{\mathrm{req}}\left(A_{\mathrm{super}}\right) = & 0.22 + \beta_{\mathrm{dep}}\left(\mathrm{DepRatio}_{\mathrm{eff}}\left(A_{\mathrm{super}}\right) - \mathrm{Dep}_{2026}\right) - \beta_{\mathrm{hardship}}\Delta\mathrm{Struggling}_{\mathrm{mean}} \\
+& - \mathbf{I}_{SS2}\left\lbrack \Delta\tau_{\mathrm{harvest}}^{SS2}\min\left(1.05, \Phi_{\mathrm{time}}\right) - \psi_{\mathrm{aust}}\max\left(0, A_{\mathrm{super}} - 65\right)^{1.35} \right\rbrack
+\end{array}
 $$
 
 ---
@@ -896,7 +899,7 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 
 *Note: `Rural` (`16.00% -> 14.39%`) and `Small` (`24.00% -> 22.56%`) domestic population shares sum with `Large` and `Auckland` to `100.0%` at every transition step and are exported in `Table9_4Region_Dynamic_Population_Shares.csv`.*
 
-| Transition Year | `PopPct_Large` | `PopPct_Auckland` | `Emig_Large_Pct` | `Emig_Auckland_Pct` (Gross / Net) | `Nat_Emig_Abroad_Pct` | `Social_Cohesion_Index_St` (`SS1` / `SS2`) |
+| Transition Year | `PopPct Large` | `PopPct Auckland` | `Emig Large Pct` | `Emig Auckland Pct` (Gross / Net) | `Nat Emig_Abroad Pct` | `Social_Cohesion Index_St` (`SS1` / `SS2`) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Year 0 (2026 Base)** | 25.90% | 34.10% | 23.41% | 19.29% (`7.02%`) | 10.93% | 100.0 (`104.3`) |
 | **Year 6 (`t = 2`)** | 26.04% | 34.66% | 21.55% | 17.65% (`6.46%`) | 10.07% | 104.8 |
