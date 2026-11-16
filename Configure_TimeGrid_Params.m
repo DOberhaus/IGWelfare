@@ -63,16 +63,22 @@ end
 %% 4. COMPOUNDED DISCOUNT, RETURN, DEPRECIATION, & TRANSITION RATES
 % Supports 2-Phase Calibration Audit:
 %   - 'historic_096' : Legacy codebase anchor (beta_hh = 0.96^dt, beta_firm = 0.95^dt)
-%   - 'launch_0985'  : Treasury Circular 2024/15 SRTP-aligned (0.985^dt, 0.9815^dt)
+%   - 'launch_0980'  : Treasury Circular 2024/15 SRTP-aligned (0.980^dt, 0.975^dt)
 if ~isfield(Params, 'Discount_Regime') || isempty(Params.Discount_Regime)
     Params.Discount_Regime = 'historic_096'; % Default to Phase 1 first
 end
 
 switch lower(strtrim(Params.Discount_Regime))
-    case 'launch_0985'
+    case 'launch_0980'   % 2.0% HH / 2.5% Firm (Treasury 2.0% real SRTP benchmark)
+        ann_beta_hh   = 0.9800;
+        ann_beta_firm = 0.9750;
+    case 'mid_0970'      % 3.0% HH / 3.75% Firm (Midpoint harmonic comparison)
+        ann_beta_hh   = 0.9700;
+        ann_beta_firm = 0.9625;
+    case 'launch_0985'   % Retained optional 1.5% HH / 1.85% Firm sensitivity check
         ann_beta_hh   = 0.9850;
         ann_beta_firm = 0.9815;
-    otherwise % 'historic_096'
+    otherwise            % 'historic_096': 4.0% HH / 5.0% Firm legacy anchor
         ann_beta_hh   = 0.9600;
         ann_beta_firm = 0.9500;
 end

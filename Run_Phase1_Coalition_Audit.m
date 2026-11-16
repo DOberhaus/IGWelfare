@@ -1,5 +1,14 @@
 %% RUN_PHASE1_COALITION_AUDIT.M (Phase 1: historic_096, dt = 3, J = 27)
-clear; clc;
+
+if ~exist('Discount_Regime_Override', 'var') || isempty(Discount_Regime_Override)
+    Discount_Regime_Override = 'launch_0980'; % 'historic_096' (Phase 1) | 'launch_0980' (Phase 2)
+end
+clearvars -except Discount_Regime_Override; clc;
+
+Params.dt              = 3;
+Params.Discount_Regime = Discount_Regime_Override;
+Params = Configure_TimeGrid_Params(Params);
+NZ_4Region_Master; % Inherits Params.Discount_Regime = 'launch_0980' (beta_hh = 0.980^dt, beta_firm = 0.975^dt)
 
 % Step 1: Initialize Single Source of Truth at dt = 3 & Historic Discounting
 Params = struct('dt', 3, 'Discount_Regime', 'historic_096');
