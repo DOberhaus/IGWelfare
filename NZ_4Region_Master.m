@@ -9,6 +9,23 @@
 %   - Households ('HH_Rural', 'HH_Small', 'HH_Large', 'HH_Auckland'): Finite Horizon (J = 80/dt)
 %   - Firms ('Firm_Rural', 'Firm_Small', 'Firm_Large', 'Firm_Auckland'): Infinite Horizon (N_j = Inf)
 
+%% 0. TOOLKIT & GNU OCTAVE / UFHORZ ENVIRONMENT BOOTSTRAP
+igw_root_dir = fileparts(mfilename('fullpath'));
+if isempty(igw_root_dir), igw_root_dir = pwd; end
+if exist('ValueFnIter_MixHorz_PType', 'file') == 0
+    vfi_matlab_dir = fullfile(igw_root_dir, '..', 'VFIToolkit-matlab');
+    if exist(vfi_matlab_dir, 'dir') ~= 0
+        addpath(genpath(vfi_matlab_dir));
+    end
+end
+vfi_octave_dir = fullfile(igw_root_dir, '..', 'VFIToolkit-octave');
+if exist('VFIToolkit_Octave_Setup', 'file') == 0 && exist(vfi_octave_dir, 'dir') ~= 0
+    addpath(vfi_octave_dir);
+end
+if exist('VFIToolkit_Octave_Setup', 'file') ~= 0
+    VFIToolkit_Octave_Setup({'ReturnFn_SpatialHH', 'ReturnFn_SpatialHH_Compact4D', 'ReturnFn_Firm', 'HumanCapital_Lifecycle_aprimeFn'});
+end
+
 if ~exist('Params', 'var'), Params = struct(); end
 % The following will initialize Params.dt=5 and Params.n_z_pts=7 if Params doesn't define them
 Params = Configure_TimeGrid_Params(Params);
@@ -53,6 +70,9 @@ for r_idx = 1:N_reg
     firm_type = ['Firm_', Regions{r_idx}];
 
     vfoptions.experienceasset.(hh_type)    = 1;
+    if exist('OCTAVE_VERSION', 'builtin') ~= 0 && (~isfield(vfoptions, 'lowmemory') || ~isfield(vfoptions.lowmemory, hh_type))
+        vfoptions.lowmemory.(hh_type)      = 1;
+    end
     simoptions.experienceasset.(hh_type)   = 1;
     vfoptions.experienceasset.(firm_type)  = 0;
     simoptions.experienceasset.(firm_type) = 0;
