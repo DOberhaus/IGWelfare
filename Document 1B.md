@@ -1182,56 +1182,68 @@ Anchored to the national household consumption base (`NZD_Billion_Per_CE_Pct = N
 
 ### 7.1 Methodological Guardrails
 
-1. **Strict Separation of the Crown Fiscal Lens and the Economy-Wide GDP Lens (Counting Rule #1):** Avoided public service outlays (Oranga Tamariki care at NZD 180k/yr or NZD 37.1k–54.7k/yr annualised cohort flow + NZD 181k lifetime Crown abuse-in-care liability, acute hospital nights, youth/adult justice, and main welfare benefit transfers *T_k*) belong strictly to the **Crown Fiscal Ledger**, whereas additional adult gross output $`\Delta Y_t`$ belongs to the **Economy-Wide GDP Lens**. Benefit transfers are fiscal redistributions (not net additions to GDP), and public tax revenue on $`\Delta Y_t`$ ($`\approx 28.8\%`$ of $`\Delta \mathrm{GDP}`$) is reported inside the Fiscal Ledger and **never added to GDP**.
-2. **Cohort-to-Ledger Regime Separation & Exact Ribbon Conservation in the 6-Gate (29-Node) Fiscal Sankey:** To prevent ontological cross-account distortion between working-age and retirement fiscal accounts, `Plot_ChildFiscal_SSankey.m` tracks the human cohort through *Gates 1–5 (Nodes 1–21)*—mapping Age-20 launch skill tiers (Gate 4, Nodes 14–16) into the five *Prime Career & Enterprise Sorting Strata* at Gate 5 (Nodes 17–21: Chronic Adversity, Core Workforce, $z_l$ Passive Land/Rent Speculation, $z_h$ Productive Enterprise Builders, and Emigrated Abroad)—and places the vertical regime-break wave at *Gate 5 ($X = 5.0$)*. Across the regime-break wave, the five human career strata map once and without rescaling into the *eight Annualized Adult Fiscal Ledger accounts at Gate 6 (Nodes 22–29)*, guaranteeing that every ribbon entering Gate 6 sums to the exact `kNZD/yr` printed on the node label, while regional charts scale gross `BNZD/yr` outlays on Node 26 proportionally by the regional population share `reg_pop_share`.
-3. **Defending Warm-Glow Bequests + Exact Intergenerational Transition Matrix vs. Outer Dynastic VFI:** As established by De Nardi (2004) and Daruich (2018, Sec. 6), 55% to 75% of the long-run welfare gain from early childhood investment operates through the shift in the **stationary distribution of parent states** $`\mu_k(a, h, z, j)`$ across generations rather than changes in the curvature of the continuation value function. Because `Build_IntergenTransitionMatrix.m` maps exact optimal child investments $`i_c^*(a_p, h_p, z_p, k)`$ and net-of-tax estates $`(1 - \tau_b)a^{\prime *}_j(k)`$ into the next generation's initial distribution `jequaloneDist` ($`\mu_{1,k}(a_1, h_1, z_1)`$), our GPU-vectorized architecture captures 100% of this dynastic general-equilibrium feedback loop ($`\mathcal{T}_{\mathrm{IG}}: \mathbf{Q}_h \times \mathbf{Q}_a \times \Pi_{\mathrm{mig}}`$) without adding parent-child strategic gaming states.
+1. **Strict Separation of the Crown Fiscal Lens and the Economy-Wide GDP Lens (Counting Rule #1):** Avoided public service outlays (Oranga Tamariki care at NZD 180k/yr or NZD 37.1k–54.7k/yr annualised cohort flow + NZD 181k lifetime Crown abuse-in-care liability, acute hospital nights, youth/adult justice, and main welfare benefit transfers `T_k`) belong strictly to the **Crown Fiscal Ledger**, whereas additional adult gross output $`\Delta Y_t`$ belongs to the **Economy-Wide GDP Lens**. Benefit transfers are fiscal redistributions (not net additions to GDP), and public tax revenue on $`\Delta Y_t`$ (approximately 28.8% of $`\Delta \mathrm{GDP}`$) is reported inside the Fiscal Ledger and **never added to GDP**.
+
+2. **Cohort-to-Ledger Regime Separation & Exact Ribbon Conservation in the 6-Gate (29-Node) Fiscal Sankey:** To prevent ontological cross-account distortion between working-age and retirement fiscal accounts, `Plot_ChildFiscal_SSankey.m` tracks the human cohort through *Gates 1–5 (Nodes 1–21)*—mapping Age-20 launch skill tiers (Gate 4, Nodes 14–16) into the five *Prime Career & Enterprise Sorting Strata* at Gate 5 (Nodes 17–21: Chronic Adversity, Core Workforce, $`z_{\ell}`$ Passive Land/Rent Speculation, $`z_h`$ Productive Enterprise Builders, and Emigrated Abroad)—and places the vertical regime-break wave at *Gate 5* ($`X = 5.0`$). Across the regime-break wave, the five human career strata map once and without rescaling into the *eight Annualized Adult Fiscal Ledger accounts at Gate 6 (Nodes 22–29)*, guaranteeing that every ribbon entering Gate 6 sums to the exact `kNZD/yr` printed on the node label, while regional charts scale gross `BNZD/yr` outlays on Node 26 proportionally by the regional population share `reg_pop_share`.
+
+3. **Defending Warm-Glow Bequests + Exact Intergenerational Transition Matrix vs. Outer Dynastic VFI:** As established by De Nardi (2004) and Daruich (2018, Sec. 6), 55% to 75% of the long-run welfare gain from early childhood investment operates through the shift in the **stationary distribution of parent states** $`\mu_k(a, h, z, j)`$ across generations rather than changes in the curvature of the continuation value function. Because `Build_IntergenTransitionMatrix.m` maps exact optimal child investments $`i_c^{\ast}(a_p, h_p, z_p, k)`$ and net-of-tax estates $`(1 - \tau_b)a_{j}^{\prime \ast}(k)`$ into the next generation's initial distribution `jequaloneDist` ($`\mu_{1, k}(a_1, h_1, z_1)`$), our GPU-vectorized architecture captures 100% of this dynastic general-equilibrium feedback loop ($`\mathbf{T}_{\mathrm{IG}}: \mathbf{Q}_h \times \mathbf{Q}_a \times \Pi_{\mathrm{mig}}`$) without adding parent-child strategic gaming states.
 
 ---
 
 ### 7.2 Core Reference Equations for Technical Reviewers
 
-* **1. Working-Age & Retirement Household Budget Constraint (`ReturnFn_SpatialHH.m`):**
+1. **Working-Age & Retirement Household Budget Constraint (`ReturnFn_SpatialHH.m`):**
 
-```math
-e_{\mathrm{tot}} = \frac{\bigl(1 + (1 - \tau_k)r\bigr)a + (1 - \tau_l) w_k z h \max(0, \ell - I_h) + \mathbb{I}_{j=1} E + T_k - \bar{e}_k - (1 - s_{\mathrm{sub}}) i_c - a'}{1 + \tau_c}
-```
+   $$
+   e_{\mathrm{tot}} = \frac{\left(1 + (1 - \tau_k)r\right)a + (1 - \tau_l) w_k z h \max(0, \ell - I_h) + \mathbb{I}_{j=1} E + T_k - \bar{e}_k - (1 - s_{\mathrm{sub}}) i_c - a^{\prime}}{1 + \tau_c}
+   $$
 
-* **2. Analytical Housing Tenure Cutoff $`\xi_k`$ & Composite Housing Price Index $`p_{H,k}(j)`$ (`Kiyotaki et al., 2024`):**
+2. **Analytical Housing Tenure Cutoff $`\xi_k`$ & Composite Housing Price Index $`p_{H, k}(j)`$ (`Kiyotaki et al., 2024`):**
 
-```math
-\xi_k = \min\left\{1,  \frac{1}{\bar{\chi}} \left(\frac{rr_k}{rh_k}\right)\right\}, \qquad p_{H,k}(j) = \begin{cases} \xi_k rh_k + (1 - \xi_k) \dfrac{rr_k}{0.5 \bar{\chi}} & \text{if } j < J_r \\ rh_k & \text{if } j \ge J_r \end{cases}
-```
+   $$
+   \xi_k = \min\left\lbrace 1, \frac{1}{\bar{\chi}} \left(\frac{rr_k}{rh_k}\right) \right\rbrace, \qquad p_{H, k}(j) = \begin{cases}
+   \xi_k rh_k + (1 - \xi_k) \frac{rr_k}{0.5 \bar{\chi}} & \mathrm{if}\ j < J_r \\
+   rh_k & \mathrm{if}\ j \ge J_r
+   \end{cases}
+   $$
 
-* **3. Infinite-Horizon Firm Bellman Equation & After-Tax Return (`ReturnFn_Firm.m`, `Guvenen et al., 2023`):** In region $`k \in \{\mathrm{Rural}, \mathrm{Small}, \mathrm{Large}, \mathrm{Auckland}\}`$, firms with productivity $`z_f \in \{z_{\ell,k}, z_{h,k}\}`$ and collateral limit $`k \le \lambda_{\mathrm{col}} a_f`$ ($`\lambda_{\mathrm{col}} = 2.50`$) solve:
+3. **Infinite-Horizon Firm Bellman Equation & After-Tax Return (`ReturnFn_Firm.m`, `Guvenen et al., 2023`):**
+   In region $`k \in \lbrace \mathrm{Rural}, \mathrm{Small}, \mathrm{Large}, \mathrm{Auckland} \rbrace`$, firms with productivity $`z_f \in \lbrace z_{\ell, k}, z_{h, k} \rbrace`$ and collateral limit $`k \le \lambda_{\mathrm{col}} a_f`$ ($`\lambda_{\mathrm{col}} = 2.50`$) solve:
 
-```math
-V_{F,k}(a_f, z_f) = \max_{a'_f \in [0, R_k(z_f; \Delta t) a_f]} \left\{ \ln\bigl(R_k(z_f; \Delta t) a_f - a'_f\bigr) + \beta_{\mathrm{firm}}(\Delta t) \sum_{z'_f} \Pi_{f,k}(z'_f \mid z_f) V_{F,k}(a'_f, z'_f) \right\}
-```
+   $$
+   V_{F, k}(a_f, z_f) = \max_{a_f^{\prime} \in \lbrack 0, R_k(z_f; \Delta t) a_f \rbrack} \left\lbrace \ln\left(R_k(z_f; \Delta t) a_f - a_f^{\prime}\right) + \beta_{\mathrm{firm}}(\Delta t) \sum_{z_f^{\prime}} \Pi_{f, k}(z_f^{\prime} \mid z_f) V_{F, k}(a_f^{\prime}, z_f^{\prime}) \right\rbrace
+   $$
 
-```math
-R_k(z_f; \Delta t) = (1 - \tau_a)\Delta t + (1 - \tau_k) \left\{ r + \max\left(0,  \alpha_k \left(\frac{1 - \alpha_k}{w_k}\right)^{\frac{1-\alpha_k}{\alpha_k}} z_f - \bigl(r + \delta_k(\Delta t)\bigr)\right) \lambda_{\mathrm{col}} \right\}
-```
+   $$
+   R_k(z_f; \Delta t) = (1 - \tau_a)\Delta t + (1 - \tau_k) \left\lbrace r + \max\left(0, \alpha_k \left(\frac{1 - \alpha_k}{w_k}\right)^{\frac{1 - \alpha_k}{\alpha_k}} z_f - \left(r + \delta_k(\Delta t)\right)\right) \lambda_{\mathrm{col}} \right\rbrace
+   $$
 
-* **4. Two-Stage Childhood CES Skill Law of Motion & Adult Ben-Porath Dynamics (`ChildCES_aprimeFn.m` / `HumanCapital_Lifecycle_aprimeFn.m`):** With step weight $`\omega_s = 1 / n_s`$ across Stage 1 ($`\mathcal{J}_{c,1}, \varphi_1 = 0.35`$) and Stage 2 ($`\mathcal{J}_{c,2}, \varphi_2 = -0.95`$):
+4. **Two-Stage Childhood CES Skill Law of Motion & Adult Ben-Porath Dynamics (`ChildCES_aprimeFn.m` / `HumanCapital_Lifecycle_aprimeFn.m`):**
+   With step weight $`\omega_s = 1 / n_s`$ across Stage 1 ($`J_{c, 1}, \varphi_1 = 0.35`$) and Stage 2 ($`J_{c, 2}, \varphi_2 = -0.95`$):
 
-```math
-\theta_{\mathrm{step}}(\theta_c, i_c, G_{\mathrm{ECE},s}, \varphi_s) = \left[ \gamma_{s,\mathrm{self}} \theta_c^{\varphi_s} + \gamma_{s,\mathrm{inv}} (i_c + G_{\mathrm{ECE},s} + \bar{g}_{\mathrm{ECE}})^{\varphi_s} + \gamma_{s,\mathrm{par}} \bar{h}_p^{\varphi_s} \right]^{1/\varphi_s}
-```
+   $$
+   \theta_{\mathrm{step}}(\theta_c, i_c, G_{\mathrm{ECE}, s}, \varphi_s) = \left\lbrack \gamma_{s, \mathrm{self}} \theta_c^{\varphi_s} + \gamma_{s, \mathrm{inv}} (i_c + G_{\mathrm{ECE}, s} + \bar{g}_{\mathrm{ECE}})^{\varphi_s} + \gamma_{s, \mathrm{par}} \bar{h}_p^{\varphi_s} \right\rbrack^{1/\varphi_s}
+   $$
 
-```math
-\theta'_c = \begin{cases} (1 - \omega_{s1}) \theta_c + \omega_{s1} \theta_{\mathrm{step}}(\theta_c, i_c, G_{\mathrm{ECE},1}, \varphi_1) & \text{if } j \in \mathcal{J}_{c,1} \\ (1 - \omega_{s2}) \theta_c + \omega_{s2} \theta_{\mathrm{step}}(\theta_c, i_c, G_{\mathrm{ECE},2}, \varphi_2) & \text{if } j \in \mathcal{J}_{c,2} \\ \theta_c & \text{otherwise} \end{cases}
-```
+   $$
+   \theta_c^{\prime} = \begin{cases}
+   (1 - \omega_{s1}) \theta_c + \omega_{s1} \theta_{\mathrm{step}}(\theta_c, i_c, G_{\mathrm{ECE}, 1}, \varphi_1) & \mathrm{if}\ j \in J_{c, 1} \\
+   (1 - \omega_{s2}) \theta_c + \omega_{s2} \theta_{\mathrm{step}}(\theta_c, i_c, G_{\mathrm{ECE}, 2}, \varphi_2) & \mathrm{if}\ j \in J_{c, 2} \\
+   \theta_c & \mathrm{otherwise}
+   \end{cases}
+   $$
 
-```math
-h' = (1 - \delta_{hc}(\Delta t)) h + \left(\frac{\Delta t}{5}\right) I(\ell > 0) I_h^{\alpha_I} h^{\alpha_H}
-```
+   $$
+   h^{\prime} = \left(1 - \delta_{hc}(\Delta t)\right) h + \left(\frac{\Delta t}{5}\right) \mathbb{I}(\ell > 0) I_h^{\alpha_I} h^{\alpha_H}
+   $$
 
-- **5. Macro Public Residual (Ω<sub>fiscal</sub>) & The 2050 50/50 Dynamic Surplus Split (`Plot_ChildFiscal_SSankey.m`):** Projecting the five Gate 5 adult career strata (*s* ∈ {17, …, 21}) onto the eight Gate 6 annualized adult fiscal accounts (*a* ∈ {22, …, 29}), the topline net cohort fiscal balance Ω<sub>fiscal</sub> (indicated by the single black breakeven bar with gold marker above the Node 26 / Node 27 Debit-Credit boundary) and positive reform surplus allocation are defined as:
+5. **Macro Public Residual ($`\Omega_{\mathrm{fiscal}}`$) & The 2050 50/50 Dynamic Surplus Split (`Plot_ChildFiscal_SSankey.m`):**
+   Projecting the five Gate 5 adult career strata ($`s \in \lbrace 17, \dots, 21 \rbrace`$) onto the eight Gate 6 annualized adult fiscal accounts ($`a \in \lbrace 22, \dots, 29 \rbrace`$), the topline net cohort fiscal balance $`\Omega_{\mathrm{fiscal}}`$ (indicated by the single black breakeven bar with gold marker above the Node 26 / Node 27 Debit-Credit boundary) and positive reform surplus allocation are defined as:
 
-```math
-\Omega_{\mathrm{fiscal}} = (\mathrm{Tax}_{\mathrm{GST,Cap,Est},27} + \mathrm{Tax}_{\mathrm{PAYE},28}) - (\mathrm{Cost}_{\mathrm{Exits},22,23,25} + \mathrm{Cost}_{\mathrm{Infra,Health,Super},26})
-```
+   $$
+   \Omega_{\mathrm{fiscal}} = \left(\mathrm{Tax}_{\mathrm{GST}, \mathrm{Cap}, \mathrm{Est}, 27} + \mathrm{Tax}_{\mathrm{PAYE}, 28}\right) - \left(\mathrm{Cost}_{\mathrm{Exits}, 22, 23, 25} + \mathrm{Cost}_{\mathrm{Infra}, \mathrm{Health}, \mathrm{Super}, 26}\right)
+   $$
 
-```math
-\Omega_{\mathrm{surplus}} = 0.50 \, \Omega_{\mathrm{debt}} + 0.50 \, \Omega_{\mathrm{reinv}}
-```
+   $$
+   \Omega_{\mathrm{surplus}} = 0.50 \Omega_{\mathrm{debt}} + 0.50 \Omega_{\mathrm{reinv}}
+   $$
