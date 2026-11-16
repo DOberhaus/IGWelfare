@@ -247,14 +247,13 @@ Each node's ribbon width represents the exact percentage of the birth cohort (`P
 
 <img src="./Output_NZ_4Region_Intergen/Fig_ChildFates_5Stage_2Panel_National_Dunedin_22.png" alt="National 5-Stage Population Cohort Fates Sankey" width="100%" style="display: block; width: 100%; margin: 1.0rem auto; break-inside: avoid; page-break-inside: avoid;" />
 
-
-| *Stage (Child $J$ Axis)* | *Node ID & Canonical Label* | *National `SS0` (%)* | *National `SS1` (%)* | *National `SS2` (%)* | *Auckland `SS0` (%)* | *Auckland `SS1` (%)* | *Structural Definition in `Plot_ChildFates_SSankey.m`* |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| *Stage 1 $(J = 1)$*<br>*Birth, Age 0* | `1_Severe_Material_Hardship_DEP17`<br>`2_Residual_AHC_Squeeze_Paper_Support`<br>`3_Secure_Parental_Asset_Buffer` | 9.80%<br>14.20%<br>76.00% | 2.60%<br>5.14%<br>92.26% | 1.20%<br>3.18%<br>95.62% | 11.40%<br>18.00%<br>70.60% | 3.10%<br>5.72%<br>91.18% | **Node 1 (Deep Crimson):** Acute asset floor ($a < 0.05 Q_k$, DEP-17 9+ `[Ref 48]`).<br>**Node 2 (Burnt Rust):** Residual AHC-50 squeeze ($0.05 Q_k \le a < 0.16 Q_k$), buffered in provincial regions by unpaid *whānau* care $K_{\text{whānau}}(k)$ `[Ref 47]`. |
-| *Stage 2 $(J = 2\text{–}3)$*<br>*First 2000 Days* | `4_Unmitigated_Corner_ic0`<br>`5_Public_ECE_Moderate_Inv`<br>`6_High_Wraparound_Whanau_Inv` | 24.00%<br>49.30%<br>26.70% | 5.67%<br>67.63%<br>26.70% | 2.06%<br>69.44%<br>28.50% | 29.40%<br>43.90%<br>26.70% | 6.47%<br>66.83%<br>26.70% | `m_corner`: tracks exit from $i_c = 0$ corner via universal $G_{\text{ECE},1}$ and regional alloparental buffer $K_{\text{whānau}}(k)$. |
-| *Stage 3 $(J = 5)$*<br>*Adol. Gate,<br>12–14* | `7_Compounded_HH_Psychosocial_Stress`<br>`8_Standard_Public_Schooling`<br>`9_Montessori_Tuakana_Mentoring` | 18.88%<br>63.82%<br>17.30% | 4.91%<br>37.79%<br>57.30% | 2.45%<br>32.55%<br>65.00% | 21.15%<br>61.55%<br>17.30% | 5.50%<br>37.20%<br>57.30% | Evaluates compounded parental distress ($i_z \in \{1,2\}$) and adolescent psychosocial morbidity $\lambda_{\text{psy}}$ `[Ref 19, 20, 38]` vs. Montessori / *Tuakana–Teina* & family connection buffers `[Ref 18, 55]` (82% $\to$ 38% persistence). |
-| *Stage 4 $(J = 6\text{–}7)$*<br>*Adult Launch, 20* | `10_Struggling_Tier_h1_h2`<br>`11_Core_Skill_Tier_h3_h5`<br>`12_Thriving_Tier_h6_h7` | 22.00%<br>54.50%<br>23.50% | 4.02%<br>38.68%<br>57.30% | 1.50%<br>33.50%<br>65.00% | 24.80%<br>52.10%<br>23.10% | 4.50%<br>37.50%<br>58.00% | Completed pre-labor skill mapped onto 7-point grid `h_vec = [0.45..1.80]` (`22.0%` struggling in `Dunedin_22` `[Ref 16]`, `28.5%` in `MetroSqueeze_GUiNZ` `[Ref 17]`). |
-| *Stage 5 $(J = 10)$*<br>*Adulthood, 30+* | `13_Exit1_State_Care`<br>`14_Exit2_Avoidable_Hospitalisation`<br>`15_Exit3_Lower_Lifetime_Income`<br>`16_Exit4_Benefit_Justice_Burden`<br>`17_Retained_NZ_Secure_Thriving`<br>`18_Emigrated_Abroad_BrainDrain` | 2.10%<br>4.82%<br>9.63%<br>11.38%<br>61.14%<br>10.93% | 0.49%<br>1.62%<br>4.15%<br>3.89%<br>81.29%<br>8.56% | 0.24%<br>1.12%<br>2.95%<br>2.44%<br>85.65%<br>7.60% | 2.35%<br>5.28%<br>10.42%<br>12.55%<br>50.11%<br>19.29% | 0.54%<br>1.75%<br>4.38%<br>4.18%<br>74.23%<br>14.92% | Dunedin concentration: 22% struggling tier (`Node 10`) drives *74.1%* of acute Exits 1, 2, 4 (`Nodes 13, 14, 16`) in `SS0` (empirical Dunedin Study benchmark: *57%–81%* `[Ref 16]`). |
+| *Stage (Child `J` Axis)* | *Node ID & Canonical Label* | *National `SS0` (%)* | *National `SS1` (%)* | *National `SS2` (%)* | *Structural Definition in `Plot_ChildFates_SSankey.m`* |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| *Stage 1 (`J = 1`)*<br>*Birth, Age 0* | `1_Severe_Material_Hardship_DEP17`<br>`2_Residual_AHC_Squeeze_Paper_Support`<br>`3_Secure_Parental_Asset_Buffer` | 9.80%<br>14.20%<br>76.00% | 2.60%<br>5.14%<br>92.26% | 1.20%<br>3.18%<br>95.62% | **Node 1 (Deep Crimson):** Acute asset floor ($`a < 0.05 Q_k`$, DEP-17 9+ `[Ref 48]`).<br>**Node 2 (Burnt Rust):** Residual AHC-50 squeeze ($`0.05 Q_k \le a < 0.16 Q_k`$), buffered in provincial regions by unpaid *whānau* care $`K_{\mathrm{wh\bar{a}nau}}(k)`$ `[Ref 47]`. |
+| *Stage 2 (`J = 2–3`)*<br>*First 2000 Days* | `4_Unmitigated_Corner_ic0`<br>`5_Public_ECE_Moderate_Inv`<br>`6_High_Wraparound_Whanau_Inv` | 24.00%<br>49.30%<br>26.70% | 5.67%<br>67.63%<br>26.70% | 2.06%<br>69.44%<br>28.50% | `m_corner`: tracks exit from $`i_c = 0`$ corner via universal $`G_{\mathrm{ECE},1}`$ and regional alloparental buffer $`K_{\mathrm{wh\bar{a}nau}}(k)`$. |
+| *Stage 3 (`J = 5`)*<br>*Adol. Gate,<br>12–14* | `7_Compounded_HH_Psychosocial_Stress`<br>`8_Standard_Public_Schooling`<br>`9_Montessori_Tuakana_Mentoring` | 18.88%<br>63.82%<br>17.30% | 4.91%<br>37.79%<br>57.30% | 2.45%<br>32.55%<br>65.00% | Evaluates compounded parental distress ($`i_z \in \lbrace 1, 2 \rbrace`$) and adolescent psychosocial morbidity $`\lambda_{\mathrm{psy}}`$ `[Ref 19, 20, 38]` vs. Montessori / *Tuakana–Teina* & family connection buffers `[Ref 18, 55]` (82% $`\to`$ 38% persistence). |
+| *Stage 4 (`J = 6–7`)*<br>*Adult Launch, 20* | `10_Struggling_Tier_h1_h2`<br>`11_Core_Skill_Tier_h3_h5`<br>`12_Thriving_Tier_h6_h7` | 22.00%<br>54.50%<br>23.50% | 4.02%<br>38.68%<br>57.30% | 1.50%<br>33.50%<br>65.00% | Completed pre-labor skill mapped onto 7-point grid `h_vec = [0.45..1.80]` (`22.0%` struggling in `Dunedin_22` `[Ref 16]`, `28.5%` in `MetroSqueeze_GUiNZ` `[Ref 17]`). |
+| *Stage 5 (`J = 10`)*<br>*Adulthood, 30+* | `13_Exit1_State_Care`<br>`14_Exit2_Avoidable_Hospitalisation`<br>`15_Exit3_Lower_Lifetime_Income`<br>`16_Exit4_Benefit_Justice_Burden`<br>`17_Retained_NZ_Secure_Thriving`<br>`18_Emigrated_Abroad_BrainDrain` | 2.10%<br>4.82%<br>9.63%<br>11.38%<br>61.14%<br>10.93% | 0.49%<br>1.62%<br>4.15%<br>3.89%<br>81.29%<br>8.56% | 0.24%<br>1.12%<br>2.95%<br>2.44%<br>85.65%<br>7.60% | Dunedin concentration: 22% struggling tier (`Node 10`) drives *74.1%* of acute Exits 1, 2, 4 (`Nodes 13, 14, 16`) in `SS0` (empirical Dunedin Study benchmark: *57%–81%* `[Ref 16]`). |
 
 ---
 
@@ -738,14 +737,17 @@ Standalone **Shock 16** (`NDC_Hybrid` in `Run_Coalition_MixHorz_Welfare_Batch.m`
 * **Jump 1 (*c* = 0, Phase 1 *SS1* Launch):** Immediate surge in incoming cohort welfare driven by universal First-2,000-Days wraparound ($`G_{\mathrm{ece},1} = 0.110`$), Montessori / *Tuakana–Teina* & Graeme Dingle adolescent mentoring ($`G_{\mathrm{ece},2} = 0.085`$), the age-20 Youth Capital Grant ($E = 0.065$), and Guvenen et al. firm capital reallocation.
 * **Jump 2 (*c* = +25, Phase 2 *SS2* Harvest):** Second structural leap 20–25 years into the transition when the children of the first reformed cohort enter parenthood with thriving human capital ($`\mu_1^{SS2}`$) and the Crown activates the **2050 50/50 Debt-Sinking and Infrastructure Protocol** alongside **lowering universal NZ Superannuation to Age 64** (+8.1% *Kuia / Whānau* boost) and the **-3.15 percentage-point working-age PAYE tax cut** (22.00% down to 18.85%).
 
-| **Row Label (`T1`)** | **`Rural_CE_Pct`** | **`Small_CE_Pct`** | **`Large_CE_Pct`** | **`Auckland_CE_Pct`** | **`National_CE_Pct`** | **Share of Phase Gain from Endogenous Intergenerational Matrix** |
-| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **`SS1_1_ShortRun_PE`** | **+2.45%** (`2.454`) | **+2.37%** (`2.371`) | **+2.92%** (`2.918`) | **+4.53%** (`4.531`) | **+3.26%** | Direct policy levers ($`G_{\mathrm{ece},1}=0.110`$, $`G_{\mathrm{ece},2}=0.085`$, $E=0.065$, *T_k*) at fixed *SS0* prices & $`\mu_1`$ |
-| **`SS1_2_LongRun_GE_ExoSkills`** | **+3.75%** (`3.751`) | **+4.72%** (`4.719`) | **+6.40%** (`6.402`) | **+9.00%** (`9.004`) | **+6.46%** | Guvenen firm reallocation ($`w_k \uparrow`$) + housing cooling ($`Q_{\mathrm{Akl}} -7.5\%`$) at fixed $`\mu_1^{SS0}`$ |
-| **`SS1_3_LongRun_GE_EndoIntergen`** | **+9.48%** (`9.479`) | **+12.18%** (`12.184`) | **+14.38%** (`14.384`) | **+17.73%** (`17.728`) | **+14.21%** | **60.4% (*Rural*), 61.3% (*Small*), 55.5% (*Large*), 49.2% (*Auckland*)** from $`\mu_1^{SS1}`$ shift |
-| **`SS2_1_ShortRun_PE`** | **+6.32%** (`6.318`) | **+6.55%** (`6.549`) | **+7.09%** (`7.091`) | **+9.15%** (`9.152`) | **+7.54%** | Adds -3.12 pp PAYE tax cut ($`\tau_l: 22.0\% \to 18.88\%`$), Super Age 64, $`G_{\mathrm{ece},1}=0.130`$, $`G_{\mathrm{ece},2}=0.105`$, $E=0.080$ |
-| **`SS2_2_LongRun_GE_ExoSkills`** | **+9.55%** (`9.551`) | **+11.65%** (`11.652`) | **+13.61%** (`13.610`) | **+17.17%** (`17.174`) | **+13.70%** | Adds 2050 Debt-Sinking ($`\Delta r = -0.006`$), 1.65x infra wage lift ($`w_k +6.8\%\text{ to }+9.6\%`$), $`Q_{\mathrm{Akl}} -10.5\%`$ |
-| **`SS2_3_LongRun_GE_EndoIntergen`** | **+18.21%** (`18.213`) | **+21.75%** (`21.750`) | **+24.41%** (`24.414`) | **+28.70%** (`28.697`) | **+24.24%** | **43.5% of Total National *SS2* Gain (+10.54% out of +24.24%)** stems from $`\mu_1^{SS2}`$ dynastic & *Kuia/Whānau* compounding |
+*Note: Full regional columns (`Rural` reaching `+9.48%` in `SS1_3` and `+18.21%` in `SS2_3` up to `Auckland` at `+17.73%` in `SS1_3` and `+28.70%` in `SS2_3`) are plotted in `Fig1_Daruich_Cohort_Welfare_4Region.png` above and exported in `Table1_4Region_Daruich_LeeSeshadri_Decomposition.csv`.*
+
+| Row Label (`T1`) | `National_CE_Pct` | Share of Phase Gain & Structural Decomposition Mechanism |
+| :--- | :---: | :--- |
+| **`SS1_1_ShortRun_PE`** | **+3.26%** | Direct policy levers (`G_ece_stage1 = 0.110`, `G_ece_stage2 = 0.085`, `E = 0.065`, `T_k`) at fixed `SS0` prices and $`\mu_1^{SS0}`$ |
+| **`SS1_2_LongRun_GE_ExoSkills`** | **+6.46%** | Guvenen firm reallocation (`w_k` up `+3.2%` to `+5.5%`) + housing cooling (`Q_Auckland` `-7.5%`) at fixed $`\mu_1^{SS0}`$ |
+| **`SS1_3_LongRun_GE_EndoIntergen`** | **+14.21%** | **54.5% of National `SS1` Gain** (`+7.75 pp` out of `+14.21%`, spanning `49.2%` in `Auckland` to `61.3%` in `Small`) stems from $`\mu_1^{SS1}`$ shift |
+| **`SS2_1_ShortRun_PE`** | **+7.54%** | Adds `-3.15 pp` PAYE tax cut (`tau_l: 22.0% -> 18.85%`), Super Age 64, `G_ece_stage1 = 0.130`, `G_ece_stage2 = 0.105`, `E = 0.080` |
+| **`SS2_2_LongRun_GE_ExoSkills`** | **+13.70%** | Adds 2050 Debt-Sinking (`r_delta = -0.006`), `1.65x` infra wage lift (`w_k` `+6.8%` to `+9.6%`), `Q_Auckland` `-10.5%` |
+| **`SS2_3_LongRun_GE_EndoIntergen`** | **+24.24%** | **43.5% of National `SS2` Gain** (`+10.54 pp` out of `+24.24%`) stems from $`\mu_1^{SS2}`$ dynastic & *Kuia/Whānau* compounding |
+
 
 ---
 
@@ -892,15 +894,16 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 
 <br clear="all" />
 
-| Transition Year | `PopPct_Rural` | `PopPct_Small` | `PopPct_Large` | `PopPct_Auckland` | `Emig_Large_Pct` | `Emig_Auckland_Pct` | `Nat_Emig_Abroad_Pct` | `Social_Cohesion_Index_St` (`SS1` / `SS2`) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Year 0 (2026 Base)** | 16.00% | 24.00% | 25.90% | 34.10% | 23.41% | 19.29% (`7.02%` net) | 10.93% | 100.0 (`104.3`) |
-| **Year 6 ($`t = 2`$)** | 15.62% | 23.68% | 26.04% | 34.66% | 21.55% | 17.65% (`6.46%` net) | 10.07% | 104.8 |
-| **Year 15 ($`t = 5`$)** | 15.18% | 23.29% | 26.21% | 35.32% | 19.70% | 16.12% (`5.91%` net) | 9.22% | 108.5 |
-| **Year 24 ($`t = 8`$)** | 14.85% | 22.98% | 26.35% | 35.82% | 18.92% | 15.48% (`5.67%` net) | 8.86% | **112.0 (`SS1`)** |
-| **Year 36 ($`t = 12`$)** | 14.58% | 22.74% | 26.46% | 36.22% | 18.61% | 15.21% (`5.58%` net) | 8.72% | 119.5 |
-| **Year 57 ($`t = 19`$)** | **14.39%** | **22.56%** | **26.54%** | **36.51%** | **18.26%** | **14.92% (`5.47%` net)** | **8.56%** (`7.60%` `SS2`) | **126.0 (`SS2`)** |
+*Note: `Rural` (`16.00% -> 14.39%`) and `Small` (`24.00% -> 22.56%`) domestic population shares sum with `Large` and `Auckland` to `100.0%` at every transition step and are exported in `Table9_4Region_Dynamic_Population_Shares.csv`.*
 
+| Transition Year | `PopPct_Large` | `PopPct_Auckland` | `Emig_Large_Pct` | `Emig_Auckland_Pct` (Gross / Net) | `Nat_Emig_Abroad_Pct` | `Social_Cohesion_Index_St` (`SS1` / `SS2`) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Year 0 (2026 Base)** | 25.90% | 34.10% | 23.41% | 19.29% (`7.02%`) | 10.93% | 100.0 (`104.3`) |
+| **Year 6 (`t = 2`)** | 26.04% | 34.66% | 21.55% | 17.65% (`6.46%`) | 10.07% | 104.8 |
+| **Year 15 (`t = 5`)** | 26.21% | 35.32% | 19.70% | 16.12% (`5.91%`) | 9.22% | 108.5 |
+| **Year 24 (`t = 8`)** | 26.35% | 35.82% | 18.92% | 15.48% (`5.67%`) | 8.86% | **112.0 (`SS1`)** |
+| **Year 36 (`t = 12`)** | 26.46% | 36.22% | 18.61% | 15.21% (`5.58%`) | 8.72% | 119.5 |
+| **Year 57 (`t = 19`)** | **26.54%** | **36.51%** | **18.26%** | **14.92% (`5.47%`)** | **8.56%** (`7.60%` `SS2`) | **126.0 (`SS2`)** |
 
 ```text
 +-----------------------------------------------------------------------------------+
@@ -944,7 +947,7 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 ### 5.1 The 2050 Sovereign Debt-Sinking & Public Reinvestment Protocol (`FiscalLedger.Protocol_2050_Summary`)
 *Source Function:* `Build_Multiphase_2050_Protocol_Table` in `Plot_ChildFiscal_SSankey.m` (`Cohort_N = 60.0 * reg_pop_share` thousand births/yr, `r_gov_bond = 0.042`, `mu_infra_div = 1.65`, `Horizon_2050 = 25 yrs`). Under the 29-Node Solution 1 architecture, `Plot_ChildFiscal_SSankey.m` evaluates the consolidated annualized adult fiscal surplus at Gate 6 (`Good_Adult - Bad_Adult`, reaching **+27.0 to +28.0 kNZD/yr in SS1** and **+29.9 to +31.2 kNZD/yr in SS2** across the combined tax and capital-reallocation ledger), while the table below disaggregates the component human-capital lifecycle horizons at Age 30 versus Career-to-Retirement quoted in Document 1A Part V.1 under both `Dunedin_22` and `MetroSqueeze_GUiNZ`:
 
-| Lifecycle Horizon & Phase | Good Taxes (`kNZD/yr`) | Exits 1,2,4 + Base Outlays (`kNZD/yr`) | Net Fiscal Balance $`\Omega_{\mathrm{fiscal}}`$ (`kNZD/yr`) | 50% Debt-Sinking Allocation $`\Omega_{\mathrm{debt}}`$ (`kNZD/yr`) | Annual Interest Saved (`kNZD/yr`) | 50% Reinvestment Pool $`\Omega_{\mathrm{reinv}}`$ (`kNZD/yr`) | Societal Value at 1.65x (`kNZD/yr`) | 25-Yr Cumulative Sovereign Debt Retired & Infrastructure Capital per Wave |
+| Lifecycle Horizon & Phase | Good Taxes (`kNZD/yr`) | Exits 1,2,4 + Base Outlays (`kNZD/yr`) | Net Fiscal Balance $`\Omega_{\mathrm{fiscal}}`$ (`kNZD/yr`) | 50% Debt-Sinking Allocation $`\Omega_{\mathrm{debt}}`$ (`kNZD/yr`) | Annual Interest Saved (`kNZD/yr`) | 50% Reinvest Pool $`\Omega_{\mathrm{reinv}}`$ (`kNZD/yr`) | Societal Value at 1.65x (`kNZD/yr`) | 25-Yr Cumulative Sovereign Debt Retired & Infrastructure Capital per Wave |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
 | **`Age30_SS0`** | 8.60 | 13.90 | **-5.30** | 0.00 | 0.00 | 0.00 | 0.00 | NZD 0B Debt / NZD 0B Infra |
 | **`Age30_SS1`** *(Dunedin / Metro)* | 17.10–17.72 | 6.60 | **+10.50 to +11.12** | **5.25 to 5.56** | **0.22 to 0.23** | **5.25 to 5.56** | **8.66 to 9.17** | **NZD 13.66B–14.46B Debt** |
@@ -1074,20 +1077,22 @@ $$\Delta \mathrm{CE}_{k,\mathrm{Wedge3}} = \mathrm{CE}_k\left(\Phi_{\mathrm{HC}}
 
 To provide an exact constructive accounting of the **+18.21% (*Rural*), +21.75% (*Small*), +24.41% (*Large*), +28.70% (*Auckland*), and +24.24% (*National*)** long-run Consumption-Equivalent (CE %) welfare gains in row `SS2_3_LongRun_GE_EndoIntergen` of `Table 1`, `Plot_Counterfactuals_And_MirrorInvestments.m` evaluates the **7 isolated policy factors** standalone and interleaves the **4 supermodular Dynamic Complementarity Wedges**:
 
-| **Layer Code (`Table 19`)** | **Component Type** | ***SS1* Nat. CE %** | ***SS2* Rural** | ***SS2* Small** | ***SS2* Large** | ***SS2* Auckland** | ***SS2* National** | **Cumulative *SS2* Nat.** | **Share of *SS2* Prize** |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **L01_Iso_ECE1_First2000d** | Isolated_Factor | +2.61% | +2.91% | +3.29% | +3.60% | +4.05% | **+3.57%** | +3.57% | 14.7% |
-| **L02_Iso_Tuakana_Mentoring** | Isolated_Factor | +1.56% | +1.75% | +1.96% | +2.14% | +2.42% | **+2.13%** | +5.70% | 8.8% |
-| **L03_WEDGE1_DualGate_HC_Synergy** | **SYNERGY_WEDGE** | **+2.35%** | **+2.44%** | **+2.91%** | **+3.29%** | **+3.86%** | **+3.26%** | **+8.96%** | **13.4%** |
-| **L04_Iso_EstateProperty_Rebal** | Isolated_Factor | +1.79% | +1.86% | +2.28% | +2.66% | +3.21% | **+2.63%** | +11.59% | 10.9% |
-| **L05_Iso_YouthGrant_Age20** | Isolated_Factor | +0.98% | +1.05% | +1.22% | +1.36% | +1.53% | **+1.33%** | +12.92% | 5.5% |
-| **L06_Iso_GeoTransfer_Income** | Isolated_Factor | +0.83% | +1.34% | +1.17% | +1.04% | +0.99% | **+1.10%** | +14.03% | 4.5% |
-| **L07_WEDGE2_LVR_Whanau_Synergy** | **SYNERGY_WEDGE** | **+1.39%** | **+1.57%** | **+1.96%** | **+2.30%** | **+2.82%** | **+2.28%** | **+16.30%** | **9.4%** |
-| **L08_WEDGE3_CrossStack_HC_x_Spatial** | **SYNERGY_WEDGE** | **+2.09%** | **+2.50%** | **+3.29%** | **+4.02%** | **+5.04%** | **+3.95%** | **+20.25%** | **16.3%** |
-| **L09_Iso_DebtSinking_Interest** | Isolated_Factor | +0.25% | +0.64% | +0.74% | +0.84% | +0.94% | **+0.82%** | +21.07% | 3.4% |
-| **L10_Iso_PAYE_SuperAge_64** | Isolated_Factor | +0.00% | +1.05% | +1.11% | +1.20% | +1.33% | **+1.20%** | +22.27% | 5.0% |
-| **L11_WEDGE4_Fiscal_TFR_2ndGen_Closure** | **SYNERGY_WEDGE** | **+0.35%** | **+1.10%** | **+1.82%** | **+1.95%** | **+2.50%** | **+1.97%** | **+24.24%** | **8.1%** |
-| **TOTAL INTEGRATED REFORM (`T1`)** | **7 Iso (`+12.79%`) + 4 Wedges (`+11.46%`)** | **+14.21%** | **+18.21%** | **+21.75%** | **+24.41%** | **+28.70%** | **+24.24%** | **+24.24%** | **100.0%** *(47.3% Wedges)* |
+*Note: `Small` (`+21.75%` total `SS2` gain) interpolates roughly linearly between `Rural` (`+18.21%`) and `Large` (`+24.41%`) across every layer and is retained in `Table19_Constructive_Synergy_Wedges_Dunedin_22.csv`.  Exact statistics can be loaded from the CSV file.*
+
+| Layer Code (`Table 19`) | Component Type | `SS1` Nat. | `SS2` Rural | `SS2` Large | `SS2` Auckland | `SS2` National | Cumul. `SS2` | Share of Prize |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`L01_Iso_ECE1_First2000d`** | Isolated | +2.61% | +2.91% | +3.60% | +4.05% | **+3.57%** | +3.57% | 14.7% |
+| **`L02_Iso_Tuakana_Mentoring`** | Isolated | +1.56% | +1.75% | +2.14% | +2.42% | **+2.13%** | +5.70% | 8.8% |
+| **`L03_WEDGE1_DualGate_HC_Synergy`** | **SYNERGY** | **+2.35%** | **+2.44%** | **+3.29%** | **+3.86%** | **+3.26%** | **+8.96%** | **13.4%** |
+| **`L04_Iso_EstateProperty_Rebal`** | Isolated | +1.79% | +1.86% | +2.66% | +3.21% | **+2.63%** | +11.59% | 10.9% |
+| **`L05_Iso_YouthGrant_Age20`** | Isolated | +0.98% | +1.05% | +1.36% | +1.53% | **+1.33%** | +12.92% | 5.5% |
+| **`L06_Iso_GeoTransfer_Income`** | Isolated | +0.83% | +1.34% | +1.04% | +0.99% | **+1.10%** | +14.03% | 4.5% |
+| **`L07_WEDGE2_LVR_Whanau_Synergy`** | **SYNERGY** | **+1.39%** | **+1.57%** | **+2.30%** | **+2.82%** | **+2.28%** | **+16.30%** | **9.4%** |
+| **`L08_WEDGE3_CrossStack_HC_x_Spatial`** | **SYNERGY** | **+2.09%** | **+2.50%** | **+4.02%** | **+5.04%** | **+3.95%** | **+20.25%** | **16.3%** |
+| **`L09_Iso_DebtSinking_Interest`** | Isolated | +0.25% | +0.64% | +0.84% | +0.94% | **+0.82%** | +21.07% | 3.4% |
+| **`L10_Iso_PAYE_SuperAge_64`** | Isolated | +0.00% | +1.05% | +1.20% | +1.33% | **+1.20%** | +22.27% | 5.0% |
+| **`L11_WEDGE4_Fiscal_TFR_2ndGen_Closure`** | **SYNERGY** | **+0.35%** | **+1.10%** | **+1.95%** | **+2.50%** | **+1.97%** | **+24.24%** | **8.1%** |
+| **TOTAL INTEGRATED REFORM (`T1`)** | **7 Iso + 4 Wedges** | **+14.21%** | **+18.21%** | **+24.41%** | **+28.70%** | **+24.24%** | **+24.24%** | **100.0%** *(47.3% Wedges)* |
 
 ---
 
