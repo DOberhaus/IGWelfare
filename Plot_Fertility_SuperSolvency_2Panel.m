@@ -112,15 +112,15 @@ fig_fert = figure('Name', ['Fertility Recovery & NZ Super Solvency (', AnchorTag
 ax1 = subplot(1, 2, 1);
 yyaxis(ax1, 'left'); hold(ax1, 'on');
 b = bar(ax1, x_cats, [tfr_ss0(:), tfr_ss1(:), tfr_ss2(:)], 'grouped', 'BarWidth', 0.78);
-b(1).FaceColor = [0.85 0.37 0.01]; b(1).DisplayName = 'Status Quo Baseline (SS0)';
-b(2).FaceColor = [0.11 0.62 0.47]; b(2).DisplayName = 'Phase 1: First-2000-Days ECE + Housing Cool (SS1)';
-b(3).FaceColor = [0.00 0.43 0.17]; b(3).DisplayName = sprintf('Phase 2: 2050 Harvest & Super Age %.0f (SS2)', super_age_ss2_target);
+set(b(1), 'FaceColor', [0.85 0.37 0.01]); set(b(1), 'DisplayName', 'Status Quo Baseline (SS0)');
+set(b(2), 'FaceColor', [0.11 0.62 0.47]); set(b(2), 'DisplayName', 'Phase 1: First-2000-Days ECE + Housing Cool (SS1)');
+set(b(3), 'FaceColor', [0.00 0.43 0.17]); set(b(3), 'DisplayName', sprintf('Phase 2: 2050 Harvest & Super Age %.0f (SS2)', super_age_ss2_target));
 
 yline(ax1, 2.10, '--', 'Color', [0.70 0.09 0.17], 'LineWidth', 1.8, ...
     'DisplayName', 'Demographic Replacement Benchmark (TFR = 2.10)');
 ylabel(ax1, 'Total Fertility Rate (Births per Woman)', 'FontSize', 10.5, 'FontWeight', 'bold');
 ylim(ax1, [0, 2.82]);
-ax1.YColor = [0.10 0.10 0.10];
+set(vfi_active_ax(ax1), 'YColor', [0.10 0.10 0.10]);
 
 yyaxis(ax1, 'right'); hold(ax1, 'on');
 plot(ax1, x_cats, gap_ss0, 'r--o', 'LineWidth', 2.2, 'MarkerSize', 6, ...
@@ -129,7 +129,7 @@ plot(ax1, x_cats, gap_ss1, 'b-s', 'LineWidth', 2.4, 'MarkerSize', 6, ...
     'DisplayName', 'Low- vs. High-Skill Fertility Gap (SS1: -40% to -61%)');
 ylabel(ax1, 'Differential Fertility Gap (Q1 Minus Q5 Births/Woman)', 'FontSize', 10, 'FontWeight', 'bold');
 ylim(ax1, [0, 0.72]);
-ax1.YColor = [0.12 0.47 0.71];
+set(vfi_active_ax(ax1), 'YColor', [0.12 0.47 0.71]);
 
 yyaxis(ax1, 'left');
 msg_A = sprintf(['Reversing the Primate-City Squeeze:\n', ...

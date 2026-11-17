@@ -25,6 +25,7 @@ end
 if exist('VFIToolkit_Octave_Setup', 'file') ~= 0
     VFIToolkit_Octave_Setup({'ReturnFn_SpatialHH', 'ReturnFn_SpatialHH_Compact4D', 'ReturnFn_Firm', 'HumanCapital_Lifecycle_aprimeFn'});
     if exist('OCTAVE_VERSION', 'builtin') ~= 0 && exist('vfi_pool', 'file') ~= 0
+        if ~exist('Params', 'var'), Params = struct(); end
         if ~isfield(Params, 'n_workers'), Params.n_workers = min(8, max(1, nproc() - 2)); end
         if Params.n_workers > 1
             vfi_pool('ensure', Params.n_workers, vfi_ramdisk('mount', 2048));

@@ -141,7 +141,7 @@ for k = 1:nLinks
     hP = SK.LinkHdl(k);
     if isgraphics(hP)
         origAlpha(k) = hP.FaceAlpha;
-        hP.EdgeColor = 'none';
+        set(hP, 'EdgeColor', 'none');
 
         [xg, yt, yb, ym, x1, y1, x2, y2, cProfile] = getTrueAlignedRibbonRails(hP);
         xGrid{k}    = xg;
@@ -231,12 +231,12 @@ figHdl.WindowKeyPressFcn   = @onKeyPress;
         % Convert figHdl.CurrentPoint directly into axes data coordinates (mx, my)
         oldFigU = figHdl.Units;
         oldAxU  = axHdl.Units;
-        figHdl.Units = 'normalized';
-        axHdl.Units  = 'normalized';
+        set(figHdl, 'Units', 'normalized');
+        set(vfi_active_ax(axHdl), 'Units', 'normalized');
         fpt   = figHdl.CurrentPoint;
         axPos = axHdl.Position;
-        figHdl.Units = oldFigU;
-        axHdl.Units  = oldAxU;
+        set(figHdl, 'Units', oldFigU);
+        set(vfi_active_ax(axHdl), 'Units', oldAxU);
 
         xl = axHdl.XLim;
         yl = axHdl.YLim;
@@ -435,13 +435,13 @@ figHdl.WindowKeyPressFcn   = @onKeyPress;
         for b = 1:nBlocks
             if isgraphics(blkLblHdl(b))
                 if b == sBlkAct || b == tBlkAct
-                    blkLblHdl(b).FontWeight = 'bold';
-                    blkLblHdl(b).FontSize   = origLblSize(b) + 0.5;
-                    blkLblHdl(b).Color      = [0.05, 0.05, 0.05];
+                    set(blkLblHdl(b), 'FontWeight', 'bold');
+                    set(blkLblHdl(b), 'FontSize', origLblSize(b) + 0.5);
+                    set(blkLblHdl(b), 'Color', [0.05, 0.05, 0.05]);
                 else
-                    blkLblHdl(b).FontWeight = origLblWeight{b};
-                    blkLblHdl(b).FontSize   = origLblSize(b);
-                    blkLblHdl(b).Color      = 0.75 * origLblColor{b} + 0.25 * [1, 1, 1];
+                    set(blkLblHdl(b), 'FontWeight', origLblWeight{b});
+                    set(blkLblHdl(b), 'FontSize', origLblSize(b));
+                    set(blkLblHdl(b), 'Color', 0.75 * origLblColor{b} + 0.25 * [1, 1, 1]);
                 end
             end
         end
@@ -539,18 +539,18 @@ figHdl.WindowKeyPressFcn   = @onKeyPress;
             boxLines = [hdrLine, flowLine];
         end
 
-        hoverBox.String          = strjoin(boxLines, newline);
-        hoverBox.BackgroundColor = cTintBg;
-        hoverBox.EdgeColor       = cBorder;
+        set(hoverBox, 'String', strjoin(boxLines, newline));
+        set(hoverBox, 'BackgroundColor', cTintBg);
+        set(hoverBox, 'EdgeColor', cBorder);
         hoverBox.Visible         = 'on';
         drawnow limitrate;
 
         % Measure exact width & height of hoverBox in normalized figure units
         extAx = double(hoverBox.Extent); % [x, y, w, h] in axes data units
         oldUnits = axHdl.Units;
-        axHdl.Units = 'normalized';
+        set(vfi_active_ax(axHdl), 'Units', 'normalized');
         axPos = axHdl.Position;
-        axHdl.Units = oldUnits;
+        set(vfi_active_ax(axHdl), 'Units', oldUnits);
 
         xl = axHdl.XLim;
         yl = axHdl.YLim;
@@ -564,7 +564,7 @@ figHdl.WindowKeyPressFcn   = @onKeyPress;
         % Position the axes text box at the computed data coordinates (axBoxX, axBoxY)
         axBoxX = xl(1) + ((boxX - axPos(1)) / axPos(3)) * diff(xl);
         axBoxY = yl(1) + ((boxY - axPos(2)) / axPos(4)) * diff(yl);
-        hoverBox.Position = [axBoxX, axBoxY, 0];
+        set(hoverBox, 'Position', [axBoxX, axBoxY, 0]);
 
         set(leaderHdl, ...
             'XData',   [xPin, boxAnchorAxesX], ...
@@ -593,9 +593,9 @@ figHdl.WindowKeyPressFcn   = @onKeyPress;
             end
             for b = 1:nBlocks
                 if isgraphics(blkLblHdl(b))
-                    blkLblHdl(b).FontWeight = origLblWeight{b};
-                    blkLblHdl(b).FontSize   = origLblSize(b);
-                    blkLblHdl(b).Color      = origLblColor{b};
+                    set(blkLblHdl(b), 'FontWeight', origLblWeight{b});
+                    set(blkLblHdl(b), 'FontSize', origLblSize(b));
+                    set(blkLblHdl(b), 'Color', origLblColor{b});
                 end
             end
         end
@@ -688,9 +688,9 @@ function [boxX, boxY, boxAnchorAxesX, boxAnchorAxesY] = ...
     boxW, boxH, ~, ~, sBlk, tBlk)
 
 oldUnits = axHdl.Units;
-axHdl.Units = 'normalized';
+set(vfi_active_ax(axHdl), 'Units', 'normalized');
 axPos = axHdl.Position;
-axHdl.Units = oldUnits;
+set(vfi_active_ax(axHdl), 'Units', oldUnits);
 
 xl = axHdl.XLim;
 yl = axHdl.YLim;

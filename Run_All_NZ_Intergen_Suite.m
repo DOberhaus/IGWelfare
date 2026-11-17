@@ -48,6 +48,27 @@ Enable_SS2_Phase = true;
 
 Params = Configure_TimeGrid_Params(Params, Params.dt);
 
+%% OCTAVE TOOLKIT, VECTORIZED REGISTRY, & WORKER POOL BOOTSTRAP (ACTIVE EVEN WHEN CACHED)
+suite_root_dir = fileparts(mfilename('fullpath'));
+if isempty(suite_root_dir), suite_root_dir = pwd; end
+if exist('ValueFnIter_MixHorz_PType', 'file') == 0
+    vfi_mat_dir = fullfile(suite_root_dir, '..', 'VFIToolkit-matlab');
+    if exist(vfi_mat_dir, 'dir') ~= 0, addpath(genpath(vfi_mat_dir)); end
+end
+vfi_oct_dir = fullfile(suite_root_dir, '..', 'VFIToolkit-octave');
+if exist('VFIToolkit_Octave_Setup', 'file') == 0 && exist(vfi_oct_dir, 'dir') ~= 0
+    addpath(vfi_oct_dir);
+end
+if exist('VFIToolkit_Octave_Setup', 'file') ~= 0
+    VFIToolkit_Octave_Setup({'ReturnFn_SpatialHH', 'ReturnFn_SpatialHH_Compact4D', 'ReturnFn_Firm', 'HumanCapital_Lifecycle_aprimeFn'});
+    if exist('OCTAVE_VERSION', 'builtin') ~= 0 && exist('vfi_pool', 'file') ~= 0
+        if ~isfield(Params, 'n_workers'), Params.n_workers = min(10, max(1, nproc() - 2)); end
+        if Params.n_workers > 1
+            vfi_pool('ensure', Params.n_workers, vfi_ramdisk('mount', 2048));
+        end
+    end
+end
+
 OutputDir = fullfile(pwd, 'Output_NZ_4Region_Intergen');
 if Export_Tables_Figures && ~exist(OutputDir, 'dir')
     mkdir(OutputDir);
@@ -139,6 +160,7 @@ if Use_ExpAsset_Pipeline && Run_LeeSeshadri_Exp && exist('PolicyExperiment_LeeSe
     if Use_Saved_Cache && ~Force_Recompute_All && exist(Cache_Step2, 'file') && Validate_CacheConfig(Cache_Step2, Cache_CfgHash)
         fprintf('    [CACHE HIT] Loading Step 2 Counterfactual Results from %s...\n', Cache_Step2);
         load(Cache_Step2);
+        if exist('vfi_restore_tables', 'file'), T_IGE = vfi_restore_tables(T_IGE); T_VarExpl = vfi_restore_tables(T_VarExpl); T_Out = vfi_restore_tables(T_Out); end
     else
         run('PolicyExperiment_LeeSeshadri_4Region.m');
         save(Cache_Step2, 'T_IGE', 'T_VarExpl', 'T_Out', 'IGE_SR', 'IGE_LR', ...
@@ -156,6 +178,7 @@ if Use_ExpAsset_Pipeline && Run_Fertility_Module && exist('FertilityBargaining_M
     if Use_Saved_Cache && ~Force_Recompute_All && exist(Cache_Step3, 'file') && Validate_CacheConfig(Cache_Step3, Cache_CfgHash)
         fprintf('    [CACHE HIT] Loading Step 3 Fertility Results from %s...\n', Cache_Step3);
         load(Cache_Step3);
+        if exist('vfi_restore_tables', 'file'), T_Fert1 = vfi_restore_tables(T_Fert1); T_Fert2 = vfi_restore_tables(T_Fert2); end
     else
         V              = V_5D_BM;
         Policy         = Policy_5D_BM;
@@ -247,6 +270,7 @@ if exist('WelfareDecomposition_4Region.m', 'file')
     if Use_Saved_Cache && ~Force_Recompute_All && exist(Cache_Step6, 'file') && Validate_CacheConfig(Cache_Step6, Cache_CfgHash)
         fprintf('    [CACHE HIT] Loading Step 6 Welfare Decomposition from %s...\n', Cache_Step6);
         load(Cache_Step6);
+        if exist('vfi_restore_tables', 'file'), T1 = vfi_restore_tables(T1); T2 = vfi_restore_tables(T2); T3 = vfi_restore_tables(T3); WelfareResults = vfi_restore_tables(WelfareResults); end
     else
         run('WelfareDecomposition_4Region.m');
         vars_step6 = {'T1', 'T2', 'T3', 'CE_Stage', 'CE_Quint', 'CE_Ten', ...

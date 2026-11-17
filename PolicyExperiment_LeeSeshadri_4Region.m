@@ -90,9 +90,20 @@ for p_idx = 1:N_pol
 
     simoptions_5D.d_grid = d_grid_5D;
 
+    t_pol = tic;
+    fprintf('    [Step 2 Policy %d/%d] Solving %s...\n', p_idx, N_pol, pol_name);
+    if exist('OCTAVE_VERSION', 'builtin') ~= 0, fflush(stdout); end
+
     % --- 1. SHORT-RUN PARTIAL EQUILIBRIUM (SR: Fixed Newborn Distribution jequaloneDist_5D_BM) ---
-    [V_SR, Policy_SR] = ValueFnIter_MixHorz_PType(n_d_5D, n_a_5D, n_z, N_j, Names_i, ...
-        d_grid_5D, a_grid_5D, z_grid, pi_z, ReturnFn_5D, Params_p, DiscountFactorParamNames, vfoptions_5D);
+    if strcmp(pol_name, 'BM_Baseline') && exist('V_5D_BM', 'var') && exist('Policy_5D_BM', 'var')
+        V_SR      = V_5D_BM;
+        Policy_SR = Policy_5D_BM;
+    else
+        [V_SR, Policy_SR] = ValueFnIter_MixHorz_PType(n_d_5D, n_a_5D, n_z, N_j, Names_i, ...
+            d_grid_5D, a_grid_5D, z_grid, pi_z, ReturnFn_5D, Params_p, DiscountFactorParamNames, vfoptions_5D);
+    end
+    fprintf('      -> VFI done in %.1fs\n', toc(t_pol));
+    if exist('OCTAVE_VERSION', 'builtin') ~= 0, fflush(stdout); end
 
     StatDist_SR = StationaryDist_MixHorz_PType(jequaloneDist_5D_BM, AgeWeightsParamNames, ...
         PTypeDistParamNames, Policy_SR, n_d_5D, n_a_5D, n_z, N_j, Names_i, ...
@@ -232,6 +243,12 @@ T_Out = array2table([Ebar_SR, Ebar_LR, CE_LR], 'RowNames', PolicyNames, ...
     'VariableNames', {'Ebar_SR_Rural', 'Ebar_SR_Small', 'Ebar_SR_Large', 'Ebar_SR_Auckland', ...
     'Ebar_LR_Rural', 'Ebar_LR_Small', 'Ebar_LR_Large', 'Ebar_LR_Auckland', ...
     'CE_LR_Rural', 'CE_LR_Small', 'CE_LR_Large', 'CE_LR_Auckland'});
+
+if exist('Use_Saved_Cache', 'var') && Use_Saved_Cache && exist('Cache_Step2', 'var') && ~isempty(Cache_Step2)
+    if ~exist('Cache_CfgHash', 'var'), Cache_CfgHash = ''; end
+    save(Cache_Step2, 'T_IGE', 'T_VarExpl', 'T_Out', 'IGE_SR', 'IGE_LR', ...
+        'VarExpl_h1', 'VarExpl_LFE', 'VarLogE', 'Ebar_SR', 'Ebar_LR', 'CE_LR', 'PolicyNames', 'Cache_CfgHash');
+end
 
 figE8 = figure('Name', 'Lee & Seshadri 4-Region Counterfactuals', 'Color', 'w', 'Position', [100, 80, 1240, 820]);
 t_e8  = tiledlayout(2, 2, 'TileSpacing', 'loose', 'Padding', 'compact');

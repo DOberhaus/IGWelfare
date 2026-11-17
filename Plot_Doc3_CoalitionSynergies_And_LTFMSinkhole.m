@@ -455,12 +455,12 @@ fate_labels = { ...
     '4. Unified 4-Coalition Compact (Own Silo + All 3 Neighbour Synergy Wedges)'};
 
 for k = 1:4
-    b_fate(k).FaceColor   = fate_colors(k, :);
-    b_fate(k).FaceAlpha   = 0.88;
-    b_fate(k).EdgeColor   = [0.15 0.15 0.15];
-    b_fate(k).DisplayName = fate_labels{k};
-    x_pts = b_fate(k).XEndPoints;
-    y_pts = b_fate(k).YEndPoints;
+    set(b_fate(k), 'FaceColor', fate_colors(k, :));
+    set(findobj(b_fate(k), 'type', 'patch'), 'FaceAlpha', 0.88);
+    set(b_fate(k), 'EdgeColor', [0.15 0.15 0.15]);
+    set(b_fate(k), 'DisplayName', fate_labels{k});
+    x_pts = vfi_bar_xep(b_fate, k);
+    y_pts = vfi_bar_yep(b_fate, k);
     for c_i = 1:4
         val_v = y_pts(c_i);
         y_pos = val_v + (val_v >= 0) * 0.55 - (val_v < 0) * 0.85;

@@ -298,7 +298,7 @@ end
 
 ylim(ax4, [16.0, 33.0]);
 ylabel(ax4, 'Required Working-Age PAYE Tax \tau_l (%) [U-Curve]', 'FontWeight', 'bold');
-ax4.YColor = [0.75 0.10 0.10];
+set(vfi_active_ax(ax4), 'YColor', [0.75 0.10 0.10]);
 
 yyaxis(ax4, 'right');
 p_w_ss2 = plot(ax4, SuperAge_Grid, CE_UCurve_SS2, '-p', 'Color', [0.00 0.50 0.22], ...
@@ -316,7 +316,7 @@ text(ax4, 68.3, CE_UCurve_SS2(idx_64) + 0.4, ...
 
 ylim(ax4, [0.0, 34.0]); % Gives generous headroom at the top for the northwest legend box!
 ylabel(ax4, 'National Long-Run Welfare Gain (CE %) [Inverted-U]', 'FontWeight', 'bold');
-ax4.YColor = [0.00 0.42 0.18];
+set(vfi_active_ax(ax4), 'YColor', [0.00 0.42 0.18]);
 
 xlim(ax4, [59.5, 75.5]);
 xticks(ax4, 60:1:75);

@@ -124,7 +124,7 @@ col_map = [0.106, 0.620, 0.467;   % Stay & Better
 nexttile;
 Y_SS0 = [Stay_Better_SS0, Leave_Better_SS0, Stay_Worse_SS0, Leave_Worse_SS0];
 b0 = bar(cats_reg, Y_SS0, 'stacked', 'BarWidth', 0.62);
-for k = 1:4; b0(k).FaceColor = col_map(k, :); end
+for k = 1:4; set(b0(k), 'FaceColor', col_map(k, :)); end
 ylim([0, 105]); ylabel('Share of Pre-Employment Birth Cohort (%)');
 title('A. Status Quo Baseline: Age-30 Opportunity Breakdown');
 grid on;
@@ -146,7 +146,7 @@ end
 nexttile;
 Y_SS1 = [Stay_Better_SS1, Leave_Better_SS1, Stay_Worse_SS1, Leave_Worse_SS1];
 b1 = bar(cats_reg, Y_SS1, 'stacked', 'BarWidth', 0.62);
-for k = 1:4; b1(k).FaceColor = col_map(k, :); end
+for k = 1:4; set(b1(k), 'FaceColor', col_map(k, :)); end
 ylim([0, 105]); ylabel('Share of Pre-Employment Birth Cohort (%)');
 title('B. High-Opportunity Reform: Age-30 Opportunity Breakdown');
 legend({'Stay in NZ & \geq Parents (Domestic Upward)', ...

@@ -959,7 +959,7 @@ end
 %% DRAW 6-GATE HORIZONTAL "J" AXIS CENTERED ON EACH BAR
 y_axis_line  = curr_ylim(1) - 0.09 * y_span;
 tick_h       = 0.022 * y_span;
-p_all        = findall(ax, 'Type', 'Patch');
+p_all        = findall(ax, 'type', 'patch');
 x_center_col = zeros(1, 6);
 for c_i = 1:6
     c_centers = [];

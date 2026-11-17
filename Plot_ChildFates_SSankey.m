@@ -551,7 +551,7 @@ set(findall(ax, 'Type', 'text'), 'FontName', 'Helvetica', 'FontSize', 8.8);
 y_axis_line = curr_ylim(1) - 0.09 * y_span;
 tick_h      = 0.022 * y_span;
 
-p_all        = findall(ax, 'Type', 'Patch');
+p_all        = findall(ax, 'type', 'patch');
 x_center_col = zeros(1, 5);
 for c_i = 1:5
     c_centers = [];
