@@ -246,27 +246,56 @@ end
 vfoptions.verbose = 0; simoptions.verbose = 0;
 simoptions.d_grid = d_grid; simoptions.a_grid = a_grid;
 
-[V, Policy] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
-    d_grid, a_grid, z_grid, pi_z, ReturnFn, Params, ...
-    DiscountFactorParamNames, vfoptions);
+% 1. Solve Policy via Phase-Split VFI (optional Benchmark_PhaseSplit check against full 5D VFI)
+if isfield(Params, 'Benchmark_PhaseSplit') && Params.Benchmark_PhaseSplit
+    tic;
+    [V_ref, ~] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
+        d_grid, a_grid, z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions);
+    t_orig = toc;
+    tic;
+    [V, Policy] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, ...
+        d_grid, a_grid, z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions, Regions);
+    t_split = toc;
+    max_V_diff = max(cellfun(@(fn) max(abs(V.(fn)(:) - V_ref.(fn)(:))), Names_i));
+    fprintf('VFI Speedup: %.2fs -> %.2fs (%.2fx) | Max |V - V_ref| = %.3e\n', ...
+        t_orig, t_split, t_orig / t_split, double(gather(max_V_diff)));
+else
+    [V, Policy] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, ...
+        d_grid, a_grid, z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions, Regions);
+end
 
 for r_idx = 1:N_reg
     hh_type = ['HH_', Regions{r_idx}];
     jequaloneDist.(hh_type) = ones([n_a.(hh_type), n_z.(hh_type)]) / prod([n_a.(hh_type), n_z.(hh_type)]);
 end
 
+% 2. Solve Infinite-Horizon Firms ONCE (jequaloneDist never affects firms)
+Names_Firm = {'Firm_Rural', 'Firm_Small', 'Firm_Large', 'Firm_Auckland'};
+Params_Firm = Params;
+Params_Firm.PTypeWeights = Reg_Firm_Shares / sum(Reg_Firm_Shares);
+StationaryDist = StationaryDist_MixHorz_PType(struct(), AgeWeightsParamNames, ...
+    PTypeDistParamNames, Policy, n_d, n_a, n_z, N_j, Names_Firm, pi_z, Params_Firm, simoptions);
+
+% 3. Precompute HH Tan transition operators ONCE across all 4 regions
+HH_TransCache = Precompute_HH_StationaryCache( ...
+    Policy, n_d, n_a, n_z, N_j, d_grid, a_grid, pi_z, Params, simoptions, Regions);
+
+% 4. Fast Intergenerational Fixed-Point across all 4 regions (pure SpMV + tiny GEMM)
 for ig_iter = 1:12
-    StationaryDist = StationaryDist_MixHorz_PType(jequaloneDist, AgeWeightsParamNames, ...
-        PTypeDistParamNames, Policy, n_d, n_a, n_z, N_j, Names_i, ...
-        pi_z, Params, simoptions);
+    StationaryDist = PushForward_HH_Dist(StationaryDist, jequaloneDist, HH_TransCache, Regions);
 
     [jequaloneDist_new, IG_Diagnostics] = Build_IntergenTransitionMatrix( ...
         StationaryDist, Policy, V, n_d, n_a, n_z, d_grid, a_grid, z_grid, pi_z, Params, Regions);
 
-    diff_ig = max(abs(jequaloneDist_new.HH_Auckland(:) - jequaloneDist.HH_Auckland(:)));
+    diff_ig = 0;
+    for r_idx = 1:N_reg
+        hh_type = ['HH_', Regions{r_idx}];
+        diff_ig = max(diff_ig, max(abs(jequaloneDist_new.(hh_type)(:) - jequaloneDist.(hh_type)(:))));
+    end
     jequaloneDist = jequaloneDist_new;
     if diff_ig < 1e-5; break; end
 end
+StationaryDist.ptweights = reshape(Params.PTypeWeights, [], 1);
 if ~(diff_ig < 1e-5)
     IGW_Log('IGW:NoConvergence', 'NZ_4Region_Master intergenerational newborn-distribution fixed point: %d iterations, residual %.3g', ig_iter, double(gather(diff_ig)));
 end

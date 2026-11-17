@@ -99,15 +99,18 @@ for p_idx = 1:N_pol
         V_SR      = V_5D_BM;
         Policy_SR = Policy_5D_BM;
     else
-        [V_SR, Policy_SR] = ValueFnIter_MixHorz_PType(n_d_5D, n_a_5D, n_z, N_j, Names_i, ...
-            d_grid_5D, a_grid_5D, z_grid, pi_z, ReturnFn_5D, Params_p, DiscountFactorParamNames, vfoptions_5D);
+        [V_SR, Policy_SR] = Solve_VFI_PhaseSplit(n_d_5D, n_a_5D, n_z, N_j, ...
+            d_grid_5D, a_grid_5D, z_grid, pi_z, ReturnFn_5D, Params_p, DiscountFactorParamNames, vfoptions_5D, Regions);
     end
     fprintf('      -> VFI done in %.1fs\n', toc(t_pol));
     if exist('OCTAVE_VERSION', 'builtin') ~= 0, fflush(stdout); end
 
-    StatDist_SR = StationaryDist_MixHorz_PType(jequaloneDist_5D_BM, AgeWeightsParamNames, ...
-        PTypeDistParamNames, Policy_SR, n_d_5D, n_a_5D, n_z, N_j, Names_i, ...
-        pi_z, Params_p, simoptions_5D);
+    simoptions_5D.a_grid = a_grid_5D;
+    HH_TransCache_p = Precompute_HH_StationaryCache( ...
+        Policy_SR, n_d_5D, n_a_5D, n_z, N_j, d_grid_5D, a_grid_5D, pi_z, Params_p, simoptions_5D, Regions);
+
+    StatDist_SR = PushForward_HH_Dist(struct(), jequaloneDist_5D_BM, HH_TransCache_p, Regions);
+    StatDist_SR.ptweights = reshape(Params_p.PTypeWeights, [], 1);
 
     [~, Diag_SR] = Build_IntergenTransitionMatrix(StatDist_SR, Policy_SR, V_SR, ...
         n_d_5D, n_a_5D, n_z, d_grid_5D, a_grid_5D, z_grid, pi_z, Params_p, Regions);
@@ -118,15 +121,19 @@ for p_idx = 1:N_pol
     Pol_LR   = Policy_SR;
 
     ig_resid = Inf;
+    StatDist_LR = struct();
     for ig_it = 1:10
-        StatDist_LR = StationaryDist_MixHorz_PType(jDist_LR, AgeWeightsParamNames, ...
-            PTypeDistParamNames, Pol_LR, n_d_5D, n_a_5D, n_z, N_j, Names_i, ...
-            pi_z, Params_p, simoptions_5D);
+        StatDist_LR = PushForward_HH_Dist(StatDist_LR, jDist_LR, HH_TransCache_p, Regions);
+        StatDist_LR.ptweights = reshape(Params_p.PTypeWeights, [], 1);
 
         [jDist_LR_new, Diag_LR] = Build_IntergenTransitionMatrix(StatDist_LR, Pol_LR, V_LR, ...
             n_d_5D, n_a_5D, n_z, d_grid_5D, a_grid_5D, z_grid, pi_z, Params_p, Regions);
 
-        ig_resid = max(abs(jDist_LR_new.HH_Auckland(:) - jDist_LR.HH_Auckland(:)));
+        ig_resid = 0;
+        for rr_ig = 1:N_reg
+            ht_ig = ['HH_', Regions{rr_ig}];
+            ig_resid = max(ig_resid, max(abs(jDist_LR_new.(ht_ig)(:) - jDist_LR.(ht_ig)(:))));
+        end
         if ig_resid < 1e-5
             jDist_LR = jDist_LR_new;
             break;
