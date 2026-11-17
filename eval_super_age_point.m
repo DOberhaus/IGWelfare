@@ -119,6 +119,4 @@ austerity_drag  = Params.psi_austerity_tax_drag * (yrs_over_65_s ^ 1.35);
 ss2_harvest_div = double(is_ss2_flag) * (Params.ss2_harvest_div_base * min(1.05, elder_time_mult) - austerity_drag);
 
 req_tax = tau_l_base_pct + aging_tax_drift - exits_skill_div - ss2_harvest_div;
-
-
 end

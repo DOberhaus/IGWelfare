@@ -130,6 +130,8 @@ for m = 1:M_reforms
     spec   = Reform_Phase_Specs(m);
     p_code = spec.Code;
 
+    fprintf('Computing Reform %d of %d: %s\n', m, M_reforms, p_code);
+
     % 3A. Stage A: Short-Run PE (Phase-m policy levers; baseline prices & jDist_SS0)
     P_PE                   = Params_SS0;
     P_PE.G_ece_stage1_base = spec.G_ece_stage1;
