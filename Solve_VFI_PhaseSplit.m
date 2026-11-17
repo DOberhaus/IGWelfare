@@ -109,9 +109,9 @@ for r_idx = 1:N_reg
     vfo_4 = struct('verbose', 0, 'experienceasset', 0);
     P_p4  = slice_age_params(Params_reg, j_p4, J);
     [V_p4, Pol_p4] = ValueFnIter_Case1_FHorz(0, [n_a1, n_h], n_z_reg, length(j_p4), ...
-        [], a_4d, z_g, pi_g, RetFn_P4, P_p4, disc, vfo_4);
+        [], a_4d, z_g, pi_g, RetFn_P4, P_p4, disc, {}, vfo_4);
     % Pol_p4 has 2 rows: [aprime_idx; hprime_idx]. Broadcast across n_th = 9:
-    V_full(:, :, :, :, j_p4)      = repmat(reshape(V_p4, [n_a1, n_h, 1, N_z, length(j_p4)]), [1, 1, n_th, 1, 1]);
+    V_full(:, :, :, :, j_p4)        = repmat(reshape(V_p4, [n_a1, n_h, 1, N_z, length(j_p4)]), [1, 1, n_th, 1, 1]);
     Pol_full(4:5, :, :, :, :, j_p4) = repmat(reshape(Pol_p4, [2, n_a1, n_h, 1, N_z, length(j_p4)]), [1, 1, 1, n_th, 1, 1]);
     V_next_4d = reshape(V_p4(:, :, :, 1), [n_a1, n_h, N_z]);
 
@@ -120,10 +120,10 @@ for r_idx = 1:N_reg
         vfo_3 = struct('verbose', 0, 'experienceasset', 0, 'V_Jplus1', V_next_4d);
         P_p3  = slice_age_params(Params_reg, j_p3, J);
         [V_p3, Pol_p3] = ValueFnIter_Case1_FHorz(n_d_full(1:2), [n_a1, n_h], n_z_reg, length(j_p3), ...
-            d_l_Ih, a_4d, z_g, pi_g, RetFn_P3, P_p3, disc, vfo_3);
+            d_l_Ih, a_4d, z_g, pi_g, RetFn_P3, P_p3, disc, {}, vfo_3);
         % Pol_p3 has 4 rows: [l_idx; Ih_idx; aprime_idx; hprime_idx]; row 3 in full Policy is ic_idx = 1:
-        V_full(:, :, :, :, j_p3)          = repmat(reshape(V_p3, [n_a1, n_h, 1, N_z, length(j_p3)]), [1, 1, n_th, 1, 1]);
-        Pol_p3_5d                         = repmat(reshape(Pol_p3, [4, n_a1, n_h, 1, N_z, length(j_p3)]), [1, 1, 1, n_th, 1, 1]);
+        V_full(:, :, :, :, j_p3)              = repmat(reshape(V_p3, [n_a1, n_h, 1, N_z, length(j_p3)]), [1, 1, n_th, 1, 1]);
+        Pol_p3_5d                             = repmat(reshape(Pol_p3, [4, n_a1, n_h, 1, N_z, length(j_p3)]), [1, 1, 1, n_th, 1, 1]);
         Pol_full([1,2,4,5], :, :, :, :, j_p3) = Pol_p3_5d;
         V_next_4d = reshape(V_p3(:, :, :, 1), [n_a1, n_h, N_z]);
     end
@@ -133,11 +133,11 @@ for r_idx = 1:N_reg
 
     % ---- PHASE 2: ACTIVE PARENTING (j_s1_start : j_s2_end) — Full 5D Experience Asset ----
     vfo_2 = struct('verbose', 0, 'experienceasset', 1, ...
-                   'aprimeFn', vfoptions.aprimeFn.(hh_type), 'V_Jplus1', V_next_5d);
+        'aprimeFn', vfoptions.aprimeFn.(hh_type), 'V_Jplus1', V_next_5d);
     P_p2  = slice_age_params(Params_reg, j_p2, J);
     [V_p2, Pol_p2] = ValueFnIter_Case1_FHorz(n_d_full, n_a_full, n_z_reg, length(j_p2), ...
-        d_all, a_all, z_g, pi_g, RetFn_5D, P_p2, disc, vfo_2);
-    V_full(:, :, :, :, j_p2)   = reshape(V_p2,   [n_a1, n_h, n_th, N_z, length(j_p2)]);
+        d_all, a_all, z_g, pi_g, RetFn_5D, P_p2, disc, {}, vfo_2);
+    V_full(:, :, :, :, j_p2)      = reshape(V_p2,   [n_a1, n_h, n_th, N_z, length(j_p2)]);
     Pol_full(:, :, :, :, :, j_p2) = reshape(Pol_p2, [5, n_a1, n_h, n_th, N_z, length(j_p2)]);
     V_next_5d = reshape(V_full(:, :, :, :, j_p2(1)), [n_a1, n_h, n_th, N_z]);
 
@@ -145,12 +145,16 @@ for r_idx = 1:N_reg
     % Must stay 5D because V_next_5d at j_s1_start depends on inherited theta_c!
     if ~isempty(j_p1)
         vfo_1 = struct('verbose', 0, 'experienceasset', 1, ...
-                       'aprimeFn', vfoptions.aprimeFn.(hh_type), 'V_Jplus1', V_next_5d);
+            'aprimeFn', vfoptions.aprimeFn.(hh_type), 'V_Jplus1', V_next_5d);
         P_p1  = slice_age_params(Params_reg, j_p1, J);
         [V_p1, Pol_p1] = ValueFnIter_Case1_FHorz([n_d_full(1:2), 1], n_a_full, n_z_reg, length(j_p1), ...
-            d_pre, a_all, z_g, pi_g, RetFn_5D, P_p1, disc, vfo_1);
-        V_full(:, :, :, :, j_p1)   = reshape(V_p1,   [n_a1, n_h, n_th, N_z, length(j_p1)]);
-        Pol_full(:, :, :, :, :, j_p1) = reshape(Pol_p1, [5, n_a1, n_h, n_th, N_z, length(j_p1)]);
+            d_pre, a_all, z_g, pi_g, RetFn_5D, P_p1, disc, {}, vfo_1);
+        V_full(:, :, :, :, j_p1) = reshape(V_p1, [n_a1, n_h, n_th, N_z, length(j_p1)]);
+        if size(Pol_p1, 1) == 5
+            Pol_full(:, :, :, :, :, j_p1) = reshape(Pol_p1, [5, n_a1, n_h, n_th, N_z, length(j_p1)]);
+        else
+            Pol_full([1,2,4,5], :, :, :, :, j_p1) = reshape(Pol_p1, [4, n_a1, n_h, n_th, N_z, length(j_p1)]);
+        end
     end
 
     V.(hh_type)      = V_full;
