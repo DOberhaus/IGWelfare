@@ -395,8 +395,11 @@ if Export_Tables_Figures
         writetable(T_BrainDrain, fullfile(OutputDir, 'Table_Trans3_BrainDrain_Cohesion_4Region.csv'));
     end
     warning('off', 'Octave:classdef-to-struct');
-save(fullfile(OutputDir, 'NZ_4Region_Intergen_Complete_Results.mat'));
-warning('on', 'Octave:classdef-to-struct');
+    old_state = warning('query', 'all');
+    warning('off', 'all');
+    save(fullfile(OutputDir, 'NZ_4Region_Intergen_Complete_Results.mat'));
+    warning(old_state);
+    warning('on', 'Octave:classdef-to-struct');
     fprintf('  Saved Full Workspace Checkpoint: NZ_4Region_Intergen_Complete_Results.mat\n');
 end
 
