@@ -91,16 +91,17 @@ else
 end
 
 %% 5. COMPOSITE CONSUMPTION, LABOR/TRAINING DISUTILITY, & CHILD ALTRUISM
-c_nd   = phi_nd .* c_eff;
-c_H    = (1 - phi_nd) .* c_eff ./ p_H;
-u_comp = (c_nd .^ phi_nd) .* (c_H .^ (1 - phi_nd));
-eta_c  = 2.0;
+% Factor Cobb-Douglas u_comp = (phi_nd*c_eff)^phi_nd * ((1-phi_nd)*c_eff/p_H)^(1-phi_nd)
+% so fractional powers run only on scalar/1D p_H instead of the full 4D c_eff tensor:
+cobb_mult = ((phi_nd ^ phi_nd) * ((1 - phi_nd) ^ (1 - phi_nd))) .* (p_H .^ (phi_nd - 1));
+u_comp    = c_eff .* cobb_mult;
+eta_c     = 2.0;
 
 early_relief     = 0.38 * super_share_j * double(~is_post_65);
 post65_wear      = 0.14 * max(0.0, age_end_yrs - 65.0) .* (1.0 + 0.40 .* max(0.0, (1.15 - h) ./ 0.55));
 manual_wear_mult = max(0.55, 1.0 - early_relief + post65_wear);
 
-u_flow = scale_dt .* ((u_comp .^ (1 - eta_c)) ./ (1 - eta_c) - 0.85 .* manual_wear_mult .* ((l + Ih) .^ 1.6) ./ 1.6);
+u_flow = scale_dt .* ((-1.0 ./ u_comp) - 0.85 .* manual_wear_mult .* ((l + Ih) .^ 1.6) ./ 1.6);
 
 u_child = 0;
 if is_parenting
@@ -119,10 +120,11 @@ if is_post_65 || (super_share_j > 0)
     mort_grad  = exp(0.05 .* (1.05 - h));
     mort_prob  = min(0.99, max(0.01, (1 - sj) .* mort_grad));
     net_estate = (1 - tau_b) .* max(0, aprime);
-    u_beq      = mort_prob .* b1_beq .* (((b2_beq + net_estate) .^ (1 - eta_c)) ./ (1 - eta_c));
+    u_beq      = mort_prob .* b1_beq .* (-1.0 ./ (b2_beq + net_estate));
 end
 
 valid_all = valid_hc & valid_ic & valid_budg;
 F = (u_flow + u_child + u_beq) + log(double(valid_all));
+
 
 end

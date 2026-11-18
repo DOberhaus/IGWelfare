@@ -163,8 +163,11 @@ if Use_ExpAsset_Pipeline && Run_LeeSeshadri_Exp && exist('PolicyExperiment_LeeSe
         if exist('vfi_restore_tables', 'file'), T_IGE = vfi_restore_tables(T_IGE); T_VarExpl = vfi_restore_tables(T_VarExpl); T_Out = vfi_restore_tables(T_Out); end
     else
         run('PolicyExperiment_LeeSeshadri_4Region.m');
+        old_warn = warning('query', 'all');
+        warning('off', 'all');
         save(Cache_Step2, 'T_IGE', 'T_VarExpl', 'T_Out', 'IGE_SR', 'IGE_LR', ...
             'VarExpl_h1', 'VarExpl_LFE', 'VarLogE', 'Ebar_SR', 'Ebar_LR', 'CE_LR', 'PolicyNames', 'Cache_CfgHash');
+        warning(old_warn);
         fprintf('    [CACHE SAVED] Saved Step 2 checkpoint to %s\n', Cache_Step2);
     end
     fprintf('    Step 2 completed in %.2f seconds.\n\n', toc(step2_timer));
@@ -185,7 +188,10 @@ if Use_ExpAsset_Pipeline && Run_Fertility_Module && exist('FertilityBargaining_M
         StationaryDist = StationaryDist_5D_BM;
         jequaloneDist  = jequaloneDist_5D_BM;
         run('FertilityBargaining_Module.m');
+        old_warn = warning('query', 'all');
+        warning('off', 'all');
         save(Cache_Step3, 'T_Fert1', 'T_Fert2', 'TFR_mat', 'DiffFert_mat', 'Struggling_mat', 'DepRatio_vec', 'ReqTax_vec', 'Cache_CfgHash');
+        warning(old_warn);
         fprintf('    [CACHE SAVED] Saved Step 3 checkpoint to %s\n', Cache_Step3);
     end
     fprintf('    Step 3 completed in %.2f seconds.\n\n', toc(step3_timer));
@@ -245,7 +251,10 @@ if Use_ExpAsset_Pipeline && exist('ReturnFn_SpatialHH_Compact4D.m', 'file')
             pi_z, Params, simoptions);
         [jequaloneDist, IG_Diagnostics] = Build_IntergenTransitionMatrix( ...
             StationaryDist, Policy, V, n_d, n_a, n_z, d_grid, a_grid, z_grid, pi_z, Params, Regions);
+        old_warn = warning('query', 'all');
+        warning('off', 'all');
         save(Cache_Step4, 'V', 'Policy', 'StationaryDist', 'jequaloneDist', 'IG_Diagnostics', 'Cache_CfgHash');
+        warning(old_warn);
         fprintf('    [CACHE SAVED] Saved Step 4 checkpoint to %s\n', Cache_Step4);
     end
     fprintf('    Step 4 completed in %.2f seconds.\n\n', toc(step4_timer));
@@ -279,7 +288,10 @@ if exist('WelfareDecomposition_4Region.m', 'file')
         if exist('V_SS2', 'var')
             vars_step6 = [vars_step6, {'V_SS2', 'Policy_SS2', 'StatDist_SS2', 'jDist_SS2', 'Params_SS2', 'IG_Diag_SS2'}];
         end
+        old_warn = warning('query', 'all');
+        warning('off', 'all');
         save(Cache_Step6, vars_step6{:});
+        warning(old_warn);
         fprintf('    [CACHE SAVED] Saved Step 6 checkpoint to %s\n', Cache_Step6);
     end
     fprintf('    Step 6 completed in %.2f seconds.\n\n', toc(step6_timer));
