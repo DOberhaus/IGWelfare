@@ -15,26 +15,12 @@ N_reg = length(Regions);
 Params_SS0       = Params;
 Params_SS0.G_ece = Params_SS0.G_ece_stage1; % Ensure 4D G_ece matches SS0 stage-1 baseline (0.045)
 vfoptions.parallel = 2;
-[V_SS0_ref, Pol_SS0_ref] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
-    d_grid, a_grid, z_grid, pi_z, ReturnFn, Params_SS0, DiscountFactorParamNames, vfoptions);
 t_w0 = tic;
 [V_SS0, Policy_SS0] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, d_grid, a_grid, z_grid, pi_z, ReturnFn, Params_SS0, DiscountFactorParamNames, vfoptions, Regions);
-fprintf('  [DIAG Step6] SS0 VFI (n_a=%s): %.2fs\n', mat2str(n_a.HH_Rural), toc(t_w0)); fflush(stdout); t_w0 = tic;
-fprintf('  j=15 Akl(30,4,4): split=%.6f | ref=%.6f | diff=%.6f\n', ...
-    V_SS0.HH_Auckland(30,4,4,15), V_SS0_ref.HH_Auckland(30,4,4,15), ...
-    V_SS0.HH_Auckland(30,4,4,15) - V_SS0_ref.HH_Auckland(30,4,4,15));
-fprintf('  j=16 Akl(30,4,4): split=%.6f | ref=%.6f\n', ...
-    V_SS0.HH_Auckland(30,4,4,16), V_SS0_ref.HH_Auckland(30,4,4,16));
-for jj_chk = Params_SS0.J:-1:1
-    test_xx = V_SS0.HH_Auckland(:,:,:,jj_chk);
-    ref_xx = V_SS0_ref.HH_Auckland(:,:,:,jj_chk);
-    err_j = max(abs(test_xx(:) - ref_xx(:)));
-    if err_j > 1e-10
-        fprintf('  [FIRST DIFF] j=%d | max|dV|=%.4e\n', jj_chk, err_j);
-    end
-end
+fprintf('  [DIAG Step6] SS0 VFI (n_a=%s): %.2fs\n', mat2str(n_a.HH_Rural), toc(t_w0));
 
 jDist_SS0 = jequaloneDist;
+t_w0 = tic;
 for ig0_it = 1:6
     StatDist_SS0 = StationaryDist_MixHorz_PType(jDist_SS0, AgeWeightsParamNames, ...
         PTypeDistParamNames, Policy_SS0, n_d, n_a, n_z, N_j, Names_i, ...
@@ -44,7 +30,7 @@ for ig0_it = 1:6
     ig0_resid = max(abs(jDist_SS0_new.HH_Auckland(:) - jDist_SS0.HH_Auckland(:)));
     jDist_SS0 = jDist_SS0_new;
 end
-fprintf('  [DIAG Step6] SS0 IG Loop (6 iters): %.2fs\n', toc(t_w0)); fflush(stdout);
+fprintf('  [DIAG Step6] SS0 IG Loop (6 iters): %.2fs\n', toc(t_w0));
 if ~(ig0_resid < 1e-5)
     IGW_Log('IGW:NoConvergence', 'WelfareDecomposition_4Region SS0 intergenerational fixed point: %d iterations, residual %.3g', ig0_it, double(gather(ig0_resid)));
 end
@@ -201,7 +187,7 @@ for m = 1:M_reforms
 
     t_wm = tic;
     [V_PE_m, Policy_PE_m] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, d_grid, a_grid, z_grid, pi_z, ReturnFn, P_PE, DiscountFactorParamNames, vfoptions, Regions);
-    fprintf('  [DIAG Step6 %s] PE VFI: %.2fs\n', p_code, toc(t_wm)); fflush(stdout);
+    fprintf('  [DIAG Step6 %s] PE VFI: %.2fs\n', p_code, toc(t_wm));
 
     % 3B. Stage B: Long-Run GE with Exogenous Skills (Phase-m GE prices & z_l -> z_h job upgrading; prior jDist)
     P_GE   = P_PE;
@@ -264,7 +250,7 @@ for m = 1:M_reforms
 
     t_wm = tic;
     [V_GE_Exo_m, Policy_GE_Exo_m] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, d_grid, a_grid, z_grid_m, pi_z_m, ReturnFn, P_GE, DiscountFactorParamNames, vfoptions, Regions);
-    fprintf('  [DIAG Step6 %s] GE VFI: %.2fs\n', p_code, toc(t_wm)); fflush(stdout);
+    fprintf('  [DIAG Step6 %s] GE VFI: %.2fs\n', p_code, toc(t_wm));
 
     % 3C. Stage C: Long-Run GE with Endogenous 4x5 Intergenerational Matrix (jDist_SSm)
     jDist_m = jDist_prev;

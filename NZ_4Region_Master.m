@@ -10,26 +10,35 @@
 %   - Firms ('Firm_Rural', 'Firm_Small', 'Firm_Large', 'Firm_Auckland'): Infinite Horizon (N_j = Inf)
 
 %% 0. TOOLKIT & GNU OCTAVE / UFHORZ ENVIRONMENT BOOTSTRAP
-igw_root_dir = fileparts(mfilename('fullpath'));
-if isempty(igw_root_dir), igw_root_dir = pwd; end
 if exist('ValueFnIter_MixHorz_PType', 'file') == 0
-    vfi_matlab_dir = fullfile(igw_root_dir, '..', 'VFIToolkit-matlab');
-    if exist(vfi_matlab_dir, 'dir') ~= 0
-        addpath(genpath(vfi_matlab_dir));
-    end
+    error('IGWelfare:MissingToolkit', ...
+        'VFIToolkit not found on path. Add VFIToolkit-matlab (and VFIToolkit-octave in Octave) via startup.m or .octaverc.');
 end
-vfi_octave_dir = fullfile(igw_root_dir, '..', 'VFIToolkit-octave');
-if exist('VFIToolkit_Octave_Setup', 'file') == 0 && exist(vfi_octave_dir, 'dir') ~= 0
-    addpath(vfi_octave_dir);
-end
-if exist('VFIToolkit_Octave_Setup', 'file') ~= 0
-    VFIToolkit_Octave_Setup({'ReturnFn_SpatialHH', 'ReturnFn_SpatialHH_Compact4D', 'ReturnFn_Firm', 'HumanCapital_Lifecycle_aprimeFn'});
-    if exist('OCTAVE_VERSION', 'builtin') ~= 0 && exist('vfi_pool', 'file') ~= 0
-        if ~exist('Params', 'var'), Params = struct(); end
-        if ~isfield(Params, 'n_workers'), Params.n_workers = min(8, max(1, nproc() - 2)); end
-        if Params.n_workers > 1
-            vfi_pool('ensure', Params.n_workers, vfi_ramdisk('mount', 2048));
+
+if exist('OCTAVE_VERSION', 'builtin') ~= 0
+    VFIToolkit_Octave_Setup({ ...
+        'ReturnFn_SpatialHH', ...
+        'ReturnFn_SpatialHH_Compact4D', ...
+        'ReturnFn_Firm', ...
+        'HumanCapital_Lifecycle_aprimeFn'});
+
+    if ~exist('Params', 'var'), Params = struct(); end
+    if ~isfield(Params, 'n_workers') || isempty(Params.n_workers)
+        pool_st = vfi_pool('status');
+        if pool_st.active
+            Params.n_workers = pool_st.ncores;
+        else
+            Params.n_workers = []; % Let vfi_pool('ensure') auto-detect physical cores
         end
+    end
+
+    if isempty(Params.n_workers) || Params.n_workers > 1
+        ram_dir = vfi_ramdisk('mount', 2048);
+        pool_st = vfi_pool('ensure', Params.n_workers, ram_dir);
+        if ~pool_st.active
+            error('IGWelfare:PoolInitFailed', 'Failed to initialize Octave persistent worker pool on %s.', ram_dir);
+        end
+        Params.n_workers = pool_st.ncores;
     end
 end
 
