@@ -54,6 +54,7 @@ if ~is_5d
     vfo_base4d = vfoptions;
     vfo_base4d.verbose = 0;
     vfo_base4d.experienceasset = 0;
+    vfo_base4d.vectorized = 1;
     for stale_f = {'V_Jplus1', 'aprimeFn', 'n_d1', 'n_d2', 'n_a1', 'n_a2', 'd1_grid', 'd2_grid', 'a1_grid', 'a2_grid'}
         if isfield(vfo_base4d, stale_f{1})
             vfo_base4d = rmfield(vfo_base4d, stale_f{1});
@@ -215,7 +216,7 @@ end
 
 %% 4. BACKWARD PHASE HANDOFF ACROSS ALL 4 REGIONS CONCURRENTLY
 % ---- PHASE 4: RETIREMENT (Jr_int : J) — 4D Standard Case1, n_d = [1,1,1] ----
-vfo_4 = struct('verbose', 0, 'experienceasset', 0);
+vfo_4 = struct('verbose', 0, 'experienceasset', 0, 'vectorized', 1);
 P_p4  = slice_age_params_ptype(Params, Names_HH, j_p4, J);
 [V_p4, Pol_p4] = ValueFnIter_MixHorz_PType(nd_p4, na_4d, n_z, nj_p4, Names_HH, ...
     dg_p4, ag_4d, z_grid, pi_z, ReturnFn, P_p4, DiscountFactorParamNames, vfo_4);
@@ -237,7 +238,7 @@ end
 
 % ---- PHASE 3: POST-PARENTING (j_s2_end+1 : Jr_int-1) — 4D Standard Case1, n_d = [4, 3, 1] ----
 if ~isempty(j_p3)
-    vfo_3 = struct('verbose', 0, 'experienceasset', 0, 'V_Jplus1', V_next_4d);
+    vfo_3 = struct('verbose', 0, 'experienceasset', 0, 'vectorized', 1, 'V_Jplus1', V_next_4d);
     P_p3  = slice_age_params_ptype(Params, Names_HH, j_p3, J);
     [V_p3, Pol_p3] = ValueFnIter_MixHorz_PType(nd_p3, na_4d, n_z, nj_p3, Names_HH, ...
         dg_p3, ag_4d, z_grid, pi_z, ReturnFn, P_p3, DiscountFactorParamNames, vfo_3);
@@ -268,8 +269,9 @@ end
 
 % ---- PHASE 2: ACTIVE PARENTING (j_s1_start : j_s2_end) — Full 5D Experience Asset ----
 vfo_2 = vfoptions;
-vfo_2.verbose  = 0;
-vfo_2.V_Jplus1 = V_next_5d;
+vfo_2.verbose    = 0;
+vfo_2.vectorized = 1;
+vfo_2.V_Jplus1   = V_next_5d;
 P_p2 = slice_age_params_ptype(Params, Names_HH, j_p2, J);
 [V_p2, Pol_p2] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, nj_p2, Names_HH, ...
     d_grid, a_grid, z_grid, pi_z, ReturnFn, P_p2, DiscountFactorParamNames, vfo_2);
@@ -290,8 +292,9 @@ end
 % Must stay 5D because V_next_5d at j_s1_start depends on inherited theta_c!
 if ~isempty(j_p1)
     vfo_1 = vfoptions;
-    vfo_1.verbose  = 0;
-    vfo_1.V_Jplus1 = V_next_5d;
+    vfo_1.verbose    = 0;
+    vfo_1.vectorized = 1;
+    vfo_1.V_Jplus1   = V_next_5d;
     P_p1 = slice_age_params_ptype(Params, Names_HH, j_p1, J);
     [V_p1, Pol_p1] = ValueFnIter_MixHorz_PType(nd_p1, n_a, n_z, nj_p1, Names_HH, ...
         dg_p1, a_grid, z_grid, pi_z, ReturnFn, P_p1, DiscountFactorParamNames, vfo_1);

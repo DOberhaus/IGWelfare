@@ -209,6 +209,7 @@ if Use_ExpAsset_Pipeline && exist('ReturnFn_SpatialHH_Compact4D.m', 'file')
     for r_idx = 1:N_reg
         hh_type = ['HH_', Regions{r_idx}];
         vfoptions.experienceasset.(hh_type)  = 0;
+        vfoptions.vectorized                 = 1;
         simoptions.experienceasset.(hh_type) = 0;
 
         n_d.(hh_type)    = [4, 3, 7];
