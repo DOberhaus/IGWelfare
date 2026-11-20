@@ -103,7 +103,7 @@ elseif (agej >= j_s2_start) && (agej <= j_s2_end)
     thetac_prime   = (1.0 - w2) .* thetac_retained + w2 .* thetac_target2;
 
 else
-    thetac_prime = thetac;
+    thetac_prime = thetac + 0.0 .* i_c;
 end
 
 end
