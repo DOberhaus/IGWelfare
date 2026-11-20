@@ -73,6 +73,8 @@ if exist('OCTAVE_VERSION', 'builtin') ~= 0
             'ReturnFn_Firm', ...
             'HumanCapital_Lifecycle_aprimeFn'});
     end
+    % Keep IGWelfare/src/utils ahead of VFIToolkit-octave/shims/matlab (so vfi_active_ax([]) works)
+    addpath(fullfile(igw_root, 'src', 'utils'), '-begin');
 
     % Graphics toolkit discipline:
     %   - Try switching 'fltk' -> 'qt' whenever 'qt' is in available_graphics_toolkits()

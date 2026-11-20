@@ -9,8 +9,8 @@
 % Outputs Table12A (IGE), Table12B (Variance Explained), Table12C (Earnings & CE Welfare), and FigE8.
 
 if ~exist('Params', 'var'), Params = struct(); end
-if ~isfield(Params, 'dt') || ~isfield(Params, 'DataSpec')
-    Params = Configure_TimeGrid_Params(Params);
+if ~isfield(Params, 'dt') || ~isfield(Params, 'DataSpec_Digest')
+    Params = Configure_Model_Params(Params);
 end
 if ~exist('Regions', 'var') || isempty(Regions), Regions = Params.Regions; end
 
@@ -46,49 +46,10 @@ j_launch = Params.j_child_launch;
 
 for p_idx = 1:N_pol
     pol_name = PolicyNames{p_idx};
-    Params_p = Params;
-
-    switch pol_name
-        case 'BM_Baseline'
-            % Status quo baseline (SS0)
-        case 'P0_Early_0to5'
-            Params_p.G_ece_stage1_base = Params.G_ece1_sched(2); % 0.110 (+0.065 over SS0)
-            Params_p.G_ece_base        = Params_p.G_ece_stage1_base;
-            Params_p                   = Configure_TimeGrid_Params(Params_p);
-            Params_p.tau_l             = Params.tau_l + 0.008;
-        case 'P1P2_Late_6to17'
-            Params_p.G_ece_stage2_base = Params.G_ece2_sched(1) + 0.065; % +0.065 on Stage 2
-            Params_p                   = Configure_TimeGrid_Params(Params_p);
-            Params_p.tau_l             = Params.tau_l + 0.008;
-        case 'BN_FrontLoad'
-            Params_p.G_ece_stage1_base = Params.G_ece1_sched(1) + 0.025;
-            Params_p.G_ece_base        = Params_p.G_ece_stage1_base;
-            Params_p.G_ece_stage2_base = max(0.010, Params.G_ece2_sched(1) - 0.025);
-            Params_p                   = Configure_TimeGrid_Params(Params_p);
-        case 'P0_Plus_GrantE'
-            Params_p.G_ece_stage1_base = Params.G_ece1_sched(2); % 0.110
-            Params_p.G_ece_base        = Params_p.G_ece_stage1_base;
-            Params_p                   = Configure_TimeGrid_Params(Params_p);
-            Params_p.YouthGrant        = Params.YouthGrant_sched(2); % 0.065
-            Params_p.tau_b             = 0.250;
-            % Convert tau_a and tau_k to PType structs so Firm_* gets the tax shift
-            % while HH_* keeps baseline life-cycle savings tax
-            tau_a_hh = Params.tau_a;
-            tau_k_hh = Params.tau_k;
-            Params_p.tau_a = struct();
-            Params_p.tau_k = struct();
-            w_mult_GE = Params.w_mult_SS1;
-            Q_mult_GE = Params.Q_mult_SS1;
-            for rr = 1:N_reg
-                r_name = Regions{rr};
-                Params_p.tau_a.(['HH_', r_name])   = tau_a_hh;
-                Params_p.tau_a.(['Firm_', r_name]) = 0.015;
-                Params_p.tau_k.(['HH_', r_name])   = tau_k_hh;
-                Params_p.tau_k.(['Firm_', r_name]) = 0.120;
-                Params_p.w_reg.(['HH_', r_name])   = Params.w_reg.(['HH_', r_name])   * w_mult_GE(rr);
-                Params_p.w_reg.(['Firm_', r_name]) = Params.w_reg.(['Firm_', r_name]) * w_mult_GE(rr);
-                Params_p.Q_reg.(['HH_', r_name])   = Params.Q_reg.(['HH_', r_name])   * Q_mult_GE(rr);
-            end
+    if strcmp(pol_name, 'BM_Baseline')
+        Params_p = Params;
+    else
+        Params_p = Apply_Policy_Regime(Params, pol_name);
     end
 
     simoptions_5D.d_grid = d_grid_5D;

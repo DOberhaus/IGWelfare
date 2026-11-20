@@ -35,16 +35,16 @@ else
 end
 
 %% 2. STATE-CONTINGENT HOUSING USER COST p_H(a, z, Q_reg) (LVR-GATED ON 61-PT ASSET GRID)
-R_ann  = (1 + r) ^ (1 / dt);
+R_ann  = (1 + r) .^ (1 ./ dt);
 rr_reg = max(0.010 * Q_reg, (1 + mu_maint - (G_reg / R_ann)) * Q_reg);
 rh_reg = max(0.008 * Q_reg, (1 + mu_maint - upsilon_h - (G_reg / R_ann)) * Q_reg);
 xi_reg = min(1.0, (1 / chi_bar) * (rr_reg / rh_reg));
 
 % Skill-readiness capitalization of YouthGrant E into LVR deposit access at agej == 1:
-yg_cap_skill     = ((agej == 1) * YouthGrant) * min(1.20, max(0.35, (h / 1.00) ^ 0.75));
+yg_cap_skill     = ((agej == 1) * YouthGrant) * min(1.20, max(0.35, (h ./ 1.00) .^ 0.75));
 lvr_access       = min(1.0, max(0.0, (a + yg_cap_skill) / max(1e-4, 0.20 * Q_reg)));
 xi_hh            = min(1.0, xi_reg * (0.94 + 0.10 * lvr_access));
-is_evict_tail    = double(a < 0.08 * Q_reg) * double(z < 0.85);
+is_evict_tail    = double(a < 0.08 .* Q_reg) .* double(z < 0.85);
 transience_wedge = 1.0 + 0.04 * is_evict_tail;
 
 if agej < Jr
@@ -60,19 +60,19 @@ is_distress_z = double(z < 0.80) .* double(a < 0.12 * Q_reg);
 K_whanau_net  = K_whanau - 0.28 .* is_super_cut .* is_distress_z;
 sandwich_drag = max(0.0, -K_whanau_net) .* 0.035;
 
-kaiako_cooling = (max(0.50, Q_reg_base) / max(0.50, Q_reg)) ^ 0.35;
+kaiako_cooling = (max(0.50, Q_reg_base) ./ max(0.50, Q_reg)) .^ 0.35;
 G_ece1_eff     = G_ece_stage1 * kaiako_cooling;
 G_ece2_eff     = G_ece_stage2 * kaiako_cooling;
 M_mentor       = min(1.0, max(0.0, 0.173 + 20.0 * (G_ece2_eff - 0.065)));
 M_trust_gated  = M_mentor .* (0.45 + 0.55 .* min(1.0, max(0.0, K_whanau_net) ./ 0.35));
 
 %% 4. BUDGET CONSTRAINT & "INCOME x GEOGRAPHY" TRANSFER RULE (FLOWS SCALED BY scale_dt)
-gross_earn       = w_reg * h * z * l;
-T_geo            = Transfer_Geo * exp(-1.8 * gross_earn);
-wealth_after_tax = ((1 - tau_a) ^ dt) * a + r * (1 - tau_k) * a;
+gross_earn       = w_reg .* h .* z .* l;
+T_geo            = Transfer_Geo .* exp(-1.8 .* gross_earn);
+wealth_after_tax = ((1 - tau_a) .^ dt) .* a + r .* (1 - tau_k) .* a;
 % Productive capitalization of YouthGrant depends on completed pre-labor skill h at launch (agej == 1):
 skill_ready_mult = min(1.15, max(0.55, 0.45 + 0.55 * (h / 1.00)));
-youth_endow      = (agej == 1) * YouthGrant * skill_ready_mult;
+youth_endow      = (agej == 1) .* YouthGrant .* skill_ready_mult;
 pension_inc      = (agej >= Jr) * p_super;
 
 c_budget = wealth_after_tax - aprime + youth_endow ...
@@ -88,7 +88,7 @@ end
 %% 5. COMPOSITE CONSUMPTION, LABOR/TRAINING DISUTILITY, & TWO-STAGE CHILD ALTRUISM
 % Factor Cobb-Douglas u_comp = (phi_nd*c_eff)^phi_nd * ((1-phi_nd)*c_eff/p_H)^(1-phi_nd)
 % so fractional powers run only on scalar/1D p_H instead of the full 4D/5D c_eff tensor:
-cobb_mult = ((phi_nd ^ phi_nd) * ((1 - phi_nd) ^ (1 - phi_nd))) .* (p_H .^ (phi_nd - 1));
+cobb_mult = ((phi_nd .^ phi_nd) .* ((1 - phi_nd) .^ (1 - phi_nd))) .* (p_H .^ (phi_nd - 1));
 u_comp    = c_eff .* cobb_mult;
 eta_c     = 2.0;
 

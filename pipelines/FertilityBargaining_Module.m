@@ -8,8 +8,8 @@
 %   - FigFert_4Region_Bargaining_Solvency.png (2x2 figure with continuous Age 60-75 U-Curve in Panel D)
 
 if ~exist('Params', 'var'), Params = struct(); end
-if ~isfield(Params, 'dt') || ~isfield(Params, 'DataSpec')
-    Params = Configure_TimeGrid_Params(Params);
+if ~isfield(Params, 'dt') || ~isfield(Params, 'DataSpec_Digest')
+    Params = Configure_Model_Params(Params);
 end
 if ~exist('Regions', 'var') || isempty(Regions), Regions = Params.Regions; end
 if ~exist('Reg_HH_Shares', 'var') || isempty(Reg_HH_Shares), Reg_HH_Shares = Params.Pop_Weights_4(:); end
@@ -58,24 +58,10 @@ for r_idx = 1:N_reg
 end
 
 %% 1. EVALUATE THE 6 DISCRETE BENCHMARK SCENARIOS
-% Construct canonical SS0, SS1, and SS2 regional parameter structs from Single Source of Truth:
-P_SS0 = Params;
-P_SS0.G_ece_stage1_base   = Params.G_ece1_sched(1);
-P_SS0.G_ece_stage2_base   = Params.G_ece2_sched(1);
-P_SS0.active_phi_local_vec = Params.phi_local_SS0;
-P_SS0 = Configure_TimeGrid_Params(P_SS0);
-
-P_SS1 = Params;
-P_SS1.G_ece_stage1_base   = Params.G_ece1_sched(2);
-P_SS1.G_ece_stage2_base   = Params.G_ece2_sched(2);
-P_SS1.active_phi_local_vec = Params.phi_local_SS1;
-P_SS1 = Configure_TimeGrid_Params(P_SS1);
-
-P_SS2 = Params;
-P_SS2.G_ece_stage1_base   = Params.G_ece1_sched(3);
-P_SS2.G_ece_stage2_base   = Params.G_ece2_sched(3);
-P_SS2.active_phi_local_vec = Params.phi_local_SS2;
-P_SS2 = Configure_TimeGrid_Params(P_SS2);
+% Construct canonical SS0, SS1, and SS2 regional parameter structs via Apply_Policy_Regime:
+P_SS0 = Apply_Policy_Regime(Params, 'SS0');
+P_SS1 = Apply_Policy_Regime(Params, 'SS1');
+P_SS2 = Apply_Policy_Regime(Params, 'SS2');
 
 for s_idx = 1:N_scen
     super_age_s = A_base;
@@ -97,10 +83,7 @@ for s_idx = 1:N_scen
         case 3 % Barnardos Stage-1 ECE Bargaining Relief (PE ECE1/ECE2 expansion, SS0 prices/kai)
             beta_hyp  = 0.92;
             chi_f_pen = 0.15;
-            P_s3      = P_SS0;
-            P_s3.G_ece_stage1_base = Params.G_ece1_sched(2);
-            P_s3.G_ece_stage2_base = Params.G_ece2_sched(2);
-            P_s3      = Configure_TimeGrid_Params(P_s3);
+            P_s3      = Apply_Policy_Regime(P_SS0, 'Barnardos_ECE_PE');
             G_ece1_s  = P_s3.G_ece_stage1;
             G_ece2_s  = P_s3.G_ece_stage2;
         case 4 % Phase 1 (SS1) Full Package at Age 65

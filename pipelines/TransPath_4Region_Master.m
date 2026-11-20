@@ -8,8 +8,9 @@
 %     and compares Pre-Announced Full Credibility (lambda_cred = 1) vs Unannounced MIT Shock
 %     (lambda_cred = 0 prior to T_phase2_yr).
 
-if ~exist('Params', 'var') || ~isfield(Params, 'dt')
-    Params = Configure_TimeGrid_Params(Params, 5);
+if ~exist('Params', 'var') || ~isfield(Params, 'dt') || ~isfield(Params, 'DataSpec_Digest')
+    if ~exist('Params', 'var'), Params = struct(); end
+    Params = Configure_Model_Params(Params);
 end
 
 dt          = Params.dt;
@@ -24,13 +25,14 @@ has_SS2 = (exist('WelfareResults', 'var') && isfield(WelfareResults, 'SS2')) || 
 
 % Resolve Phase-2 Trigger Year & Announcement Mode from Layer 3 ContingencySpec (unless explicitly overridden)
 if ~exist('StateMetrics_Trans', 'var'), StateMetrics_Trans = struct(); end
-GateEval_Trans = Evaluate_Contingency_Gates(Params.ContingencySpec, Trans_Years, StateMetrics_Trans);
+ContingencySpec_Trans = Load_Contingency_Policy(Params.Profile_ID, Params.Contingency_Policy);
+GateEval_Trans = Evaluate_Contingency_Gates(ContingencySpec_Trans, Trans_Years, StateMetrics_Trans);
 if ~exist('T_phase2_yr', 'var') || isempty(T_phase2_yr)
     T_phase2_yr = GateEval_Trans.SS2_Unlock_Year;
 end
 if ~exist('Phase2_Announcement_Mode', 'var') || isempty(Phase2_Announcement_Mode)
     % 'PreAnnounced' (lambda_cred = 1.0), 'EarnedCred' (ramps 0.25 -> 1.0), or 'Unannounced_MIT' (0 -> 1 at T_phase2_yr)
-    Phase2_Announcement_Mode = Params.ContingencySpec.Announcement_Mode;
+    Phase2_Announcement_Mode = Params.Contingency_Announcement_Mode;
 end
 
 %% 1. DYNAMIC REGIONAL POPULATION LAW OF MOTION (s_HH,t: DOMESTIC SORTING + INTL INFLOWS FROM DATASPEC)
@@ -41,9 +43,9 @@ if isfield(Params, 'PTypeWeights') && numel(Params.PTypeWeights) >= N_reg
 end
 s_HH_path(1, :) = s_HH_0;
 
-Pi_dom     = Params.DataSpec.Transition.Pi_dom_SS1;
-Pi_dom_SS2 = Params.DataSpec.Transition.Pi_dom_SS2;
-m_intl     = Params.DataSpec.Transition.Intl_Inflow_Share;
+Pi_dom     = Params.Trans_Pi_dom_SS1;
+Pi_dom_SS2 = Params.Trans_Pi_dom_SS2;
+m_intl     = Params.Trans_Intl_Inflow_Share;
 zeta_c     = 0.035 * (dt / 5);
 
 for t = 1:(T_trans - 1)
@@ -83,7 +85,7 @@ CE_Cohort_MIT    = zeros(N_coh, N_reg); % Counterfactual unannounced MIT traject
 % Rural+Small lead in Waves 1, 4, 7 (plus consecutive Waves 1-3 Electrification);
 % Large follows in Waves 2, 5, 8; Auckland follows in Waves 3, 6, 9:
 is_kahui_mode = ~isfield(Params, 'Rollout_Mode') || any(strcmpi(Params.Rollout_Mode, {'TeKahuiWaka', 'Armada'}));
-t_kahui_lag   = Params.DataSpec.Reg_Table.kahui_lag_yrs(:)'; % Regional mean wave arrival center (yrs) from DataSpec
+t_kahui_lag   = Params.kahui_lag_yrs(:)'; % Regional mean wave arrival center (yrs) from DataSpec
 
 for r_idx = 1:N_reg
     pe_1 = T1_SS1{1, r_idx};
@@ -160,14 +162,14 @@ end
 
 %% 4. KIYOTAKI HOUSING USER-COST COOLING, $1.6T ESTATE REALLOCATION & BRAIN-DRAIN CLOSURE
 Q_path         = zeros(T_trans, N_reg);
-Q_init         = Params.DataSpec.Transition.Q_init_trans;
+Q_init         = Params.Trans_Q_init;
 Q_end_SS1      = Q_init .* Params.Q_mult_SS1;
 Q_end_SS2      = Q_init .* Params.Q_mult_SS2;
 
 Emig_Rate_Path = zeros(T_trans, N_reg);
-Emig_0         = Params.DataSpec.Transition.Emig_0;
-Emig_SS1       = Params.DataSpec.Transition.Emig_SS1;
-Emig_SS2       = Params.DataSpec.Transition.Emig_SS2;
+Emig_0         = Params.Trans_Emig_0;
+Emig_SS1       = Params.Trans_Emig_SS1;
+Emig_SS2       = Params.Trans_Emig_SS2;
 
 for t = 1:T_trans
     yr = Trans_Years(t);

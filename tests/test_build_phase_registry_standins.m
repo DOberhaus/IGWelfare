@@ -6,7 +6,9 @@ function test_build_phase_registry_standins()
 % Solved phases in the workspace must pass through unchanged and unlogged.
 % Runs in a scratch directory and plants variables in the base workspace; if any of those names already exist it
 % prints a SKIP line and returns without touching them. Throws on failure, silent on success. No toolboxes, no GPU; MATLAB and GNU Octave.
-addpath(fileparts(fileparts(mfilename('fullpath'))));
+repo_root = fileparts(fileparts(mfilename('fullpath')));
+addpath(repo_root);
+if exist('setup_igw_paths', 'file') == 2, setup_igw_paths(true); end
 
 base_vars = {'StatDist_SS0', 'Policy_SS0', 'V_SS0', 'jDist_SS0', 'Params_SS0', 'IG_Diag_SS0', ...
     'StatDist_SS1', 'Params_SS1', 'StatDist_SS2'};

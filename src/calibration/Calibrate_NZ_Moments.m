@@ -3,9 +3,9 @@
 % Implements multiple subfunctions locally so it runs natively as a script in both MATLAB and GNU Octave.
 
 if ~exist('Params', 'var'), Params = struct(); end
-Params    = Configure_TimeGrid_Params(Params);
-TargetVec = Params.DataSpec.TargetMoments.Target_Val;
-WeightVec = Params.DataSpec.TargetMoments.Weight;
+Params    = Configure_Model_Params(Params);
+TargetVec = Params.TargetMoments_Val;
+WeightVec = Params.TargetMoments_Weight;
 
 % Placeholder for standalone execution of calibration procedure
 fprintf('Running %s (%d-Region) SMM Calibration Script Procedure...\n', ...

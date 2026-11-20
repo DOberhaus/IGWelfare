@@ -134,9 +134,8 @@ else
     % Parametric fallback from SS0 -- every stand-in value is logged
     IGW_Log('IGW:PhaseStandIn', 'Build_Phase_Registry phase SS1: workspace variable StatDist_SS1 (or StatDist_GE_Endo) is missing; substituting stand-in values, this phase is NOT a solved steady state');
     Dist1 = Dist0; Pol1 = Pol0; V1 = V0; jDist1 = jDist0; P1 = P0;
-    G0 = getfield_def(P0, 'G_ece', 0.05);
-    P1.G_ece = G0 + 0.14;
-    IGW_Log('IGW:PhaseStandIn', 'Build_Phase_Registry phase SS1: stand-in G_ece = %.4f (SS0 G_ece %.4f%s + 0.14)', P1.G_ece, G0, absent_note(P0, 'G_ece', '0.05 assumed'));
+    [P1.G_ece, G0_sc, G1_sc] = add_scalar_or_ptype(getfield_def(P0, 'G_ece', 0.05), 0.14);
+    IGW_Log('IGW:PhaseStandIn', 'Build_Phase_Registry phase SS1: stand-in G_ece = %.4f (SS0 G_ece %.4f%s + 0.14)', G1_sc, G0_sc, absent_note(P0, 'G_ece', '0.05 assumed'));
     Q_mult   = struct('Rural', 0.990, 'Small', 0.975, 'Urban', 0.960, 'Large', 0.950, 'Auckland', 0.925);
     for r_i = 1:length(Regions)
         reg = Regions{r_i}; hk = ['HH_', reg];
@@ -177,11 +176,10 @@ else
     IGW_Log('IGW:PhaseStandIn', 'Build_Phase_Registry phase %s: workspace variable StatDist_%s is missing; substituting stand-in values, this phase is NOT a solved steady state', code, code);
     DistK = PrevPhase.Dist; PolK = PrevPhase.Pol; VK = PrevPhase.V; jDistK = PrevPhase.jDist;
     PK    = PrevPhase.Params;
-    G0 = getfield_def(PK, 'G_ece', 0.19);
+    [PK.G_ece, G0_sc, GK_sc] = add_scalar_or_ptype(getfield_def(PK, 'G_ece', 0.19), 0.03);
     t0 = getfield_def(PK, 'tau_l', 0.22);
-    PK.G_ece = G0 + 0.03;
     PK.tau_l = max(0.10, t0 - 0.025); % 2050 Debt-Sinking tax relief
-    IGW_Log('IGW:PhaseStandIn', 'Build_Phase_Registry phase %s: stand-in G_ece = %.4f (previous phase G_ece %.4f%s + 0.03)', code, PK.G_ece, G0, absent_note(PrevPhase.Params, 'G_ece', '0.19 assumed'));
+    IGW_Log('IGW:PhaseStandIn', 'Build_Phase_Registry phase %s: stand-in G_ece = %.4f (previous phase G_ece %.4f%s + 0.03)', code, GK_sc, G0_sc, absent_note(PrevPhase.Params, 'G_ece', '0.19 assumed'));
     IGW_Log('IGW:PhaseStandIn', 'Build_Phase_Registry phase %s: stand-in tau_l = %.4f (previous phase tau_l %.4f%s - 0.025, floor 0.10)', code, PK.tau_l, t0, absent_note(PrevPhase.Params, 'tau_l', '0.22 assumed'));
     for r_i = 1:length(Regions)
         reg = Regions{r_i}; hk = ['HH_', reg];
@@ -215,4 +213,20 @@ end
 function note = absent_note(S, fname, msg)
 % ' [<msg>]' when S has no field fname (the typed default was used), else ''.
 if isstruct(S) && isfield(S, fname), note = ''; else, note = [' [absent: ', msg, ']']; end
+end
+
+function [out_val, base_sc, new_sc] = add_scalar_or_ptype(in_val, delta)
+if isstruct(in_val)
+    fn = fieldnames(in_val);
+    out_val = in_val;
+    for k = 1:numel(fn)
+        out_val.(fn{k}) = in_val.(fn{k}) + delta;
+    end
+    base_sc = in_val.(fn{1});
+    new_sc  = out_val.(fn{1});
+else
+    base_sc = in_val;
+    out_val = in_val + delta;
+    new_sc  = out_val;
+end
 end

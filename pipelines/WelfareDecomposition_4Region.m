@@ -8,7 +8,7 @@
 %   - Populates workspace structs (StatDist_SS0, StatDist_SS1, ..., Phases(1:M+1))
 
 if ~exist('Params', 'var'), Params = struct(); end
-Params = Configure_TimeGrid_Params(Params);
+Params = Configure_Model_Params(Params);
 if ~exist('Regions', 'var') || isempty(Regions)
     Regions = Params.Regions;
 end
@@ -45,82 +45,20 @@ if exist('IG_Diagnostics', 'var'), IG_Diag_SS0 = IG_Diagnostics; else, IG_Diag_S
 V_Base = V_SS0; Policy_Base = Policy_SS0; StatDist_Base = StatDist_SS0;
 jequalone_Base = jDist_SS0; Params_Base = Params_SS0; IG_Diag_Base = IG_Diag_SS0;
 
-%% 2. DEFINE MULTIPHASE REFORM SPECIFICATIONS (DEFAULT: M = 1 FOR SS1; ADD SS2 ANYTIME)
-if ~exist('Reform_Phase_Specs', 'var') || isempty(Reform_Phase_Specs)
-    Reform_Phase_Specs = struct([]);
-    % --- PHASE 1 (SS1): Barnardos First-2000-Days + Montessori + Wealth/Estate Tax Rebalance ---
-    Reform_Phase_Specs(1).Code          = 'SS1';
-    Reform_Phase_Specs(1).Label         = 'B. High-Opportunity Reform + Montessori Mentoring (SS1)';
-    Reform_Phase_Specs(1).Intensity     = 1.0;
-    Reform_Phase_Specs(1).G_ece_stage1  = Params_SS0.G_ece1_sched(2);
-    Reform_Phase_Specs(1).G_ece_stage2  = Params_SS0.G_ece2_sched(2);
-    Reform_Phase_Specs(1).G_ece         = Params_SS0.G_ece1_sched(2);
-    Reform_Phase_Specs(1).YouthGrant    = Params_SS0.YouthGrant_sched(2);
-    Reform_Phase_Specs(1).tau_a         = Params_SS0.tau_a; % Household liquid savings rate unchanged; wealth tax is on Firm_k book equity
-    Reform_Phase_Specs(1).tau_b         = 0.180;
-    Reform_Phase_Specs(1).tau_l_delta   = 0.000; % Revenue-neutral PAYE in SS1 (matches field in SS2!)
-    Reform_Phase_Specs(1).r_delta       = -0.004;
-    Reform_Phase_Specs(1).w_mult_vs_SS0 = Params_SS0.w_mult_SS1; % Guvenen (2023) capital + Murphy-Shleifer-Vishny (1991) talent reallocation lift
-    Reform_Phase_Specs(1).Q_mult_vs_SS0 = Params_SS0.Q_mult_SS1; % Guvenen (2023) capital + Murphy-Shleifer-Vishny (1991) talent reallocation lift
-    Reform_Phase_Specs(1).Frac_struggling  = 0.045; % Hardship compression from 28.5% -> 4.5% (lifts relational utility u_rel)
-    Reform_Phase_Specs(1).S_cohesion    = 112.0; % Social cohesion lift from brain-drain & early hardship reduction
-    t1_mult_def = [1.52, 1.55, 1.5625, 2.00]; % Exact [0.038, 0.031, 0.025, 0.028] on NZ_Dunedin1972 baseline [0.025, 0.020, 0.016, 0.014]
-    t_geo_ss1   = struct();
-    for r_tg = 1:N_reg
-        hk_tg = ['HH_', Regions{r_tg}];
-        m_tg  = t1_mult_def(min(r_tg, numel(t1_mult_def)));
-        t_geo_ss1.(hk_tg) = round(Params_SS0.Transfer_Geo.(hk_tg) * m_tg, 4);
-    end
-    Reform_Phase_Specs(1).Transfer_Geo  = t_geo_ss1;
-    Reform_Phase_Specs(1).super_age     = Params_SS0.super_age_SS1;
-elseif ~isfield(Reform_Phase_Specs, 'tau_l_delta')
-    [Reform_Phase_Specs.tau_l_delta] = deal(0.000);
-end
-
-% Toggle Enable_SS2_Phase = true (or pass Active_Phases = {'SS0','SS1','SS2'}) to solve Phase 2 (SS2):
+%% 2. DEFINE MULTIPHASE REFORM SPECIFICATIONS VIA TIER-D DEFAULT_REFORM_PHASE_SPECS
 Enable_SS2_Phase = (exist('Enable_SS2_Phase', 'var') && Enable_SS2_Phase) || ...
     (exist('Active_Phases', 'var') && any(strcmpi(Active_Phases, 'SS2')));
 
-if Enable_SS2_Phase
-    % --- PHASE 2 (SS2): 2050 Actuarial Liability Release, Debt-Sinking & PAYE Tax-Relief Harvest ---
-    % Triggered after Cash Breakeven (Yr 18.8) & Year 5-20 Actuarial Surplus Verification ($35.25B -> $257.8B)
-    Reform_Phase_Specs(2).Code          = 'SS2';
-    Reform_Phase_Specs(2).Label         = 'C. 2050 Actuarial Dividend & PAYE Tax-Relief Harvest (SS2)';
-    Reform_Phase_Specs(2).Intensity     = 1.30;
-    Reform_Phase_Specs(2).G_ece_stage1  = Params_SS0.G_ece1_sched(3); % 50% Reinvestment Pool deepens First-2000-Days wraparound
-    Reform_Phase_Specs(2).G_ece_stage2  = Params_SS0.G_ece2_sched(3); % Expanded Montessori / Tuakana adolescent mentoring
-    Reform_Phase_Specs(2).G_ece         = Params_SS0.G_ece1_sched(3);
-    Reform_Phase_Specs(2).YouthGrant    = Params_SS0.YouthGrant_sched(3); % Compounded Opportunity Endowment lifts age-20 grant
-    Reform_Phase_Specs(2).tau_a         = Params_SS0.tau_a;
-    Reform_Phase_Specs(2).tau_b         = 0.180; % Steps down from 25% peak wave to 18% steady-state maintenance
-    Reform_Phase_Specs(2).r_delta       = -0.006; % 50% Debt-Sinking Fund lowers sovereign crowding-out
-    Reform_Phase_Specs(2).w_mult_vs_SS0 = Params_SS0.w_mult_SS2; % 1.65x Public Infra Reinvestment + TFP lift
-    Reform_Phase_Specs(2).Q_mult_vs_SS0 = Params_SS0.Q_mult_SS2; % Long-run spatial housing supply elasticity
-    Reform_Phase_Specs(2).Frac_struggling  = 0.015; % 2nd-gen Daruich compounding + Stage-2 mentoring reaches 1.5%
-    Reform_Phase_Specs(2).S_cohesion    = 126.0;
-    % Endogenous 85% retirement of the SS1 geographic transfer top-up in SS2 (Params_SS0.psi_retire_T = 0.850)
-    % as Rural/Small z_l -> z_h enterprise upgrading and competition reform replace fiscal charity:
-    psi_ret = Params_SS0.psi_retire_T; % 0.850
-    T0_vec  = cellfun(@(r) Params_SS0.Transfer_Geo.(['HH_', r]), Regions);
-    T1_vec  = cellfun(@(r) Reform_Phase_Specs(1).Transfer_Geo.(['HH_', r]), Regions);
-    T2_vec  = max(Params_SS0.T_reg_min_floor(1:N_reg), T0_vec + (1.0 - psi_ret) * (T1_vec - T0_vec));
-
-    t_geo_ss2 = struct();
-    for r_tg = 1:N_reg
-        t_geo_ss2.(['HH_', Regions{r_tg}]) = T2_vec(r_tg);
+if ~exist('Reform_Phase_Specs', 'var') || isempty(Reform_Phase_Specs)
+    Reform_Phase_Specs = Default_Reform_Phase_Specs(Params_SS0, Enable_SS2_Phase);
+else
+    if ~isfield(Reform_Phase_Specs, 'tau_l_delta')
+        [Reform_Phase_Specs.tau_l_delta] = deal(0.000);
     end
-    Reform_Phase_Specs(2).Transfer_Geo  = t_geo_ss2;
-    Reform_Phase_Specs(2).super_age = Params_SS0.super_age_SS2; % Default 64.0 (or set 63.0, 62.0!)
-
-    % Endogenous SS2 PAYE tax cut (tau_l_delta) including fiscal savings from 85% Transfer_Geo retirement:
-    sa2 = Reform_Phase_Specs(2).super_age;
-    if sa2 < 65.0
-        super_tax_cost = 0.0030 * (65.0 - sa2) + 0.00085 * ((65.0 - sa2) ^ 2);
-    else
-        super_tax_cost = 0.0028 * ((sa2 - 65.0) ^ 1.30);
+    if Enable_SS2_Phase && numel(Reform_Phase_Specs) < 2
+        def_both = Default_Reform_Phase_Specs(Params_SS0, true);
+        Reform_Phase_Specs(2) = def_both(2);
     end
-    transfer_retire_tax_div = 0.0075 * psi_ret; % -0.64 pp additional PAYE cut funded by retiring Transfer_Geo
-    Reform_Phase_Specs(2).tau_l_delta = -0.0350 - transfer_retire_tax_div + super_tax_cost;
 end
 
 M_reforms = numel(Reform_Phase_Specs);
@@ -141,134 +79,21 @@ for m = 1:M_reforms
 
     fprintf('Computing Reform %d of %d: %s\n', m, M_reforms, p_code);
 
-    % 3A. Stage A: Short-Run PE (Phase-m policy levers; baseline prices & jDist_SS0)
-    P_PE                   = Params_SS0;
-    if m == 1
-        P_PE.eta_deliv_vec = Params_SS0.eta_delivery_SS1;
-    else
-        P_PE.eta_deliv_vec = Params_SS0.eta_delivery_SS2;
-    end
-    P_PE.G_ece_stage1_base = spec.G_ece_stage1;
-    if isfield(spec, 'G_ece_stage2')
-        P_PE.G_ece_stage2_base = spec.G_ece_stage2;
-    else
-        P_PE.G_ece_stage2_base = spec.G_ece_stage1;
-    end
-    P_PE.G_ece_base        = spec.G_ece;
-    if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec)
-        P_PE.active_phi_local_vec = spec.phi_local_vec;
-    else
-        P_PE.active_phi_local_vec = Params_SS0.phi_local_SS1;
-    end
-    P_PE            = Configure_TimeGrid_Params(P_PE);
-    mean_eta_m      = sum(P_PE.eta_deliv_vec(:) .* Params_SS0.Pop_Weights_4(:));
-    yg0             = Params_SS0.YouthGrant_sched(1);
-    % In SingleShot, Years 1-6 hand YouthGrant to unmentored SS0-skill cohorts (22% skill-mismatch dissipation);
-    % in Te Kāhui Waka, Wave 7 (Yr 7) synchronizes YouthGrant with Gate-3 mentored graduates (0% skill-mismatch waste):
-    if strcmpi(Params_SS0.Rollout_Mode, 'SingleShot') && (m == 1)
-        eta_ygr_skill = 0.78 * mean_eta_m;
-    else
-        eta_ygr_skill = 1.00 * mean_eta_m;
-    end
-    P_PE.YouthGrant = yg0 + eta_ygr_skill * (spec.YouthGrant - yg0);
-    P_PE.tau_a      = spec.tau_a;
-    P_PE.tau_b      = spec.tau_b;
-    if isfield(spec, 'tau_k') && ~isempty(spec.tau_k)
-        P_PE.tau_k = spec.tau_k;
-    end
-    if isfield(spec, 'tau_l_delta') && ~isempty(spec.tau_l_delta)
-        P_PE.tau_l = max(0.05, P_PE.tau_l + spec.tau_l_delta);
-    end
-    if isfield(spec, 'Frac_struggling') && isfield(P_PE, 'Frac_struggling')
-        P_PE.Frac_struggling = 0.5 * P_PE.Frac_struggling + 0.5 * spec.Frac_struggling;
-    end
-    P_PE.Transfer_Geo     = spec.Transfer_Geo;
-    P_PE.Reform_Intensity = spec.Intensity * mean_eta_m;
-    P_PE.Phase_Label      = spec.Label;
-
-    if isfield(spec, 'super_age') && ~isempty(spec.super_age)
-        super_age_m = spec.super_age;
-    else
-        super_age_m = 65.0;
-    end
-    P_PE.super_age = super_age_m;
-    P_PE.Jr        = 1 + (super_age_m - 20.0) / Params_SS0.dt;
-
-    % Fiscal U-curve penalty on PAYE tax rate when super_age deviates from the 64-65 sweet spot:
-    % - Below 64: shrinking the 60-63 peak-earner denominator erodes the -3.5 pp PAYE cut
-    % - Above 65: disability/geriatric health leaks & struggling tax-base erosion eat into the fiscal surplus
-    if super_age_m < 64.0
-        super_tax_wedge = 0.0045 * ((64.0 - super_age_m) ^ 1.35); % +2.9 pp at Age 60
-    elseif super_age_m > 65.0
-        super_tax_wedge = 0.0032 * ((super_age_m - 65.0) ^ 1.25); % +2.2 pp at Age 70, +5.7 pp at Age 75
-    else
-        super_tax_wedge = 0.0008 * (65.0 - super_age_m);          % Only +0.08 pp at Age 64 sweet spot!
-    end
+    % 3A. Stage A: Short-Run PE via Single-Source-of-Truth Apply_Policy_Regime
+    P_PE        = Apply_Policy_Regime(Params_SS0, spec, struct('Stage', 'PE', 'PhaseIdx', m));
+    super_age_m = P_PE.super_age;
 
     t_wm = tic;
     [V_PE_m, Policy_PE_m] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, d_grid, a_grid, z_grid, pi_z, ReturnFn, P_PE, DiscountFactorParamNames, vfoptions, Regions);
     fprintf('  [DIAG Step6 %s] PE VFI: %.2fs\n', p_code, toc(t_wm));
 
-    % 3B. Stage B: Long-Run GE with Exogenous Skills (Phase-m GE prices & z_l -> z_h job upgrading; prior jDist)
-    P_GE   = P_PE;
-    P_GE.r = Params_SS0.r + spec.r_delta;
-    if isfield(spec, 'Frac_struggling')
-        P_GE.Frac_struggling = spec.Frac_struggling;
-    end
-    if isfield(spec, 'S_cohesion')
-        P_GE.S_cohesion = spec.S_cohesion;
-    end
+    % 3B. Stage B: Long-Run GE with Exogenous Skills via Single-Source-of-Truth Apply_Policy_Regime
+    [P_GE, z_grid_m, pi_z_m] = Apply_Policy_Regime(Params_SS0, spec, ...
+        struct('Stage', 'GE', 'PhaseIdx', m, 'z_grid', z_grid, 'pi_z', pi_z));
     if super_age_m >= 65
-        elder_time_mult = exp(-Params_SS0.eta_elder_whanau*(super_age_m - 65));
+        elder_time_mult = exp(-Params_SS0.eta_elder_whanau * (super_age_m - 65));
     else
-        elder_time_mult = 1 + 0.16*tanh((65 - super_age_m)/1.8);
-    end
-    if isfield(spec, 'M_olig_vec') && ~isempty(spec.M_olig_vec)
-        P_GE.active_M_olig_vec = spec.M_olig_vec;
-    elseif m >= 2
-        P_GE.active_M_olig_vec = Params_SS0.M_olig_SS2;
-    else
-        P_GE.active_M_olig_vec = Params_SS0.M_olig_SS1;
-    end
-    if isfield(spec, 'mu_monop_vec') && ~isempty(spec.mu_monop_vec)
-        P_GE.active_mu_monop_vec = spec.mu_monop_vec;
-    elseif m >= 2
-        P_GE.active_mu_monop_vec = Params_SS0.mu_monop_SS2;
-    else
-        P_GE.active_mu_monop_vec = Params_SS0.mu_monop_SS1;
-    end
-    if isfield(spec, 'phi_local_vec') && ~isempty(spec.phi_local_vec)
-        P_GE.active_phi_local_vec = spec.phi_local_vec;
-    elseif m >= 2
-        P_GE.active_phi_local_vec = Params_SS0.phi_local_SS2;
-    else
-        P_GE.active_phi_local_vec = Params_SS0.phi_local_SS1;
-    end
-    P_GE = Configure_TimeGrid_Params(P_GE);
-
-    % Update regional prices, whanau care, electrification ebar_energy relief, and endogenous z_l -> z_h productivity grids (z_grid_m, pi_z_m)
-    z_grid_m = z_grid;
-    pi_z_m   = pi_z;
-    for r_idx = 1:N_reg
-        reg       = Regions{r_idx};
-        hh_type   = ['HH_', reg];
-        firm_type = ['Firm_', reg];
-        P_GE.w_reg.(hh_type)   = Params_SS0.w_reg.(hh_type)   * spec.w_mult_vs_SS0(r_idx);
-        P_GE.w_reg.(firm_type) = Params_SS0.w_reg.(firm_type) * spec.w_mult_vs_SS0(r_idx);
-        P_GE.Q_reg.(hh_type)   = Params_SS0.Q_reg.(hh_type)   * spec.Q_mult_vs_SS0(r_idx);
-        elder_home_mult        = min(1.25, max(0.50, (1.0 / spec.Q_mult_vs_SS0(r_idx)) ^ 0.35));
-        P_GE.K_whanau.(hh_type) = Params_SS0.K_whanau_base.(hh_type) * elder_home_mult * elder_time_mult;
-
-        % Consecutive Rural+Small -> Large -> Auckland electrification grants compress net ebar_energy:
-        elec_comp = P_GE.s_active_elec_vec(r_idx) * P_GE.eta_deliv_vec(r_idx) * Params_SS0.ebar_elec_relief_share(r_idx);
-        P_GE.ebar_energy.(hh_type) = Params_SS0.ebar_energy.(hh_type) * (1.0 - elec_comp);
-
-        % Endogenous regional z_l -> z_h shift from local procurement & youth career pathways (CEFS LFPI / FYI):
-        d_mu_z_r            = P_GE.mu_z_reg_vec(r_idx) - Params_SS0.mu_z_SS0(r_idx);
-        z_grid_m.(hh_type)  = z_grid.(hh_type) * exp(d_mu_z_r);
-        p_up_m              = P_GE.p_zh_upgrade_vec(r_idx);
-        p_dn_m              = P_GE.p_zl_downgrade_v(r_idx);
-        pi_z_m.(firm_type)  = [1.0 - p_up_m, p_up_m; p_dn_m, 1.0 - p_dn_m];
+        elder_time_mult = 1 + 0.16 * tanh((65 - super_age_m) / 1.8);
     end
 
     t_wm = tic;

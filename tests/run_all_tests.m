@@ -46,6 +46,7 @@ if isOctave
     if exist('VFIToolkit_Octave_Setup', 'file') ~= 0
         VFIToolkit_Octave_Setup(vecFns, true);
     end
+    addpath(fullfile(repoRoot, 'src', 'utils'), '-begin');
     if exist('vfi_pool', 'file') ~= 0
         pool_st = vfi_pool('status');
         if ~pool_st.active

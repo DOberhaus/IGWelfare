@@ -49,8 +49,8 @@ if exist('OCTAVE_VERSION', 'builtin') ~= 0
 end
 
 if ~exist('Params', 'var'), Params = struct(); end
-% The following will initialize Params.dt=5 and Params.n_z_pts=7 if Params doesn't define them
-Params = Configure_TimeGrid_Params(Params);
+% Initialize 4-tier provenance contract (canonical default Params.dt=3, Params.n_z_pts=7)
+Params = Configure_Model_Params(Params);
 
 %% 1. DEFINE PERMANENT TYPES (N_reg REGIONS x 2 SECTORS FROM DATASPEC)
 Regions = Params.Regions;
@@ -145,7 +145,7 @@ end
 
 % Discretize regional log-productivity AR(1) via Rouwenhorst (mew, rho, sigma, znum)
 % Note: In VFI Toolkit, mew = mu * (1 - rho) so unconditional mean of log(z) is Params.mu_z_reg_vec(r_idx)
-rho_z = 0.85;
+rho_z = Params.rho_z;
 for r_idx = 1:length(Regions)
     hh_type = ['HH_', Regions{r_idx}];
     [z_grid_log.(hh_type), pi_z.(hh_type)] = discretizeAR1_Rouwenhorst( ...
@@ -153,11 +153,10 @@ for r_idx = 1:length(Regions)
     z_grid.(hh_type) = exp(z_grid_log.(hh_type));
 end
 
-% Regional Firm Productivity Ceilings (z_l vs z_h from DataSpec.Reg_Table)
-RT_master = Params.DataSpec.Reg_Table;
+% Regional Firm Productivity Ceilings (z_l vs z_h from Tier B Apply_Empirical_Data)
 for r_idx = 1:N_reg
     firm_type = ['Firm_', Regions{r_idx}];
-    z_grid.(firm_type) = [RT_master.z_firm_low(r_idx); RT_master.z_firm_high(r_idx)];
+    z_grid.(firm_type) = [Params.z_firm_low_vec(r_idx); Params.z_firm_high_vec(r_idx)];
 end
 
 %% 4. SPATIAL HOUSING, ENERGY, & INTERGENERATIONAL PARAMETERS (FROM LAYER 1 DATASPEC)
@@ -169,32 +168,21 @@ for r_idx = 1:N_reg
     DiscountFactorParamNames.(['Firm_', Regions{r_idx}]) = {'beta_firm'};
 end
 
-% Two-Stage Child Skill (Cunha et al.), Ben-Porath, Housing Tenure, & Tax Parameters
-Params.gamma1_self = 0.53; Params.gamma1_inv = 0.24; Params.gamma1_par = 0.23; Params.phi1_ces = 0.35;
-Params.gamma2_self = 0.87; Params.gamma2_inv = 0.07; Params.gamma2_par = 0.06; Params.phi2_ces = -0.95;
-Params.G_ece_stage1_base = Params.G_ece1_sched(1); Params.G_ece_stage2_base = Params.G_ece2_sched(1);
-Params.G_ece_base = Params.G_ece_stage1_base;
-Params.gbar_ece = 0.020; Params.s_sub = 0.100;
-Params.omega_ic = 0.420; Params.h_par_mean = 1.000;
-Params.phi_nd = 0.80; Params.mu_maint = 0.04; Params.upsilon_h = 0.008; Params.chi_bar = 2.55;
-Params.alpha_I = 0.090; Params.alpha_H = 0.064;
-Params.p_super = 0.18; Params.c_floor = 0.04;
-Params.b1_beq = 4.20; Params.b2_beq = 0.45;
-if ~isfield(Params, 'YouthGrant'), Params.YouthGrant = Params.YouthGrant_sched(1); end
-Params.tau_l = 0.22; Params.tau_c = 0.15; Params.tau_k = 0.20; Params.tau_a = 0.005; Params.tau_b = 0.15;
-Params.alpha_k = 0.33; Params.lambda_col = 1.80; Params.sigma_hc_ig = 0.18;
+% Note: Tiers A, B, C, and D (Configure_Grid_And_Prefs, Apply_Empirical_Data,
+% Apply_Calibrated_Params, Apply_Policy_Regime) already populated all deep preferences,
+% statutory taxes, Cunha-Heckman/Ben-Porath elasticities, and SS0 ECE baselines while
+% respecting any caller-supplied overrides on Params!
 
 % Update active regional whanau capacity Params.K_whanau(k) from fixed Params.K_whanau_base(k)
 % as a function of current NZ Super age (Jr), pension rate (p_super), and current house prices (Params.Q_reg):
 super_age_eff   = 20 + (Params.Jr - 1) * Params.dt;
-elder_time_mult = exp(-0.09 * max(0, super_age_eff - 65)); % -9%/yr loss of grandparent time when Super age > 65
+elder_time_mult = exp(-Params.eta_elder_whanau * max(0, super_age_eff - 65));
 for r_idx = 1:length(Regions)
     hh_type = ['HH_', Regions{r_idx}];
-    % Ratio compares fixed SS0 baseline (Params.Q_reg_base) against active house price (Params.Q_reg):
     elder_home_mult = min(1.15, max(0.50, (Params.p_super / 0.18) * ((Params.Q_reg_base.(hh_type) / Params.Q_reg.(hh_type)) ^ 0.35)));
     Params.K_whanau.(hh_type) = Params.K_whanau_base.(hh_type) * elder_time_mult * elder_home_mult;
 end
-Params = Configure_TimeGrid_Params(Params);
+Params = Apply_Policy_Regime(Params, '');
 
 %% 5. SOLVE VFI & 4-REGION + ABROAD INTERGENERATIONAL TRANSITION LOOP
 for r_idx = 1:N_reg

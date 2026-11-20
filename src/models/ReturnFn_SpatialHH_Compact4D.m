@@ -35,16 +35,16 @@ else
 end
 
 %% 2. STATE-CONTINGENT HOUSING USER COST p_H(a, z, Q_reg) (LVR-GATED ON 61-PT ASSET GRID)
-R_ann  = (1 + r) ^ (1 / dt);
+R_ann  = (1 + r) .^ (1 ./ dt);
 rr_reg = max(0.010 * Q_reg, (1 + mu_maint - (G_reg / R_ann)) * Q_reg);
 rh_reg = max(0.008 * Q_reg, (1 + mu_maint - upsilon_h - (G_reg / R_ann)) * Q_reg);
 xi_reg = min(1.0, (1 / chi_bar) * (rr_reg / rh_reg));
 
 % Skill-readiness capitalization of YouthGrant E into LVR deposit access at agej == 1:
-yg_cap_skill     = ((agej == 1) * YouthGrant) * min(1.20, max(0.35, (h / 1.00) ^ 0.75));
+yg_cap_skill     = ((agej == 1) * YouthGrant) * min(1.20, max(0.35, (h ./ 1.00) .^ 0.75));
 lvr_access       = min(1.0, max(0.0, (a + yg_cap_skill) / max(1e-4, 0.20 * Q_reg)));
 xi_hh            = min(1.0, xi_reg * (0.98 + 0.04 * lvr_access));
-is_evict_tail    = double(a < 0.08 * Q_reg) * double(z < 0.85);
+is_evict_tail    = double(a < 0.08 .* Q_reg) .* double(z < 0.85);
 transience_wedge = 1.0 + 0.04 * is_evict_tail * max(0.0, (0.110 - G_ece) / 0.065);
 
 if ~is_post_65
@@ -64,7 +64,7 @@ else
     elder_time_mult = 1.0 + 0.16 * tanh(yrs_below_65 / 1.8);
 end
 K_whanau_net = K_whanau - 0.035 * yrs_above_65 .* (0.4 + is_distress_z);
-sandwich_drag = max(0.0, -K_whanau_net) .* 0.035 + 0.0012 * (yrs_above_65 ^ 1.20) * double(~is_post_65);
+sandwich_drag = max(0.0, -K_whanau_net) .* 0.035 + 0.0012 * (yrs_above_65 .^ 1.20) * double(~is_post_65);
 
 M_mentor      = min(1.0, max(0.0, 0.173 + 12.0 * (G_ece - 0.045)));
 M_trust_gated = M_mentor .* (0.45 + 0.55 .* min(1.0, max(0.0, K_whanau_net) ./ 0.35));
@@ -72,12 +72,12 @@ M_trust_gated = M_mentor .* (0.45 + 0.55 .* min(1.0, max(0.0, K_whanau_net) ./ 0
 %% 4. BUDGET CONSTRAINT & "INCOME x GEOGRAPHY" TRANSFER RULE (FLOWS SCALED BY scale_dt)
 s_sub            = min(0.80, G_ece / (G_ece + gbar_ece));
 senescence_fac   = exp(-0.08 * max(0.0, age_end_yrs - 65.0)); % 8%/yr productivity decay past Age 65
-gross_earn       = w_reg * h * z * l * senescence_fac;
-T_geo            = Transfer_Geo * exp(-1.8 * gross_earn);
-wealth_after_tax = ((1 - tau_a) ^ dt) * a + r * (1 - tau_k) * a;
+gross_earn       = w_reg .* h .* z .* l .* senescence_fac;
+T_geo            = Transfer_Geo .* exp(-1.8 .* gross_earn);
+wealth_after_tax = ((1 - tau_a) .^ dt) .* a + r .* (1 - tau_k) .* a;
 % Productive capitalization of YouthGrant depends on completed pre-labor skill h at launch (agej == 1):
 skill_ready_mult = min(1.15, max(0.55, 0.45 + 0.55 * (h / 1.00)));
-youth_endow      = (agej == 1) * YouthGrant * skill_ready_mult;
+youth_endow      = (agej == 1) .* YouthGrant .* skill_ready_mult;
 
 % When super_age_yrs > 65, displaced 65+ seniors who cannot receive NZ Super draw partial
 % Supported Living / Disability safety-net support (55% of p_super, funded out of government taxes):
@@ -97,7 +97,7 @@ end
 %% 5. COMPOSITE CONSUMPTION, LABOR/TRAINING DISUTILITY, & CHILD ALTRUISM
 % Factor Cobb-Douglas u_comp = (phi_nd*c_eff)^phi_nd * ((1-phi_nd)*c_eff/p_H)^(1-phi_nd)
 % so fractional powers run only on scalar/1D p_H instead of the full 4D c_eff tensor:
-cobb_mult = ((phi_nd ^ phi_nd) * ((1 - phi_nd) ^ (1 - phi_nd))) .* (p_H .^ (phi_nd - 1));
+cobb_mult = ((phi_nd .^ phi_nd) .* ((1 - phi_nd) .^ (1 - phi_nd))) .* (p_H .^ (phi_nd - 1));
 u_comp    = c_eff .* cobb_mult;
 eta_c     = 2.0;
 
@@ -110,7 +110,7 @@ u_flow = scale_dt .* ((-1.0 ./ u_comp) - 0.85 .* manual_wear_mult .* ((l + Ih) .
 u_child = 0;
 if is_parenting
     is_corner_ic   = double(ic < 0.01);
-    metro_ece_mult = (max(1.0, Q_reg / 1.05) ^ 0.85) * (1.0 + 0.80 * max(0.0, 0.42 - K_whanau));
+    metro_ece_mult = (max(1.0, Q_reg ./ 1.05) .^ 0.85) * (1.0 + 0.80 * max(0.0, 0.42 - K_whanau));
     Psi_perc       = -0.025 .* is_corner_ic .* max(0.0, (1 - 0.55 .* K_whanau_net) .* (1 - 0.80 .* M_trust_gated)) ...
                    + 0.045 .* max(0.0, M_trust_gated - 0.173) .* metro_ece_mult;
     I_eff          = 1.0 + 2.20 .* (ic + G_ece * metro_ece_mult .* (1 + 0.25 .* M_trust_gated) + 0.025 .* max(0.0, K_whanau_net) + gbar_ece);

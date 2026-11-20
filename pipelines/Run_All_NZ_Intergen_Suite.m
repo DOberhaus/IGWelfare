@@ -65,7 +65,7 @@ Export_Tables_Figures  = true;  % true = Save all CSV tables, 300-DPI PNGs, .fig
 Active_Phases    = {'SS0', 'SS1', 'SS2'};
 Enable_SS2_Phase = true;
 
-Params = Configure_TimeGrid_Params(Params, Params.dt);
+Params = Configure_Model_Params(Params, Params.dt);
 
 %% OCTAVE WORKER POOL BOOTSTRAP (PATHS & SHIMS ALREADY INITIALIZED BY setup_igw_paths)
 setup_igw_paths(true);
@@ -112,7 +112,7 @@ reg_summary_parts = arrayfun(@(i) sprintf('%s (%.1f%%)', Params.Regions{i}, 100*
     1:Params.N_reg, 'UniformOutput', false);
 fprintf('=========================================================================================\n');
 fprintf('  STARTING INTERGENERATIONAL WELFARE SUITE [%s | %s | %s]\n', ...
-    Params.Profile_ID, Params.Rollout_Mode, Params.ContingencySpec.Policy_ID);
+    Params.Profile_ID, Params.Rollout_Mode, Params.Contingency_Policy_ID);
 fprintf('  Regions: %s + %s\n', strjoin(reg_summary_parts, ' | '), Params.External_Dest_Label);
 fprintf('  Time Grid: dt = %d yrs | Horizon J = %d (Ages 20-99) | Retirement Jr = %d (Age %.0f)\n', ...
     Params.dt, Params.J, Params.Jr, Params.super_age_base);
@@ -145,7 +145,7 @@ else
 end
 
 % Ensure Regional Extended Whanau Network K_whanau(k) and Section 7 structs are synchronized with Single Source of Truth:
-Params = Configure_TimeGrid_Params(Params, Params.dt);
+Params = Configure_Model_Params(Params, Params.dt);
 super_age_eff   = 20 + (Params.Jr - 1) * Params.dt;
 elder_time_mult = exp(-0.09 * max(0, super_age_eff - 65)); % -9%/yr loss of grandparent time when Super age > 65
 for r_idx = 1:length(Regions)
@@ -376,7 +376,8 @@ if strcmpi(Params.Profile_ID, 'NZ_Dunedin1972')
     Out_National_GUiNZ = Plot_ActuarialContinuationValuation([], alt_prof, 'National');
 end
 
-Params.super_age_SS2 = Params.DataSpec.Institutions.Super_Age_SS2;
+DS_active = Load_Empirical_Profile(Params.Profile_ID);
+Params.super_age_SS2 = DS_active.Institutions.Super_Age_SS2;
 Out_National_Counterfactuals = Plot_Counterfactuals_And_MirrorInvestments(Params);
 
 %% 8. EXPORT ALL 4-REGION + ABROAD TABLES (.CSV), FIGURES (.PNG/.FIG), AND WORKSPACE (.MAT)

@@ -11,11 +11,30 @@ function DataSpec = Load_Empirical_Profile(Profile_Name)
 %   - Child profile inherits parent YAML sections and CSV files unless overridden locally.
 %   - Computes deterministic MD5 DataSpec.Digest for steady-state cache validation.
 
+persistent cache_map;
+if isempty(cache_map)
+    cache_map = struct();
+end
 if nargin < 1 || isempty(Profile_Name)
     Profile_Name = 'NZ_Dunedin1972';
+elseif isstruct(Profile_Name)
+    if isfield(Profile_Name, 'Profile_ID') && ~isempty(Profile_Name.Profile_ID)
+        Profile_Name = Profile_Name.Profile_ID;
+    elseif isfield(Profile_Name, 'Profile_Name') && ~isempty(Profile_Name.Profile_Name)
+        Profile_Name = Profile_Name.Profile_Name;
+    elseif isfield(Profile_Name, 'Calibration_Anchor') && ~isempty(Profile_Name.Calibration_Anchor)
+        Profile_Name = Profile_Name.Calibration_Anchor;
+    else
+        Profile_Name = 'NZ_Dunedin1972';
+    end
 end
 if isstring(Profile_Name)
     Profile_Name = char(Profile_Name);
+end
+cache_key = regexprep(strtrim(Profile_Name), '[^a-zA-Z0-9_]', '_');
+if ~isempty(cache_key) && isvarname(cache_key) && isfield(cache_map, cache_key)
+    DataSpec = cache_map.(cache_key);
+    return;
 end
 
 igw_root     = resolve_igw_root();
@@ -143,6 +162,12 @@ DataSpec.TargetMoments = struct( ...
 % Compute deterministic MD5 digest over data payload (excluding local filesystem paths so digest is machine-portable!)
 hash_payload = rmfield(DataSpec, {'Profile_Dir', 'Parent_Profile_Dir'});
 DataSpec.Digest = compute_struct_md5(hash_payload);
+if ~isempty(cache_key) && isvarname(cache_key)
+    cache_map.(cache_key) = DataSpec;
+end
+if isvarname(DataSpec.Profile_ID)
+    cache_map.(DataSpec.Profile_ID) = DataSpec;
+end
 
 end
 
