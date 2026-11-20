@@ -50,6 +50,8 @@ jobs:
             octave-parallel \
             octave-struct \
             octave-optim \
+            fonts-freefont-otf \
+            fonts-liberation2 \
             xvfb \
             xauth \
             gnuplot
