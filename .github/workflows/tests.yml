@@ -53,7 +53,6 @@ jobs:
             xvfb \
             xauth \
             gnuplot
-          octave --no-gui --eval "pkg install -forge struct io statistics optim parallel"
 
       - name: Run MATLAB/Octave test suite (Octave No-GPU)
         working-directory: IGWelfare
