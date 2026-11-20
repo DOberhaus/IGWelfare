@@ -81,6 +81,7 @@ N_coh            = length(Cohort_Years);
 CE_Cohort        = zeros(N_coh, N_reg); % Primary trajectory (SS0 -> SS1, or SS0 -> SS1 -> SS2)
 CE_Cohort_MIT    = zeros(N_coh, N_reg); % Counterfactual unannounced MIT trajectory when has_SS2 == true
 
+if exist('vfi_restore_tables', 'file'), T1_SS1 = vfi_restore_tables(T1_SS1); T1_SS2 = vfi_restore_tables(T1_SS2); end
 for r_idx = 1:N_reg
     pe_1 = T1_SS1{1, r_idx};
     ge_1 = T1_SS1{2, r_idx};

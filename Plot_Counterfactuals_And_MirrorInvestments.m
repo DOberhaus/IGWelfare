@@ -313,15 +313,14 @@ y_bot_lim = floor(min_y_val * 1.15);
 axA = nexttile(1); hold(axA, 'on');
 h_area = area(axA, Yr_Grid, Traj_11, 'LineWidth', 0.6, 'EdgeColor', [0.18 0.18 0.18]);
 for k = 1:11
-    h_area(k).FaceColor = layer_colors(k, :);
+    pch_a = findobj(h_area(k), 'type', 'patch');
+    set(pch_a, 'FaceColor', layer_colors(k, :));
     if Is_Wedge(k)
-        h_area(k).FaceAlpha = 0.92;
-        h_area(k).EdgeColor = [0.10 0.10 0.10];
-        h_area(k).LineWidth = 1.0;
+        set(pch_a, 'FaceAlpha', 0.92, 'EdgeColor', [0.10 0.10 0.10], 'LineWidth', 1.0);
     else
-        h_area(k).FaceAlpha = 0.78;
+        set(pch_a, 'FaceAlpha', 0.78);
     end
-    h_area(k).DisplayName = Layer_Legend_Labels{k};
+    set(h_area(k), 'DisplayName', Layer_Legend_Labels{k});
 end
 
 % Plot Total Integrated Trajectory vs. Additive Sum of Isolated Factors Alone
@@ -355,19 +354,19 @@ xlabel(axA, 'Cohort Entry Year Relative to 2026 Reform Introduction', 'FontSize'
 ylabel(axA, 'Lifetime Consumption-Equivalent Welfare Gain (CE %)', 'FontSize', 10.2, 'FontWeight', 'bold');
 xlim(axA, [-10, 60]); ylim(axA, [y_bot_lim, y_top_lim]);
 grid(axA, 'on'); box(axA, 'on');
-legend(axA, [h_area, h_tot, h_iso], 'Location', 'northwest', 'FontSize', 6.8);
+legend(axA, [reshape(h_area, 1, []), h_tot, h_iso], 'Location', 'northwest', 'FontSize', 6.8);
 
 % --- PANEL B: REGIONAL & NATIONAL SS2 STACKED BUILD-UP WITH WEDGE CALLOUTS ---
 axB = nexttile(2); hold(axB, 'on');
 x_5 = 1:5;
 b_reg = bar(axB, x_5, SS2_11x5', 'stacked', 'BarWidth', 0.58, 'EdgeColor', [0.15 0.15 0.15], 'LineWidth', 0.6);
 for k = 1:11
-    b_reg(k).FaceColor = layer_colors(k, :);
+    set(b_reg(k), 'FaceColor', layer_colors(k, :));
     if Is_Wedge(k)
-        b_reg(k).FaceAlpha = 0.94;
-        b_reg(k).LineWidth = 1.1;
+        set(b_reg(k), 'LineWidth', 1.1);
+        set(findobj(b_reg(k), 'type', 'patch'), 'FaceAlpha', 0.94);
     else
-        b_reg(k).FaceAlpha = 0.80;
+        set(findobj(b_reg(k), 'type', 'patch'), 'FaceAlpha', 0.80);
     end
 end
 
@@ -530,9 +529,8 @@ axM = axes(fig_mir); hold(axM, 'on');
 
 b_pos11 = bar(axM, Yr_Mir, Pos_11_Mir, 'stacked', 'BarWidth', 0.82, 'EdgeColor', [0.18 0.18 0.18], 'LineWidth', 0.45);
 for k = 1:11
-    b_pos11(k).FaceColor   = layer_colors(k, :);
-    b_pos11(k).FaceAlpha   = 0.88;
-    b_pos11(k).DisplayName = Layer_Legend_Labels{k};
+    set(b_pos11(k), 'FaceColor', layer_colors(k, :), 'DisplayName', Layer_Legend_Labels{k});
+    set(findobj(b_pos11(k), 'type', 'patch'), 'FaceAlpha', 0.88);
 end
 
 b_neg4 = bar(axM, Yr_Mir, Neg_4Investments_CE, 'stacked', 'BarWidth', 0.82, 'EdgeColor', [0.18 0.18 0.18], 'LineWidth', 0.45);
@@ -543,9 +541,8 @@ inv_names  = { ...
     '-Inv 3: Universal Age-20 Youth Capital Grant (\DeltaE: -1.6B \rightarrow -1.4B/yr)', ...
     '-Inv 4: Geographic Transfer (\DeltaT_k: -1.6B/yr Peak \rightarrow -0.3B/yr as z_l\rightarrowz_h Retires 82%!)'};
 for k = 1:4
-    b_neg4(k).FaceColor   = inv_colors(k, :);
-    b_neg4(k).FaceAlpha   = 0.88;
-    b_neg4(k).DisplayName = inv_names{k};
+    set(b_neg4(k), 'FaceColor', inv_colors(k, :), 'DisplayName', inv_names{k});
+    set(findobj(b_neg4(k), 'type', 'patch'), 'FaceAlpha', 0.88);
 end
 
 plot(axM, Yr_Mir, Total_Mir_CE, '-o', 'Color', [0.00 0.32 0.12], 'MarkerFaceColor', [0.00 0.58 0.24], ...
@@ -586,7 +583,7 @@ ylim(axM, [y_mir_bot, y_mir_top]);
 yyaxis(axM, 'right');
 ylim(axM, [y_mir_bot * NZD_Billion_Per_CE_Pct, y_mir_top * NZD_Billion_Per_CE_Pct]);
 ylabel(axM, 'Annual Consumption-Equiv. Gain (+NZD B/yr) vs. Annual Public Investment (-NZD B/yr)', 'FontSize', 10.2, 'FontWeight', 'bold');
-axM.YColor = [0.15 0.15 0.15];
+set(vfi_active_ax(axM), 'YColor', [0.15 0.15 0.15]);
 yyaxis(axM, 'left');
 
 title(axM, 'Constructive 11-Layer Welfare Gains (+Above 0) vs. Mirror Annual SS1/SS2 Public Investments (-Below 0)', ...

@@ -176,14 +176,12 @@ neg_names = { ...
     'Give 3: Estate Levy (\tau_b: 25%\rightarrow18% Above Exemption)'};
 
 for k = 1:4
-    b_pos(k).FaceColor   = pos_colors(k, :);
-    b_pos(k).FaceAlpha   = 0.85;
-    b_pos(k).DisplayName = pos_names{k};
+    set(b_pos(k), 'FaceColor', pos_colors(k, :), 'DisplayName', pos_names{k});
+    set(findobj(b_pos(k), 'type', 'patch'), 'FaceAlpha', 0.85);
 end
 for k = 1:3
-    b_neg(k).FaceColor   = neg_colors(k, :);
-    b_neg(k).FaceAlpha   = 0.85;
-    b_neg(k).DisplayName = neg_names{k};
+    set(b_neg(k), 'FaceColor', neg_colors(k, :), 'DisplayName', neg_names{k});
+    set(findobj(b_neg(k), 'type', 'patch'), 'FaceAlpha', 0.85);
 end
 
 % Overlay the 3 Net Welfare Trajectories (Portfolio Average, Entrepreneur z_h, Land Hoarder z_l)
@@ -232,8 +230,10 @@ set(ax1, 'XTick', x_idx, 'XTickLabel', strrep(Tier_Labels, '\n', ' '), 'XTickLab
 xlim(ax1, [0.35, N_tiers + 0.65]); ylim(ax1, [-19.5, 28.5]);
 grid(ax1, 'on'); box(ax1, 'on');
 lgd1 = legend(ax1, 'Location', 'southwest', 'FontSize', 6.7, 'NumColumns', 1);
-lgd1.BoxFace.ColorType = 'truecoloralpha';
-lgd1.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
+if exist('OCTAVE_VERSION', 'builtin') == 0
+    lgd1.BoxFace.ColorType = 'truecoloralpha';
+    lgd1.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
+end
 
 % --- PANEL B: RETAINED FORTUNE + SOCIAL COHESION ---
 ax2 = subplot('Position', [0.540, 0.165, 0.405, 0.765]);
@@ -275,17 +275,17 @@ end
 
 ylabel(ax2, 'Post-Reform Compounded Net Worth (% of Status Quo Baseline)', 'FontSize', 10.2, 'FontWeight', 'bold');
 ylim(ax2, [68, 172]);
-ax2.YColor = [0.10 0.10 0.10];
+set(vfi_active_ax(ax2), 'YColor', [0.10 0.10 0.10]);
 
 % Right Axis: Absolute Post-Reform Net Worth Resilience (Log-Scale NZD Millions)
 yyaxis(ax2, 'right'); hold(ax2, 'on');
-bar_retained = bar(ax2, x_idx, PostReform_NetWorth_MNZD, 'BarWidth', 0.36, ...
+bar_retained = bar(ax2, x_idx, PostReform_NetWorth_MNZD, 'BarWidth', 0.36, 'BaseValue', 0.02, ...
     'FaceColor', [0.17 0.51 0.73], 'FaceAlpha', 0.25, 'EdgeColor', [0.17 0.51 0.73], ...
     'LineWidth', 0.9, 'DisplayName', 'Absolute Post-Reform Net Worth Resilience (NZD Millions, Right Axis)');
-set(ax2, 'YScale', 'log');
+set(vfi_active_ax(ax2), 'YScale', 'log');
 ylabel(ax2, 'Absolute Post-Reform Net Worth Resilience (NZD Millions, Log Scale)', 'FontSize', 9.8, 'FontWeight', 'bold');
 ylim(ax2, [0.02, 350]);
-ax2.YColor = [0.17 0.51 0.73];
+set(vfi_active_ax(ax2), 'YColor', [0.17 0.51 0.73]);
 
 yyaxis(ax2, 'left');
 msg_B = sprintf(['Retained Wealth & Increased Social Cohesion After Rebalancing:\n', ...
@@ -306,8 +306,10 @@ set(ax2, 'XTick', x_idx, 'XTickLabel', strrep(Tier_Labels, '\n', ' '), 'XTickLab
 xlim(ax2, [0.35, N_tiers + 0.65]);
 grid(ax2, 'on'); box(ax2, 'on');
 lgd2 = legend(ax2, 'Location', 'southwest', 'FontSize', 6.7);
-lgd2.BoxFace.ColorType = 'truecoloralpha';
-lgd2.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
+if exist('OCTAVE_VERSION', 'builtin') == 0
+    lgd2.BoxFace.ColorType = 'truecoloralpha';
+    lgd2.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
+end
 
 % Export 2-Panel combined figure + 2 individual sibling panels
 f_2p   = fullfile(OutputDir, sprintf('Fig_WealthBrackets_2Panel_GiveAndGain_%s.png', AnchorTag));

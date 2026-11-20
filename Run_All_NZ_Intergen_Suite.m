@@ -20,17 +20,21 @@ end
 if exist('Params', 'var') && isstruct(Params) && isfield(Params, 'dt')
     cmd_dt = Params.dt;
 end
+if exist('Params', 'var') && isstruct(Params) && isfield(Params, 'n_workers')
+    cmd_n_workers = Params.n_workers;
+end
 
-clearvars -except cmd_Force_Recompute cmd_Use_Cache cmd_Enable_Duopoly_Kai cmd_dt;
+clearvars -except cmd_Force_Recompute cmd_Use_Cache cmd_Enable_Duopoly_Kai cmd_dt cmd_n_workers;
 clc; close all;
 suite_timer = tic;
 
 %% 0. CONFIGURATION SWITCHES, CACHING, & OUTPUT DIRECTORY SETUP
 if exist('cmd_dt', 'var'),                 Params.dt = cmd_dt;                       else, Params.dt = 3;                 end
+if exist('cmd_n_workers', 'var'),          Params.n_workers = cmd_n_workers;         end
 if exist('cmd_Enable_Duopoly_Kai', 'var'), Params.Enable_Duopoly_Kai = cmd_Enable_Duopoly_Kai;                            end
 if exist('cmd_Use_Cache', 'var'),          Use_Saved_Cache = cmd_Use_Cache;          else, Use_Saved_Cache = true;        end
 if exist('cmd_Force_Recompute', 'var'),    Force_Recompute_All = cmd_Force_Recompute; else, Force_Recompute_All = false;  end
-clear cmd_Force_Recompute cmd_Use_Cache cmd_Enable_Duopoly_Kai cmd_dt;
+clear cmd_Force_Recompute cmd_Use_Cache cmd_Enable_Duopoly_Kai cmd_dt cmd_n_workers;
 
 Use_ExpAsset_Pipeline  = true;  % true = Full 5D Experience-Asset Lifecycle Human Capital Pipeline
 Run_SMM_Calibration    = false; % true = Run Sobol global pre-screening + local fminsearch SMM
@@ -43,6 +47,27 @@ Active_Phases    = {'SS0', 'SS1', 'SS2'};
 Enable_SS2_Phase = true;
 
 Params = Configure_TimeGrid_Params(Params, Params.dt);
+
+%% OCTAVE TOOLKIT, VECTORIZED REGISTRY, & WORKER POOL BOOTSTRAP (ACTIVE EVEN WHEN CACHED)
+suite_root_dir = fileparts(mfilename('fullpath'));
+if isempty(suite_root_dir), suite_root_dir = pwd; end
+if exist('ValueFnIter_MixHorz_PType', 'file') == 0
+    vfi_mat_dir = fullfile(suite_root_dir, '..', 'VFIToolkit-matlab');
+    if exist(vfi_mat_dir, 'dir') ~= 0, addpath(genpath(vfi_mat_dir)); end
+end
+vfi_oct_dir = fullfile(suite_root_dir, '..', 'VFIToolkit-octave');
+if exist('VFIToolkit_Octave_Setup', 'file') == 0 && exist(vfi_oct_dir, 'dir') ~= 0
+    addpath(vfi_oct_dir);
+end
+if exist('VFIToolkit_Octave_Setup', 'file') ~= 0
+    VFIToolkit_Octave_Setup({'ReturnFn_SpatialHH', 'ReturnFn_SpatialHH_Compact4D', 'ReturnFn_Firm', 'HumanCapital_Lifecycle_aprimeFn'});
+    if exist('OCTAVE_VERSION', 'builtin') ~= 0 && exist('vfi_pool', 'file') ~= 0
+        if ~isfield(Params, 'n_workers'), Params.n_workers = min(10, max(1, nproc() - 2)); end
+        if Params.n_workers > 1
+            vfi_pool('ensure', Params.n_workers, vfi_ramdisk('mount', 2048));
+        end
+    end
+end
 
 OutputDir = fullfile(pwd, 'Output_NZ_4Region_Intergen');
 if Export_Tables_Figures && ~exist(OutputDir, 'dir')
@@ -135,10 +160,14 @@ if Use_ExpAsset_Pipeline && Run_LeeSeshadri_Exp && exist('PolicyExperiment_LeeSe
     if Use_Saved_Cache && ~Force_Recompute_All && exist(Cache_Step2, 'file') && Validate_CacheConfig(Cache_Step2, Cache_CfgHash)
         fprintf('    [CACHE HIT] Loading Step 2 Counterfactual Results from %s...\n', Cache_Step2);
         load(Cache_Step2);
+        if exist('vfi_restore_tables', 'file'), T_IGE = vfi_restore_tables(T_IGE); T_VarExpl = vfi_restore_tables(T_VarExpl); T_Out = vfi_restore_tables(T_Out); end
     else
         run('PolicyExperiment_LeeSeshadri_4Region.m');
+        old_warn = warning('query', 'all');
+        warning('off', 'all');
         save(Cache_Step2, 'T_IGE', 'T_VarExpl', 'T_Out', 'IGE_SR', 'IGE_LR', ...
             'VarExpl_h1', 'VarExpl_LFE', 'VarLogE', 'Ebar_SR', 'Ebar_LR', 'CE_LR', 'PolicyNames', 'Cache_CfgHash');
+        warning(old_warn);
         fprintf('    [CACHE SAVED] Saved Step 2 checkpoint to %s\n', Cache_Step2);
     end
     fprintf('    Step 2 completed in %.2f seconds.\n\n', toc(step2_timer));
@@ -152,13 +181,17 @@ if Use_ExpAsset_Pipeline && Run_Fertility_Module && exist('FertilityBargaining_M
     if Use_Saved_Cache && ~Force_Recompute_All && exist(Cache_Step3, 'file') && Validate_CacheConfig(Cache_Step3, Cache_CfgHash)
         fprintf('    [CACHE HIT] Loading Step 3 Fertility Results from %s...\n', Cache_Step3);
         load(Cache_Step3);
+        if exist('vfi_restore_tables', 'file'), T_Fert1 = vfi_restore_tables(T_Fert1); T_Fert2 = vfi_restore_tables(T_Fert2); end
     else
         V              = V_5D_BM;
         Policy         = Policy_5D_BM;
         StationaryDist = StationaryDist_5D_BM;
         jequaloneDist  = jequaloneDist_5D_BM;
         run('FertilityBargaining_Module.m');
+        old_warn = warning('query', 'all');
+        warning('off', 'all');
         save(Cache_Step3, 'T_Fert1', 'T_Fert2', 'TFR_mat', 'DiffFert_mat', 'Struggling_mat', 'DepRatio_vec', 'ReqTax_vec', 'Cache_CfgHash');
+        warning(old_warn);
         fprintf('    [CACHE SAVED] Saved Step 3 checkpoint to %s\n', Cache_Step3);
     end
     fprintf('    Step 3 completed in %.2f seconds.\n\n', toc(step3_timer));
@@ -176,6 +209,7 @@ if Use_ExpAsset_Pipeline && exist('ReturnFn_SpatialHH_Compact4D.m', 'file')
     for r_idx = 1:N_reg
         hh_type = ['HH_', Regions{r_idx}];
         vfoptions.experienceasset.(hh_type)  = 0;
+        vfoptions.vectorized                 = 1;
         simoptions.experienceasset.(hh_type) = 0;
 
         n_d.(hh_type)    = [4, 3, 7];
@@ -218,7 +252,10 @@ if Use_ExpAsset_Pipeline && exist('ReturnFn_SpatialHH_Compact4D.m', 'file')
             pi_z, Params, simoptions);
         [jequaloneDist, IG_Diagnostics] = Build_IntergenTransitionMatrix( ...
             StationaryDist, Policy, V, n_d, n_a, n_z, d_grid, a_grid, z_grid, pi_z, Params, Regions);
+        old_warn = warning('query', 'all');
+        warning('off', 'all');
         save(Cache_Step4, 'V', 'Policy', 'StationaryDist', 'jequaloneDist', 'IG_Diagnostics', 'Cache_CfgHash');
+        warning(old_warn);
         fprintf('    [CACHE SAVED] Saved Step 4 checkpoint to %s\n', Cache_Step4);
     end
     fprintf('    Step 4 completed in %.2f seconds.\n\n', toc(step4_timer));
@@ -243,6 +280,7 @@ if exist('WelfareDecomposition_4Region.m', 'file')
     if Use_Saved_Cache && ~Force_Recompute_All && exist(Cache_Step6, 'file') && Validate_CacheConfig(Cache_Step6, Cache_CfgHash)
         fprintf('    [CACHE HIT] Loading Step 6 Welfare Decomposition from %s...\n', Cache_Step6);
         load(Cache_Step6);
+        if exist('vfi_restore_tables', 'file'), T1 = vfi_restore_tables(T1); T2 = vfi_restore_tables(T2); T3 = vfi_restore_tables(T3); WelfareResults = vfi_restore_tables(WelfareResults); end
     else
         run('WelfareDecomposition_4Region.m');
         vars_step6 = {'T1', 'T2', 'T3', 'CE_Stage', 'CE_Quint', 'CE_Ten', ...
@@ -251,7 +289,10 @@ if exist('WelfareDecomposition_4Region.m', 'file')
         if exist('V_SS2', 'var')
             vars_step6 = [vars_step6, {'V_SS2', 'Policy_SS2', 'StatDist_SS2', 'jDist_SS2', 'Params_SS2', 'IG_Diag_SS2'}];
         end
+        old_warn = warning('query', 'all');
+        warning('off', 'all');
         save(Cache_Step6, vars_step6{:});
+        warning(old_warn);
         fprintf('    [CACHE SAVED] Saved Step 6 checkpoint to %s\n', Cache_Step6);
     end
     fprintf('    Step 6 completed in %.2f seconds.\n\n', toc(step6_timer));
@@ -366,7 +407,10 @@ if Export_Tables_Figures
         writetable(T_BrainDrain, fullfile(OutputDir, 'Table10_4Region_Abroad_BrainDrain_Cohesion.csv'));
         writetable(T_BrainDrain, fullfile(OutputDir, 'Table_Trans3_BrainDrain_Cohesion_4Region.csv'));
     end
+    old_warn = warning('query', 'all');
+    warning('off', 'all');
     save(fullfile(OutputDir, 'NZ_4Region_Intergen_Complete_Results.mat'));
+    warning(old_warn);
     fprintf('  Saved Full Workspace Checkpoint: NZ_4Region_Intergen_Complete_Results.mat\n');
 end
 

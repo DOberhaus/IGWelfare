@@ -279,12 +279,12 @@ axM = axes(fig_hm); hold(axM, 'on');
 b_pos12 = bar(axM, Yr_Grid, Pos_12Layers_CE, 'stacked', 'BarWidth', 0.82, ...
               'EdgeColor', [0.15 0.15 0.15], 'LineWidth', 0.45);
 for k = 1:12
-    b_pos12(k).FaceColor   = layer_colors(k, :);
-    b_pos12(k).FaceAlpha   = 0.90;
-    b_pos12(k).DisplayName = sprintf('%s (%+.2f%% SS2)', Layer_ShortLabels{k}, SS2_Layer_CE(k));
+    set(b_pos12(k), 'FaceColor', layer_colors(k, :));
+    set(findobj(b_pos12(k), 'type', 'patch'), 'FaceAlpha', 0.90);
+    set(b_pos12(k), 'DisplayName', sprintf('%s (%+.2f%% SS2)', Layer_ShortLabels{k}, SS2_Layer_CE(k)));
     if is_wedge(k)
-        b_pos12(k).EdgeColor = [0.50 0.10 0.00];
-        b_pos12(k).LineWidth = 1.05;
+        set(b_pos12(k), 'EdgeColor', [0.50 0.10 0.00]);
+        set(b_pos12(k), 'LineWidth', 1.05);
     end
 end
 
@@ -297,9 +297,9 @@ inv_names  = { ...
     '-Mirror Inv 3: Age-20 Youth Capital Grant (\DeltaE: -1.6B to -2.2B/yr)', ...
     '-Mirror Inv 4: Geographic Transfer (\DeltaT_k: -1.6B to -2.0B/yr)'};
 for m = 1:4
-    b_neg4(m).FaceColor   = inv_colors(m, :);
-    b_neg4(m).FaceAlpha   = 0.88;
-    b_neg4(m).DisplayName = inv_names{m};
+    set(b_neg4(m), 'FaceColor', inv_colors(m, :));
+    set(findobj(b_neg4(m), 'type', 'patch'), 'FaceAlpha', 0.88);
+    set(b_neg4(m), 'DisplayName', inv_names{m});
 end
 
 plot(axM, Yr_Grid, Net_Fiscal_Outlay_Mirror_CE, '--d', 'Color', [0.98 0.84 0.12], ...
@@ -318,7 +318,7 @@ yyaxis(axM, 'right');
 ylim(axM, [-6.5 * NZD_Billion_Per_CE_Pct, 23.5 * NZD_Billion_Per_CE_Pct]);
 ylabel(axM, 'Annual Welfare Equiv. (+NZD B/yr) vs. Annual Public Investment (-NZD B/yr)', ...
        'FontSize', 10.5, 'FontWeight', 'bold');
-axM.YColor = [0.15 0.15 0.15];
+set(vfi_active_ax(axM), 'YColor', [0.15 0.15 0.15]);
 
 yyaxis(axM, 'left');
 title(axM, '12-Layer Hierarchical Complementarity Stack (+Above 0) vs. Mirror Annual Investments (-Below 0)', ...

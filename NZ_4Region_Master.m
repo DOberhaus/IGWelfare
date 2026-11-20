@@ -9,6 +9,39 @@
 %   - Households ('HH_Rural', 'HH_Small', 'HH_Large', 'HH_Auckland'): Finite Horizon (J = 80/dt)
 %   - Firms ('Firm_Rural', 'Firm_Small', 'Firm_Large', 'Firm_Auckland'): Infinite Horizon (N_j = Inf)
 
+%% 0. TOOLKIT & GNU OCTAVE / UFHORZ ENVIRONMENT BOOTSTRAP
+if exist('ValueFnIter_MixHorz_PType', 'file') == 0
+    error('IGWelfare:MissingToolkit', ...
+        'VFIToolkit not found on path. Add VFIToolkit-matlab (and VFIToolkit-octave in Octave) via startup.m or .octaverc.');
+end
+
+if exist('OCTAVE_VERSION', 'builtin') ~= 0
+    VFIToolkit_Octave_Setup({ ...
+        'ReturnFn_SpatialHH', ...
+        'ReturnFn_SpatialHH_Compact4D', ...
+        'ReturnFn_Firm', ...
+        'HumanCapital_Lifecycle_aprimeFn'});
+
+    if ~exist('Params', 'var'), Params = struct(); end
+    if ~isfield(Params, 'n_workers') || isempty(Params.n_workers)
+        pool_st = vfi_pool('status');
+        if pool_st.active
+            Params.n_workers = pool_st.ncores;
+        else
+            Params.n_workers = []; % Let vfi_pool('ensure') auto-detect physical cores
+        end
+    end
+
+    if isempty(Params.n_workers) || Params.n_workers > 1
+        ram_dir = vfi_ramdisk('mount', 2048);
+        pool_st = vfi_pool('ensure', Params.n_workers, ram_dir);
+        if ~pool_st.active
+            error('IGWelfare:PoolInitFailed', 'Failed to initialize Octave persistent worker pool on %s.', ram_dir);
+        end
+        Params.n_workers = pool_st.ncores;
+    end
+end
+
 if ~exist('Params', 'var'), Params = struct(); end
 % The following will initialize Params.dt=5 and Params.n_z_pts=7 if Params doesn't define them
 Params = Configure_TimeGrid_Params(Params);
@@ -53,6 +86,9 @@ for r_idx = 1:N_reg
     firm_type = ['Firm_', Regions{r_idx}];
 
     vfoptions.experienceasset.(hh_type)    = 1;
+    if exist('OCTAVE_VERSION', 'builtin') ~= 0 && (~isfield(vfoptions, 'lowmemory') || ~isfield(vfoptions.lowmemory, hh_type))
+        vfoptions.lowmemory.(hh_type)      = 1;
+    end
     simoptions.experienceasset.(hh_type)   = 1;
     vfoptions.experienceasset.(firm_type)  = 0;
     simoptions.experienceasset.(firm_type) = 0;
@@ -219,20 +255,23 @@ end
 vfoptions.verbose = 0; simoptions.verbose = 0;
 simoptions.d_grid = d_grid; simoptions.a_grid = a_grid;
 
-% 1. Initialize Policy via VFI and jequaloneDist starting points
-tic;
-[V_ref, Policy_ref] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
-    d_grid, a_grid, z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions);
-t_orig = toc;
-
-tic;
-[V, Policy] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, ...
-    d_grid, a_grid, z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions, Regions);
-t_split = toc;
-
-max_V_diff   = max(cellfun(@( fn ) max(abs(V.(fn)(:) - V_ref.(fn)(:))), Names_i));
-fprintf('VFI Speedup: %.2fs -> %.2fs (%.2fx) | Max |V - V_ref| = %.3e\n', ...
-    t_orig, t_split, t_orig / t_split, double(gather(max_V_diff)));
+% 1. Solve Policy via Phase-Split VFI (optional Benchmark_PhaseSplit check against full 5D VFI)
+if isfield(Params, 'Benchmark_PhaseSplit') && Params.Benchmark_PhaseSplit
+    tic;
+    [V_ref, ~] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
+        d_grid, a_grid, z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions);
+    t_orig = toc;
+    tic;
+    [V, Policy] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, ...
+        d_grid, a_grid, z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions, Regions);
+    t_split = toc;
+    max_V_diff = max(cellfun(@(fn) max(abs(V.(fn)(:) - V_ref.(fn)(:))), Names_i));
+    fprintf('VFI Speedup: %.2fs -> %.2fs (%.2fx) | Max |V - V_ref| = %.3e\n', ...
+        t_orig, t_split, t_orig / t_split, double(gather(max_V_diff)));
+else
+    [V, Policy] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, ...
+        d_grid, a_grid, z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions, Regions);
+end
 
 for r_idx = 1:N_reg
     hh_type = ['HH_', Regions{r_idx}];
@@ -250,7 +289,7 @@ StationaryDist = StationaryDist_MixHorz_PType(struct(), AgeWeightsParamNames, ..
 HH_TransCache = Precompute_HH_StationaryCache( ...
     Policy, n_d, n_a, n_z, N_j, d_grid, a_grid, pi_z, Params, simoptions, Regions);
 
-% 4. Fast Intergenerational Fixed-Point (pure SpMV + tiny GEMM; Anderson-ready!)
+% 4. Fast Intergenerational Fixed-Point across all 4 regions (pure SpMV + tiny GEMM)
 for ig_iter = 1:12
     StationaryDist = PushForward_HH_Dist(StationaryDist, jequaloneDist, HH_TransCache, Regions);
 
@@ -266,7 +305,6 @@ for ig_iter = 1:12
     if diff_ig < 1e-5; break; end
 end
 StationaryDist.ptweights = reshape(Params.PTypeWeights, [], 1);
-
 if ~(diff_ig < 1e-5)
     IGW_Log('IGW:NoConvergence', 'NZ_4Region_Master intergenerational newborn-distribution fixed point: %d iterations, residual %.3g', ig_iter, double(gather(diff_ig)));
 end

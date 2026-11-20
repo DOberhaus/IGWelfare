@@ -15,6 +15,16 @@
 %       (13) Exit 1: State Care, (14) Exit 2: Avoidable Hospitalisation, (15) Exit 3: Lower Lifetime Income,
 %       (16) Exit 4: Benefit & Justice Burden, (17) Retained NZ Secure/Thriving Adult, (18) Emigrated Abroad (20-35 Brain Drain)
 
+%% 0. OPTIONAL DEPENDENCY CHECK (MATLAB FILE EXCHANGE 'SSankey')
+if exist('SSankey', 'file') == 0 && exist('SSankey', 'class') == 0
+    if exist('IGW_Log', 'file') ~= 0
+        IGW_Log('IGW:MissingSSankey', 'Plot_ChildFates_SSankey.m: SSankey library not found in environment; skipping Sankey figure rendering.');
+    else
+        warning('IGW:MissingSSankey', 'Plot_ChildFates_SSankey.m: SSankey library not found in environment; skipping Sankey figure rendering.');
+    end
+    return;
+end
+
 %% 1. CONFIGURATION SWITCHES (N-PHASE COMPATIBLE: 1, 2, 3, OR MORE PANELS)
 if ~exist('Target_Regions', 'var') || isempty(Target_Regions)
     Target_Regions     = {'National', 'Auckland', 'Large', 'Small', 'Rural', 'Urban'};
@@ -139,6 +149,10 @@ for r_loop = 1:length(Target_Regions)
     imshow(img_Merged, 'Parent', ax_M, 'Border', 'tight');
     axis(ax_M, 'off');
 end
+
+%% ========================================================================
+%  LOCAL HELPER: GPU-VECTORIZED 5-STAGE (18-NODE) CHILD FATES SANKEY
+%  ========================================================================
 
 %% ========================================================================
 %  LOCAL HELPER: GPU-VECTORIZED 5-STAGE (18-NODE) CHILD FATES SANKEY
@@ -551,7 +565,7 @@ set(findall(ax, 'Type', 'text'), 'FontName', 'Helvetica', 'FontSize', 8.8);
 y_axis_line = curr_ylim(1) - 0.09 * y_span;
 tick_h      = 0.022 * y_span;
 
-p_all        = findall(ax, 'Type', 'Patch');
+p_all        = findall(ax, 'type', 'patch');
 x_center_col = zeros(1, 5);
 for c_i = 1:5
     c_centers = [];
@@ -609,78 +623,4 @@ t_pos = get(t_obj, 'Position');
 set(t_obj, 'Position', [t_pos(1), 1.03, t_pos(3)]);
 
 axis(ax, 'off');
-end
-
-function val = getfield_def(S, fname, default_val)
-if isfield(S, fname)
-    val = S.(fname);
-else
-    val = default_val;
-end
-end
-
-function img_cropped = AutoCrop_White_Border(img)
-is_nonwhite = any(img < 252, 3);
-rows = find(any(is_nonwhite, 2));
-cols = find(any(is_nonwhite, 1));
-if ~isempty(rows) && ~isempty(cols)
-    img_cropped = img(min(rows):max(rows), min(cols):max(cols), :);
-else
-    img_cropped = img;
-end
-end
-
-function [img_Merged, fig_pos] = Stitch_NPanels_Canvas(Panel_Imgs, Merge_Orientation)
-N_p = numel(Panel_Imgs);
-hs  = cellfun(@(x) size(x, 1), Panel_Imgs);
-ws  = cellfun(@(x) size(x, 2), Panel_Imgs);
-
-if strcmpi(Merge_Orientation, 'Vertical')
-    W_max    = max(ws);
-    pad_L    = 65; pad_R = 95;
-    W_canvas = W_max + pad_L + pad_R;
-
-    top_pad  = uint8(255 * ones(90, W_canvas, 3));
-    bot_pad  = uint8(255 * ones(90, W_canvas, 3));
-    gap_pre  = uint8(255 * ones(80, W_canvas, 3));
-    div_line = uint8(220 * ones(4,  W_canvas, 3));
-    gap_post = uint8(255 * ones(90, W_canvas, 3));
-
-    blocks = {top_pad};
-    for p = 1:N_p
-        img_p = uint8(255 * ones(hs(p), W_canvas, 3));
-        img_p(:, (pad_L+1):(pad_L+ws(p)), :) = Panel_Imgs{p};
-        blocks{end+1} = img_p; %#ok<AGROW>
-        if p < N_p
-            blocks{end+1} = gap_pre;  %#ok<AGROW>
-            blocks{end+1} = div_line; %#ok<AGROW>
-            blocks{end+1} = gap_post; %#ok<AGROW>
-        end
-    end
-    blocks{end+1} = bot_pad;
-    img_Merged    = vertcat(blocks{:});
-    fig_pos       = [80, 20, 1320, min(1150, 560 * N_p)];
-else
-    H_max    = max(hs);
-    pad_T    = 90; pad_B = 90;
-    H_canvas = H_max + pad_T + pad_B;
-    left_pad = uint8(255 * ones(H_canvas, 65, 3));
-    mid_gap  = uint8(255 * ones(H_canvas, 120, 3));
-    right_pad= uint8(255 * ones(H_canvas, 95, 3));
-
-    blocks = {left_pad};
-    for p = 1:N_p
-        img_p = uint8(255 * ones(H_canvas, ws(p), 3));
-        img_p((pad_T+1):(pad_T+hs(p)), :, :) = Panel_Imgs{p};
-        blocks{end+1} = img_p; %#ok<AGROW>
-        if p < N_p
-            blocks{end+1} = mid_gap; %#ok<AGROW>
-        end
-    end
-    blocks{end+1} = right_pad;
-    img_Merged    = horzcat(blocks{:});
-    fig_pos       = [20, 80, min(1920, 920 * N_p), 740];
-end
-
-
 end

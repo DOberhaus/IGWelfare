@@ -90,13 +90,27 @@ for p_idx = 1:N_pol
 
     simoptions_5D.d_grid = d_grid_5D;
 
-    % --- 1. SHORT-RUN PARTIAL EQUILIBRIUM (SR: Fixed Newborn Distribution jequaloneDist_5D_BM) ---
-    [V_SR, Policy_SR] = ValueFnIter_MixHorz_PType(n_d_5D, n_a_5D, n_z, N_j, Names_i, ...
-        d_grid_5D, a_grid_5D, z_grid, pi_z, ReturnFn_5D, Params_p, DiscountFactorParamNames, vfoptions_5D);
+    t_pol = tic;
+    fprintf('    [Step 2 Policy %d/%d] Solving %s...\n', p_idx, N_pol, pol_name);
+    if exist('OCTAVE_VERSION', 'builtin') ~= 0, fflush(stdout); end
 
-    StatDist_SR = StationaryDist_MixHorz_PType(jequaloneDist_5D_BM, AgeWeightsParamNames, ...
-        PTypeDistParamNames, Policy_SR, n_d_5D, n_a_5D, n_z, N_j, Names_i, ...
-        pi_z, Params_p, simoptions_5D);
+    % --- 1. SHORT-RUN PARTIAL EQUILIBRIUM (SR: Fixed Newborn Distribution jequaloneDist_5D_BM) ---
+    if strcmp(pol_name, 'BM_Baseline') && exist('V_5D_BM', 'var') && exist('Policy_5D_BM', 'var')
+        V_SR      = V_5D_BM;
+        Policy_SR = Policy_5D_BM;
+    else
+        [V_SR, Policy_SR] = Solve_VFI_PhaseSplit(n_d_5D, n_a_5D, n_z, N_j, ...
+            d_grid_5D, a_grid_5D, z_grid, pi_z, ReturnFn_5D, Params_p, DiscountFactorParamNames, vfoptions_5D, Regions);
+    end
+    fprintf('      -> VFI done in %.1fs\n', toc(t_pol));
+    if exist('OCTAVE_VERSION', 'builtin') ~= 0, fflush(stdout); end
+
+    simoptions_5D.a_grid = a_grid_5D;
+    HH_TransCache_p = Precompute_HH_StationaryCache( ...
+        Policy_SR, n_d_5D, n_a_5D, n_z, N_j, d_grid_5D, a_grid_5D, pi_z, Params_p, simoptions_5D, Regions);
+
+    StatDist_SR = PushForward_HH_Dist(struct(), jequaloneDist_5D_BM, HH_TransCache_p, Regions);
+    StatDist_SR.ptweights = reshape(Params_p.PTypeWeights, [], 1);
 
     [~, Diag_SR] = Build_IntergenTransitionMatrix(StatDist_SR, Policy_SR, V_SR, ...
         n_d_5D, n_a_5D, n_z, d_grid_5D, a_grid_5D, z_grid, pi_z, Params_p, Regions);
@@ -107,15 +121,19 @@ for p_idx = 1:N_pol
     Pol_LR   = Policy_SR;
 
     ig_resid = Inf;
+    StatDist_LR = struct();
     for ig_it = 1:10
-        StatDist_LR = StationaryDist_MixHorz_PType(jDist_LR, AgeWeightsParamNames, ...
-            PTypeDistParamNames, Pol_LR, n_d_5D, n_a_5D, n_z, N_j, Names_i, ...
-            pi_z, Params_p, simoptions_5D);
+        StatDist_LR = PushForward_HH_Dist(StatDist_LR, jDist_LR, HH_TransCache_p, Regions);
+        StatDist_LR.ptweights = reshape(Params_p.PTypeWeights, [], 1);
 
         [jDist_LR_new, Diag_LR] = Build_IntergenTransitionMatrix(StatDist_LR, Pol_LR, V_LR, ...
             n_d_5D, n_a_5D, n_z, d_grid_5D, a_grid_5D, z_grid, pi_z, Params_p, Regions);
 
-        ig_resid = max(abs(jDist_LR_new.HH_Auckland(:) - jDist_LR.HH_Auckland(:)));
+        ig_resid = 0;
+        for rr_ig = 1:N_reg
+            ht_ig = ['HH_', Regions{rr_ig}];
+            ig_resid = max(ig_resid, max(abs(jDist_LR_new.(ht_ig)(:) - jDist_LR.(ht_ig)(:))));
+        end
         if ig_resid < 1e-5
             jDist_LR = jDist_LR_new;
             break;
@@ -233,48 +251,79 @@ T_Out = array2table([Ebar_SR, Ebar_LR, CE_LR], 'RowNames', PolicyNames, ...
     'Ebar_LR_Rural', 'Ebar_LR_Small', 'Ebar_LR_Large', 'Ebar_LR_Auckland', ...
     'CE_LR_Rural', 'CE_LR_Small', 'CE_LR_Large', 'CE_LR_Auckland'});
 
+if exist('Use_Saved_Cache', 'var') && Use_Saved_Cache && exist('Cache_Step2', 'var') && ~isempty(Cache_Step2)
+    if ~exist('Cache_CfgHash', 'var'), Cache_CfgHash = ''; end
+    save(Cache_Step2, 'T_IGE', 'T_VarExpl', 'T_Out', 'IGE_SR', 'IGE_LR', ...
+        'VarExpl_h1', 'VarExpl_LFE', 'VarLogE', 'Ebar_SR', 'Ebar_LR', 'CE_LR', 'PolicyNames', 'Cache_CfgHash');
+end
+
 figE8 = figure('Name', 'Lee & Seshadri 4-Region Counterfactuals', 'Color', 'w', 'Position', [100, 80, 1240, 820]);
 t_e8  = tiledlayout(2, 2, 'TileSpacing', 'loose', 'Padding', 'compact');
 
 CleanLabels = {'BM Baseline'; 'P0 Early (0-5)'; 'P1/P2 Late (6-17)'; 'BN Front-Load'; 'P0 + Grant E'};
-cats = categorical(CleanLabels, CleanLabels);
+is_oct = (exist('OCTAVE_VERSION', 'builtin') ~= 0);
+if is_oct
+    x_all = (1:N_pol)';
+    x_sub = (1:(N_pol-1))';
+else
+    x_all = categorical(CleanLabels, CleanLabels);
+    x_sub = x_all(2:end);
+end
 
 % Panel A: Long-Run IGE
 ax1 = nexttile;
-b_ige = bar(cats, IGE_LR, 'grouped');
+b_ige = bar(x_all, IGE_LR, 'grouped');
 ylim([0, max(0.62, max(IGE_LR(:)) * 1.25)]);
 ylabel('Long-Run IGE');
 title('A. Intergenerational Elasticity of Earnings (IGE\_LR)');
-set(ax1, 'TickLabelInterpreter', 'none');
+if is_oct
+    set(ax1, 'XTick', 1:N_pol, 'XTickLabel', CleanLabels);
+else
+    set(ax1, 'TickLabelInterpreter', 'none');
+end
 grid on;
 lgd = legend(b_ige, Regions, 'Orientation', 'horizontal', 'Location', 'northoutside');
-lgd.Layout.Tile = 'north';
+if ~is_oct
+    if exist('OCTAVE_VERSION', 'builtin') == 0, lgd.Layout.Tile = 'north'; end
+end
 
 % Panel B: Variance Explained
 ax2 = nexttile;
-bar(cats, VarExpl_LFE, 'grouped');
+bar(x_all, VarExpl_LFE, 'grouped');
 ylim([0, max(88, max(VarExpl_LFE(:)) * 1.20)]);
 ylabel('Variance Explained (%)');
 title('B. Lifetime Earnings Variance Explained by Parents at Age 30-35');
-set(ax2, 'TickLabelInterpreter', 'none');
+if is_oct
+    set(ax2, 'XTick', 1:N_pol, 'XTickLabel', CleanLabels);
+else
+    set(ax2, 'TickLabelInterpreter', 'none');
+end
 grid on;
 
 % Panel C: Lifetime Earnings Gain
 ax3 = nexttile;
-bar(cats(2:end), Ebar_LR(2:end, :), 'grouped');
+bar(x_sub, Ebar_LR(2:end, :), 'grouped');
 ylim([min(0, min(Ebar_LR(:)) * 1.2), max(9.0, max(Ebar_LR(:)) * 1.22)]);
 ylabel('\Delta Lifetime Earnings (%)');
 title('C. Long-Run Average Lifetime Earnings Gain (Ebar\_LR %)');
-set(ax3, 'TickLabelInterpreter', 'none');
+if is_oct
+    set(ax3, 'XTick', 1:(N_pol-1), 'XTickLabel', CleanLabels(2:end));
+else
+    set(ax3, 'TickLabelInterpreter', 'none');
+end
 grid on;
 
 % Panel D: Newborn Welfare Gain
 ax4 = nexttile;
-bar(cats(2:end), CE_LR(2:end, :), 'grouped');
+bar(x_sub, CE_LR(2:end, :), 'grouped');
 ylim([min(0, min(CE_LR(:)) * 1.2), max(8.0, max(CE_LR(:)) * 1.22)]);
 ylabel('Consumption Equivalent CE\_LR (%)');
 title('D. Long-Run Newborn Welfare Gain (CE\_LR %)');
-set(ax4, 'TickLabelInterpreter', 'none');
+if is_oct
+    set(ax4, 'XTick', 1:(N_pol-1), 'XTickLabel', CleanLabels(2:end));
+else
+    set(ax4, 'TickLabelInterpreter', 'none');
+end
 grid on;
 
 if ~exist('Export_Tables_Figures', 'var') || Export_Tables_Figures

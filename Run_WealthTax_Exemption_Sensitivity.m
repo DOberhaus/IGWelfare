@@ -215,15 +215,15 @@ x_g = 1:n_grid;
 Bar_Mat = [SS1_DebtSink_BNZD, SS1_InfraPool_BNZD, SS2_DebtSink_BNZD, SS2_InfraPool_BNZD];
 b_h = bar(ax1, x_g, Bar_Mat, 'grouped', 'BarWidth', 0.78);
 
-b_h(1).FaceColor = [0.17, 0.51, 0.73]; b_h(1).DisplayName = 'SS1 Debt-Sinking Pool (\Omega_{debt}, NZD B/wave)';
-b_h(2).FaceColor = [0.55, 0.78, 0.92]; b_h(2).DisplayName = 'SS1 Public Infrastructure Pool (\Omega_{reinv}, NZD B/wave)';
-b_h(3).FaceColor = [0.00, 0.45, 0.22]; b_h(3).DisplayName = 'SS2 Debt-Sinking Pool (\Omega_{debt}, NZD B/wave)';
-b_h(4).FaceColor = [0.58, 0.84, 0.45]; b_h(4).DisplayName = 'SS2 Public Infrastructure Pool (\Omega_{reinv}, NZD B/wave)';
+set(b_h(1), 'FaceColor', [0.17, 0.51, 0.73]); set(b_h(1), 'DisplayName', 'SS1 Debt-Sinking Pool (\Omega_{debt}, NZD B/wave)');
+set(b_h(2), 'FaceColor', [0.55, 0.78, 0.92]); set(b_h(2), 'DisplayName', 'SS1 Public Infrastructure Pool (\Omega_{reinv}, NZD B/wave)');
+set(b_h(3), 'FaceColor', [0.00, 0.45, 0.22]); set(b_h(3), 'DisplayName', 'SS2 Debt-Sinking Pool (\Omega_{debt}, NZD B/wave)');
+set(b_h(4), 'FaceColor', [0.58, 0.84, 0.45]); set(b_h(4), 'DisplayName', 'SS2 Public Infrastructure Pool (\Omega_{reinv}, NZD B/wave)');
 
 % Annotate exact NZD Billion values on top of bars
 for k = 1:4
-    xt = b_h(k).XEndPoints;
-    yt = b_h(k).YEndPoints;
+    xt = vfi_bar_xep(b_h, k);
+    yt = vfi_bar_yep(b_h, k);
     for j = 1:n_grid
         text(ax1, xt(j), yt(j) + 0.45, sprintf('$%.1fB', yt(j)), ...
              'HorizontalAlignment', 'center', 'FontSize', 7.5, 'FontWeight', 'bold');
@@ -234,11 +234,11 @@ yyaxis(ax1, 'right'); hold(ax1, 'on');
 plot(ax1, x_g, Breakeven_Year, '-o', 'Color', [0.80 0.15 0.15], 'MarkerFaceColor', [0.95 0.30 0.30], ...
      'LineWidth', 2.6, 'MarkerSize', 7, 'DisplayName', 'Cash-Flow Breakeven Year (Right Axis)');
 ylabel(ax1, 'Cash-Flow Breakeven Horizon (Years from Reform Launch)', 'FontSize', 10, 'FontWeight', 'bold');
-ylim(ax1, [16, 28]); ax1.YColor = [0.80 0.15 0.15];
+ylim(ax1, [16, 28]); set(vfi_active_ax(ax1), 'YColor', [0.80 0.15 0.15]);
 
 yyaxis(ax1, 'left');
 ylabel(ax1, 'Sovereign Debt-Sinking & Infrastructure Pools (NZD Billions / Wave)', 'FontSize', 10.5, 'FontWeight', 'bold');
-ylim(ax1, [0, 26.5]); ax1.YColor = [0.10 0.10 0.10];
+ylim(ax1, [0, 26.5]); set(vfi_active_ax(ax1), 'YColor', [0.10 0.10 0.10]);
 
 x_tick_lbls = arrayfun(@(p, w, tb) sprintf('Exempt %d%%\n(<$%.2fM | %.0f%% Base)', round(p), w, tb), ...
                        Exempt_Pct_Grid', Threshold_MNZD, Retained_TaxBase_Pct, 'UniformOutput', false);

@@ -237,8 +237,10 @@ xlabel(ax1, 'Transition Horizon (Years from Policy Introduction)', 'FontSize', 1
 ylabel(ax1, 'Cumulative / Recognised NZD (Billions, Real 2025$)', 'FontSize', 10.5, 'FontWeight', 'bold');
 title(ax1, ['A. Fiscal Ledger: ', TitleLabel], 'FontSize', 10.5, 'FontWeight', 'bold');
 lgd1 = legend(ax1, 'Location', 'northwest', 'FontSize', 7.8);
-lgd1.BoxFace.ColorType = 'truecoloralpha';
-lgd1.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
+if exist('OCTAVE_VERSION', 'builtin') == 0, lgd1.BoxFace.ColorType = 'truecoloralpha';
+ end
+if exist('OCTAVE_VERSION', 'builtin') == 0, lgd1.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
+ end
 
 % --- PANEL B: ECONOMY-WIDE GDP LENS / PRIZE ---
 ax2 = subplot('Position', [0.535, 0.130, 0.425, 0.785]); hold(ax2, 'on');
@@ -279,8 +281,10 @@ xlabel(ax2, 'Transition Horizon (Years from Policy Introduction)', 'FontSize', 1
 ylabel(ax2, 'Cumulative / Recognised NZD (Billions, Real 2025$)', 'FontSize', 10.5, 'FontWeight', 'bold');
 title(ax2, ['B. Economy-Wide GDP Prize: ', TitleLabel], 'FontSize', 10.5, 'FontWeight', 'bold');
 lgd2 = legend(ax2, 'Location', 'northwest', 'FontSize', 7.9);
-lgd2.BoxFace.ColorType = 'truecoloralpha';
-lgd2.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
+if exist('OCTAVE_VERSION', 'builtin') == 0, lgd2.BoxFace.ColorType = 'truecoloralpha';
+ end
+if exist('OCTAVE_VERSION', 'builtin') == 0, lgd2.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
+ end
 
 % Auto-export the 2-Panel combined figure AND the two individual sibling panels
 f_2panel = fullfile(OutputDir, sprintf('Fig_Actuarial_2Panel_%s_%s.png',  ShortTag, AnchorTag));
@@ -399,11 +403,11 @@ fig_bar = figure('Name', ['Year 5 Parliamentary Audit by Region (', AnchorTag, '
 
 ax_b1 = subplot(1, 2, 1);
 b1 = bar(categorical(regions, regions), M_fisc, 'grouped');
-b1(1).FaceColor = [0.84 0.15 0.16];
-b1(2).FaceColor = [0.60 0.80 0.60];
-b1(3).FaceColor = [0.12 0.47 0.71];
-b1(4).FaceColor = [0.25 0.67 0.36];
-b1(5).FaceColor = [0.00 0.43 0.17];
+set(b1(1), 'FaceColor', [0.84 0.15 0.16]);
+set(b1(2), 'FaceColor', [0.60 0.80 0.60]);
+set(b1(3), 'FaceColor', [0.12 0.47 0.71]);
+set(b1(4), 'FaceColor', [0.25 0.67 0.36]);
+set(b1(5), 'FaceColor', [0.00 0.43 0.17]);
 ylabel('NZD (Billions, Real 2025$)');
 title('A. Year 5 Fiscal Audit by Region: Cash vs. Booked Return');
 legend({'Cum Outlay', 'Cash Fiscal Return', 'Booked Cost Avoidance Alone (2%)', ...
@@ -412,10 +416,10 @@ grid on;
 
 ax_b2 = subplot(1, 2, 2);
 b2 = bar(categorical(regions, regions), M_gdp, 'grouped');
-b2(1).FaceColor = [0.84 0.15 0.16];
-b2(2).FaceColor = [0.60 0.80 0.60];
-b2(3).FaceColor = [0.25 0.67 0.36];
-b2(4).FaceColor = [0.00 0.43 0.17];
+set(b2(1), 'FaceColor', [0.84 0.15 0.16]);
+set(b2(2), 'FaceColor', [0.60 0.80 0.60]);
+set(b2(3), 'FaceColor', [0.25 0.67 0.36]);
+set(b2(4), 'FaceColor', [0.00 0.43 0.17]);
 ylabel('NZD (Billions, Real 2025$)');
 title('B. Year 5 Economy-Wide GDP Prize by Region');
 legend({'Cum Outlay', 'Realized Cash GDP Gain', 'Booked 25-Yr GDP Prize (8% Sens.)', ...

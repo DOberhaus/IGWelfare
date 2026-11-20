@@ -1,6 +1,6 @@
 %% MULTIPHASE 4-REGION WELFARE & SPATIAL DECOMPOSITION (SS0 -> SS1 -> ... -> SSm)
 % File: WelfareDecomposition_4Region.m
-% Uses ValueFnIter_MixHorz_PType and StationaryDist_MixHorz_PType.
+% Uses Solve_VFI_PhaseSplit and StationaryDist_MixHorz_PType.
 % Dynamically solves M >= 1 reform phases relative to Baseline SS0:
 %   - Stage 1: Short-Run PE (policy levers of Phase m, prior prices & jDist)
 %   - Stage 2: Long-Run GE with Exogenous Skills (price shifts of Phase m, prior jDist)
@@ -14,10 +14,13 @@ N_reg = length(Regions);
 %% 1. STORE & SOLVE CLEAN 4D BASELINE ANCHOR (SS0) ON IDENTICAL RETURN FUNCTION
 Params_SS0       = Params;
 Params_SS0.G_ece = Params_SS0.G_ece_stage1; % Ensure 4D G_ece matches SS0 stage-1 baseline (0.045)
-[V_SS0, Policy_SS0] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
-    d_grid, a_grid, z_grid, pi_z, ReturnFn, Params_SS0, DiscountFactorParamNames, vfoptions);
+vfoptions.parallel = 2;
+t_w0 = tic;
+[V_SS0, Policy_SS0] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, d_grid, a_grid, z_grid, pi_z, ReturnFn, Params_SS0, DiscountFactorParamNames, vfoptions, Regions);
+fprintf('  [DIAG Step6] SS0 VFI (n_a=%s): %.2fs\n', mat2str(n_a.HH_Rural), toc(t_w0));
 
 jDist_SS0 = jequaloneDist;
+t_w0 = tic;
 for ig0_it = 1:6
     StatDist_SS0 = StationaryDist_MixHorz_PType(jDist_SS0, AgeWeightsParamNames, ...
         PTypeDistParamNames, Policy_SS0, n_d, n_a, n_z, N_j, Names_i, ...
@@ -27,6 +30,7 @@ for ig0_it = 1:6
     ig0_resid = max(abs(jDist_SS0_new.HH_Auckland(:) - jDist_SS0.HH_Auckland(:)));
     jDist_SS0 = jDist_SS0_new;
 end
+fprintf('  [DIAG Step6] SS0 IG Loop (6 iters): %.2fs\n', toc(t_w0));
 if ~(ig0_resid < 1e-5)
     IGW_Log('IGW:NoConvergence', 'WelfareDecomposition_4Region SS0 intergenerational fixed point: %d iterations, residual %.3g', ig0_it, double(gather(ig0_resid)));
 end
@@ -130,6 +134,8 @@ for m = 1:M_reforms
     spec   = Reform_Phase_Specs(m);
     p_code = spec.Code;
 
+    fprintf('Computing Reform %d of %d: %s\n', m, M_reforms, p_code);
+
     % 3A. Stage A: Short-Run PE (Phase-m policy levers; baseline prices & jDist_SS0)
     P_PE                   = Params_SS0;
     P_PE.G_ece_stage1_base = spec.G_ece_stage1;
@@ -179,8 +185,9 @@ for m = 1:M_reforms
         super_tax_wedge = 0.0008 * (65.0 - super_age_m);          % Only +0.08 pp at Age 64 sweet spot!
     end
 
-    [V_PE_m, Policy_PE_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
-        d_grid, a_grid, z_grid, pi_z, ReturnFn, P_PE, DiscountFactorParamNames, vfoptions);
+    t_wm = tic;
+    [V_PE_m, Policy_PE_m] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, d_grid, a_grid, z_grid, pi_z, ReturnFn, P_PE, DiscountFactorParamNames, vfoptions, Regions);
+    fprintf('  [DIAG Step6 %s] PE VFI: %.2fs\n', p_code, toc(t_wm));
 
     % 3B. Stage B: Long-Run GE with Exogenous Skills (Phase-m GE prices & z_l -> z_h job upgrading; prior jDist)
     P_GE   = P_PE;
@@ -241,8 +248,9 @@ for m = 1:M_reforms
         pi_z_m.(firm_type)  = [1.0 - p_up_m, p_up_m; p_dn_m, 1.0 - p_dn_m];
     end
 
-    [V_GE_Exo_m, Policy_GE_Exo_m] = ValueFnIter_MixHorz_PType(n_d, n_a, n_z, N_j, Names_i, ...
-        d_grid, a_grid, z_grid_m, pi_z_m, ReturnFn, P_GE, DiscountFactorParamNames, vfoptions);
+    t_wm = tic;
+    [V_GE_Exo_m, Policy_GE_Exo_m] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, d_grid, a_grid, z_grid_m, pi_z_m, ReturnFn, P_GE, DiscountFactorParamNames, vfoptions, Regions);
+    fprintf('  [DIAG Step6 %s] GE VFI: %.2fs\n', p_code, toc(t_wm));
 
     % 3C. Stage C: Long-Run GE with Endogenous 4x5 Intergenerational Matrix (jDist_SSm)
     jDist_m = jDist_prev;
