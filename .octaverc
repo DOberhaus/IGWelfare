@@ -1,0 +1,15 @@
+%% IGWELFARE REPOSITORY-LOCAL GNU OCTAVE STARTUP (.octaverc)
+% Automatically executed whenever GNU Octave (octave, octave-cli, or octave --no-gui)
+% starts with IGWelfare as its working directory.
+% Note: Using '--norc' or '-f' on the command line skips .octaverc; if you pass '--norc',
+% call setup_igw_paths() explicitly as your first statement.
+
+igw_rc_dir = fileparts(mfilename('fullpath'));
+if isempty(igw_rc_dir)
+    igw_rc_dir = pwd;
+end
+if exist(fullfile(igw_rc_dir, 'setup_igw_paths.m'), 'file') == 2
+    addpath(igw_rc_dir);
+    setup_igw_paths(true);
+end
+clear igw_rc_dir;

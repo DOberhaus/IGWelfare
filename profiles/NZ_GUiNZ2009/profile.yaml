@@ -1,0 +1,22 @@
+# Empirical Data & Country Profile Contract: Growing Up in New Zealand (2009 Cohort / Metro Rental Squeeze)
+Profile_ID: NZ_GUiNZ2009
+Inherits_From: NZ_Dunedin1972
+Legacy_Alias: MetroSqueeze_GUiNZ
+Cohort_Label: "Growing Up in New Zealand (2009 Birth Cohort, ~36.6% Metro Rental Squeeze Sensitivity)"
+Country_Name: "New Zealand"
+External_Dest_Label: "Abroad"
+Primate_Region_ID: "Auckland"
+Representative_Urban_ID: "Large"
+
+Actuarial:
+  Sav_Multiplier: 1.28
+  GDP_Wave_Multiplier: 1.12
+  H_Window_Yrs: 25
+  Attribution_Haircut: 0.30
+  Real_Cost_Growth: 0.015
+  Discount_Central: 0.020
+  Discount_Sensitivity: 0.080
+
+Files:
+  Regions_CSV: "regions.csv"
+  Moments_CSV: "target_moments.csv"

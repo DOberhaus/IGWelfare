@@ -1,0 +1,12 @@
+# Empirical Target Moments for SMM Calibration (GUiNZ 2009 Metro Squeeze Cohort)
+Moment_ID,Target_Val,Weight,Description
+Struggling_Launch_Share,0.318,2.5,"National population-weighted struggling share (~36.6% in Auckland, GUiNZ 2009)"
+Zero_ChildInv_Share,0.310,1.5,"Share of fertile households constrained at zero private child investment"
+ChildInv_Q5_Q1_Ratio,3.250,1.5,"Q5/Q1 total early childhood investment ratio in primate metro"
+Labor_FTE_Share,0.675,1.0,"Working-age full-time equivalent employment share"
+Labor_PT_Share,0.165,1.0,"Working-age part-time employment share"
+LateCareer_Wage_Drop,-0.140,1.0,"Log mean human-capital change from age bin j=7 to j=9"
+Homeowner_Young_Share,0.260,1.5,"Young household (j=2) homeownership share under metro squeeze"
+Homeowner_Retiree_Share,0.760,1.0,"Retiree household (j=10) homeownership share"
+Homeowner_Agg_Share,0.595,1.5,"Aggregate household homeownership rate"
+Estate_To_GDP_Ratio,0.062,1.0,"Annual aggregate bequest flow relative to GDP proxy"

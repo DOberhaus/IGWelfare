@@ -4,3 +4,7 @@
 .DS_Store
 igw_run.log
 octave-workspace
+
+# Wave 1 modular cache & output directories
+cache/
+output/
