@@ -2,49 +2,214 @@ name: tests
 
 # Runners are pinned to ubuntu-24.04 (not ubuntu-latest) so the apt Octave version does
 # not change when GitHub moves ubuntu-latest to a newer Ubuntu; actions target Node 24.
-
 on:
   push:
+    branches: [main]
   pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  # ---------------------------------------------------------------------------
+  # 1. Always-on Cloud CI: GNU Octave (No GPU)
+  # ---------------------------------------------------------------------------
   octave:
+    name: GNU Octave (No GPU)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout IGWelfare
+        uses: actions/checkout@v7
+        with:
+          path: IGWelfare
 
-      - name: Install GNU Octave
+      - name: Checkout VFIToolkit-matlab
+        uses: actions/checkout@v7
+        with:
+          repository: MichaelTiemann/VFIToolkit-matlab
+          ref: octave-compat
+          path: VFIToolkit-matlab
+
+      - name: Checkout VFIToolkit-octave
+        uses: actions/checkout@v7
+        with:
+          repository: MichaelTiemann/VFIToolkit-octave
+          path: VFIToolkit-octave
+
+      - name: Install GNU Octave & headless X11 framebuffer
         run: |
           sudo apt-get update
-          sudo apt-get install -y octave
+          sudo apt-get install -y octave liboctave-dev xvfb xauth gnuplot
+          octave --no-gui --eval "pkg install -forge struct io statistics optim parallel"
 
-      - name: Run MATLAB/Octave test suite
-        # run_all_tests exits with status 1 on any failure when started via --eval,
-        # so a failing test fails this step.
-        run: octave --no-gui --eval "cd tests; run_all_tests"
+      - name: Run MATLAB/Octave test suite (Octave No-GPU)
+        working-directory: IGWelfare
+        env:
+          IGWELFARE_TEST_MODE: octave_nogpu
+        run: |
+          xvfb-run -a -s "-screen 0 2560x1440x24" \
+            octave --no-gui --eval "cd tests; run_all_tests('exit');"
 
       - name: Check docs consistency (when the tool exists)
+        working-directory: IGWelfare
         run: |
           if [ -f tools/check_docs_consistency.py ]; then
             python3 tools/check_docs_consistency.py --strict
           fi
 
-  matlab:
+  # ---------------------------------------------------------------------------
+  # 2. Always-on Cloud CI: MATLAB without GPU
+  # ---------------------------------------------------------------------------
+  matlab-nogpu:
+    name: MATLAB (No GPU)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout IGWelfare
+        uses: actions/checkout@v7
+        with:
+          path: IGWelfare
+
+      - name: Checkout VFIToolkit-matlab
+        uses: actions/checkout@v7
+        with:
+          repository: MichaelTiemann/VFIToolkit-matlab
+          ref: octave-compat
+          path: VFIToolkit-matlab
+
+      - name: Checkout VFIToolkit-octave
+        uses: actions/checkout@v7
+        with:
+          repository: MichaelTiemann/VFIToolkit-octave
+          path: VFIToolkit-octave
 
       - name: Set up MATLAB
-        # Public repository: the MathWorks actions license MATLAB automatically
-        # (no MLM_LICENSE_TOKEN needed); a private fork would need a batch token.
+        # Public repository: MathWorks actions license MATLAB automatically.
         uses: matlab-actions/setup-matlab@v3
         with:
-          release: R2025b
+          release: R2026b
+          products: >
+            MATLAB
+            Parallel_Computing_Toolbox
+            Optimization_Toolbox
+            Statistics_and_Machine_Learning_Toolbox
 
-      - name: Run MATLAB/Octave test suite
-        # run-command starts MATLAB with -batch, so a nonzero exit fails the step.
-        # 'exit' makes run_all_tests exit 1 on any failure without relying on
-        # batchStartupOptionUsed detection.
+      - name: Run MATLAB/Octave test suite (MATLAB No-GPU)
+        env:
+          CUDA_VISIBLE_DEVICES: "-1"
+          IGWELFARE_TEST_MODE: matlab_nogpu
         uses: matlab-actions/run-command@v3
         with:
-          command: cd tests; run_all_tests('exit')
+          command: cd IGWelfare/tests; run_all_tests('exit')
+
+  # ---------------------------------------------------------------------------
+  # 3. Fast Pre-Flight Probe: Check Which Self-Hosted Machines Are Online
+  #    Prevents commits from hanging when workstation or MacBook is offline!
+  # ---------------------------------------------------------------------------
+  detect-self-hosted:
+    name: Detect Online Self-Hosted Runners
+    runs-on: ubuntu-24.04
+    # SECURITY: Only probe/dispatch on MichaelTiemann's own same-repo events
+    if: >-
+      github.actor == 'MichaelTiemann' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    outputs:
+      cuda_online: ${{ steps.probe.outputs.cuda_online }}
+      macos_online: ${{ steps.probe.outputs.macos_online }}
+    steps:
+      - name: Query GitHub Runners API
+        id: probe
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "No RUNNER_CHECK_TOKEN secret configured; skipping self-hosted runners."
+            echo "cuda_online=false" >> "$GITHUB_OUTPUT"
+            echo "macos_online=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          RUNNERS_JSON=$(gh api "/repos/${{ github.repository }}/actions/runners" 2>/dev/null || echo '{"runners":[]}')
+          CUDA_UP=$(echo "$RUNNERS_JSON" | jq -r 'any(.runners[]?; .status == "online" and any(.labels[]?; .name == "cuda"))')
+          MACOS_UP=$(echo "$RUNNERS_JSON" | jq -r 'any(.runners[]?; .status == "online" and any(.labels[]?; .name == "macos-local"))')
+
+          echo "CUDA workstation online: $CUDA_UP"
+          echo "macOS machine online: $MACOS_UP"
+          echo "cuda_online=$CUDA_UP" >> "$GITHUB_OUTPUT"
+          echo "macos_online=$MACOS_UP" >> "$GITHUB_OUTPUT"
+
+  # ---------------------------------------------------------------------------
+  # 4. Dynamic Self-Hosted CI: MATLAB WITH GPU (CUDA Workstation)
+  # ---------------------------------------------------------------------------
+  matlab-cuda:
+    name: MATLAB (With GPU - Self-Hosted)
+    needs: detect-self-hosted
+    if: needs.detect-self-hosted.outputs.cuda_online == 'true'
+    runs-on: [self-hosted, cuda]
+    timeout-minutes: 25
+    steps:
+      - name: Checkout IGWelfare
+        uses: actions/checkout@v7
+        with:
+          path: IGWelfare
+
+      - name: Checkout VFIToolkit-matlab
+        uses: actions/checkout@v7
+        with:
+          repository: MichaelTiemann/VFIToolkit-matlab
+          ref: octave-compat
+          path: VFIToolkit-matlab
+
+      - name: Run MATLAB/Octave test suite (MATLAB + CUDA GPU)
+        env:
+          IGWELFARE_TEST_MODE: matlab_gpu
+        shell: pwsh
+        run: |
+          $matlab = Get-ChildItem "C:\Program Files\MATLAB\*\bin\matlab.exe","C:\Program Files\MathWorks\MATLAB\*\bin\matlab.exe" -ErrorAction SilentlyContinue | Sort-Object FullName | Select-Object -Last 1
+          if (-not $matlab) { throw "matlab.exe not found on CUDA runner" }
+          & $matlab.FullName -batch "cd IGWelfare/tests; run_all_tests('exit')"
+
+  # ---------------------------------------------------------------------------
+  # 5. Dynamic Self-Hosted CI: Local macOS Machine
+  # ---------------------------------------------------------------------------
+  macos-local:
+    name: macOS Local Validation (Self-Hosted)
+    needs: detect-self-hosted
+    if: needs.detect-self-hosted.outputs.macos_online == 'true'
+    runs-on: [self-hosted, macos-local]
+    timeout-minutes: 25
+    steps:
+      - name: Checkout IGWelfare
+        uses: actions/checkout@v7
+        with:
+          path: IGWelfare
+
+      - name: Checkout VFIToolkit-matlab
+        uses: actions/checkout@v7
+        with:
+          repository: MichaelTiemann/VFIToolkit-matlab
+          ref: octave-compat
+          path: VFIToolkit-matlab
+
+      - name: Checkout VFIToolkit-octave
+        uses: actions/checkout@v7
+        with:
+          repository: MichaelTiemann/VFIToolkit-octave
+          path: VFIToolkit-octave
+
+      - name: Run test suite on macOS (MATLAB & Octave if installed)
+        shell: bash
+        run: |
+          MATLAB_MAC=$(ls -1 /Applications/MATLAB_*.app/bin/matlab 2>/dev/null | sort -V | tail -n 1 || true)
+          if [ -n "$MATLAB_MAC" ]; then
+            echo "=== Running MATLAB (No GPU) on macOS: $MATLAB_MAC ==="
+            IGWELFARE_TEST_MODE=matlab_nogpu "$MATLAB_MAC" -batch "cd IGWelfare/tests; run_all_tests('exit')"
+          fi
+          if command -v octave >/dev/null 2>&1; then
+            echo "=== Running GNU Octave on macOS ==="
+            IGWELFARE_TEST_MODE=octave_nogpu octave --no-gui --eval "cd IGWelfare/tests; run_all_tests('exit');"
+          fi
