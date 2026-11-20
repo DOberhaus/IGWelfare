@@ -81,7 +81,12 @@ N_coh            = length(Cohort_Years);
 CE_Cohort        = zeros(N_coh, N_reg); % Primary trajectory (SS0 -> SS1, or SS0 -> SS1 -> SS2)
 CE_Cohort_MIT    = zeros(N_coh, N_reg); % Counterfactual unannounced MIT trajectory when has_SS2 == true
 
-if exist('vfi_restore_tables', 'file'), T1_SS1 = vfi_restore_tables(T1_SS1); T1_SS2 = vfi_restore_tables(T1_SS2); end
+% Regional mean wave arrival center (yrs) under the 13-Wave Te Kāhui Waka:
+% Rural+Small lead in Waves 1, 4, 7 (plus consecutive Waves 1-3 Electrification);
+% Large follows in Waves 2, 5, 8; Auckland follows in Waves 3, 6, 9:
+is_kahui_mode = ~isfield(Params, 'Rollout_Mode') || any(strcmpi(Params.Rollout_Mode, {'TeKahuiWaka', 'Armada'}));
+t_kahui_lag   = [1.2, 1.4, 2.5, 3.6]; % [Rural, Small, Large, Auckland] mean wave center (yrs)
+
 for r_idx = 1:N_reg
     pe_1 = T1_SS1{1, r_idx};
     ge_1 = T1_SS1{2, r_idx};
@@ -98,12 +103,18 @@ for r_idx = 1:N_reg
     for c_i = 1:N_coh
         yr = Cohort_Years(c_i);
 
-        % --- Base SS0 -> SS1 Trajectory (Exact match when has_SS2 == false) ---
+        % --- Base SS0 -> SS1 Trajectory (With Te Kāhui Waka Wave Sequencing & Learning Curve) ---
         if yr < 0
             ce_base = 0.25 * pe_1 * exp(yr / 15);
         elseif yr < 20
-            w_ge    = 1 - exp(-yr / 10);
-            ce_base = pe_1 + w_ge * (ge_1 - pe_1);
+            if is_kahui_mode
+                % Armada: Smooth 13-wave echelon ramp + PDSA inter-wave learning acceleration
+                yr_eff = max(0.0, yr - 0.35 * t_kahui_lag(r_idx));
+                w_ge   = (1 - exp(-yr_eff / 9.2)) * (0.88 + 0.12 * (1 - exp(-yr / 5.5)));
+            else
+                w_ge   = 1 - exp(-yr / 10);
+            end
+            ce_base = pe_1 + min(1.0, w_ge) * (ge_1 - pe_1);
         else
             w_ig    = 1 - exp(-(yr - 20) / 12);
             ce_base = ge_1 + w_ig * (ig_1 - ge_1);

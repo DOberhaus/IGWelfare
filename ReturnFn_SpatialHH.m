@@ -40,10 +40,12 @@ rr_reg = max(0.010 * Q_reg, (1 + mu_maint - (G_reg / R_ann)) * Q_reg);
 rh_reg = max(0.008 * Q_reg, (1 + mu_maint - upsilon_h - (G_reg / R_ann)) * Q_reg);
 xi_reg = min(1.0, (1 / chi_bar) * (rr_reg / rh_reg));
 
-lvr_access       = min(1.0, max(0.0, a ./ max(1e-4, 0.20 * Q_reg)));
-xi_hh            = min(1.0, xi_reg .* (0.94 + 0.10 .* lvr_access));
-is_evict_tail    = double(a < 0.08 * Q_reg) .* double(z < 0.85);
-transience_wedge = 1.0 + 0.04 .* is_evict_tail;
+% Skill-readiness capitalization of YouthGrant E into LVR deposit access at agej == 1:
+yg_cap_skill     = ((agej == 1) * YouthGrant) * min(1.20, max(0.35, (h / 1.00) ^ 0.75));
+lvr_access       = min(1.0, max(0.0, (a + yg_cap_skill) / max(1e-4, 0.20 * Q_reg)));
+xi_hh            = min(1.0, xi_reg * (0.94 + 0.10 * lvr_access));
+is_evict_tail    = double(a < 0.08 * Q_reg) * double(z < 0.85);
+transience_wedge = 1.0 + 0.04 * is_evict_tail;
 
 if agej < Jr
     p_H = (xi_hh .* rh_reg + (1 - xi_hh) .* (rr_reg / (0.5 * chi_bar))) .* transience_wedge;
@@ -65,11 +67,12 @@ M_mentor       = min(1.0, max(0.0, 0.173 + 20.0 * (G_ece2_eff - 0.065)));
 M_trust_gated  = M_mentor .* (0.45 + 0.55 .* min(1.0, max(0.0, K_whanau_net) ./ 0.35));
 
 %% 4. BUDGET CONSTRAINT & "INCOME x GEOGRAPHY" TRANSFER RULE (FLOWS SCALED BY scale_dt)
-gross_earn       = w_reg .* h .* z .* l;
-T_geo            = Transfer_Geo .* exp(-1.8 .* gross_earn);
-wealth_after_tax = ((1 - tau_a) ^ dt) .* a + r * (1 - tau_k) .* a;
-
-youth_endow      = (agej == 1) * YouthGrant;
+gross_earn       = w_reg * h * z * l;
+T_geo            = Transfer_Geo * exp(-1.8 * gross_earn);
+wealth_after_tax = ((1 - tau_a) ^ dt) * a + r * (1 - tau_k) * a;
+% Productive capitalization of YouthGrant depends on completed pre-labor skill h at launch (agej == 1):
+skill_ready_mult = min(1.15, max(0.55, 0.45 + 0.55 * (h / 1.00)));
+youth_endow      = (agej == 1) * YouthGrant * skill_ready_mult;
 pension_inc      = (agej >= Jr) * p_super;
 
 c_budget = wealth_after_tax - aprime + youth_endow ...

@@ -40,10 +40,12 @@ rr_reg = max(0.010 * Q_reg, (1 + mu_maint - (G_reg / R_ann)) * Q_reg);
 rh_reg = max(0.008 * Q_reg, (1 + mu_maint - upsilon_h - (G_reg / R_ann)) * Q_reg);
 xi_reg = min(1.0, (1 / chi_bar) * (rr_reg / rh_reg));
 
-lvr_access       = min(1.0, max(0.0, a ./ max(1e-4, 0.20 * Q_reg)));
-xi_hh            = min(1.0, xi_reg .* (0.98 + 0.04 .* lvr_access));
-is_evict_tail    = double(a < 0.08 * Q_reg) .* double(z < 0.85);
-transience_wedge = 1.0 + 0.04 .* is_evict_tail .* max(0.0, (0.110 - G_ece) / 0.065);
+% Skill-readiness capitalization of YouthGrant E into LVR deposit access at agej == 1:
+yg_cap_skill     = ((agej == 1) * YouthGrant) * min(1.20, max(0.35, (h / 1.00) ^ 0.75));
+lvr_access       = min(1.0, max(0.0, (a + yg_cap_skill) / max(1e-4, 0.20 * Q_reg)));
+xi_hh            = min(1.0, xi_reg * (0.98 + 0.04 * lvr_access));
+is_evict_tail    = double(a < 0.08 * Q_reg) * double(z < 0.85);
+transience_wedge = 1.0 + 0.04 * is_evict_tail * max(0.0, (0.110 - G_ece) / 0.065);
 
 if ~is_post_65
     p_H = (xi_hh .* rh_reg + (1 - xi_hh) .* (rr_reg / (0.5 * chi_bar))) .* transience_wedge;
@@ -70,10 +72,12 @@ M_trust_gated = M_mentor .* (0.45 + 0.55 .* min(1.0, max(0.0, K_whanau_net) ./ 0
 %% 4. BUDGET CONSTRAINT & "INCOME x GEOGRAPHY" TRANSFER RULE (FLOWS SCALED BY scale_dt)
 s_sub            = min(0.80, G_ece / (G_ece + gbar_ece));
 senescence_fac   = exp(-0.08 * max(0.0, age_end_yrs - 65.0)); % 8%/yr productivity decay past Age 65
-gross_earn       = w_reg .* h .* z .* l .* senescence_fac;
-T_geo            = Transfer_Geo .* exp(-1.8 .* gross_earn);
-wealth_after_tax = ((1 - tau_a) ^ dt) .* a + r * (1 - tau_k) .* a;
-youth_endow      = (agej == 1) * YouthGrant;
+gross_earn       = w_reg * h * z * l * senescence_fac;
+T_geo            = Transfer_Geo * exp(-1.8 * gross_earn);
+wealth_after_tax = ((1 - tau_a) ^ dt) * a + r * (1 - tau_k) * a;
+% Productive capitalization of YouthGrant depends on completed pre-labor skill h at launch (agej == 1):
+skill_ready_mult = min(1.15, max(0.55, 0.45 + 0.55 * (h / 1.00)));
+youth_endow      = (agej == 1) * YouthGrant * skill_ready_mult;
 
 % When super_age_yrs > 65, displaced 65+ seniors who cannot receive NZ Super draw partial
 % Supported Living / Disability safety-net support (55% of p_super, funded out of government taxes):
