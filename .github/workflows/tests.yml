@@ -39,10 +39,21 @@ jobs:
           repository: MichaelTiemann/VFIToolkit-octave
           path: VFIToolkit-octave
 
-      - name: Install GNU Octave & headless X11 framebuffer
+      - name: Install GNU Octave & prebuilt packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y octave liboctave-dev xvfb xauth gnuplot
+          sudo apt-get install -y --no-install-recommends \
+            octave \
+            octave-dev \
+            octave-struct \
+            octave-io \
+            octave-statistics \
+            octave-optim \
+            octave-parallel \
+            octave-tablicious \
+            xvfb \
+            xauth \
+            gnuplot
           octave --no-gui --eval "pkg install -forge struct io statistics optim parallel"
 
       - name: Run MATLAB/Octave test suite (Octave No-GPU)

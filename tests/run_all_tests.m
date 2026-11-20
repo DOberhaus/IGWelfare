@@ -36,7 +36,10 @@ vecFns = { ...
     'BenPorath_aprimeFn'};
 
 if isOctave
-    try pkg('load', 'parallel', 'statistics', 'datatypes', 'struct'); catch, end
+    octPkgs = {'parallel', 'statistics', 'datatypes', 'tablicious', 'struct', 'io', 'optim'};
+    for ip = 1:numel(octPkgs)
+        try pkg('load', octPkgs{ip}); catch, end
+    end
     if exist(vfiOctaveDir, 'dir') == 7 && exist('VFIToolkit_Octave_Setup', 'file') == 0
         addpath(vfiOctaveDir);
     end
