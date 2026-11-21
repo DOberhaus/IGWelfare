@@ -9,7 +9,11 @@ else
     elder_time_mult = 1.0 + Params.kappa_kuia_max * tanh((A_base - super_age_s) / Params.tau_kuia_sat);
 end
 
-Reg_Names    = {'Rural', 'Small', 'Large', 'Auckland'};
+if isstruct(Params) && isfield(Params, 'Regions') && ~isempty(Params.Regions)
+    Reg_Names = Params.Regions;
+else
+    Reg_Names = {'Rural', 'Small', 'Large', 'Auckland'};
+end
 N_reg        = numel(Dist_Reg_Cell);
 n_h          = numel(h_vec);
 tfr_row      = zeros(1, N_reg);

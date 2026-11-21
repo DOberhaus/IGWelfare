@@ -196,19 +196,32 @@ if Use_ExpAsset_Pipeline && Run_Fertility_Module && exist('FertilityBargaining_M
     fprintf('>>> [STEP 3/7] Running FertilityBargaining_Module.m across 4 Regions...\n');
     step3_timer = tic;
     Cache_Step3 = fullfile(CacheDir, sprintf('Cache_Step3_Fertility_dt%d.mat', Params.dt));
-    if Use_Saved_Cache && ~Force_Recompute_All && exist(Cache_Step3, 'file') && Validate_CacheConfig(Cache_Step3, Cache_CfgHash)
+    if Use_Saved_Cache && ~Force_Recompute_All && exist(Cache_Step3, 'file') && Validate_CacheConfig(Cache_Step3, Cache_CfgHash) ...
+            && ~isempty(whos('-file', Cache_Step3, 'FertOut'))
         fprintf('    [CACHE HIT] Loading Step 3 Fertility Results from %s...\n', Cache_Step3);
         load(Cache_Step3);
-        if exist('vfi_restore_tables', 'file'), T_Fert1 = vfi_restore_tables(T_Fert1); T_Fert2 = vfi_restore_tables(T_Fert2); end
+        if exist('vfi_restore_tables', 'file')
+            T_Fert1       = vfi_restore_tables(T_Fert1);
+            T_Fert2       = vfi_restore_tables(T_Fert2);
+            T_UCurve      = vfi_restore_tables(T_UCurve);
+            FertOut.T_Fert1  = T_Fert1;
+            FertOut.T_Fert2  = T_Fert2;
+            FertOut.T_UCurve = T_UCurve;
+        end
+        Params.tau_l_SS2_req_pct = FertOut.tau_l_SS2_req_pct;
+        Params.tau_l_delta_SS2   = FertOut.tau_l_delta_SS2;
     else
-        V              = V_5D_BM;
-        Policy         = Policy_5D_BM;
-        StationaryDist = StationaryDist_5D_BM;
-        jequaloneDist  = jequaloneDist_5D_BM;
+        V                    = V_5D_BM;
+        Policy               = Policy_5D_BM;
+        StationaryDist       = StationaryDist_5D_BM;
+        jequaloneDist        = jequaloneDist_5D_BM;
+        Defer_Fertility_Plot = true; % Defer Panel D CE% anchoring & PNG/CSV export until Step 6 solves T1
         run(which('FertilityBargaining_Module.m'));
+        Defer_Fertility_Plot = false;
         old_warn = warning('query', 'all');
         warning('off', 'all');
-        save(Cache_Step3, 'T_Fert1', 'T_Fert2', 'TFR_mat', 'DiffFert_mat', 'Struggling_mat', 'DepRatio_vec', 'ReqTax_vec', 'Cache_CfgHash');
+        save(Cache_Step3, 'FertOut', 'T_Fert1', 'T_Fert2', 'T_UCurve', 'TFR_mat', 'DiffFert_mat', ...
+            'Struggling_mat', 'DepRatio_vec', 'ReqTax_vec', 'Cache_CfgHash');
         warning(old_warn);
         fprintf('    [CACHE SAVED] Saved Step 3 checkpoint to %s\n', Cache_Step3);
     end
@@ -329,7 +342,19 @@ if Run_Transition_Path && exist('TransPath_4Region_Master.m', 'file')
     fprintf('    Step 7 completed in %.2f seconds.\n\n', toc(step7_timer));
 end
 
-%% STEP 7B: 2-PANEL FERTILITY/SUPER SOLVENCY & 7-FACTOR SS2 STACKED ATTRIBUTION PLOTS
+%% STEP 7B: 4-PANEL & 2-PANEL FERTILITY/SUPER SOLVENCY + 7-FACTOR SS2 STACKED ATTRIBUTION PLOTS
+if exist('FertOut', 'var') && isstruct(FertOut)
+    reanchor_opts = struct('ReanchorFrom', FertOut, 'Reg_HH_Shares', Reg_HH_Shares);
+    if exist('T1', 'var') && istable(T1)
+        reanchor_opts.T1 = T1;
+    end
+    FertOut       = Compute_FiscalSolvency_And_Fertility(Params, [], [], [], [], reanchor_opts);
+    CE_UCurve_SS2 = FertOut.CE_UCurve_SS2;
+    T_UCurve      = FertOut.T_UCurve;
+    figFert       = Plot_FertilityBargaining(FertOut, Params, ...
+        struct('Export_Tables_Figures', Export_Tables_Figures, 'OutputDir', OutputDir));
+end
+
 Target_Plot_Regions = [{'National'}, fliplr(Regions), {'Urban'}];
 if ~exist('Params_SS0', 'var') && exist('Params', 'var'), Params_SS0 = Params; end
 Params_SS0.Profile_ID         = Params.Profile_ID;

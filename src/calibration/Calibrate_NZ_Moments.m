@@ -3,7 +3,7 @@
 % Implements multiple subfunctions locally so it runs natively as a script in both MATLAB and GNU Octave.
 
 if ~exist('Params', 'var'), Params = struct(); end
-Params    = Configure_Model_Params(Params);
+Params    = Ensure_Workbench_Initialized(Params, struct('ForceConfigure', true));
 TargetVec = Params.TargetMoments_Val;
 WeightVec = Params.TargetMoments_Weight;
 

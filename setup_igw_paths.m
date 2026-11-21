@@ -25,9 +25,11 @@ if isempty(igw_root)
     igw_root = pwd;
 end
 
-% Fast idempotent exit if already initialized in this session (survives 'clear' via root appdata!)
-if ~force_reinit && isappdata(0, 'IGW_PATHS_READY') && isequal(getappdata(0, 'IGW_ROOT_DIR'), igw_root) ...
-        && exist('Load_Empirical_Profile', 'file') == 2
+% Fast idempotent exit if already initialized AND VFIToolkit-octave still precedes VFIToolkit-matlab in Octave
+oct_precedence_ok = (exist('OCTAVE_VERSION', 'builtin') == 0) || ...
+    ~isempty(strfind(which('ValueFnIter_InfHorz'), 'VFIToolkit-octave'));
+if ~force_reinit && oct_precedence_ok && isappdata(0, 'IGW_PATHS_READY') ...
+        && isequal(getappdata(0, 'IGW_ROOT_DIR'), igw_root) && exist('Load_Empirical_Profile', 'file') == 2
     return;
 end
 

@@ -1,22 +1,28 @@
-function Phases = Build_Phase_Registry(Requested_Codes)
+function Phases = Build_Phase_Registry(Requested_Codes, WorkspaceSnap)
 %% BUILD_PHASE_REGISTRY.M
-% Assembles a 1xN struct array Phases(1..N) from workspace variables or Cache_SS*.mat files.
+% Assembles a 1xN struct array Phases(1..N) from an explicit WorkspaceSnap struct
+% (100% pure / evalin-free) or, when WorkspaceSnap is omitted, from a boundary snapshot
+% of the caller/base workspace.
 % Supports N = 1 ({'SS0'}), N = 2 ({'SS0','SS1'}), N = 3 ({'SS0','SS1','SS2'}), or more.
 %
-% Missing phase results are LOGGED, not blocked: if StatDist_SS1 / StatDist_SS2 (...) are not in the base workspace,
+% Missing phase results are LOGGED, not blocked: if StatDist_SS1 / StatDist_SS2 (...) are not in WorkspaceSnap,
 % documented stand-in values are substituted (SS1: G_ece + 0.14, Q_reg x [0.990 ... 0.925], Emig_By_SkillTier x 0.55;
 % SS2: G_ece + 0.03, tau_l - 0.025, w_reg x 1.035, Emig_By_SkillTier x 0.80) and the missing variable and every
 % stand-in value used are written through IGW_Log (id IGW:PhaseStandIn: warning + igw_run.log line naming phase,
 % variable and value). A missing phase always substitutes the stand-ins; there is no switch that turns it into an error.
 
+if nargin < 2 || isempty(WorkspaceSnap)
+    WorkspaceSnap = snapshot_base_workspace();
+end
+
 if nargin < 1 || isempty(Requested_Codes)
-    % Auto-detect available phases in base workspace
+    % Auto-detect available phases in WorkspaceSnap
     Requested_Codes = {'SS0'};
-    if evalin('base', 'exist(''StatDist_SS1'',''var'') || exist(''StatDist_GE_Endo'',''var'')')
+    if has_snap_var(WorkspaceSnap, 'StatDist_SS1') || has_snap_var(WorkspaceSnap, 'StatDist_GE_Endo')
         Requested_Codes{end+1} = 'SS1';
     end
     for k = 2:9
-        if evalin('base', sprintf('exist(''StatDist_SS%d'',''var'')', k))
+        if has_snap_var(WorkspaceSnap, sprintf('StatDist_SS%d', k))
             Requested_Codes{end+1} = sprintf('SS%d', k); %#ok<AGROW>
         end
     end
@@ -32,13 +38,13 @@ end
 N_phases    = numel(Requested_Codes);
 Panel_Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-% 1. Resolve Baseline (SS0) Anchor first, then resolve Regions from P0.DataSpec / workspace
-[Dist0, Pol0, V0, jDist0, P0, Diag0] = Resolve_SS0_From_Workspace();
+% 1. Resolve Baseline (SS0) Anchor first, then resolve Regions from P0.Regions / WorkspaceSnap
+[Dist0, Pol0, V0, jDist0, P0, Diag0] = Resolve_SS0_From_Snap(WorkspaceSnap);
 def_regs = {'Rural', 'Small', 'Large', 'Auckland'};
 if isstruct(P0) && isfield(P0, 'Regions') && ~isempty(P0.Regions)
     def_regs = P0.Regions;
 end
-Regions = evalin_def('Regions', def_regs);
+Regions = snap_def(WorkspaceSnap, 'Regions', def_regs);
 
 Phases = struct('Code', {}, 'Label', {}, 'Dist', {}, 'Pol', {}, ...
     'V', {}, 'jDist', {}, 'Params', {}, 'Diag', {}, 'Intensity', {});
@@ -59,7 +65,7 @@ for p = 1:N_phases
         Phases(p).Intensity = 0.0;
 
     elseif strcmp(code, 'SS1')
-        [Dist1, Pol1, V1, jDist1, P1, Diag1] = Resolve_SS1_From_Workspace(Dist0, Pol0, V0, jDist0, P0, Diag0, Regions);
+        [Dist1, Pol1, V1, jDist1, P1, Diag1] = Resolve_SS1_From_Snap(WorkspaceSnap, Dist0, Pol0, V0, jDist0, P0, Diag0, Regions);
         Phases(p).Code      = 'SS1';
         Phases(p).Label     = sprintf('%c. High-Opportunity Reform + Montessori Mentoring (SS1)', let);
         Phases(p).Dist      = Dist1;
@@ -71,9 +77,9 @@ for p = 1:N_phases
         Phases(p).Intensity = 1.0;
 
     else
-        % Generic Phase SSk (SS2, SS3, ...): check workspace or Cache_NZ_Intergen/Cache_<code >.mat
+        % Generic Phase SSk (SS2, SS3, ...): check WorkspaceSnap or log documented stand-ins
         [DistK, PolK, VK, jDistK, PK, DiagK, intensity_k, label_k] = ...
-            Resolve_SSk_From_Workspace(code, let, Phases(max(1, p-1)), Regions);
+            Resolve_SSk_From_Snap(WorkspaceSnap, code, let, Phases(max(1, p-1)), Regions);
         Phases(p).Code      = code;
         Phases(p).Label     = label_k;
         Phases(p).Dist      = DistK;
@@ -87,49 +93,49 @@ for p = 1:N_phases
 end
 end
 
-%% --- INTERNAL RESOLVERS ---
-function [Dist0, Pol0, V0, jDist0, P0, Diag0] = Resolve_SS0_From_Workspace()
-if evalin('base', 'exist(''StatDist_SS0'',''var'')')
-    Dist0  = evalin('base', 'StatDist_SS0');
-    Pol0   = evalin_def('Policy_SS0', evalin_def('Policy', struct()));
-    V0     = evalin_def('V_SS0',      evalin_def('V', struct()));
-    jDist0 = evalin_def('jDist_SS0',  evalin_def('jequaloneDist', struct()));
-    P0     = evalin_def('Params_SS0', evalin_def('Params', struct()));
-    Diag0  = evalin_def('IG_Diag_SS0',evalin_def('IG_Diagnostics', struct()));
-elseif evalin('base', 'exist(''StatDist_Base'',''var'')')
-    Dist0  = evalin('base', 'StatDist_Base');
-    Pol0   = evalin('base', 'Policy_Base');
-    V0     = evalin_def('V_Base', struct());
-    jDist0 = evalin_def('jequalone_Base', struct());
-    P0     = evalin('base', 'Params_Base');
-    Diag0  = evalin_def('IG_Diag_Base', struct());
-elseif evalin('base', 'exist(''StationaryDist'',''var'')')
-    Dist0  = evalin('base', 'StationaryDist');
-    Pol0   = evalin('base', 'Policy');
-    V0     = evalin_def('V', struct());
-    jDist0 = evalin_def('jequaloneDist', struct());
-    P0     = evalin('base', 'Params');
-    Diag0  = evalin_def('IG_Diagnostics', struct());
+%% --- INTERNAL PURE RESOLVERS (OPERATING STRICTLY ON WORKSPACESNAP) ---
+function [Dist0, Pol0, V0, jDist0, P0, Diag0] = Resolve_SS0_From_Snap(S)
+if has_snap_var(S, 'StatDist_SS0')
+    Dist0  = S.StatDist_SS0;
+    Pol0   = snap_def(S, 'Policy_SS0', snap_def(S, 'Policy', struct()));
+    V0     = snap_def(S, 'V_SS0',      snap_def(S, 'V', struct()));
+    jDist0 = snap_def(S, 'jDist_SS0',  snap_def(S, 'jequaloneDist', struct()));
+    P0     = snap_def(S, 'Params_SS0', snap_def(S, 'Params', struct()));
+    Diag0  = snap_def(S, 'IG_Diag_SS0',snap_def(S, 'IG_Diagnostics', struct()));
+elseif has_snap_var(S, 'StatDist_Base')
+    Dist0  = S.StatDist_Base;
+    Pol0   = snap_def(S, 'Policy_Base', struct());
+    V0     = snap_def(S, 'V_Base', struct());
+    jDist0 = snap_def(S, 'jequalone_Base', struct());
+    P0     = snap_def(S, 'Params_Base', struct());
+    Diag0  = snap_def(S, 'IG_Diag_Base', struct());
+elseif has_snap_var(S, 'StationaryDist')
+    Dist0  = S.StationaryDist;
+    Pol0   = snap_def(S, 'Policy', struct());
+    V0     = snap_def(S, 'V', struct());
+    jDist0 = snap_def(S, 'jequaloneDist', struct());
+    P0     = snap_def(S, 'Params', struct());
+    Diag0  = snap_def(S, 'IG_Diagnostics', struct());
 else
     error('Build_Phase_Registry: No baseline StationaryDist found in workspace.');
 end
 end
 
-function [Dist1, Pol1, V1, jDist1, P1, Diag1] = Resolve_SS1_From_Workspace(Dist0, Pol0, V0, jDist0, P0, Diag0, Regions)
-if evalin('base', 'exist(''StatDist_SS1'',''var'')')
-    Dist1  = evalin('base', 'StatDist_SS1');
-    Pol1   = evalin_def('Policy_SS1', evalin_def('Policy_GE_Exo', Pol0));
-    V1     = evalin_def('V_SS1',      evalin_def('V_GE_Exo', V0));
-    jDist1 = evalin_def('jDist_SS1',  jDist0);
-    P1     = evalin_def('Params_SS1', evalin_def('Params_Reform', P0));
-    Diag1  = evalin_def('IG_Diag_SS1',Diag0);
-elseif evalin('base', 'exist(''StatDist_GE_Endo'',''var'')')
-    Dist1  = evalin('base', 'StatDist_GE_Endo');
-    Pol1   = evalin_def('Policy_GE_Endo', evalin_def('Policy_GE_Exo', Pol0));
-    V1     = evalin_def('V_GE_Endo',      evalin_def('V_GE_Exo', V0));
-    jDist1 = evalin_def('jequalone_Endo', jDist0);
-    P1     = evalin_def('Params_GE',      evalin_def('Params_Reform', P0));
-    Diag1  = evalin_def('IG_Diag_Reform', Diag0);
+function [Dist1, Pol1, V1, jDist1, P1, Diag1] = Resolve_SS1_From_Snap(S, Dist0, Pol0, V0, jDist0, P0, Diag0, Regions)
+if has_snap_var(S, 'StatDist_SS1')
+    Dist1  = S.StatDist_SS1;
+    Pol1   = snap_def(S, 'Policy_SS1', snap_def(S, 'Policy_GE_Exo', Pol0));
+    V1     = snap_def(S, 'V_SS1',      snap_def(S, 'V_GE_Exo', V0));
+    jDist1 = snap_def(S, 'jDist_SS1',  jDist0);
+    P1     = snap_def(S, 'Params_SS1', snap_def(S, 'Params_Reform', P0));
+    Diag1  = snap_def(S, 'IG_Diag_SS1',Diag0);
+elseif has_snap_var(S, 'StatDist_GE_Endo')
+    Dist1  = S.StatDist_GE_Endo;
+    Pol1   = snap_def(S, 'Policy_GE_Endo', snap_def(S, 'Policy_GE_Exo', Pol0));
+    V1     = snap_def(S, 'V_GE_Endo',      snap_def(S, 'V_GE_Exo', V0));
+    jDist1 = snap_def(S, 'jequalone_Endo', jDist0);
+    P1     = snap_def(S, 'Params_GE',      snap_def(S, 'Params_Reform', P0));
+    Diag1  = snap_def(S, 'IG_Diag_Reform', Diag0);
 else
     % Parametric fallback from SS0 -- every stand-in value is logged
     IGW_Log('IGW:PhaseStandIn', 'Build_Phase_Registry phase SS1: workspace variable StatDist_SS1 (or StatDist_GE_Endo) is missing; substituting stand-in values, this phase is NOT a solved steady state');
@@ -162,14 +168,15 @@ else
 end
 end
 
-function [DistK, PolK, VK, jDistK, PK, DiagK, intensity_k, label_k] = Resolve_SSk_From_Workspace(code, let, PrevPhase, Regions)
-if evalin('base', sprintf('exist(''StatDist_%s'',''var'')', code))
-    DistK  = evalin('base', sprintf('StatDist_%s', code));
-    PolK   = evalin_def(sprintf('Policy_%s', code), PrevPhase.Pol);
-    VK     = evalin_def(sprintf('V_%s', code),      PrevPhase.V);
-    jDistK = evalin_def(sprintf('jDist_%s', code),  PrevPhase.jDist);
-    PK     = evalin_def(sprintf('Params_%s', code), PrevPhase.Params);
-    DiagK  = evalin_def(sprintf('IG_Diag_%s', code),PrevPhase.Diag);
+function [DistK, PolK, VK, jDistK, PK, DiagK, intensity_k, label_k] = Resolve_SSk_From_Snap(S, code, let, PrevPhase, Regions)
+sd_name = sprintf('StatDist_%s', code);
+if has_snap_var(S, sd_name)
+    DistK  = S.(sd_name);
+    PolK   = snap_def(S, sprintf('Policy_%s', code), PrevPhase.Pol);
+    VK     = snap_def(S, sprintf('V_%s', code),      PrevPhase.V);
+    jDistK = snap_def(S, sprintf('jDist_%s', code),  PrevPhase.jDist);
+    PK     = snap_def(S, sprintf('Params_%s', code), PrevPhase.Params);
+    DiagK  = snap_def(S, sprintf('IG_Diag_%s', code),PrevPhase.Diag);
 else
     % Parametric preview for SS2 (2050 Debt-Sinking & Dividend Harvest) if not yet solved in VFI
     % -- every stand-in value is logged
@@ -198,9 +205,37 @@ intensity_k = getfield_def(PK, 'Reform_Intensity', PrevPhase.Intensity + 0.25);
 label_k     = getfield_def(PK, 'Phase_Label', sprintf('%c. Multiphase Dividend & Harvest (%s)', let, code));
 end
 
-function val = evalin_def(varname, default_val)
-if evalin('base', sprintf('exist(''%s'',''var'')', varname))
-    val = evalin('base', varname);
+%% --- BOUNDARY SNAPSHOT & SMALL HELPERS ---
+function Snap = snapshot_base_workspace()
+% Captures only phase-relevant checkpoint variables from 'base' when caller omits WorkspaceSnap
+Snap = struct();
+ws_names = evalin('base', 'who');
+prefixes = {'StatDist_', 'Policy_', 'V_', 'jDist_', 'Params_', 'IG_Diag_', 'jequalone_'};
+exact    = {'Regions', 'StationaryDist', 'Policy', 'V', 'jequaloneDist', 'Params', 'IG_Diagnostics'};
+for i = 1:numel(ws_names)
+    nm = ws_names{i};
+    keep = any(strcmp(nm, exact));
+    if ~keep
+        for p = 1:numel(prefixes)
+            if strncmp(nm, prefixes{p}, length(prefixes{p}))
+                keep = true;
+                break;
+            end
+        end
+    end
+    if keep
+        Snap.(nm) = evalin('base', nm);
+    end
+end
+end
+
+function tf = has_snap_var(S, fname)
+tf = isstruct(S) && isfield(S, fname);
+end
+
+function val = snap_def(S, fname, default_val)
+if isstruct(S) && isfield(S, fname)
+    val = S.(fname);
 else
     val = default_val;
 end

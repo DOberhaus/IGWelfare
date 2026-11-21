@@ -13,8 +13,11 @@ if isOctave || hasGpu
 end
 
 if nargin < 1 || isempty(vfiOctaveDir)
-    repoRoot     = fileparts(mfilename('fullpath'));
-    vfiOctaveDir = fullfile(fileparts(repoRoot), 'VFIToolkit-octave');
+    igwRoot = getappdata(0, 'IGW_ROOT_DIR');
+    if isempty(igwRoot)
+        igwRoot = fileparts(fileparts(fileparts(mfilename('fullpath'))));
+    end
+    vfiOctaveDir = fullfile(fileparts(igwRoot), 'VFIToolkit-octave');
 end
 
 if exist(vfiOctaveDir, 'dir') ~= 7

@@ -10,47 +10,15 @@
 %   - Firms ('Firm_Rural', 'Firm_Small', 'Firm_Large', 'Firm_Auckland'): Infinite Horizon (N_j = Inf)
 
 %% 0. TOOLKIT & GNU OCTAVE / UFHORZ ENVIRONMENT BOOTSTRAP
-if exist('Load_Empirical_Profile', 'file') == 0
+if exist('Ensure_Workbench_Initialized', 'file') == 0
     this_dir = fileparts(mfilename('fullpath'));
     cand_setup = fullfile(this_dir, '..', 'setup_igw_paths.m');
     if exist(cand_setup, 'file') == 2, run(cand_setup);
     elseif exist('setup_igw_paths.m', 'file') == 2, setup_igw_paths(true); end
 end
-if exist('ValueFnIter_MixHorz_PType', 'file') == 0
-    error('IGWelfare:MissingToolkit', ...
-        'VFIToolkit not found on path. Add VFIToolkit-matlab (and VFIToolkit-octave in Octave) via startup.m or .octaverc.');
-end
-
-if exist('OCTAVE_VERSION', 'builtin') ~= 0
-    VFIToolkit_Octave_Setup({ ...
-        'ReturnFn_SpatialHH', ...
-        'ReturnFn_SpatialHH_Compact4D', ...
-        'ReturnFn_Firm', ...
-        'HumanCapital_Lifecycle_aprimeFn'});
-
-    if ~exist('Params', 'var'), Params = struct(); end
-    if ~isfield(Params, 'n_workers') || isempty(Params.n_workers)
-        pool_st = vfi_pool('status');
-        if pool_st.active
-            Params.n_workers = pool_st.ncores;
-        else
-            Params.n_workers = []; % Let vfi_pool('ensure') auto-detect physical cores
-        end
-    end
-
-    if isempty(Params.n_workers) || Params.n_workers > 1
-        ram_dir = vfi_ramdisk('mount', 2048);
-        pool_st = vfi_pool('ensure', Params.n_workers, ram_dir);
-        if ~pool_st.active
-            error('IGWelfare:PoolInitFailed', 'Failed to initialize Octave persistent worker pool on %s.', ram_dir);
-        end
-        Params.n_workers = pool_st.ncores;
-    end
-end
-
 if ~exist('Params', 'var'), Params = struct(); end
-% Initialize 4-tier provenance contract (canonical default Params.dt=3, Params.n_z_pts=7)
-Params = Configure_Model_Params(Params);
+[Params, Regions, Reg_HH_Shares] = Ensure_Workbench_Initialized(Params, ...
+    struct('RequireToolkit', true, 'RequireWorkerPool', true, 'ForceConfigure', true));
 
 %% 1. DEFINE PERMANENT TYPES (N_reg REGIONS x 2 SECTORS FROM DATASPEC)
 Regions = Params.Regions;

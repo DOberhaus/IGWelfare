@@ -1,227 +1,49 @@
 %% MULTI-STAGE CHILDHOOD COUNTERFACTUALS ACROSS 4 REGIONS (INTEGRATED WITH Params.dt)
-% File: PolicyExperiment_LeeSeshadri_4Region.m
-% Evaluates Lee & Seshadri (2019) / Cunha, Heckman & Schennach (2010) counterfactuals:
-%   1. 'BM_Baseline'     : Status quo NZ policy
-%   2. 'P0_Early_0to5'   : Stage-1 First 2000 Days wraparound ECE expansion (j in J_c1)
-%   3. 'P1P2_Late_6to17' : Stage-2 School-Age remedial expansion (j in J_c2)
-%   4. 'BN_FrontLoad'    : Budget-neutral reallocation from Stage 2 to Stage 1
-%   5. 'P0_Plus_GrantE'  : Stage-1 ECE expansion + Youth Capital Grant E at j = 1
-% Outputs Table12A (IGE), Table12B (Variance Explained), Table12C (Earnings & CE Welfare), and FigE8.
+% File: pipelines/PolicyExperiment_LeeSeshadri_4Region.m
+% Pipeline orchestration & rendering script delegating counterfactual VFI/IGE math to
+% Compute_LeeSeshadri_Counterfactuals.m and rendering Figure E8 + Tables 4/5/6 & 12A/12B/12C.
 
+wb_opts = struct('RequireToolkit', true);
+if exist('Regions', 'var') && ~isempty(Regions), wb_opts.Regions = Regions; end
 if ~exist('Params', 'var'), Params = struct(); end
-if ~isfield(Params, 'dt') || ~isfield(Params, 'DataSpec_Digest')
-    Params = Configure_Model_Params(Params);
-end
-if ~exist('Regions', 'var') || isempty(Regions), Regions = Params.Regions; end
+[Params, Regions] = Ensure_Workbench_Initialized(Params, wb_opts);
 
-PolicyNames = {'BM_Baseline'; 'P0_Early_0to5'; 'P1P2_Late_6to17'; 'BN_FrontLoad'; 'P0_Plus_GrantE'};
-N_pol       = length(PolicyNames);
-N_reg       = length(Regions);
+Grids5D = struct( ...
+    'n_d_5D',                   n_d_5D, ...
+    'n_a_5D',                   n_a_5D, ...
+    'n_z',                      n_z, ...
+    'N_j',                      N_j, ...
+    'd_grid_5D',                d_grid_5D, ...
+    'a_grid_5D',                a_grid_5D, ...
+    'z_grid',                   z_grid, ...
+    'pi_z',                     pi_z, ...
+    'ReturnFn_5D',              ReturnFn_5D, ...
+    'DiscountFactorParamNames', {DiscountFactorParamNames}, ...
+    'vfoptions_5D',             vfoptions_5D, ...
+    'simoptions_5D',            simoptions_5D);
 
-IGE_SR      = zeros(N_pol, N_reg);
-IGE_LR      = zeros(N_pol, N_reg);
-VarExpl_h1  = zeros(N_pol, N_reg);
-VarExpl_LFE = zeros(N_pol, N_reg);
-VarLogE     = zeros(N_pol, N_reg);
-Ebar_SR     = zeros(N_pol, N_reg);
-Ebar_LR     = zeros(N_pol, N_reg);
-CE_LR       = zeros(N_pol, N_reg);
+Baseline5D = struct('jequaloneDist_5D_BM', jequaloneDist_5D_BM);
+if exist('V_5D_BM', 'var'),      Baseline5D.V_5D_BM      = V_5D_BM;      end
+if exist('Policy_5D_BM', 'var'), Baseline5D.Policy_5D_BM = Policy_5D_BM; end
 
-Ebar_BM_SR  = zeros(1, N_reg);
-Ebar_BM_LR  = zeros(1, N_reg);
-EV_BM_LR    = zeros(1, N_reg);
+%% 1. COMPUTE PURE COUNTERFACTUAL TABLES & MATRICES
+LSOut = Compute_LeeSeshadri_Counterfactuals(Params, Grids5D, Baseline5D, struct('Regions', {Regions}));
 
-ref_hh_ls = ['HH_', Regions{1}];
-n_a1  = n_a_5D.(ref_hh_ls)(1);
-n_h   = n_a_5D.(ref_hh_ls)(2);
-n_th  = n_a_5D.(ref_hh_ls)(3);
-n_z1  = n_z.(ref_hh_ls);
-a_vec = a_grid_5D.(ref_hh_ls)(1 : n_a1);
-h_vec = a_grid_5D.(ref_hh_ls)(n_a1+1 : n_a1+n_h);
-th_vec= a_grid_5D.(ref_hh_ls)(n_a1+n_h+1 : end);
+PolicyNames = LSOut.PolicyNames;
+N_pol       = numel(PolicyNames);
+IGE_SR      = LSOut.IGE_SR;
+IGE_LR      = LSOut.IGE_LR;
+VarExpl_h1  = LSOut.VarExpl_h1;
+VarExpl_LFE = LSOut.VarExpl_LFE;
+VarLogE     = LSOut.VarLogE;
+Ebar_SR     = LSOut.Ebar_SR;
+Ebar_LR     = LSOut.Ebar_LR;
+CE_LR       = LSOut.CE_LR;
+T_IGE       = LSOut.T_IGE;
+T_VarExpl   = LSOut.T_VarExpl;
+T_Out       = LSOut.T_Out;
 
-j_s1_vec = Params.j_s1_start : Params.j_s1_end;
-j_s2_vec = Params.j_s2_start : Params.j_s2_end;
-j_launch = Params.j_child_launch;
-
-for p_idx = 1:N_pol
-    pol_name = PolicyNames{p_idx};
-    if strcmp(pol_name, 'BM_Baseline')
-        Params_p = Params;
-    else
-        Params_p = Apply_Policy_Regime(Params, pol_name);
-    end
-
-    simoptions_5D.d_grid = d_grid_5D;
-
-    t_pol = tic;
-    fprintf('    [Step 2 Policy %d/%d] Solving %s...\n', p_idx, N_pol, pol_name);
-    if exist('OCTAVE_VERSION', 'builtin') ~= 0, fflush(stdout); end
-
-    % --- 1. SHORT-RUN PARTIAL EQUILIBRIUM (SR: Fixed Newborn Distribution jequaloneDist_5D_BM) ---
-    if strcmp(pol_name, 'BM_Baseline') && exist('V_5D_BM', 'var') && exist('Policy_5D_BM', 'var')
-        V_SR      = V_5D_BM;
-        Policy_SR = Policy_5D_BM;
-    else
-        [V_SR, Policy_SR] = Solve_VFI_PhaseSplit(n_d_5D, n_a_5D, n_z, N_j, ...
-            d_grid_5D, a_grid_5D, z_grid, pi_z, ReturnFn_5D, Params_p, DiscountFactorParamNames, vfoptions_5D, Regions);
-    end
-    fprintf('      -> VFI done in %.1fs\n', toc(t_pol));
-    if exist('OCTAVE_VERSION', 'builtin') ~= 0, fflush(stdout); end
-
-    simoptions_5D.a_grid = a_grid_5D;
-    HH_TransCache_p = Precompute_HH_StationaryCache( ...
-        Policy_SR, n_d_5D, n_a_5D, n_z, N_j, d_grid_5D, a_grid_5D, pi_z, Params_p, simoptions_5D, Regions);
-
-    StatDist_SR = PushForward_HH_Dist(struct(), jequaloneDist_5D_BM, HH_TransCache_p, Regions);
-    StatDist_SR.ptweights = reshape(Params_p.PTypeWeights, [], 1);
-
-    [~, Diag_SR] = Build_IntergenTransitionMatrix(StatDist_SR, Policy_SR, V_SR, ...
-        n_d_5D, n_a_5D, n_z, d_grid_5D, a_grid_5D, z_grid, pi_z, Params_p, Regions);
-
-    % --- 2. LONG-RUN GENERAL EQUILIBRIUM (LR: Endogenous Intergenerational Fixed Point) ---
-    jDist_LR = jequaloneDist_5D_BM;
-    V_LR     = V_SR;
-    Pol_LR   = Policy_SR;
-
-    ig_resid = Inf;
-    StatDist_LR = struct();
-    for ig_it = 1:10
-        StatDist_LR = PushForward_HH_Dist(StatDist_LR, jDist_LR, HH_TransCache_p, Regions);
-        StatDist_LR.ptweights = reshape(Params_p.PTypeWeights, [], 1);
-
-        [jDist_LR_new, Diag_LR] = Build_IntergenTransitionMatrix(StatDist_LR, Pol_LR, V_LR, ...
-            n_d_5D, n_a_5D, n_z, d_grid_5D, a_grid_5D, z_grid, pi_z, Params_p, Regions);
-
-        ig_resid = 0;
-        for rr_ig = 1:N_reg
-            ht_ig = ['HH_', Regions{rr_ig}];
-            ig_resid = max(ig_resid, max(abs(jDist_LR_new.(ht_ig)(:) - jDist_LR.(ht_ig)(:))));
-        end
-        if ig_resid < 1e-5
-            jDist_LR = jDist_LR_new;
-            break;
-        end
-        jDist_LR = jDist_LR_new;
-    end
-    if ~(ig_resid < 1e-5)
-        IGW_Log('IGW:NoConvergence', 'PolicyExperiment_LeeSeshadri_4Region LR intergenerational fixed point (%s): %d iterations, residual %.3g', pol_name, ig_it, double(gather(ig_resid)));
-    end
-
-    % --- 3. COMPUTE REGIONAL IGE, VARIANCE EXPLAINED, LIFETIME EARNINGS & CE WELFARE ---
-    for r_idx = 1:N_reg
-        reg     = Regions{r_idx};
-        hh_type = ['HH_', reg];
-        w_k     = Params_p.w_reg.(hh_type);
-        z_vec   = z_grid.(hh_type);
-        l_grid  = [0; 0.5; 0.8; 1.0];
-
-        Dist_SR_k = reshape(gather(StatDist_SR.(hh_type)), [n_a1, n_h, n_th, n_z1, Params.J]);
-        Dist_LR_k = reshape(gather(StatDist_LR.(hh_type)), [n_a1, n_h, n_th, n_z1, Params.J]);
-        Pol_SR_k  = gather(Policy_SR.(hh_type));
-        Pol_LR_k  = gather(Pol_LR.(hh_type));
-        V_LR_k    = reshape(gather(V_LR.(hh_type)), [n_a1, n_h, n_th, n_z1, Params.J]);
-        jDist_k   = reshape(gather(jDist_LR.(hh_type)), [n_a1, n_h, n_th, n_z1]);
-
-        % Working-age average earnings (j = 1 ... Jr-1)
-        earn_SR_sum = 0; mass_SR_work = 0;
-        earn_LR_sum = 0; mass_LR_work = 0;
-        logE_vals   = []; logE_weights = [];
-
-        % Working-age slice: j = 1 ... Jr-1 (5D Tensor: [n_a1, n_h, n_th, n_z1, Jr-1])
-        j_work     = 1:(Params.Jr - 1);
-        Dist_SR_w  = Dist_SR_k(:, :, :, :, j_work);
-        Dist_LR_w  = Dist_LR_k(:, :, :, :, j_work);
-
-        % Extract labor supply decision l (Index 1 of Policy) across all working-age states at once
-        idx_l_sr   = min(4, max(1, round(reshape(Pol_SR_k(1, :, :, :, :, j_work), size(Dist_SR_w)))));
-        idx_l_lr   = min(4, max(1, round(reshape(Pol_LR_k(1, :, :, :, :, j_work), size(Dist_LR_w)))));
-        l_sr_ten   = max(0.2, l_grid(idx_l_sr));
-        l_lr_ten   = max(0.2, l_grid(idx_l_lr));
-
-        % 5D implicit expansion: h_vec is [1 x n_h x 1 x 1 x 1], z_vec is [1 x 1 x 1 x n_z1 x 1]
-        hz_tensor  = w_k .* reshape(h_vec, [1, n_h, 1, 1, 1]) .* reshape(z_vec, [1, 1, 1, n_z1, 1]);
-        Y_SR_ten   = hz_tensor .* l_sr_ten;
-        Y_LR_ten   = hz_tensor .* l_lr_ten;
-
-        earn_SR_sum  = sum(Dist_SR_w .* Y_SR_ten, 'all');
-        mass_SR_work = sum(Dist_SR_w, 'all');
-        earn_LR_sum  = sum(Dist_LR_w .* Y_LR_ten, 'all');
-        mass_LR_work = sum(Dist_LR_w, 'all');
-
-        mask_pos     = Dist_LR_w > 1e-9;
-        logE_vals    = log(max(1e-3, Y_LR_ten(mask_pos)));
-        logE_weights = Dist_LR_w(mask_pos);
-
-        ebar_sr_val = earn_SR_sum / max(1e-12, mass_SR_work);
-        ebar_lr_val = earn_LR_sum / max(1e-12, mass_LR_work);
-
-        % Weighted variance of log earnings
-        w_norm = logE_weights / sum(logE_weights);
-        mu_log = sum(w_norm .* logE_vals);
-        VarLogE(p_idx, r_idx) = sum(w_norm .* ((logE_vals - mu_log).^2));
-
-        % Parent-Child IGE & Variance Explained at j_launch
-        Dist_p_SR = squeeze(sum(Dist_SR_k(:, :, :, :, j_launch), [1, 4])); % [n_h x n_th]
-        Dist_p_LR = squeeze(sum(Dist_LR_k(:, :, :, :, j_launch), [1, 4]));
-        [H_grid, TH_grid] = ndgrid(log(h_vec), log(th_vec));
-
-        w_p_sr = Dist_p_SR(:) / max(1e-12, sum(Dist_p_SR(:)));
-        w_p_lr = Dist_p_LR(:) / max(1e-12, sum(Dist_p_LR(:)));
-
-        cov_sr = sum(w_p_sr .* (H_grid(:) - sum(w_p_sr.*H_grid(:))) .* (TH_grid(:) - sum(w_p_sr.*TH_grid(:))));
-        var_sr = sum(w_p_sr .* ((H_grid(:) - sum(w_p_sr.*H_grid(:))).^2));
-        cov_lr = sum(w_p_lr .* (H_grid(:) - sum(w_p_lr.*H_grid(:))) .* (TH_grid(:) - sum(w_p_lr.*TH_grid(:))));
-        var_lr = sum(w_p_lr .* ((H_grid(:) - sum(w_p_lr.*H_grid(:))).^2));
-
-        IGE_SR(p_idx, r_idx) = max(0.15, min(0.65, cov_sr / max(1e-6, var_sr)));
-        IGE_LR(p_idx, r_idx) = max(0.15, min(0.65, cov_lr / max(1e-6, var_lr)));
-
-        var_th_lr = sum(w_p_lr .* ((TH_grid(:) - sum(w_p_lr.*TH_grid(:))).^2));
-        VarExpl_h1(p_idx, r_idx)  = 100 * var_th_lr / (var_th_lr + Params_p.sigma_hc_ig^2);
-        VarExpl_LFE(p_idx, r_idx) = 100 * (var_th_lr + 0.025) / (var_th_lr + 0.025 + 0.65 * Params_p.sigma_hc_ig^2);
-
-        % Newborn Expected Value at j = 1 for Consumption Equivalent Welfare (CE_LR %)
-        V_j1 = V_LR_k(:, :, :, :, 1);
-        valid_m = isfinite(V_j1) & (jDist_k > 0);
-        ev_lr_val = sum(V_j1(valid_m) .* jDist_k(valid_m)) / max(1e-12, sum(jDist_k(valid_m)));
-
-        if p_idx == 1
-            Ebar_BM_SR(r_idx) = ebar_sr_val;
-            Ebar_BM_LR(r_idx) = ebar_lr_val;
-            EV_BM_LR(r_idx)   = ev_lr_val;
-            Ebar_SR(p_idx, r_idx) = 0;
-            Ebar_LR(p_idx, r_idx) = 0;
-            CE_LR(p_idx, r_idx)   = 0;
-        else
-            Ebar_SR(p_idx, r_idx) = 100 * (ebar_sr_val / Ebar_BM_SR(r_idx) - 1);
-            Ebar_LR(p_idx, r_idx) = 100 * (ebar_lr_val / Ebar_BM_LR(r_idx) - 1);
-            CE_LR(p_idx, r_idx)   = 100 * (((ev_lr_val / EV_BM_LR(r_idx)) ^ (1 / (Params_p.phi_nd * (1 - 2.0)))) - 1);
-        end
-    end
-end
-
-%% 4. ASSEMBLE TABLES 12A, 12B, 12C & PLOT 4-PANEL FIGURE E8
-T_IGE = array2table([IGE_SR, IGE_LR], 'RowNames', PolicyNames, ...
-    'VariableNames', [cellfun(@(r) [r, '_SR'], Regions, 'UniformOutput', false), ...
-                      cellfun(@(r) [r, '_LR'], Regions, 'UniformOutput', false)]);
-
-T_VarExpl = array2table([VarExpl_h1, VarExpl_LFE, VarLogE], 'RowNames', PolicyNames, ...
-    'VariableNames', [cellfun(@(r) ['VarExpl_h1_',  r], Regions, 'UniformOutput', false), ...
-                      cellfun(@(r) ['VarExpl_LFE_', r], Regions, 'UniformOutput', false), ...
-                      cellfun(@(r) ['VarLogE_',     r], Regions, 'UniformOutput', false)]);
-
-T_Out = array2table([Ebar_SR, Ebar_LR, CE_LR], 'RowNames', PolicyNames, ...
-    'VariableNames', [cellfun(@(r) ['Ebar_SR_', r], Regions, 'UniformOutput', false), ...
-                      cellfun(@(r) ['Ebar_LR_', r], Regions, 'UniformOutput', false), ...
-                      cellfun(@(r) ['CE_LR_',   r], Regions, 'UniformOutput', false)]);
-
-if exist('Use_Saved_Cache', 'var') && Use_Saved_Cache && exist('Cache_Step2', 'var') && ~isempty(Cache_Step2)
-    if ~exist('Cache_CfgHash', 'var'), Cache_CfgHash = ''; end
-    save(Cache_Step2, 'T_IGE', 'T_VarExpl', 'T_Out', 'IGE_SR', 'IGE_LR', ...
-        'VarExpl_h1', 'VarExpl_LFE', 'VarLogE', 'Ebar_SR', 'Ebar_LR', 'CE_LR', 'PolicyNames', 'Cache_CfgHash');
-end
-
+%% 2. PLOT 4-PANEL FIGURE E8 & EXPORT CSV TABLES
 figE8 = figure('Name', 'Lee & Seshadri 4-Region Counterfactuals', 'Color', 'w', 'Position', [100, 80, 1240, 820]);
 t_e8  = tiledlayout(2, 2, 'TileSpacing', 'loose', 'Padding', 'compact');
 
@@ -231,7 +53,7 @@ if is_oct
     x_all = (1:N_pol)';
     x_sub = (1:(N_pol-1))';
 else
-    x_all = categorical(CleanLabels, CleanLabels);
+    x_all = categorical(CleanLabels(1:N_pol), CleanLabels(1:N_pol));
     x_sub = x_all(2:end);
 end
 
@@ -242,14 +64,14 @@ ylim([0, max(0.62, max(IGE_LR(:)) * 1.25)]);
 ylabel('Long-Run IGE');
 title('A. Intergenerational Elasticity of Earnings (IGE\_LR)');
 if is_oct
-    set(ax1, 'XTick', 1:N_pol, 'XTickLabel', CleanLabels);
+    set(ax1, 'XTick', 1:N_pol, 'XTickLabel', CleanLabels(1:N_pol));
 else
     set(ax1, 'TickLabelInterpreter', 'none');
 end
 grid on;
 lgd = legend(b_ige, Regions, 'Orientation', 'horizontal', 'Location', 'northoutside');
 if ~is_oct
-    if exist('OCTAVE_VERSION', 'builtin') == 0, lgd.Layout.Tile = 'north'; end
+    lgd.Layout.Tile = 'north';
 end
 
 % Panel B: Variance Explained
@@ -259,7 +81,7 @@ ylim([0, max(88, max(VarExpl_LFE(:)) * 1.20)]);
 ylabel('Variance Explained (%)');
 title('B. Lifetime Earnings Variance Explained by Parents at Age 30-35');
 if is_oct
-    set(ax2, 'XTick', 1:N_pol, 'XTickLabel', CleanLabels);
+    set(ax2, 'XTick', 1:N_pol, 'XTickLabel', CleanLabels(1:N_pol));
 else
     set(ax2, 'TickLabelInterpreter', 'none');
 end
@@ -272,7 +94,7 @@ ylim([min(0, min(Ebar_LR(:)) * 1.2), max(9.0, max(Ebar_LR(:)) * 1.22)]);
 ylabel('\Delta Lifetime Earnings (%)');
 title('C. Long-Run Average Lifetime Earnings Gain (Ebar\_LR %)');
 if is_oct
-    set(ax3, 'XTick', 1:(N_pol-1), 'XTickLabel', CleanLabels(2:end));
+    set(ax3, 'XTick', 1:(N_pol-1), 'XTickLabel', CleanLabels(2:N_pol));
 else
     set(ax3, 'TickLabelInterpreter', 'none');
 end
@@ -285,24 +107,16 @@ ylim([min(0, min(CE_LR(:)) * 1.2), max(8.0, max(CE_LR(:)) * 1.22)]);
 ylabel('Consumption Equivalent CE\_LR (%)');
 title('D. Long-Run Newborn Welfare Gain (CE\_LR %)');
 if is_oct
-    set(ax4, 'XTick', 1:(N_pol-1), 'XTickLabel', CleanLabels(2:end));
+    set(ax4, 'XTick', 1:(N_pol-1), 'XTickLabel', CleanLabels(2:N_pol));
 else
     set(ax4, 'TickLabelInterpreter', 'none');
 end
 grid on;
 
-if ~exist('Export_Tables_Figures', 'var') || Export_Tables_Figures
-    if ~exist('OutputDir', 'var') || isempty(OutputDir)
-        app_out = getappdata(0, 'IGW_OUTPUT_DIR');
-        if ~isempty(app_out)
-            OutputDir = app_out;
-        elseif isfolder('Output_NZ_4Region_Intergen')
-            OutputDir = 'Output_NZ_4Region_Intergen';
-        else
-            OutputDir = fullfile(pwd, 'output', Params.Profile_ID);
-        end
-    end
-    if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
+if ~exist('Export_Tables_Figures', 'var') || logical(Export_Tables_Figures)
+    explicit_out = '';
+    if exist('OutputDir', 'var') && ~isempty(OutputDir), explicit_out = OutputDir; end
+    OutputDir = Resolve_IGW_OutputDir(explicit_out, Params.Profile_ID);
     exportgraphics(figE8, fullfile(OutputDir, 'FigE8_LeeSeshadri_4Region_Counterfactuals.png'), 'Resolution', 300, 'BackgroundColor', 'white');
     writetable(T_IGE,     fullfile(OutputDir, 'Table4_4Region_LeeSeshadri_IGE.csv'), 'WriteRowNames', true);
     writetable(T_Out,     fullfile(OutputDir, 'Table5_4Region_LeeSeshadri_Output_Welfare.csv'), 'WriteRowNames', true);

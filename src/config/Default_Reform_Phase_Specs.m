@@ -69,14 +69,19 @@ if Enable_SS2_Phase
     Reform_Phase_Specs(2).Transfer_Geo = t_geo_ss2;
     Reform_Phase_Specs(2).super_age    = Params_SS0.super_age_SS2;
 
-    sa2 = Reform_Phase_Specs(2).super_age;
-    if sa2 < 65.0
-        super_tax_cost = 0.0030 * (65.0 - sa2) + 0.00085 * ((65.0 - sa2) ^ 2);
+    if isfield(Params_SS0, 'tau_l_delta_SS2') && ~isempty(Params_SS0.tau_l_delta_SS2) && isfinite(Params_SS0.tau_l_delta_SS2)
+        % Synchronize directly with Compute_FiscalSolvency_And_Fertility when Step 3 has evaluated exact SS2 solvency:
+        Reform_Phase_Specs(2).tau_l_delta = Params_SS0.tau_l_delta_SS2;
     else
-        super_tax_cost = 0.0028 * ((sa2 - 65.0) ^ 1.30);
+        sa2 = Reform_Phase_Specs(2).super_age;
+        if sa2 < 65.0
+            super_tax_cost = 0.0030 * (65.0 - sa2) + 0.00085 * ((65.0 - sa2) ^ 2);
+        else
+            super_tax_cost = 0.0028 * ((sa2 - 65.0) ^ 1.30);
+        end
+        transfer_retire_tax_div           = 0.0075 * psi_ret;
+        Reform_Phase_Specs(2).tau_l_delta = -0.0350 - transfer_retire_tax_div + super_tax_cost;
     end
-    transfer_retire_tax_div           = 0.0075 * psi_ret;
-    Reform_Phase_Specs(2).tau_l_delta = -0.0350 - transfer_retire_tax_div + super_tax_cost;
 end
 
 end
