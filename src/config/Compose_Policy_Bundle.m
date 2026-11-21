@@ -52,9 +52,8 @@ nC      = numel(CIDs);
 s_direct = get_opt(Opts, 'ShockScale',  get_opt(Opts, 'DirectScale', 1.0000));
 s_core13 = get_opt(Opts, 'Core13Scale', Catalog.Default_Core13_PassThrough * s_direct);
 
-is_core13 = true(nC, 1);
-is_core13(14:min(15, nC)) = false; % C14 (Council water/rates) & C15 (Arts/Civic) enter at direct statutory scale s_direct
-
+is_core13 = false(nC, 1);
+is_core13(1:min(13, nC)) = true; % C01..C13 use macro announcement pass-through s_core13; C14+ enter at direct scale s_direct
 eff_u = u_vec;
 eff_u(is_core13)  = u_vec(is_core13)  * s_core13;
 eff_u(~is_core13) = u_vec(~is_core13) * s_direct;
@@ -306,6 +305,80 @@ if abs(u15) > 0
     end
 end
 
+% C16: Paris NDC & Clean Exergy Transition (TWO-SIDED! u < 0 = TP 26/01 NDC shortfall + EV repeal; u > 0 = CERF electrification + Clean-Green)
+if isfield(Eff, 'C16_paris_ndc_and_clean_energy_transition')
+    u16 = Eff.C16_paris_ndc_and_clean_energy_transition;
+    if u16 < 0
+        q_ndc    = -u16;
+        ndc_mode = lower(strtrim(char(get_opt(Opts, 'NDC_Settlement_Mode', 'hybrid'))));
+        w_pay    = double(strcmp(ndc_mode, 'offshore_pay')) + 0.5 * double(strcmp(ndc_mode, 'hybrid'));
+        w_def    = double(strcmp(ndc_mode, 'default_fta_penalty')) + 0.5 * double(strcmp(ndc_mode, 'hybrid'));
+
+        Params_Out.eps_h_energy            = max(0.15, get_def(Params_Out, 'eps_h_energy', 0.350) - q_ndc * 0.120);
+        ebar_curr                          = get_def(Params_Out, 'ebar_k_vec', [0.048, 0.036, 0.022, 0.016]);
+        Params_Out.ebar_k_vec              = ebar_curr .* (1.0 + q_ndc * [0.065, 0.052, 0.030, 0.022]);
+        Params_Out.Debt_to_GDP_Init        = get_def(Params_Out, 'Debt_to_GDP_Init', 0.405) + q_ndc * w_pay * 0.0185;
+        Params_Out.Offshore_NDC_Drain_BNZD = get_def(Params_Out, 'Offshore_NDC_Drain_BNZD', 0.0) + q_ndc * w_pay * 1.45;
+        zh_curr                            = get_def(Params_Out, 'Z_h_reg_mult', [1.0, 1.0, 1.0, 1.0]);
+        Params_Out.Z_h_reg_mult            = zh_curr .* max(0.60, 1.0 - q_ndc * w_def * [0.034, 0.024, 0.008, 0.006]);
+        Params_Out.r_sov_spread            = get_def(Params_Out, 'r_sov_spread', 0.0) + q_ndc * w_def * 0.0022;
+        Params_Out.tau_l                   = get_def(Params_Out, 'tau_l', 0.220) ...
+            + 0.0025 * (Params_Out.Offshore_NDC_Drain_BNZD / 0.725) + 0.80 * Params_Out.r_sov_spread;
+    elseif u16 > 0
+        % Positive Keen-Labrousse Electrification (e_F=0.30 -> e_N=0.88) + Clean-Green Primary Export Lift:
+        Params_Out.eps_h_energy       = min(0.95, get_def(Params_Out, 'eps_h_energy', 0.350) + u16 * 0.300);
+        ebar_curr                     = get_def(Params_Out, 'ebar_k_vec', [0.048, 0.036, 0.022, 0.016]);
+        Params_Out.ebar_k_vec         = ebar_curr .* max(0.45, 1.0 - u16 * [0.220, 0.190, 0.140, 0.110]);
+        zh_curr                       = get_def(Params_Out, 'Z_h_reg_mult', [1.0, 1.0, 1.0, 1.0]);
+        Params_Out.Z_h_reg_mult       = zh_curr .* (1.0 + u16 * [0.045, 0.030, 0.012, 0.008]);
+        Params_Out.r_sov_spread       = max(-0.006, get_def(Params_Out, 'r_sov_spread', 0.0) - u16 * 0.0015);
+        Params_Out.Clean_Exergy_Scale = u16;
+    end
+end
+
+% C17: Public Network & Grid Asset Stewardship (TWO-SIDED! u < 0 = irreversible privatization into monopoly; u > 0 = Ostrom/board turnaround)
+if isfield(Eff, 'C17_public_network_asset_stewardship')
+    u17 = Eff.C17_public_network_asset_stewardship;
+    Params_Out.Asset_Stewardship_Dial = u17;
+    if u17 < 0
+        q_priv = -u17;
+        % One-off fire-sale cash lowers initial net debt slightly (-1.8% GDP), BUT locks in permanent monopoly
+        % tariff/electricity markups (+ebar_k, +mu_rates_wedge) and lowers downstream firm z_h competitiveness:
+        Params_Out.Debt_to_GDP_Init   = get_def(Params_Out, 'Debt_to_GDP_Init', 0.405) - q_priv * 0.018;
+        ebar_curr                     = get_def(Params_Out, 'ebar_k_vec', [0.048, 0.036, 0.022, 0.016]);
+        Params_Out.ebar_k_vec         = ebar_curr .* (1.0 + q_priv * [0.140, 0.125, 0.105, 0.095]);
+        wedge_curr                    = get_def(Params_Out, 'mu_rates_wedge_vec', [0.0, 0.0, 0.0, 0.0]);
+        Params_Out.mu_rates_wedge_vec = wedge_curr + q_priv * [0.0028, 0.0032, 0.0038, 0.0034];
+        zh_curr                       = get_def(Params_Out, 'Z_h_reg_mult', [1.0, 1.0, 1.0, 1.0]);
+        Params_Out.Z_h_reg_mult       = zh_curr .* max(0.65, 1.0 - q_priv * [0.028, 0.026, 0.024, 0.022]);
+        Params_Out.Cohesion_Shock_Pts = get_def(Params_Out, 'Cohesion_Shock_Pts', 0.0) - q_priv * 3.20;
+    elseif u17 > 0
+        % Reforming public network & gentailer governance compresses oligopoly markups & lifts network reliability:
+        ebar_curr                     = get_def(Params_Out, 'ebar_k_vec', [0.048, 0.036, 0.022, 0.016]);
+        Params_Out.ebar_k_vec         = ebar_curr .* max(0.55, 1.0 - u17 * [0.085, 0.080, 0.070, 0.065]);
+        wedge_curr                    = get_def(Params_Out, 'mu_rates_wedge_vec', [0.0, 0.0, 0.0, 0.0]);
+        Params_Out.mu_rates_wedge_vec = max(-0.015, wedge_curr - u17 * [0.0018, 0.0020, 0.0024, 0.0020]);
+        zh_curr                       = get_def(Params_Out, 'Z_h_reg_mult', [1.0, 1.0, 1.0, 1.0]);
+        Params_Out.Z_h_reg_mult       = zh_curr .* (1.0 + u17 * [0.022, 0.020, 0.018, 0.016]);
+        Params_Out.Cohesion_Shock_Pts = get_def(Params_Out, 'Cohesion_Shock_Pts', 0.0) + u17 * 2.40;
+    end
+end
+
+% C18: Sovereign Defence Capability Posture (u = +1.0 -> 1.2% to 3.0% GDP = +NZD 8.0B/yr FX & skill demand)
+if isfield(Eff, 'C18_sovereign_defence_capability_posture')
+    u18 = Eff.C18_sovereign_defence_capability_posture;
+    if abs(u18) > 0
+        Params_Out.Defence_Posture_Dial = u18;
+        Params_Out.Defence_PctGDP       = max(0.005, 0.012 + u18 * 0.018);
+        % Unfunded defence import drain (+62% FX share) widens NFA/sovereign spread & requires PAYE closure unless offset:
+        has_clean_offset = get_def(Params_Out, 'Clean_Exergy_Scale', 0.0);
+        net_fx_strain    = max(0.0, u18 * (1.0 - 0.65 * has_clean_offset));
+        Params_Out.Debt_to_GDP_Init = get_def(Params_Out, 'Debt_to_GDP_Init', 0.405) + net_fx_strain * 0.028;
+        Params_Out.r_sov_spread     = get_def(Params_Out, 'r_sov_spread', 0.0) + net_fx_strain * 0.0018;
+        Params_Out.tau_l            = max(0.05, get_def(Params_Out, 'tau_l', 0.220) + u18 * 0.0175 - 0.0040 * has_clean_offset);
+    end
+end
+
 [Params_Out, BundleMeta, z_grid_Out] = sync_and_diagnose(Params_Out, Regions, BundleMeta, z_grid_Out, false);
 
 end
@@ -401,6 +474,12 @@ switch low
         b_name = 'civic_commons_expansion_doc1e';
     case {'all_but_ndc', 'full_15_shocks'}
         b_name = 'domestic_15_bundle';
+    case 'ndc'
+        b_name = 'ndc_clean_energy_rollback';
+    case {'ndc_clean_green', 'cerf_ndc_upgrade'}
+        b_name = 'ndc_clean_exergy_upgrade';
+    case 'full_16_shocks'
+        b_name = 'full_16_commitments';
     case 'custom'
         b_name = 'custom';
     otherwise
@@ -425,8 +504,9 @@ legacy_map = { ...
     'InvestmentBoost20Pct',   11, +1.0; ...
     'TeacherKaiakoPaySqueeze',12, -1.0; ...
     'KiwiSaverMatchCut',      13, -1.0; ...
-    'ThreeWatersRatesWedge',  14, -1.0; ...
-    'ArtsCivicWCCSqueeze',    15, -1.0};
+    'ThreeWatersRatesWedge',           14, -1.0; ...
+    'ArtsCivicWCCSqueeze',             15, -1.0; ...
+    'ParisNDCLiabilityAndEVRollback',  16, -1.0};
 for r = 1:size(legacy_map, 1)
     fn = legacy_map{r, 1};
     ix = legacy_map{r, 2};

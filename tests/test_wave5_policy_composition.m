@@ -14,7 +14,7 @@ setup_igw_paths(true);
 %% 1. COMMITMENT CATALOG SCHEMA & PROFILE INHERITANCE
 Cat_Dun  = Load_Commitment_Catalog('NZ_Dunedin1972');
 Cat_Gui  = Load_Commitment_Catalog('NZ_GUiNZ2009');
-check(numel(Cat_Dun.Commitment_IDs) == 15, 'Expected 15 domestic institutional commitments');
+check(numel(Cat_Dun.Commitment_IDs) >= 15, 'Expected at least 15 institutional commitments');
 check(strcmp(Cat_Dun.Digest, Cat_Gui.Digest), 'NZ_GUiNZ2009 failed to inherit commitment catalog digest');
 
 %% 2. EXACT COMMUTATIVITY & NAMED-BUNDLE EQUIVALENCE IN COMPOSE_POLICY_BUNDLE

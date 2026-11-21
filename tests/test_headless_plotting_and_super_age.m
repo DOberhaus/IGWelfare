@@ -1,4 +1,10 @@
 function test_headless_plotting_and_super_age()
+has_base_od = evalin('base', 'exist(''OutputDir'', ''var'')');
+if has_base_od
+    saved_base_od = evalin('base', 'OutputDir');
+    evalin('base', 'clear OutputDir');
+    restore_od = onCleanup(@() assignin('base', 'OutputDir', saved_base_od));
+end
 %TEST_HEADLESS_PLOTTING_AND_SUPER_AGE Sanity-check eval_super_age_point and headless
 %   Plot_ActuarialContinuationValuation under both calibration anchors in a temp workspace.
 

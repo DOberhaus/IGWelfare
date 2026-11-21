@@ -79,3 +79,45 @@ domestic_15_bundle:
   C13_retirement_match_and_social_rent_buffer: -1.0
   C14_national_water_balance_sheet_stewardship: -1.0
   C15_grassroots_arts_sport_and_civic_commons: -1.0
+
+ndc_clean_energy_rollback:
+  Label: "6A. Paris NDC Shortfall & Clean-Car Rollback Alone (C16 = -1)"
+  Legacy_Alias: "ndc"
+  C16_paris_ndc_and_clean_energy_transition: -1.0
+
+ndc_clean_exergy_upgrade:
+  Label: "6B. CERF Electrification, Spatial Carbon Rebate & Clean-Green Upgrade (C16 = +1)"
+  Legacy_Alias: "ndc_clean_green"
+  C16_paris_ndc_and_clean_energy_transition: 1.0
+
+full_16_commitments:
+  Label: "3C. Full 16-Commitment 2024-2026 Vector (Domestic 15 + NDC/EV Rollback)"
+  Legacy_Alias: "full_16_shocks"
+  C01_tenure_tax_neutrality: -1.0
+  C02_public_rd_and_science_capacity: -1.0
+  C03_core_public_service_workforce: -1.0
+  C04_interisland_rail_ferry_corridor: -1.0
+  C05_acute_hospital_and_clinical_capacity: -1.0
+  C06_early_years_and_care_pay_equity: -1.0
+  C07_tertiary_access_and_adult_upskilling: -1.0
+  C08_smokefree_public_health_excise: -1.0
+  C09_working_age_tax_threshold_relief: 1.0
+  C10_investor_visa_capital_inflow: 1.0
+  C11_accelerated_business_asset_expensing: 1.0
+  C12_educator_real_remuneration_parity: -1.0
+  C13_retirement_match_and_social_rent_buffer: -1.0
+  C14_national_water_balance_sheet_stewardship: -1.0
+  C15_grassroots_arts_sport_and_civic_commons: -1.0
+  C16_paris_ndc_and_clean_energy_transition: -1.0
+
+public_asset_privatization:
+  Label: "7A. Distressed Public Network/Grid Privatization (C17 = -1)"
+  C17_public_network_asset_stewardship: -1.0
+
+public_asset_governance_reform:
+  Label: "7B. Ostrom & Commercial-Board Public Asset Turnaround (C17 = +1)"
+  C17_public_network_asset_stewardship: 1.0
+
+defence_3pct_gdp_posture:
+  Label: "8. Sovereign Defence Capability Uplift to 3.0% of GDP (C18 = +1)"
+  C18_sovereign_defence_capability_posture: 1.0

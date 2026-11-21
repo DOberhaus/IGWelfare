@@ -1,0 +1,63 @@
+Metadata:
+  Schema_Version: "1.0"
+  Description: "Document 4 Phase II Biophysical Exergy, 5-Sector SOE, Paris NDC & Public-Asset Stewardship Parameters"
+  Anti_Double_Counting_CashTransfers_BNZD: 63.7
+
+Exergy_And_Grid:
+  e_N_elec: 0.880
+  e_F_fossil: 0.300
+  sigma_KL_X: 0.070
+  eps_y_fuel_sub: 0.450
+  eps_h_energy: 0.350
+  p_F_world_base: 0.6773
+  p_N_grid_base: 0.4200
+  Fossil_Import_Bill_SS0_BNZD: 19.50
+  K_N_Grid_Init_BNZD: 48.0
+  M_olig_grid_schedule: [1.220, 1.080, 1.040]
+  DryYear_Thermal_Share_SS0: 0.135
+  DryYear_Thermal_Share_SS2: 0.020
+  gamma_h_reg: [0.620, 0.500, 0.340, 0.220]
+  omega_y_reg: [0.090, 0.070, 0.050, 0.020]
+  ebar_subsistence_reg: [0.048, 0.036, 0.022, 0.016]
+
+Paris_NDC_And_Trade:
+  Enable_NDC_Module: true
+  E_NDC_schedule: [1.000, 0.650, 0.220]
+  MtCO2e_2025_reg: [26.5, 16.2, 12.8, 12.0]
+  tau_h_ets_schedule: [0.000, 0.055, 0.085]
+  tau_f_ets_schedule: [0.000, 0.055, 0.085]
+  kappa_pine_schedule: [1.000, 0.250, 0.000]
+  theta_ag_schedule: [0.000, 0.500, 1.000]
+  pi_green_reg: [0.045, 0.030, 0.010, 0.005]
+  chi_CBAM_reg: [0.080, 0.055, 0.020, 0.010]
+  Pi_trade_SS0: [0.940, 0.960, 0.990, 1.000]
+  Pi_trade_SS1: [1.020, 1.020, 1.010, 1.000]
+  Pi_trade_SS2: [1.050, 1.030, 1.010, 1.010]
+  xk_geo_rebate: [2.070, 2.080, 2.380, 2.270]
+  phi_ctr_rebate: 0.650
+  p_NDC_intl_BNZD_per_Mt: 0.145
+  CERF_Pulse_BNZD: 3.00
+
+External_SOE_And_Defence:
+  r_world_real: 0.0350
+  r_dom_SS0: 0.0420
+  NFA_to_GDP_Init: -0.520
+  NFA_to_GDP_Bar: -0.520
+  psi_sov_spread: 0.0280
+  Arrow_S2_Spillover_Eta: 0.140
+  Ostrom_CoProd_Rho: 0.650
+  Ostrom_Omega_Paid: 0.720
+  Health_Reactive_Share_SS0: 0.420
+  Defence_Base_PctGDP: 0.012
+  Defence_Target_PctGDP: 0.030
+  Defence_Import_Share: 0.620
+  Waring_Shadow_Wage_Frac: 0.720
+  Household_Unpaid_Care_kFTE_SS0: 610.0
+
+Public_Asset_Stewardship:
+  Privatization_FireSale_Discount: 0.280
+  Privatized_Monopoly_Markup_Add: 0.240
+  Public_Mismanagement_TFP_Drag: 0.140
+  Stewardship_Reform_TFP_Lift: 0.180
+  Deferred_Maint_Cavity_Convexity: 2.150
+  Recompra_Irreversibility_Premium: 0.350

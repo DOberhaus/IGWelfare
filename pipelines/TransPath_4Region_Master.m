@@ -54,6 +54,13 @@ Cohesion_St              = TransOut.Cohesion_St;
 T_BrainDrain_Path        = TransOut.T_BrainDrain_Path;
 T_CohortWelfare          = TransOut.T_CohortWelfare;
 T_PopShares              = TransOut.T_PopShares;
+T_NDC_Path               = TransOut.T_NDC_Path;
+Pi_trade_path            = TransOut.Pi_trade_path;
+E_NDC_cap_path           = TransOut.E_NDC_cap_path;
+E_net_dom_path           = TransOut.E_net_dom_path;
+S_pine_path              = TransOut.S_pine_path;
+S_native_path            = TransOut.S_native_path;
+r_bond_path              = TransOut.r_bond_path;
 
 %% 2. PLOT TRANSITION FIGURES (FIGURES 1, 2, AND 3)
 cols = [0.00 0.45 0.74; 0.85 0.33 0.10; 0.93 0.69 0.13; 0.49 0.18 0.56];

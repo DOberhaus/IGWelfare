@@ -32,7 +32,7 @@ The `IGWelfare` repository separates empirical grounding, rollout staging, gover
 * `src/data/` — `Load_Empirical_Profile.m`, `Load_Rollout_Schedule.m`, `Load_Contingency_Policy.m`, `Evaluate_Contingency_Gates.m`, `Read_IGW_YAML.m`, `Read_IGW_CSV.m`
 * `src/config/` — 4-tier epistemic parameter pipeline (`Configure_Model_Params.m`, `Apply_Empirical_Data.m`, `Apply_Calibrated_Params.m`, `Apply_Policy_Regime.m`, `Configure_Grid_And_Prefs.m`, `Describe_Params_Provenance.m`, `Configure_TimeGrid_Params.m`), `Ensure_Workbench_Initialized.m`, `Build_Phase_Registry.m`, `Default_Reform_Phase_Specs.m`, `Get_ModelConfigHash.m`, `Validate_CacheConfig.m`
 * `src/models/` — Pure, side-effect-free Bellman kernels (`ReturnFn_SpatialHH.m`, `ReturnFn_SpatialHH_Compact4D.m`, `ReturnFn_Firm.m`, `HumanCapital_Lifecycle_aprimeFn.m`) and general-equilibrium counterfactual/composition solvers (`Compute_Policy_Composition_Batch.m`, `Compute_FiscalSolvency_And_Fertility.m`, `Compute_LeeSeshadri_Counterfactuals.m`, `Compute_WelfareDecomposition_4Region.m`, `Compute_TransitionPath_4Region.m`)
-* `src/ledgers/` — Pure, headless accounting & attribution ledgers (`Compute_Actuarial_Ledger.m`, `Compute_Synergy_And_Mirror_Ledger.m`, `Compute_Civic_Gearing_Ledger.m`, `Compute_Divergence_Trajectory_Ledger.m`)
+* `src/ledgers/` — Pure, headless accounting & attribution ledgers (`Compute_Actuarial_Ledger.m`, `Compute_Synergy_And_Mirror_Ledger.m`, `Compute_Civic_Gearing_Ledger.m`, `Compute_Divergence_Trajectory_Ledger.m`, `Compute_ThreeTier_NationalAccounts_Ledger.m`, `Compute_Public_Asset_Stewardship_Ledger.m`, `Compute_NDC_Compliance_Ledger.m`)
 * `src/solvers/` — `Solve_VFI_PhaseSplit.m`, `Precompute_HH_StationaryCache.m`, `PushForward_HH_Dist.m`, `Build_IntergenTransitionMatrix.m`
 * `src/calibration/` — `Calibrate_NZ_Moments.m`
 * `src/utils/` — Single-source platform & UI contracts (`Resolve_Compute_Backend.m`, `IGW_UI_Style.m`, `IGW_MD5_Hex.m`, `IGW_Restore_Tables.m`, `vfi_active_ax.m`, `enable_vfi_cpu_accel.m`, `IGW_Log.m`, `Resolve_IGW_OutputDir.m`)
@@ -75,6 +75,9 @@ Every ongoing institutional commitment in `profiles/<Profile_ID>/policies/commit
 
     % Or run the full 5D solved composition & additionality suite:
     run(which('Run_Policy_Composition_Suite.m'));
+
+    % Run the Phase II 5-Sector SOE, Exergy, Atkinson-Waring & Public-Asset Stewardship suite:
+    run(which('Run_Phase2_5Sector_Suite.m'));
 
 To run the full suite from the command line with overrides:
 

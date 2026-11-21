@@ -267,7 +267,38 @@ TransOut.Emig_path                = Emig_path;
 TransOut.Nat_Emig_path            = Nat_Emig_path;
 TransOut.Cohesion_Index           = Cohesion_Index;
 TransOut.Cohesion_St              = Cohesion_St;
+% Vectorized NDC Abatement, Pine-Saturation Cliff (Yr 25), & Clean-Green Trade Path (0 loops!):
+SecSpec_TP      = Load_Sectoral_Exergy_Spec(Params.Profile_ID);
+NDC_TP          = SecSpec_TP.NDC;
+yr_col          = Trans_Years(:);
+w_q1_col        = 1.0 - exp(-yr_col / 14.0);
+w_p2_col        = double(has_SS2) .* (yr_col >= T_phase2_yr) .* (1.0 - exp(-max(0.0, yr_col - T_phase2_yr) / 10.0));
+E_NDC_cap_path  = 1.00 - 0.35 * w_q1_col - 0.43 * w_p2_col;
+theta_ag_path   = 0.50 * w_q1_col + 0.50 * w_p2_col;
+kappa_pine_path = max(0.0, 1.00 - 0.75 * w_q1_col - 0.25 * w_p2_col);
+S_pine_path     = 0.18 * kappa_pine_path .* exp(-0.085 * max(0.0, yr_col - T_phase2_yr));
+S_native_path   = 0.14 * (1.0 - kappa_pine_path) .* min(1.0, yr_col / max(1.0, T_phase2_yr));
+E_gross_path    = 1.00 - 0.28 * w_q1_col - 0.40 * w_p2_col;
+E_net_dom_path  = max(0.15, E_gross_path - (S_pine_path + S_native_path));
+ndc_gap_path    = max(0.0, (E_net_dom_path - E_NDC_cap_path) ./ max(0.10, E_NDC_cap_path));
+Pi_trade_path   = 1.0 + theta_ag_path * NDC_TP.pi_green_reg - ndc_gap_path * NDC_TP.chi_CBAM_reg;
+r_bond_path     = 0.042 + 0.0045 * ndc_gap_path - 0.0060 * w_p2_col;
+
+T_NDC_Path = table(yr_col, E_gross_path, S_pine_path, S_native_path, ...
+    E_net_dom_path, E_NDC_cap_path, ndc_gap_path, theta_ag_path, r_bond_path, ...
+    Pi_trade_path(:, 1), Pi_trade_path(:, 2), Pi_trade_path(:, 3), Pi_trade_path(:, 4), ...
+    'VariableNames', {'Year', 'E_Gross', 'S_Pine', 'S_Native', ...
+    'E_Net_Dom', 'E_NDC_Cap', 'NDC_Gap_Ratio', 'Theta_Ag', 'r_Bond', ...
+    'Pi_Trade_Rural', 'Pi_Trade_Small', 'Pi_Trade_Large', 'Pi_Trade_Auckland'});
+
 TransOut.T_BrainDrain_Path        = T_BrainDrain_Path;
+TransOut.T_NDC_Path               = T_NDC_Path;
+TransOut.Pi_trade_path            = Pi_trade_path;
+TransOut.E_NDC_cap_path           = E_NDC_cap_path;
+TransOut.E_net_dom_path           = E_net_dom_path;
+TransOut.S_pine_path              = S_pine_path;
+TransOut.S_native_path            = S_native_path;
+TransOut.r_bond_path              = r_bond_path;
 TransOut.T_CohortWelfare          = T_CohortWelfare;
 TransOut.T_PopShares              = T_PopShares;
 

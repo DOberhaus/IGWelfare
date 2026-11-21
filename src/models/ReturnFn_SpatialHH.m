@@ -67,16 +67,16 @@ M_mentor       = min(1.0, max(0.0, 0.173 + 20.0 * (G_ece2_eff - 0.065)));
 M_trust_gated  = M_mentor .* (0.45 + 0.55 .* min(1.0, max(0.0, K_whanau_net) ./ 0.35));
 
 %% 4. BUDGET CONSTRAINT & "INCOME x GEOGRAPHY" TRANSFER RULE (FLOWS SCALED BY scale_dt)
+xk_geo           = 2.35 - 0.65 .* K_whanau; % Labrousse-Perdereau spatial phaseout curvature
 gross_earn       = w_reg .* h .* z .* l;
-T_geo            = Transfer_Geo .* exp(-1.8 .* gross_earn);
+T_geo            = Transfer_Geo .* exp(-xk_geo .* gross_earn);
+ebar_eff         = ebar_energy .* (1.0 + 0.15 .* double(a < 0.12 .* Q_reg)); % Credit-constrained fossil/exergy lock-in
 wealth_after_tax = ((1 - tau_a) .^ dt) .* a + r .* (1 - tau_k) .* a;
-% Productive capitalization of YouthGrant depends on completed pre-labor skill h at launch (agej == 1):
-skill_ready_mult = min(1.15, max(0.55, 0.45 + 0.55 * (h / 1.00)));
-youth_endow      = (agej == 1) .* YouthGrant .* skill_ready_mult;
-pension_inc      = (agej >= Jr) * p_super;
+youth_endow      = (agej == 1) .* YouthGrant;
+pension_inc      = (agej >= Jr) .* p_super;
 
 c_budget = wealth_after_tax - aprime + youth_endow ...
-         + scale_dt .* ((1 - tau_l) .* gross_earn + T_geo + pension_inc - (1 - s_sub) .* ic - ebar_energy - sandwich_drag);
+    + scale_dt .* ((1 - tau_l) .* gross_earn + T_geo + pension_inc - (1 - s_sub) .* ic - ebar_eff - sandwich_drag);
 c_eff    = max(scale_dt * c_floor, c_budget ./ (1 + tau_c)) ./ scale_dt;
 
 if agej < Jr
