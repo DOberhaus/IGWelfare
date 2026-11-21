@@ -32,4 +32,10 @@ writetable(ThreeTierOut.SummaryTable, fullfile(OutputDir, sprintf('Table_Phase2_
 writetable(AssetOut.SummaryTable,     fullfile(OutputDir, sprintf('Table_Phase2_PublicAsset_Stewardship_%s.csv', AnchorTag)));
 writetable(NDCOut.SummaryTable,       fullfile(OutputDir, sprintf('Table_Phase2_NDC_Exergy_Compliance_%s.csv', AnchorTag)));
 
+fprintf('\n=== 5. NAVAL HELM PHYSICS: COUNTER-STEERING & FOUR HYDRODYNAMIC TRIM-TABS ===\n');
+HelmOut = Plot_HelmPhysics_TrimTabs_And_CounterSteering(Params, struct('Verbose', true));
+writetable(HelmOut.TrimTabTable,    fullfile(OutputDir, sprintf('Table_Phase2_Helm_TrimTabs_%s.csv', AnchorTag)));
+writetable(HelmOut.SeaStateTable,   fullfile(OutputDir, sprintf('Table_Phase2_Helm_SeaState_Waterfall_%s.csv', AnchorTag)));
+writetable(HelmOut.TrajectoryTable, fullfile(OutputDir, sprintf('Table_Phase2_Helm_Binnacle_Trajectories_%s.csv', AnchorTag)));
+
 DashOut = Plot_Phase2_5Sector_Dashboard(Params);
