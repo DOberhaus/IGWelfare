@@ -73,7 +73,15 @@ for g = 1:N_gates
             unlock_yr     = max(min_yr, fb_yr);
             used_fallback = true;
         else
-            pass_idx = find(elig_mask & comb_mask, 1, 'first');
+            sustain_k = max(1, round(get_num_def(gate, 'Sustain_Steps', 1)));
+            if sustain_k > 1 && N_t >= sustain_k
+                % Vectorized moving-sum persistence check: requires sustain_k consecutive satisfied steps!
+                run_sum   = conv(double(comb_mask), ones(sustain_k, 1), 'full');
+                sust_mask = (run_sum(1:N_t) >= sustain_k);
+            else
+                sust_mask = comb_mask;
+            end
+            pass_idx = find(elig_mask & sust_mask, 1, 'first');
             if isempty(pass_idx)
                 unlock_yr     = Inf; % Conditions never met over horizon -> gate stays locked!
                 used_fallback = false;
