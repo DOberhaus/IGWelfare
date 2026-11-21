@@ -73,9 +73,9 @@ plot(ax2, Eq_SS0.Years, 100*Eq_SS0.NFA_to_GDP_t, ':', 'Color', [0.55 0.10 0.12],
 plot(ax2, Eq_Def.Years, 100*Eq_Def.NFA_to_GDP_t, '-', 'Color', [0.42 0.14 0.62], 'LineWidth', 2.6);
 ylabel(ax2, 'Net Foreign Assets NFA_t / Y_t (%)', 'FontSize', 9.4, 'FontWeight', 'bold');
 ylim(ax2, [-112, 72]);
-set(vfi_active_ax(ax2), 'YColor', [0.42 0.14 0.62]);
-yyaxis(ax2, 'left');
-
+xlim(vfi_active_ax(ax2), [2026, 2086]);
+set(vfi_active_ax(ax2), 'YColor', [0.42 0.14 0.62], 'Color', 'none');
+% Keep yyaxis right active above opaque left axes so NFA curves are never masked by ax2's white fill!
 xlim(ax2, [2026, 2086]);
 items2 = { ...
     '--', [0.72 0.16 0.18], 2.3, 'none', 'SS0 Fossil (~$20B/yr)'; ...

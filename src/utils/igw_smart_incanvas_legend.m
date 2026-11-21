@@ -137,7 +137,9 @@ end
 pair = getappdata(ax, 'vfi_yyaxis_pair');
 if ~isempty(pair) && isfield(pair, 'right') && ishandle(pair.right)
     set(pair.right, 'Color', 'none', 'Position', ax_pos_n);
-    try, uistack(pair.right, 'top'); catch, end
+    ch_f = get(fig, 'Children');
+    ch_rest = ch_f(ch_f ~= pair.right & ch_f ~= pair.left);
+    set(fig, 'Children', [pair.right; pair.left; ch_rest]);
 end
 
 lgd_fig_pos = [ ...
