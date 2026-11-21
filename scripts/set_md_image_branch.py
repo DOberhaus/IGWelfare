@@ -30,12 +30,13 @@ def detect_git_branch(repo_dir: pathlib.Path) -> str:
     return res.stdout.strip()
 
 
-def rewrite_links(md_text: str, target_branch: str | None) -> str:
-    # Also ensure Document 1D points to Fig_11Layer_Welfare_And_MirrorInvestments
-    md_text = md_text.replace(
-        "Fig_7Segment_Welfare_And_MirrorInvestments_",
-        "Fig_11Layer_Welfare_And_MirrorInvestments_",
-    )
+def rewrite_links(md_text: str, target_branch: str | None, doc_name: str = "") -> str:
+    # Only map Fig_7Segment -> Fig_11Layer inside Document 1D.md (Document 1E.md intentionally uses Fig_7Segment!)
+    if doc_name == "Document 1D.md":
+        md_text = md_text.replace(
+            "Fig_7Segment_Welfare_And_MirrorInvestments_",
+            "Fig_11Layer_Welfare_And_MirrorInvestments_",
+        )
 
     def _repl(match: re.Match) -> str:
         prefix, url, suffix = match.groups()
@@ -66,7 +67,7 @@ def main():
         if not path.exists():
             continue
         orig = path.read_text(encoding="utf-8")
-        updated = rewrite_links(orig, branch)
+        updated = rewrite_links(orig, branch, path.name)
         if updated != orig:
             path.write_text(updated, encoding="utf-8")
             mode_lbl = "relative shorthand (main)" if branch in (None, "main") else f"branch '{branch}' raw URLs"

@@ -239,7 +239,7 @@ $$
 
 ## 3. Part III Cross-Reference: Population & Fiscal Sankey Ledgers and Interactive Web Explorer
 
-## 3.1 The 5-Stage (18-Node) Population Cohort Fates Sankey ( Table15_ChildFates_5Stage_Decomp_<Region>.csv )
+### 3.1 The 5-Stage (18-Node) Population Cohort Fates Sankey ( Table15_ChildFates_5Stage_Decomp_<Region>.csv )
 
 *Source Script:* `Plot_ChildFates_SSankey.m` *(Supports $N = 1, 2, 3, \dots$ phases via `Active_Phases` and `Build_Phase_Registry.m`; Figure: `Fig_ChildFates_5Stage_2Panel_National_Dunedin_22.png`)*
 
@@ -258,7 +258,7 @@ Each node's ribbon width represents the exact percentage of the birth cohort (`P
 
 ---
 
-## 3.2 The 6-Gate (29-Node) Lifecycle Fiscal Ledger Sankey & 4-Lane Survey Reconciliation (`Table14_FiscalLedger_6Gate_Decomp_<Region>.csv`)
+### 3.2 The 6-Gate (29-Node) Lifecycle Fiscal Ledger Sankey & 4-Lane Survey Reconciliation (`Table14_FiscalLedger_6Gate_Decomp_<Region>.csv`)
 
 *Source Script:* `Plot_ChildFiscal_SSankey.m` *(29 Nodes across 6 Gates; Cohort-to-Ledger Transformation with Vertical Regime-Break Wave at Gate 5, $X = 5.0$, separating Human Cohort & Career Strata across Gates 1–5 from the Single Annualized Adult Fiscal Ledger at Gate 6; Figure: `Fig_ChildFiscal_6Gate_3Panel_National_Dunedin_22.png`)*
 
@@ -747,7 +747,7 @@ Across the bottom 90% of households (`Tiers 1–5`), net welfare gains are uncon
 
 ## 4.7 Tables 7, 8, & 8B: Cooperative Childcare Bargaining, Extended *Whānau* Scaffolding, & The NZ Superannuation Retirement-Age U-Curve (Ages 60 to 75)
 
-*Source Files:* [`Table7_4Region_Fertility_Bargaining_TFR.csv`](Output_NZ_4Region_Intergen/Table7_4Region_Fertility_Bargaining_TFR.csv), [`Table8_4Region_Fertility_Struggling_NZSuperTax.csv`](Output_NZ_4Region_Intergen/Table8_4Region_Fertility_Struggling_NZSuperTax.csv), and `Table8B_SuperAge_UCurve_60to75.csv` *(Script: [`FertilityBargaining_Module.m`](FertilityBargaining_Module.m); Figure: [`FigFert_4Region_Bargaining_Solvency.png`](Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png))*
+*Source Files:* [`Table7_4Region_Fertility_Bargaining_TFR.csv`](Output_NZ_4Region_Intergen/Table7_4Region_Fertility_Bargaining_TFR.csv), [`Table8_4Region_Fertility_Struggling_NZSuperTax.csv`](Output_NZ_4Region_Intergen/Table8_4Region_Fertility_Struggling_NZSuperTax.csv), and `Table8B_SuperAge_UCurve_60to75.csv` *(Script: [`FertilityBargaining_Module.m`](pipelines/FertilityBargaining_Module.m); Figure: [`FigFert_4Region_Bargaining_Solvency.png`](Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png))*
 
 ![4-Region Fertility Bargaining, Whanau Networks & The NZ Super Retirement-Age U-Curve](https://raw.githubusercontent.com/MichaelTiemann/IGWelfare/launch/Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png)
 

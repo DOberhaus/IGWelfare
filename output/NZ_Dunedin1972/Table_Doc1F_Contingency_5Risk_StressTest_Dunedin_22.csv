@@ -1,0 +1,8 @@
+Shock_Scenario,YGr_Yr_Fixed,YGr_Yr_Cont,SS2_Yr_Fixed,SS2_Yr_Cont,PeakDebt_Fixed_PctGDP,PeakDebt_Cont_PctGDP,Yr60Debt_Fixed_PctGDP,Yr60Debt_Cont_PctGDP,Welfare_Fixed_CE_Pct,Welfare_Cont_CE_Pct,Contingent_Resilience_Gain_pp
+0. Baseline Realization (No Adverse Shock),0,6,25,18,44.2,43.4,23.6,22.7,27.54,27.84,0.31
+1. Stock Formation Lag (35% Slower hc Exit),0,6,25,28,48.3,43.4,43.6,23.5,19.01,24.97,5.97
+2. Sector 4A Kaiako & Nurse Retention Shock,0,7,25,24,48.1,43.4,41,23.1,21.26,25.9,4.65
+3. Dry-Hydro + Global Oil Exergy Spike (+75%),0,6,25,18,47.8,45.2,40,22.7,22.24,26.55,4.31
+4. Export Competitiveness & CBAM Shock (-12%),0,6,25,19,47.6,44.4,38.9,22.8,22.54,26.34,3.8
+5. Global Sovereign Credit Spread Spike (+180 bps),0,6,25,18,49.5,45.5,47.1,22.7,20.87,26.06,5.19
+6. Compound Polycrisis (Energy + Credit + S4A Staffing),0,7,25,27,75.7,46,75.7,23.4,6.06,21.73,15.67

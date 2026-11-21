@@ -218,7 +218,7 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 
 ---
 
-## 5.2 Master Scoreboard: What Each Coalition Wins Alone vs. Inside the Unified Compact
+### 5.2 Master Scoreboard: What Each Coalition Wins Alone vs. Inside the Unified Compact
 
 | **Coalition Constituency** | **Fate If Operating Standalone Against LTFM Drift (`Table 21`)** | **Fate Under 6-Yr (2-Term) "Stop-Go" Cycle (`Table 22`)** | **Total Connected Value Inside Unified $SS1 \to SS2$ Compact (`Table 22`)** | **Signature Institutional & Policy Wins Locked In by the Compact** |
 | :--- | :---: | :---: | :---: | :--- |
@@ -230,9 +230,9 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 
 ### 5.3 Replication & Companion File Index for Document 3
 
-* **Constructive 11-Layer Synergy & Mirror Investment Engine:** [`Plot_Counterfactuals_And_MirrorInvestments.m`](Plot_Counterfactuals_And_MirrorInvestments.m) → `Table 19`, `Table 20`, [`Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png), and [`Fig_11Layer_Welfare_And_MirrorInvestments_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_11Layer_Welfare_And_MirrorInvestments_Dunedin_22.png).
-* **3D LTFM Sinkhole, 3%-GDP Defense Shock, Two-Term Pendulum, & $`4 \times 4`$ Coalition Matrix Engine:** [`Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m`](Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m) → `Table 21`, `Table 22`, [`Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png), and [`Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png).
-* **Parametric NZ Super Age U-Curve & Kuia/Whānau Solvency Engine:** [`FertilityBargaining_Module.m`](FertilityBargaining_Module.m) and [`WelfareDecomposition_4Region.m`](WelfareDecomposition_4Region.m) → `Table 7`, `Table 8`, `Table 8B`, and [`FigFert_4Region_Bargaining_Solvency.png`](Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png).
+* **Constructive 11-Layer Synergy & Mirror Investment Engine:** [`Plot_Counterfactuals_And_MirrorInvestments.m`](plots/Plot_Counterfactuals_And_MirrorInvestments.m) → `Table 19`, `Table 20`, [`Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png), and [`Fig_11Layer_Welfare_And_MirrorInvestments_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_11Layer_Welfare_And_MirrorInvestments_Dunedin_22.png).
+* **3D LTFM Sinkhole, 3%-GDP Defense Shock, Two-Term Pendulum, & $`4 \times 4`$ Coalition Matrix Engine:** [`Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m`](plots/Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m) → `Table 21`, `Table 22`, [`Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Doc3_LTFM_Sinkhole_And_DefenseShock_Dunedin_22.png), and [`Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png`](Output_NZ_4Region_Intergen/Fig_Doc3_2D_Coalition_Migration_Matrix_Dunedin_22.png).
+* **Parametric NZ Super Age U-Curve & Kuia/Whānau Solvency Engine:** [`FertilityBargaining_Module.m`](pipelines/FertilityBargaining_Module.m) and [`WelfareDecomposition_4Region.m`](pipelines/WelfareDecomposition_4Region.m) → `Table 7`, `Table 8`, `Table 8B`, and [`FigFert_4Region_Bargaining_Solvency.png`](Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png).
 
 ---
 

@@ -129,7 +129,7 @@ with $a_0 \equiv a_1 - (a_2 - a_1)$. This ensures that marginal changes in regio
 
 ---
 
-## 3.3 Adolescent Family Unemployment Stress, Unbanked Skill Fade-Out, and Bidirectional Montessori / Tuakana–Teina Mentoring ($M_{\mathrm{mentor}}$), and the importance of Whānau
+### 3.3 Adolescent Family Unemployment Stress, Unbanked Skill Fade-Out, and Bidirectional Montessori / Tuakana–Teina Mentoring ($M_{\mathrm{mentor}}$), and the importance of Whānau
 
 In the two-stage Cunha–Heckman–Schennach skill technology (`HumanCapital_Lifecycle_aprimeFn.m`), childhood skill $`\theta_c`$ evolves across Stage 1 (ages 0–5, where $`\varphi_1 = 0.35 > 0`$) and Stage 2 (ages 6–17, where $`\varphi_2 = -0.95 < 0`$):
 
@@ -204,7 +204,7 @@ $$
 
 To eliminate CPU nested loops, `Build_IntergenTransitionMatrix.m` executes all three intergenerational operators via 4D/5D GPU tensor broadcasting and `accumarray` projection, mapping the stationary distribution $`\mu_k\left(a, h, z, j\right)`$ and policy arrays `Policy` into the newborn adult distribution `jequaloneDist` ($`\mu_{1,k}\left(a_1, h_1, z_1\right)`$).
 
-## 4.1 Stage 1 Operator ($Q_h$): Two-Stage Childhood Skill & Montessori / Tuakana–Teina Gate
+### 4.1 Stage 1 Operator ($Q_h$): Two-Stage Childhood Skill & Montessori / Tuakana–Teina Gate
 
 For fertile parental cohorts in Stage 1 ($`\mathcal{J}_{c,1}`$) and Stage 2 ($`\mathcal{J}_{c,2}`$), expected log pre-labor-market skill $`\ln(\hat{h}_{\mathrm{child}})`$ integrates Stage-1 private and public investment $`(i_{c,1}, G_{\mathrm{ECE},1})`$, housing crowding penalties, and the **Gate 3 (`J = 5`, Ages 12–14) Montessori / *Tuakana–Teina* & Graeme Dingle Foundation Mentoring Operator**:
 

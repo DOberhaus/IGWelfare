@@ -5,7 +5,7 @@
 **Author:** Michael Tiemann (`mdtiemann@gmail.com`)  
 **Date:** November 2026 | **Code & Replication Repository:** [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)
 
-**Companion Suite Navigation:** [Document 1A (Master Monograph)](./Document%201A.md) | [Document 1B (Empirical Answer Key)](./Document%201B.md) | [Document 1C (Executive Brief)](./Document%201C.md) | [Document 1D (Te Kāhui Waka Sequencing)](./Document%201D.md) | [Document 1E (Grassroots Civic Mycelium)](./Document%201E.md) | [Document 3 (Leaving Our Silos)](./Document%203.md)
+**Companion Suite Navigation:** [Document 1A (Master Monograph)](./Document%201A.md) | [Document 1B (Empirical Answer Key)](./Document%201B.md) | [Document 1C (Executive Brief)](./Document%201C.md) | [Document 1D (Te Kāhui Waka Sequencing)](./Document%201D.md) | [Document 1E (Grassroots Civic Mycelium)](./Document%201E.md) | [Document 3 (Leaving Our Silos)](./Document%203.md) | [Document 4 (5-Sector Biophysical & Epistemic Architecture)](./Document%204.md)
 
 **Disclaimer:** No people nor organizations mentioned herein have endorsed this work unless stated otherwise. This is the work of the author, and all errors and omissions are his alone.
 
@@ -217,6 +217,13 @@ By using an open-source **Economic Clearinghouse** and a **Joint Citizen Reconci
 |  * Gives all parties political permission to enact the whole—and exposes cherry-picks |
 +---------------------------------------------------------------------------------------+
 ```
+
+### Live Replication Dashboards & Comonotonic Shock-Security Telemetry (`Run_Contingency_Suite.m`)
+
+Every bilateral contract (`K01`–`K15` in `profiles/NZ_Dunedin1972/policies/citizens_assembly_contracts.csv`), Two-Key `Sustain_Steps` persistence gate (`Evaluate_Contingency_Gates.m`), and Small-Open-Economy shock-absorption band (`Compute_Contract_Shock_Sensitivity_Ledger.m`, detailed epistemically in [Document 4](./Document%204.md)) is audited and exported by `pipelines/Run_Contingency_Suite.m`:
+
+* **Clearinghouse & 5-Risk Two-Key Dashboard:** [`Fig_Doc1F_Contingency_And_Clearinghouse_Dunedin_22.png`](./output/NZ_Dunedin1972/Fig_Doc1F_Contingency_And_Clearinghouse_Dunedin_22.png) (backed by [`Table_Doc1F_Assembly_Clearinghouse_Dunedin_22.csv`](./output/NZ_Dunedin1972/Table_Doc1F_Assembly_Clearinghouse_Dunedin_22.csv) and [`Table_Doc1F_Contingency_5Risk_StressTest_Dunedin_22.csv`](./output/NZ_Dunedin1972/Table_Doc1F_Contingency_5Risk_StressTest_Dunedin_22.csv)) — verifying `15/15` contract clearance under the unified compact, early `SS2` unlock (`Year 19`) when verified cohorts clear on track, and automatic downside deferral (`Years 27–32`) under stock-formation or polycrisis shocks.
+* **Comonotonic SOE Shock-Frontier & Plenary Telemetry Dashboard:** [`Fig_Doc1F_SOE_Shock_Contract_Frontiers_Dunedin_22.png`](./output/NZ_Dunedin1972/Fig_Doc1F_SOE_Shock_Contract_Frontiers_Dunedin_22.png) (backed by [`Table_Doc1F_Contract_BreakingPoints_Dunedin_22.csv`](./output/NZ_Dunedin1972/Table_Doc1F_Contract_BreakingPoints_Dunedin_22.csv), [`Table_Doc1F_SOE_Shock_Frontiers_Dunedin_22.csv`](./output/NZ_Dunedin1972/Table_Doc1F_SOE_Shock_Frontiers_Dunedin_22.csv), and [`Table_Doc1F_Assembly_Telemetry_Roadmap_Dunedin_22.csv`](./output/NZ_Dunedin1972/Table_Doc1F_Assembly_Telemetry_Roadmap_Dunedin_22.csv)) — mapping continuous exogenous SOE shocks into **Green (Self-Clearing)**, **Amber (Pre-Agreed Auto-Remedy)**, and **Red (Reconvene 30-Delegate Citizen Plenary)** governance bands.
 
 ### How Reconciliation Solves Real Tensions (Without Splitting the Baby)
 

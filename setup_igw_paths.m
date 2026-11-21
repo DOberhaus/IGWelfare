@@ -86,7 +86,9 @@ if is_oct
     end
 
     try
-        if ismac || ispc
+        if ismac
+            def_font = 'Hiragino Sans';
+        elseif ispc
             def_font = 'Arial';
         else
             def_font = 'DejaVu Sans';

@@ -3,7 +3,7 @@
 
 **Author:** Michael Tiemann ([mdtiemann@gmail.com](mailto:mdtiemann@gmail.com))  
 **Date:** November 2026 | **Code & Replication Repository:** [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)  
-*Companion to [Document 1A](Document%201A.md) (Strategic Monograph), [Document 1B](Document%201B.md) (Strategy & Policy Answer Key), [Document 1C](Document%201C.md) (Executive Brief), and [Document 3](Document%203.md) (Leaving Our Silos, Lifting All Boats)*
+*Companion to [Document 1A](Document%201A.md) (Strategic Monograph), [Document 1B](Document%201B.md) (Empirical Answer Key), [Document 1C](Document%201C.md) (Executive Brief), [Document 1D](Document%201D.md) (Te Kāhui Waka Sequencing), [Document 1E](Document%201E.md) (Grassroots Civic Mycelium), [Document 1F](Document%201F.md) (Citizens' Assembly Compact), [Document 3](Document%203.md) (Leaving Our Silos), and [Document 4](Document%204.md) (5-Sector Biophysical, Care & Public-Asset Economy)*
 
 ---
 
@@ -31,6 +31,6 @@ To ensure every structural equation, operator derivation, and calibration annex 
 | **Section 5** | **Post-Hoc Lifecycle Operators: 6-Gate Fiscal Ledger, Statutory Rules, Fertility Bargaining, & 10-Tier Incidence** (`Plot_ChildFiscal_SSankey.m`, `FertilityBargaining_Module.m`, `Plot_WealthBracket_GiveAndGain.m`) | **[Read in Document 2B (Section 5)](Document%202B.md)** |
 | **Section 6** | **Calibration, SMM Identification, & Cross-Country Validation Benchmarks** (`Calibrate_NZ_Moments.m`, 15 NZ Empirical Moments, `'Dunedin_22'` vs. `'MetroSqueeze_GUiNZ'`, Scotland & Deming-to-Tokyo Coda) | **[Read in Document 2B (Section 6)](Document%202B.md)** |
 | **Section 7** | **Multiphase Transition Path, Actuarial Continuation Valuation, 11-Layer Supermodular Attribution, & Web SVG Architecture** (`TransPath_4Region_Master.m`, `Plot_ActuarialContinuationValuation.m`, `Plot_Counterfactuals_And_MirrorInvestments.m`, `exportSankeyToHTML.m`) | **[Read in Document 2B (Section 7)](Document%202B.md)** |
-| **Section 8** | **Consolidated 22-File VFI Toolkit Codebase Manifest** (`Run_All_NZ_Intergen_Suite.m` and full script directory) | **[Read in Document 2B (Section 8)](Document%202B.md)** |
+| **Section 8** | **Consolidated Modular Codebase Manifest** (`setup_igw_paths.m`, `profiles/`, `src/`, `plots/`, `pipelines/`, & 26-test suite in `tests/`) | **[Read in Document 2B (Section 8)](Document%202B.md)** |
 | **Section 9** | **Annex: Master Reference Library & Empirical Source of Truth** (Decile-Indexed References `[1]`–`[60]` across 6 Folders) | **[Read in Document 2B (Section 9)](Document%202B.md)** |
 | **Section 10** | **Companion Technical Tutorial: "Thick" vs. "Thin" Numbers & Dimension-Free State-Contingent Conditioning** (Four Zero-Dimension-Cost Operators) | **[Read in Document 2T (Full Tutorial)](Document%202T.md)** |
