@@ -257,7 +257,8 @@ lift_s1   = min([0.88, 0.82], [0.735, 0.638] * eta_ref); % [Severe Node 1 lift, 
 lift_s2   = min(0.92, 0.78 * eta_ref);
 s3_shifts = reshape([-0.22, 0.00, montessori_bank], [1, 1, 1, 1, 1, 3]);
 
-use_gpu = (gpuDeviceCount > 0);
+Backend_Fates = Resolve_Compute_Backend();
+to_dev        = Backend_Fates.ToDevice;
 
 for r_i = 1:length(reg_list)
     reg     = reg_list{r_i};
@@ -332,12 +333,10 @@ for r_i = 1:length(reg_list)
     W_G      = reshape(W_cell, [n_a1, 1, 1, 1, 4]);
     Tier_G   = double(Tier_Map);
 
-    if use_gpu
-        Dist_Fert = gpuArray(Dist_Fert); ic_4D    = gpuArray(ic_4D);
-        h_G       = gpuArray(h_G);       z_idx_3D = gpuArray(z_idx_3D);
-        log_h_5D  = gpuArray(log_h_5D);  W_G      = gpuArray(W_G);
-        Tier_G    = gpuArray(Tier_G);
-    end
+    Dist_Fert = to_dev(Dist_Fert); ic_4D    = to_dev(ic_4D);
+    h_G       = to_dev(h_G);       z_idx_3D = to_dev(z_idx_3D);
+    log_h_5D  = to_dev(log_h_5D);  W_G      = to_dev(W_G);
+    Tier_G    = to_dev(Tier_G);
 
     N_st        = numel(Dist_Fert);
     p_flat      = Dist_Fert(:) / max(1e-12, sum(Dist_Fert, 'all')); % [N_st x 1] normalized probability vector

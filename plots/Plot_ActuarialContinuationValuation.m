@@ -244,10 +244,7 @@ xlabel(ax1, 'Transition Horizon (Years from Policy Introduction)', 'FontSize', 1
 ylabel(ax1, 'Cumulative / Recognised NZD (Billions, Real 2025$)', 'FontSize', 10.5, 'FontWeight', 'bold');
 title(ax1, ['A. Fiscal Ledger: ', TitleLabel], 'FontSize', 10.5, 'FontWeight', 'bold');
 lgd1 = legend(ax1, 'Location', 'northwest', 'FontSize', 7.8);
-if exist('OCTAVE_VERSION', 'builtin') == 0, lgd1.BoxFace.ColorType = 'truecoloralpha';
- end
-if exist('OCTAVE_VERSION', 'builtin') == 0, lgd1.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
- end
+IGW_UI_Style('legend_alpha', lgd1, 0.92);
 
 % --- PANEL B: ECONOMY-WIDE GDP LENS / PRIZE ---
 ax2 = subplot('Position', [0.535, 0.130, 0.425, 0.785]); hold(ax2, 'on');
@@ -288,10 +285,7 @@ xlabel(ax2, 'Transition Horizon (Years from Policy Introduction)', 'FontSize', 1
 ylabel(ax2, 'Cumulative / Recognised NZD (Billions, Real 2025$)', 'FontSize', 10.5, 'FontWeight', 'bold');
 title(ax2, ['B. Economy-Wide GDP Prize: ', TitleLabel], 'FontSize', 10.5, 'FontWeight', 'bold');
 lgd2 = legend(ax2, 'Location', 'northwest', 'FontSize', 7.9);
-if exist('OCTAVE_VERSION', 'builtin') == 0, lgd2.BoxFace.ColorType = 'truecoloralpha';
- end
-if exist('OCTAVE_VERSION', 'builtin') == 0, lgd2.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
- end
+IGW_UI_Style('legend_alpha', lgd2, 0.92);
 
 % Auto-export the 2-Panel combined figure AND the two individual sibling panels
 f_2panel = fullfile(OutputDir, sprintf('Fig_Actuarial_2Panel_%s_%s.png',  ShortTag, AnchorTag));
@@ -303,10 +297,7 @@ exportgraphics(fig_2p, f_2panel, 'Resolution', 300, 'BackgroundColor', 'white');
 % Before exporting the standalone single-panel charts (f_fiscal and f_wide),
 % give each standalone panel a wider 4:3 aspect ratio so the title, legend,
 % and Year-5 callout box have generous horizontal room when viewed by itself!
-single_vis = 'off';
-if exist('OCTAVE_VERSION', 'builtin') ~= 0 && strcmp(graphics_toolkit(), 'fltk')
-    single_vis = 'on';
-end
+single_vis = IGW_UI_Style('headless_vis');
 fig_single = figure('Visible', single_vis, 'Color', 'w', 'Position', [60, 60, 1020, 680]);
 ax2_copy = copyobj([ax2, lgd2], fig_single);
 set(ax2_copy(1), 'Position', [0.10, 0.13, 0.85, 0.78]);

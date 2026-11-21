@@ -49,9 +49,9 @@ simoptions               = Grids4D.simoptions;
 %% 1. SOLVE CLEAN 4D BASELINE ANCHOR (SS0) ON IDENTICAL RETURN FUNCTION
 Params_SS0_Solve       = Params;
 Params_SS0_Solve.G_ece = Params_SS0_Solve.G_ece_stage1; % Ensure 4D G_ece matches SS0 stage-1 baseline (0.045)
+Backend = Resolve_Compute_Backend();
 if ~isfield(vfoptions, 'parallel') || isempty(vfoptions.parallel)
-    has_cuda = (exist('OCTAVE_VERSION', 'builtin') == 0) && (exist('gpuDeviceCount', 'file') ~= 0) && (gpuDeviceCount > 0);
-    if has_cuda
+    if Backend.UseGPU
         vfoptions.parallel = 2;
     end
 end

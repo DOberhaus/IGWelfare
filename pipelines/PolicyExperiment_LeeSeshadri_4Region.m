@@ -47,15 +47,9 @@ T_Out       = LSOut.T_Out;
 figE8 = figure('Name', 'Lee & Seshadri 4-Region Counterfactuals', 'Color', 'w', 'Position', [100, 80, 1240, 820]);
 t_e8  = tiledlayout(2, 2, 'TileSpacing', 'loose', 'Padding', 'compact');
 
-CleanLabels = {'BM Baseline'; 'P0 Early (0-5)'; 'P1/P2 Late (6-17)'; 'BN Front-Load'; 'P0 + Grant E'};
-is_oct = (exist('OCTAVE_VERSION', 'builtin') ~= 0);
-if is_oct
-    x_all = (1:N_pol)';
-    x_sub = (1:(N_pol-1))';
-else
-    x_all = categorical(CleanLabels(1:N_pol), CleanLabels(1:N_pol));
-    x_sub = x_all(2:end);
-end
+CleanLabels    = {'BM Baseline'; 'P0 Early (0-5)'; 'P1/P2 Late (6-17)'; 'BN Front-Load'; 'P0 + Grant E'};
+ActiveLabels   = CleanLabels(1:N_pol);
+[x_all, x_sub] = IGW_UI_Style('bar_x', ActiveLabels);
 
 % Panel A: Long-Run IGE
 ax1 = nexttile;
@@ -63,16 +57,10 @@ b_ige = bar(x_all, IGE_LR, 'grouped');
 ylim([0, max(0.62, max(IGE_LR(:)) * 1.25)]);
 ylabel('Long-Run IGE');
 title('A. Intergenerational Elasticity of Earnings (IGE\_LR)');
-if is_oct
-    set(ax1, 'XTick', 1:N_pol, 'XTickLabel', CleanLabels(1:N_pol));
-else
-    set(ax1, 'TickLabelInterpreter', 'none');
-end
+IGW_UI_Style('bar_xticks', ax1, ActiveLabels);
 grid on;
 lgd = legend(b_ige, Regions, 'Orientation', 'horizontal', 'Location', 'northoutside');
-if ~is_oct
-    lgd.Layout.Tile = 'north';
-end
+IGW_UI_Style('dock_north', lgd);
 
 % Panel B: Variance Explained
 ax2 = nexttile;
@@ -80,11 +68,7 @@ bar(x_all, VarExpl_LFE, 'grouped');
 ylim([0, max(88, max(VarExpl_LFE(:)) * 1.20)]);
 ylabel('Variance Explained (%)');
 title('B. Lifetime Earnings Variance Explained by Parents at Age 30-35');
-if is_oct
-    set(ax2, 'XTick', 1:N_pol, 'XTickLabel', CleanLabels(1:N_pol));
-else
-    set(ax2, 'TickLabelInterpreter', 'none');
-end
+IGW_UI_Style('bar_xticks', ax2, ActiveLabels);
 grid on;
 
 % Panel C: Lifetime Earnings Gain
@@ -93,11 +77,7 @@ bar(x_sub, Ebar_LR(2:end, :), 'grouped');
 ylim([min(0, min(Ebar_LR(:)) * 1.2), max(9.0, max(Ebar_LR(:)) * 1.22)]);
 ylabel('\Delta Lifetime Earnings (%)');
 title('C. Long-Run Average Lifetime Earnings Gain (Ebar\_LR %)');
-if is_oct
-    set(ax3, 'XTick', 1:(N_pol-1), 'XTickLabel', CleanLabels(2:N_pol));
-else
-    set(ax3, 'TickLabelInterpreter', 'none');
-end
+IGW_UI_Style('bar_xticks', ax3, ActiveLabels(2:end));
 grid on;
 
 % Panel D: Newborn Welfare Gain
@@ -106,11 +86,7 @@ bar(x_sub, CE_LR(2:end, :), 'grouped');
 ylim([min(0, min(CE_LR(:)) * 1.2), max(8.0, max(CE_LR(:)) * 1.22)]);
 ylabel('Consumption Equivalent CE\_LR (%)');
 title('D. Long-Run Newborn Welfare Gain (CE\_LR %)');
-if is_oct
-    set(ax4, 'XTick', 1:(N_pol-1), 'XTickLabel', CleanLabels(2:N_pol));
-else
-    set(ax4, 'TickLabelInterpreter', 'none');
-end
+IGW_UI_Style('bar_xticks', ax4, ActiveLabels(2:end));
 grid on;
 
 if ~exist('Export_Tables_Figures', 'var') || logical(Export_Tables_Figures)

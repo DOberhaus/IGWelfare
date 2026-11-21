@@ -29,6 +29,7 @@ else
     PolicyNames = {'BM_Baseline'; 'P0_Early_0to5'; 'P1P2_Late_6to17'; 'BN_FrontLoad'; 'P0_Plus_GrantE'};
 end
 verbose_log = ~isfield(Opts, 'Verbose') || logical(Opts.Verbose);
+Backend     = Resolve_Compute_Backend();
 
 n_d_5D                   = Grids5D.n_d_5D;
 n_a_5D                   = Grids5D.n_a_5D;
@@ -87,7 +88,7 @@ for p_idx = 1:N_pol
     t_pol = tic;
     if verbose_log
         fprintf('    [Step 2 Policy %d/%d] Solving %s...\n', p_idx, N_pol, pol_name);
-        if exist('OCTAVE_VERSION', 'builtin') ~= 0, fflush(stdout); end
+        Backend.FlushConsole();
     end
 
     % --- 1. SHORT-RUN PARTIAL EQUILIBRIUM (SR: Fixed Newborn Distribution jequaloneDist_5D_BM) ---
@@ -100,7 +101,7 @@ for p_idx = 1:N_pol
     end
     if verbose_log
         fprintf('      -> VFI done in %.1fs\n', toc(t_pol));
-        if exist('OCTAVE_VERSION', 'builtin') ~= 0, fflush(stdout); end
+        Backend.FlushConsole();
     end
 
     HH_TransCache_p = Precompute_HH_StationaryCache( ...

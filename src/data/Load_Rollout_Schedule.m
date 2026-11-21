@@ -152,17 +152,6 @@ error('IGWelfare:MissingScheduleFile', 'Schedule file "%s" not found for profile
 end
 
 function digest = compute_md5_local(S)
-json_str = jsonencode(S);
-digest   = '';
-try
-    if exist('OCTAVE_VERSION', 'builtin') ~= 0
-        digest = lower(hash('md5', json_str));
-    elseif usejava('jvm')
-        md = java.security.MessageDigest.getInstance('MD5');
-        md.update(typecast(uint8(unicode2native(json_str, 'UTF-8')), 'int8'));
-        digest = lower(reshape(dec2hex(typecast(md.digest(), 'uint8'), 2)', 1, []));
-    end
-catch
-    digest = '';
+digest = IGW_MD5_Hex(S);
 end
-end
+

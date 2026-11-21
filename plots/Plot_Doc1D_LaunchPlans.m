@@ -183,7 +183,7 @@ c_ss0  = [0.70, 0.09, 0.17];
 %% ====================================================================
 %  FIGURE 1: INTEGRATED 2-PANEL ORBITAL MECHANICS & DEBT ALIGNMENT
 %% ====================================================================
-vis_m = 'off'; if exist('OCTAVE_VERSION','builtin')~=0 && strcmp(graphics_toolkit(),'fltk'), vis_m = 'on'; end
+vis_m = IGW_UI_Style('headless_vis');
 fig1 = figure('Color', 'w', 'Position', [50, 50, 1500, 1280], 'Visible', vis_m);
 tl1  = tiledlayout(2, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
 

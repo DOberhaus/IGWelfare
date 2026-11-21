@@ -4,13 +4,9 @@ function Cache = Precompute_HH_StationaryCache(Policy, n_d, n_a, n_z, N_j, d_gri
 
 N_reg = length(Regions);
 Cache = struct();
-use_gpu = (exist('OCTAVE_VERSION', 'builtin') == 0) ...
-    && (exist('gpuDeviceCount', 'file') ~= 0) && (gpuDeviceCount > 0);
-if use_gpu
-    to_dev = @(x) gpuArray(x);
-else
-    to_dev = @(x) x;
-end
+Backend = Resolve_Compute_Backend();
+use_gpu = Backend.UseGPU;
+to_dev  = Backend.ToDevice;
 
 for r_idx = 1:N_reg
     hh_type = ['HH_', Regions{r_idx}];

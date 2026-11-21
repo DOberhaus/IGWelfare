@@ -30,7 +30,7 @@ for r_idx = 1:N_reg
     Names_HH{r_idx} = ['HH_', Regions{r_idx}];
 end
 
-use_gpu = (exist('OCTAVE_VERSION', 'builtin') == 0) && (gpuDeviceCount > 0);
+Backend = Resolve_Compute_Backend();
 
 % Detect Compact 4D ([n_a1, n_h], experienceasset == 0) vs Canonical 5D ([n_a1, n_h, n_th])
 is_5d = (numel(n_a.(Names_HH{1})) >= 3);
@@ -89,13 +89,8 @@ if ~is_5d
         nj_c2.(ht) = length(j_c2);
         nj_c1.(ht) = length(j_c1);
 
-        if use_gpu
-            V.(ht)      = zeros(n_a_reg(1), n_a_reg(2), N_z_reg, J, 'gpuArray');
-            Policy.(ht) = ones(5, n_a_reg(1), n_a_reg(2), N_z_reg, J, 'gpuArray');
-        else
-            V.(ht)      = zeros(n_a_reg(1), n_a_reg(2), N_z_reg, J);
-            Policy.(ht) = ones(5, n_a_reg(1), n_a_reg(2), N_z_reg, J);
-        end
+        V.(ht)      = Backend.Zeros(n_a_reg(1), n_a_reg(2), N_z_reg, J);
+        Policy.(ht) = Backend.Ones(5, n_a_reg(1), n_a_reg(2), N_z_reg, J);
     end
 
     V_next_c = struct();
@@ -205,13 +200,8 @@ for r_idx = 1:N_reg
     nj_p2.(hh_type) = length(j_p2);
     nj_p1.(hh_type) = length(j_p1);
 
-    if use_gpu
-        V.(hh_type)      = zeros(n_a1, n_h, n_th, N_z, J, 'gpuArray');
-        Policy.(hh_type) = ones(5, n_a1, n_h, n_th, N_z, J, 'gpuArray');
-    else
-        V.(hh_type)      = zeros(n_a1, n_h, n_th, N_z, J);
-        Policy.(hh_type) = ones(5, n_a1, n_h, n_th, N_z, J);
-    end
+    V.(hh_type)      = Backend.Zeros(n_a1, n_h, n_th, N_z, J);
+    Policy.(hh_type) = Backend.Ones(5, n_a1, n_h, n_th, N_z, J);
 end
 
 %% 4. BACKWARD PHASE HANDOFF ACROSS ALL 4 REGIONS CONCURRENTLY

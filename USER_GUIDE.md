@@ -27,40 +27,38 @@ The `IGWelfare` repository separates empirical grounding, rollout staging, gover
 
 ## 2. Repository Directory Hierarchy
 
-* `setup_igw_paths.m` — Idempotent root path & VFIToolkit bootstrap for MATLAB and GNU Octave
-* `profiles/` — Modular CSV + YAML empirical profiles, schedules, and contingency policies
+* `setup_igw_paths.m` — Authoritative path, toolkit, and 3-backend bootstrap (`matlab_cuda`, `matlab_cpu`, `octave_pool`)
+* `profiles/` — Modular CSV + YAML empirical profiles, rollout schedules, and contingency policies
 * `src/data/` — `Load_Empirical_Profile.m`, `Load_Rollout_Schedule.m`, `Load_Contingency_Policy.m`, `Evaluate_Contingency_Gates.m`, `Read_IGW_YAML.m`, `Read_IGW_CSV.m`
-* `src/config/` — `Configure_TimeGrid_Params.m`, `Build_Phase_Registry.m`, `Get_ModelConfigHash.m`, `Validate_CacheConfig.m`
-* `src/models/` — Bellman return functions (`ReturnFn_*`) and lifecycle experience-asset kernels (`*aprimeFn.m`)
-* `src/solvers/` — `Build_IntergenTransitionMatrix.m`, phase-split VFI, and stationary distribution operators
+* `src/config/` — 4-tier epistemic parameter pipeline (`Configure_Model_Params.m`, `Apply_Empirical_Data.m`, `Apply_Calibrated_Params.m`, `Apply_Policy_Regime.m`, `Configure_Grid_And_Prefs.m`, `Describe_Params_Provenance.m`, `Configure_TimeGrid_Params.m`), `Ensure_Workbench_Initialized.m`, `Build_Phase_Registry.m`, `Default_Reform_Phase_Specs.m`, `Get_ModelConfigHash.m`, `Validate_CacheConfig.m`
+* `src/models/` — Pure, side-effect-free Bellman kernels (`ReturnFn_SpatialHH.m`, `ReturnFn_SpatialHH_Compact4D.m`, `ReturnFn_Firm.m`, `HumanCapital_Lifecycle_aprimeFn.m`) and pure policy/counterfactual engines (`Compute_FiscalSolvency_And_Fertility.m`, `Compute_LeeSeshadri_Counterfactuals.m`, `Compute_WelfareDecomposition_4Region.m`, `Compute_TransitionPath_4Region.m`)
+* `src/solvers/` — `Solve_VFI_PhaseSplit.m`, `Precompute_HH_StationaryCache.m`, `PushForward_HH_Dist.m`, `Build_IntergenTransitionMatrix.m`
 * `src/calibration/` — `Calibrate_NZ_Moments.m`
-* `src/utils/` — `IGW_Log.m` and Octave/GPU helper utilities
-* `pipelines/` — Top-level orchestrators (`Run_All_NZ_Intergen_Suite.m`, `NZ_4Region_Master.m`, `TransPath_4Region_Master.m`, counterfactual & decomposition modules)
-* `plots/` — Publication figure and actuarial valuation scripts (`Plot_*.m`)
+* `src/utils/` — Single-source platform & UI contracts (`Resolve_Compute_Backend.m`, `IGW_UI_Style.m`, `IGW_MD5_Hex.m`, `IGW_Restore_Tables.m`, `vfi_active_ax.m`, `enable_vfi_cpu_accel.m`, `IGW_Log.m`, `Resolve_IGW_OutputDir.m`)
+* `pipelines/` — Top-level orchestration scripts (`Run_All_NZ_Intergen_Suite.m`, `NZ_4Region_Master.m`, `PolicyExperiment_LeeSeshadri_4Region.m`, `FertilityBargaining_Module.m`, `WelfareDecomposition_4Region.m`, `TransPath_4Region_Master.m`) and post-simulation sensitivity engines (`Audit_GUiNZ_vs_Dunedin_4Region.m`, `Run_WealthTax_Exemption_Sensitivity.m`)
+* `plots/` — Publication figure, Sankey, and actuarial valuation modules (`Plot_*.m`)
+* `tests/` — Automated cross-platform verification suite (`run_all_tests.m` + 23 contract tests)
 
 ---
 
 ## 3. Setting Up Your Workbench Manually
 
-Initialize your MATLAB or GNU Octave session from the repository root with `setup_igw_paths()`:
+Initialize your MATLAB (CUDA GPU or CPU-only / MATLAB Online) or GNU Octave session from the repository root with `Ensure_Workbench_Initialized` (or `setup_igw_paths()` + `Configure_Model_Params`):
 
     clear; clc; close all;
     setup_igw_paths();
 
-    % Initialize structural + 3-layer parameters (defaults to 'NZ_Dunedin1972' + 'TeKahuiWaka')
+    % Single-call 4-tier parameter + optional Octave RAMDisk worker-pool bootstrap:
     Params = struct( ...
         'Profile_Name',       'NZ_Dunedin1972', ... % Or 'NZ_GUiNZ2009'
         'Rollout_Mode',       'TeKahuiWaka',    ... % 'TeKahuiWaka', 'SingleShot', or 'Frictionless_Textbook'
         'Contingency_Policy', 'contingent_armada', ...
         'dt',                 3, ...
         'n_z_pts',            7);
-    Params = Configure_TimeGrid_Params(Params, Params.dt);
+    [Params, OutputDir] = Ensure_Workbench_Initialized(Params, '', struct('RequireWorkerPool', true));
 
-    % Optional GNU Octave persistent worker pool initialization for VFI solvers
-    if exist('OCTAVE_VERSION', 'builtin') ~= 0 && exist('vfi_pool', 'file') ~= 0
-        VFIToolkit_Octave_Setup({'ReturnFn_SpatialHH', 'ReturnFn_SpatialHH_Compact4D', ...
-            'ReturnFn_Firm', 'HumanCapital_Lifecycle_aprimeFn'});
-    end
+    % Inspect active hardware backend ('matlab_cuda', 'matlab_cpu', or 'octave_pool')
+    Backend = Resolve_Compute_Backend();
 
 To run the full suite from the command line with overrides:
 
@@ -89,5 +87,5 @@ The repository root includes both **`.octaverc`** (for GNU Octave) and **`startu
 ### Critical Don'ts
 1. **Do NOT pass `--norc` or `-f` to Octave without calling `setup_igw_paths()`:** Passing `--norc` suppresses `.octaverc`, leaving `src/**` and `VFIToolkit_Octave_Setup` unloaded unless your `--eval` string starts with `setup_igw_paths(true);`.
 2. **Do NOT set `graphics_toolkit('gnuplot')` in Octave:** Octave 11's `gnuplot` backend cannot render modern `hggroup` primitives (`xline`, translucent `fill` bands) inside legends. Leave graphics on `'qt'` or `'fltk'` as configured by `setup_igw_paths()`.
-3. **Do NOT create `'Visible', 'off'` figures manually under `octave-cli` (`fltk`) before `exportgraphics`:** In `octave-cli` (where Qt GUI is unlinked), FLTK requires a visible OpenGL buffer during capture. Check `strcmp(graphics_toolkit(), 'fltk')` (as in `Plot_ActuarialContinuationValuation.m`) or run under GUI-linked `octave` when true headless window suppression is required.
+3. **Do NOT scatter manual `OCTAVE_VERSION`, `gpuDeviceCount`, or `fltk` checks in model or plotting code:** Use `Resolve_Compute_Backend()` for device placement and `vis = IGW_UI_Style('headless_vis')` (plus `IGW_UI_Style('legend_alpha', lgd)`) so figures export cleanly under MATLAB HG2, Octave Qt, and Octave FLTK (`test_wave4_platform_contracts` enforces this boundary automatically).
 4. **Do NOT hardcode relative paths like `run('NZ_4Region_Master.m')` when calling across subfolders:** Use `run(which('NZ_4Region_Master.m'))` so both MATLAB and GNU Octave resolve pipeline scripts cleanly from any working directory.

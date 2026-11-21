@@ -112,8 +112,7 @@ end
 figOpp = figure('Name', 'Pre-Employment Cohort Opportunity Index (Age 30)', ...
                 'Color', 'w', 'Position', [100, 100, 1220, 560]);
 tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
-is_oct_opp = (exist('OCTAVE_VERSION', 'builtin') ~= 0);
-if is_oct_opp, cats_reg = (1:N_reg)'; else, cats_reg = categorical(Regions, Regions); end
+[cats_reg, ~] = IGW_UI_Style('bar_x', Regions);
 
 % Color Palette:
 %   1. Deep Emerald (#1b9e77) : Stay in NZ & Attain >= Parents
@@ -130,7 +129,7 @@ ax_oppA = nexttile;
 Y_SS0 = [Stay_Better_SS0, Leave_Better_SS0, Stay_Worse_SS0, Leave_Worse_SS0];
 b0 = bar(cats_reg, Y_SS0, 'stacked', 'BarWidth', 0.62);
 for k = 1:4; set(b0(k), 'FaceColor', col_map(k, :)); end
-if is_oct_opp, set(ax_oppA, 'XTick', 1:N_reg, 'XTickLabel', Regions); end
+IGW_UI_Style('bar_xticks', ax_oppA, Regions);
 ylim([0, 105]); ylabel('Share of Pre-Employment Birth Cohort (%)');
 title('A. Status Quo Baseline: Age-30 Opportunity Breakdown');
 grid on;
@@ -153,7 +152,7 @@ ax_oppB = nexttile;
 Y_SS1 = [Stay_Better_SS1, Leave_Better_SS1, Stay_Worse_SS1, Leave_Worse_SS1];
 b1 = bar(cats_reg, Y_SS1, 'stacked', 'BarWidth', 0.62);
 for k = 1:4; set(b1(k), 'FaceColor', col_map(k, :)); end
-if is_oct_opp, set(ax_oppB, 'XTick', 1:N_reg, 'XTickLabel', Regions); end
+IGW_UI_Style('bar_xticks', ax_oppB, Regions);
 ylim([0, 105]); ylabel('Share of Pre-Employment Birth Cohort (%)');
 title('B. High-Opportunity Reform: Age-30 Opportunity Breakdown');
 legend({'Stay in NZ & \geq Parents (Domestic Upward)', ...

@@ -12,8 +12,9 @@ if exist('ValueFnIter_MixHorz_PType', 'file') == 0
     end
 end
 
-isOctave = (exist('OCTAVE_VERSION', 'builtin') ~= 0);
-hasGpu   = (~isOctave && exist('gpuDeviceCount', 'file') ~= 0 && gpuDeviceCount > 0);
+Backend  = Resolve_Compute_Backend();
+isOctave = Backend.IsOctave;
+hasGpu   = Backend.UseGPU;
 
 Regions = {'Rural', 'Auckland'};
 J  = 6;

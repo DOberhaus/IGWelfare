@@ -1,8 +1,9 @@
 function test_returnfn_firm_vectorized()
 %TEST_RETURNPN_FIRM_VECTORIZED Verify scalar, 3D broadcasted CPU, and GPU parity for ReturnFn_Firm.
 
-isOctave = (exist('OCTAVE_VERSION', 'builtin') ~= 0);
-hasGpu = (~isOctave && exist('gpuDeviceCount', 'file') ~= 0 && gpuDeviceCount > 0);
+Backend = Resolve_Compute_Backend();
+hasGpu  = Backend.UseGPU;
+to_dev  = Backend.ToDevice;
 
 % Realistic NZ firm parameters
 w_reg      = 1.15;
@@ -41,10 +42,10 @@ check(max_diff_cpu < 1e-12, ...
 
 % 3. GPU tensor + arrayfun parity when running on CUDA workstation
 if hasGpu
-    F_gpu_vec = gather(ReturnFn_Firm(gpuArray(aprime_vec), gpuArray(a_row), gpuArray(z_page), ...
+    F_gpu_vec = gather(ReturnFn_Firm(to_dev(aprime_vec), to_dev(a_row), to_dev(z_page), ...
         w_reg, r, alpha_k, lambda_col, delta_k, tau_k, tau_a, dt));
     F_gpu_af = gather(arrayfun(@ReturnFn_Firm, ...
-        gpuArray(AP), gpuArray(A), gpuArray(Z), ...
+        to_dev(AP), to_dev(A), to_dev(Z), ...
         w_reg, r, alpha_k, lambda_col, delta_k, tau_k, tau_a, dt));
 
     check(isequal(isinf(F_vec), isinf(F_gpu_vec)) && isequal(isinf(F_vec), isinf(F_gpu_af)), ...

@@ -227,10 +227,7 @@ set(ax1, 'XTick', x_idx, 'XTickLabel', strrep(Tier_Labels, '\n', ' '), 'XTickLab
 xlim(ax1, [0.35, N_tiers + 0.65]); ylim(ax1, [-19.5, 28.5]);
 grid(ax1, 'on'); box(ax1, 'on');
 lgd1 = legend(ax1, 'Location', 'southwest', 'FontSize', 6.7, 'NumColumns', 1);
-if exist('OCTAVE_VERSION', 'builtin') == 0
-    lgd1.BoxFace.ColorType = 'truecoloralpha';
-    lgd1.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
-end
+IGW_UI_Style('legend_alpha', lgd1, 0.92);
 
 % --- PANEL B: RETAINED FORTUNE + SOCIAL COHESION ---
 ax2 = subplot('Position', [0.540, 0.165, 0.405, 0.765]);
@@ -304,10 +301,7 @@ set(ax2, 'XTick', x_idx, 'XTickLabel', strrep(Tier_Labels, '\n', ' '), 'XTickLab
 xlim(ax2, [0.35, N_tiers + 0.65]);
 grid(ax2, 'on'); box(ax2, 'on');
 lgd2 = legend(ax2, 'Location', 'southwest', 'FontSize', 6.7);
-if exist('OCTAVE_VERSION', 'builtin') == 0
-    lgd2.BoxFace.ColorType = 'truecoloralpha';
-    lgd2.BoxFace.ColorData = uint8(255 * [1; 1; 1; 0.92]);
-end
+IGW_UI_Style('legend_alpha', lgd2, 0.92);
 
 % Export 2-Panel combined figure + 2 individual sibling panels
 f_2p   = fullfile(OutputDir, sprintf('Fig_WealthBrackets_2Panel_GiveAndGain_%s.png', AnchorTag));

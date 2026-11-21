@@ -77,23 +77,7 @@ is_cached      = (~ForceRecompute) && (exist(cache_filepath, 'file') == 2);
 end
 
 function hash_hex = md5_hex(str)
-hash_hex = '';
-try
-    if exist('OCTAVE_VERSION', 'builtin') ~= 0
-        hash_hex = lower(hash('md5', str));
-    elseif usejava('jvm')
-        md = java.security.MessageDigest.getInstance('MD5');
-        md.update(typecast(uint8(unicode2native(str, 'UTF-8')), 'int8'));
-        hash_hex = lower(reshape(dec2hex(typecast(md.digest(), 'uint8'), 2)', 1, []));
-    else
-        md5_fun = @() mMD5(str);
-        [~, hash_hex] = evalc('md5_fun()');
-    end
-catch err
-    hash_hex = '';
-    IGW_Log('IGW:NoMD5', 'Get_ModelConfigHash: MD5 failed (%s); cache key forces a rebuild.', err.message);
-    return
-end
+hash_hex = IGW_MD5_Hex(str);
 if isempty(hash_hex)
     IGW_Log('IGW:NoMD5', 'Get_ModelConfigHash: no MD5 available (needs Octave hash() or the MATLAB JVM); cache key forces a rebuild.');
 end

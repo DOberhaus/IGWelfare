@@ -249,7 +249,7 @@ fprintf('  -> Exported Table 24 (Te Kāhui Waka vs Single-Shot Trajectories) to:
 %% =========================================================================
 %  3. FIGURE 1: THE 13-WAVE ARMADA SCHEDULE & TAX RAMP MATRIX (YEARS 1-13)
 %% =========================================================================
-vis_m = 'off'; if exist('OCTAVE_VERSION','builtin')~=0 && strcmp(graphics_toolkit(),'fltk'), vis_m = 'on'; end
+vis_m = IGW_UI_Style('headless_vis');
 fig1 = figure('Color', 'w', 'Position', [50, 40, 1540, 1280], 'Visible', vis_m);
 tl1  = tiledlayout(2, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
 

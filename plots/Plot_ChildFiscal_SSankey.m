@@ -306,7 +306,8 @@ lift_s1    = min([0.88, 0.82], [0.735, 0.638] * eta_ref);
 lift_s2    = min(0.92, 0.78 * eta_ref);
 s3_shifts  = reshape([-0.22, 0.00, montessori_bank], [1, 1, 1, 1, 1, 3]);
 
-use_gpu = (gpuDeviceCount > 0);
+Backend_Fisc = Resolve_Compute_Backend();
+to_dev       = Backend_Fisc.ToDevice;
 
 for r_i = 1:length(reg_list)
     reg     = reg_list{r_i};
@@ -393,15 +394,13 @@ for r_i = 1:length(reg_list)
     W_G      = reshape(W_cell,              [n_a1, 1, 1, 1, 4]);
     Tier_G   = Tier_Map;
 
-    if use_gpu
-        Dist_G   = gpuArray(Dist_G);   Pol_G    = gpuArray(Pol_G);
-        ic_4D    = gpuArray(ic_4D);    a_G      = gpuArray(a_G);
-        h_G      = gpuArray(h_G);      z_G      = gpuArray(z_G);
-        l_G      = gpuArray(l_G);      Ih_G     = gpuArray(Ih_G);
-        ic_G     = gpuArray(ic_G);     z_idx_3D = gpuArray(z_idx_3D);
-        log_h_5D = gpuArray(log_h_5D); W_G      = gpuArray(W_G);
-        Tier_G   = gpuArray(Tier_G);
-    end
+    Dist_G   = to_dev(Dist_G);   Pol_G    = to_dev(Pol_G);
+    ic_4D    = to_dev(ic_4D);    a_G      = to_dev(a_G);
+    h_G      = to_dev(h_G);      z_G      = to_dev(z_G);
+    l_G      = to_dev(l_G);      Ih_G     = to_dev(Ih_G);
+    ic_G     = to_dev(ic_G);     z_idx_3D = to_dev(z_idx_3D);
+    log_h_5D = to_dev(log_h_5D); W_G      = to_dev(W_G);
+    Tier_G   = to_dev(Tier_G);
 
     %% PART A (GPU): GATES 1 TO 4 — SYNCHRONIZED WITH 18-NODE PLOT_CHILDFATES_SSANKEY.M
     Dist_Fert   = Dist_G(:, :, :, fertile_j);

@@ -67,13 +67,12 @@ Enable_SS2_Phase = true;
 
 Params = Configure_Model_Params(Params, Params.dt);
 
-%% OCTAVE WORKER POOL BOOTSTRAP (PATHS & SHIMS ALREADY INITIALIZED BY setup_igw_paths)
-setup_igw_paths(true);
-if exist('OCTAVE_VERSION', 'builtin') ~= 0 && exist('vfi_pool', 'file') ~= 0
-    if ~isfield(Params, 'n_workers'), Params.n_workers = min(10, max(1, nproc() - 2)); end
-    if Params.n_workers > 1
-        vfi_pool('ensure', Params.n_workers, vfi_ramdisk('mount', 2048));
-    end
+%% COMPUTE BACKEND & WORKER POOL PROVISIONING (SINGLE-SOURCE CONTRACT)
+req_w = [];
+if isfield(Params, 'n_workers'), req_w = Params.n_workers; end
+SuiteBackend = Resolve_Compute_Backend(struct('EnsureWorkerPool', true, 'n_workers', req_w));
+if SuiteBackend.IsOctave
+    Params.n_workers = SuiteBackend.n_workers;
 end
 
 OutputDir = fullfile(igw_root_dir, 'output', Params.Profile_ID);
@@ -118,12 +117,11 @@ fprintf('  Time Grid: dt = %d yrs | Horizon J = %d (Ages 20-99) | Retirement Jr 
     Params.dt, Params.J, Params.Jr, Params.super_age_base);
 fprintf('=========================================================================================\n');
 
-if gpuDeviceCount > 0
-    gpu_info = gpuDevice;
-    fprintf('GPU Detected: %s (Available Memory: %.2f GB)\n\n', ...
-        gpu_info.Name, gpu_info.AvailableMemory / 1e9);
+if SuiteBackend.UseGPU
+    fprintf('Compute Backend: %s (%s | Available Memory: %.2f GB)\n\n', ...
+        SuiteBackend.Mode, SuiteBackend.DeviceName, SuiteBackend.MemoryGB);
 else
-    warning('No CUDA GPU detected. VFI Toolkit will fall back to CPU execution.\n');
+    fprintf('Compute Backend: %s (%s)\n\n', SuiteBackend.Mode, SuiteBackend.DeviceName);
 end
 
 %% STEP 1: SOLVE BASELINE 4-REGION STEADY STATE (SS0) & LIFECYCLE EXPERIENCE ASSET
@@ -178,7 +176,7 @@ if Use_ExpAsset_Pipeline && Run_LeeSeshadri_Exp && exist('PolicyExperiment_LeeSe
     if Use_Saved_Cache && ~Force_Recompute_All && exist(Cache_Step2, 'file') && Validate_CacheConfig(Cache_Step2, Cache_CfgHash)
         fprintf('    [CACHE HIT] Loading Step 2 Counterfactual Results from %s...\n', Cache_Step2);
         load(Cache_Step2);
-        if exist('vfi_restore_tables', 'file'), T_IGE = vfi_restore_tables(T_IGE); T_VarExpl = vfi_restore_tables(T_VarExpl); T_Out = vfi_restore_tables(T_Out); end
+        [T_IGE, T_VarExpl, T_Out] = IGW_Restore_Tables(T_IGE, T_VarExpl, T_Out);
     else
         run(which('PolicyExperiment_LeeSeshadri_4Region.m'));
         old_warn = warning('query', 'all');
@@ -200,14 +198,10 @@ if Use_ExpAsset_Pipeline && Run_Fertility_Module && exist('FertilityBargaining_M
             && ~isempty(whos('-file', Cache_Step3, 'FertOut'))
         fprintf('    [CACHE HIT] Loading Step 3 Fertility Results from %s...\n', Cache_Step3);
         load(Cache_Step3);
-        if exist('vfi_restore_tables', 'file')
-            T_Fert1       = vfi_restore_tables(T_Fert1);
-            T_Fert2       = vfi_restore_tables(T_Fert2);
-            T_UCurve      = vfi_restore_tables(T_UCurve);
-            FertOut.T_Fert1  = T_Fert1;
-            FertOut.T_Fert2  = T_Fert2;
-            FertOut.T_UCurve = T_UCurve;
-        end
+        [T_Fert1, T_Fert2, T_UCurve] = IGW_Restore_Tables(T_Fert1, T_Fert2, T_UCurve);
+        FertOut.T_Fert1  = T_Fert1;
+        FertOut.T_Fert2  = T_Fert2;
+        FertOut.T_UCurve = T_UCurve;
         Params.tau_l_SS2_req_pct = FertOut.tau_l_SS2_req_pct;
         Params.tau_l_delta_SS2   = FertOut.tau_l_delta_SS2;
     else
@@ -312,7 +306,7 @@ if exist('WelfareDecomposition_4Region.m', 'file')
         fprintf('    [CACHE HIT] Loading Step 6 Welfare Decomposition from %s...\n', Cache_Step6);
         load(Cache_Step6);
         Cache_CfgHash = regexp(Get_ModelConfigHash('SS0_RunAll_Params', Params, [], [], [], []), '[0-9a-f]{32}(?=\.mat$)', 'match', 'once');
-        if exist('vfi_restore_tables', 'file'), T1 = vfi_restore_tables(T1); T2 = vfi_restore_tables(T2); T3 = vfi_restore_tables(T3); WelfareResults = vfi_restore_tables(WelfareResults); end
+        [T1, T2, T3, WelfareResults] = IGW_Restore_Tables(T1, T2, T3, WelfareResults);
     else
         run(which('WelfareDecomposition_4Region.m'));
         ss0_hash_keep = Cache_CfgHash;

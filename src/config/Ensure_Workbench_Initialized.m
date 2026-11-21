@@ -40,25 +40,15 @@ if isfield(Opts, 'RequireToolkit') && logical(Opts.RequireToolkit)
     end
 end
 
-% 3. Optional GNU Octave persistent worker pool bootstrap for VFI solver scripts
+% 3. Optional persistent worker pool bootstrap via authoritative Resolve_Compute_Backend contract
 if isfield(Opts, 'RequireWorkerPool') && logical(Opts.RequireWorkerPool)
-    if exist('OCTAVE_VERSION', 'builtin') ~= 0 && exist('vfi_pool', 'file') ~= 0
-        if ~isfield(Params, 'n_workers') || isempty(Params.n_workers)
-            pool_st = vfi_pool('status');
-            if pool_st.active
-                Params.n_workers = pool_st.ncores;
-            else
-                Params.n_workers = []; % Let vfi_pool('ensure') auto-detect physical cores
-            end
-        end
-        if isempty(Params.n_workers) || Params.n_workers > 1
-            ram_dir = vfi_ramdisk('mount', 2048);
-            pool_st = vfi_pool('ensure', Params.n_workers, ram_dir);
-            if ~pool_st.active
-                error('IGWelfare:PoolInitFailed', 'Failed to initialize Octave persistent worker pool on %s.', ram_dir);
-            end
-            Params.n_workers = pool_st.ncores;
-        end
+    req_w = [];
+    if isfield(Params, 'n_workers') && ~isempty(Params.n_workers)
+        req_w = Params.n_workers;
+    end
+    Backend = Resolve_Compute_Backend(struct('EnsureWorkerPool', true, 'n_workers', req_w));
+    if Backend.IsOctave
+        Params.n_workers = Backend.n_workers;
     end
 end
 

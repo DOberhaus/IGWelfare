@@ -62,25 +62,17 @@ da_span  = [max(1e-6, a_dbl(2) - a_dbl(1)); diff(a_dbl)];
 a_prev   = a_dbl - da_span;
 tau_cuts = [0.025, 0.050, 0.080, 0.160]; % [1: Extreme, 2: Severe DEP-17, 3: Hardship, 4: AHC-50]
 
-use_gpu = (gpuDeviceCount > 0);
-if use_gpu
-    a_G       = gpuArray(reshape(a_dbl,      [n_a1, 1, 1, 1]));
-    h_G       = gpuArray(reshape(h_vec,      [1, n_h, 1, 1]));
-    ic_G      = gpuArray(ic_vec(:));
-    z_idx_3D  = gpuArray(reshape(1:n_z1,     [1, 1, n_z1, 1]));
-    log_h_dst = gpuArray(reshape(log(h_vec), [1, 1, 1, 1, n_h]));
-else
-    a_G       = reshape(a_dbl,      [n_a1, 1, 1, 1]);
-    h_G       = reshape(h_vec,      [1, n_h, 1, 1]);
-    ic_G      = ic_vec(:);
-    z_idx_3D  = reshape(1:n_z1,     [1, 1, n_z1, 1]);
-    log_h_dst = reshape(log(h_vec), [1, 1, 1, 1, n_h]);
-end
+Backend   = Resolve_Compute_Backend();
+to_dev    = Backend.ToDevice;
+a_G       = to_dev(reshape(a_dbl,      [n_a1, 1, 1, 1]));
+h_G       = to_dev(reshape(h_vec,      [1, n_h, 1, 1]));
+ic_G      = to_dev(ic_vec(:));
+z_idx_3D  = to_dev(reshape(1:n_z1,     [1, 1, n_z1, 1]));
+log_h_dst = to_dev(reshape(log(h_vec), [1, 1, 1, 1, n_h]));
 
 fertile_j = Params.j_s1_start : Params.j_s2_end;
 retire_j  = round(Params.Jr) : Params.J;
-mort_vec  = reshape(1 - double(gather(Params.sj(retire_j))), [1, 1, 1, length(retire_j)]);
-if use_gpu, mort_vec = gpuArray(mort_vec); end
+mort_vec  = to_dev(reshape(1 - double(gather(Params.sj(retire_j))), [1, 1, 1, length(retire_j)]));
 
 NewbornDist_PreMig = struct();
 reg_skill_drift    = Params.reg_skill_drift; % Canonical regional launch skill drift from Configure_TimeGrid_Params
@@ -135,13 +127,13 @@ for r_idx = 1:N_reg
         Dist_4D = reshape(sum(Dist_5D, 3), [n_a1, n_h, n_z1, Params.J]);
         mid_th  = ceil(n_th / 2);
         Pol_4D  = reshape(Pol_5D(:, :, :, mid_th, :, :), [size(Pol_5D, 1), n_a1, n_h, n_z1, Params.J]);
-        if use_gpu, Dist_k = gpuArray(Dist_4D); Pol_k = gpuArray(Pol_4D);
-        else,       Dist_k = Dist_4D;           Pol_k = Pol_4D; end
+        Dist_k = to_dev(Dist_4D);
+        Pol_k  = to_dev(Pol_4D);
     else
         Dist_4D = reshape(Dist_raw, [n_a1, n_h, n_z1, Params.J]);
         Pol_4D  = reshape(Pol_raw,  [size(Pol_raw, 1), n_a1, n_h, n_z1, Params.J]);
-        if use_gpu, Dist_k = gpuArray(Dist_4D); Pol_k = gpuArray(Pol_4D);
-        else,       Dist_k = Dist_4D;           Pol_k = Pol_4D; end
+        Dist_k  = to_dev(Dist_4D);
+        Pol_k   = to_dev(Pol_4D);
 
         Dist_Fert   = Dist_k(:, :, :, fertile_j);
         parent_mass = max(1e-12, sum(Dist_Fert, 'all'));
@@ -149,9 +141,8 @@ for r_idx = 1:N_reg
         ic_4D       = reshape(ic_G(d_ic_idx(:)), size(Dist_Fert));
 
         % Broadcast [n_a1 x 4] W_cell against z_idx_3D [1 x 1 x n_z1]:
-        W_G      = reshape(W_cell, [n_a1, 1, 1, 1, 4]);
-        crowd_G  = reshape(crowd_1D, [n_a1, 1, 1, 1]);
-        if use_gpu, W_G = gpuArray(W_G); crowd_G = gpuArray(crowd_G); end
+        W_G     = to_dev(reshape(W_cell, [n_a1, 1, 1, 1, 4]));
+        crowd_G = to_dev(reshape(crowd_1D, [n_a1, 1, 1, 1]));
 
         w_sev_az = max(W_G(:,:,:,:,2) .* (z_idx_3D <= 2), W_G(:,:,:,:,1) .* (z_idx_3D <= 3));
         w_ahc_az = max(W_G(:,:,:,:,4) .* (z_idx_3D <= 2), W_G(:,:,:,:,3) .* (z_idx_3D <= 3)) - w_sev_az;

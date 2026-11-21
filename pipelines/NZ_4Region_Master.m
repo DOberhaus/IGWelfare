@@ -60,7 +60,8 @@ for r_idx = 1:N_reg
     firm_type = ['Firm_', Regions{r_idx}];
 
     vfoptions.experienceasset.(hh_type)    = 1;
-    if exist('OCTAVE_VERSION', 'builtin') ~= 0 && (~isfield(vfoptions, 'lowmemory') || ~isfield(vfoptions.lowmemory, hh_type))
+    Backend_NZ = Resolve_Compute_Backend();
+    if Backend_NZ.IsOctave && (~isfield(vfoptions, 'lowmemory') || ~isfield(vfoptions.lowmemory, hh_type))
         vfoptions.lowmemory.(hh_type)      = 1;
     end
     simoptions.experienceasset.(hh_type)   = 1;
