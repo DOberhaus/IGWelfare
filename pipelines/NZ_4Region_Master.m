@@ -183,6 +183,12 @@ end
 vfoptions.verbose = 0; simoptions.verbose = 0;
 simoptions.d_grid = d_grid; simoptions.a_grid = a_grid;
 
+for r_idx = 1:N_reg
+    hh_type = ['HH_', Regions{r_idx}];
+    jequaloneDist.(hh_type) = ones([n_a.(hh_type), n_z.(hh_type)]) / prod([n_a.(hh_type), n_z.(hh_type)]);
+end
+
+if ~exist('Skip_Baseline_Solve', 'var') || ~logical(Skip_Baseline_Solve)
 % 1. Solve Policy via Phase-Split VFI (optional Benchmark_PhaseSplit check against full 5D VFI)
 if isfield(Params, 'Benchmark_PhaseSplit') && Params.Benchmark_PhaseSplit
     tic;
@@ -199,11 +205,6 @@ if isfield(Params, 'Benchmark_PhaseSplit') && Params.Benchmark_PhaseSplit
 else
     [V, Policy] = Solve_VFI_PhaseSplit(n_d, n_a, n_z, N_j, ...
         d_grid, a_grid, z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions, Regions);
-end
-
-for r_idx = 1:N_reg
-    hh_type = ['HH_', Regions{r_idx}];
-    jequaloneDist.(hh_type) = ones([n_a.(hh_type), n_z.(hh_type)]) / prod([n_a.(hh_type), n_z.(hh_type)]);
 end
 
 % 2. Solve Infinite-Horizon Firms ONCE (jequaloneDist never affects firms)
@@ -244,4 +245,5 @@ for r_idx = 1:N_reg
         reg, 100*Reg_HH_Shares(r_idx), IG_Diagnostics.MeanTheta2.(reg), ...
         IG_Diagnostics.MeanTheta3.(reg), 100*IG_Diagnostics.StrugglingShare.(reg), ...
         IG_Diagnostics.MeanBequest.(reg), 100*IG_Diagnostics.EmigRate.(reg));
+end
 end

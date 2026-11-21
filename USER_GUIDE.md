@@ -31,7 +31,8 @@ The `IGWelfare` repository separates empirical grounding, rollout staging, gover
 * `profiles/` — Modular CSV + YAML empirical profiles, rollout schedules, and contingency policies
 * `src/data/` — `Load_Empirical_Profile.m`, `Load_Rollout_Schedule.m`, `Load_Contingency_Policy.m`, `Evaluate_Contingency_Gates.m`, `Read_IGW_YAML.m`, `Read_IGW_CSV.m`
 * `src/config/` — 4-tier epistemic parameter pipeline (`Configure_Model_Params.m`, `Apply_Empirical_Data.m`, `Apply_Calibrated_Params.m`, `Apply_Policy_Regime.m`, `Configure_Grid_And_Prefs.m`, `Describe_Params_Provenance.m`, `Configure_TimeGrid_Params.m`), `Ensure_Workbench_Initialized.m`, `Build_Phase_Registry.m`, `Default_Reform_Phase_Specs.m`, `Get_ModelConfigHash.m`, `Validate_CacheConfig.m`
-* `src/models/` — Pure, side-effect-free Bellman kernels (`ReturnFn_SpatialHH.m`, `ReturnFn_SpatialHH_Compact4D.m`, `ReturnFn_Firm.m`, `HumanCapital_Lifecycle_aprimeFn.m`) and pure policy/counterfactual engines (`Compute_FiscalSolvency_And_Fertility.m`, `Compute_LeeSeshadri_Counterfactuals.m`, `Compute_WelfareDecomposition_4Region.m`, `Compute_TransitionPath_4Region.m`)
+* `src/models/` — Pure, side-effect-free Bellman kernels (`ReturnFn_SpatialHH.m`, `ReturnFn_SpatialHH_Compact4D.m`, `ReturnFn_Firm.m`, `HumanCapital_Lifecycle_aprimeFn.m`) and general-equilibrium counterfactual/composition solvers (`Compute_Policy_Composition_Batch.m`, `Compute_FiscalSolvency_And_Fertility.m`, `Compute_LeeSeshadri_Counterfactuals.m`, `Compute_WelfareDecomposition_4Region.m`, `Compute_TransitionPath_4Region.m`)
+* `src/ledgers/` — Pure, headless accounting & attribution ledgers (`Compute_Actuarial_Ledger.m`, `Compute_Synergy_And_Mirror_Ledger.m`, `Compute_Civic_Gearing_Ledger.m`, `Compute_Divergence_Trajectory_Ledger.m`)
 * `src/solvers/` — `Solve_VFI_PhaseSplit.m`, `Precompute_HH_StationaryCache.m`, `PushForward_HH_Dist.m`, `Build_IntergenTransitionMatrix.m`
 * `src/calibration/` — `Calibrate_NZ_Moments.m`
 * `src/utils/` — Single-source platform & UI contracts (`Resolve_Compute_Backend.m`, `IGW_UI_Style.m`, `IGW_MD5_Hex.m`, `IGW_Restore_Tables.m`, `vfi_active_ax.m`, `enable_vfi_cpu_accel.m`, `IGW_Log.m`, `Resolve_IGW_OutputDir.m`)
@@ -55,17 +56,32 @@ Initialize your MATLAB (CUDA GPU or CPU-only / MATLAB Online) or GNU Octave sess
         'Contingency_Policy', 'contingent_armada', ...
         'dt',                 3, ...
         'n_z_pts',            7);
-    [Params, OutputDir] = Ensure_Workbench_Initialized(Params, '', struct('RequireWorkerPool', true));
+    [Params, Regions] = Ensure_Workbench_Initialized(Params, struct('RequireWorkerPool', true));
+    OutputDir = Resolve_IGW_OutputDir('', Params.Profile_ID);
 
     % Inspect active hardware backend ('matlab_cuda', 'matlab_cpu', or 'octave_pool')
     Backend = Resolve_Compute_Backend();
+
+### Composing Custom Policy Counterfactuals (`Compose_Policy_Bundle.m`)
+Every ongoing institutional commitment in `profiles/<Profile_ID>/policies/commitment_catalog.csv` uses signed Convention-2 dials (`u > 0` strengthens/expands; `u < 0` retrenches/defers; tax/expensing dials `C09..C11 > 0` enact relief):
+
+    setup_igw_paths();
+    P0  = Configure_Model_Params(struct('Profile_Name', 'NZ_Dunedin1972', 'dt', 3));
+    [P_Base, pi_Base] = Compose_Policy_Bundle(P0, struct(), 'baseline_2023');
+
+    % Compose named bundles or pass custom signed dials directly:
+    [P_Mix, pi_Mix, Meta] = Compose_Policy_Bundle(P_Base, pi_Base, ...
+        {'tax_visa_expensing_3', 'civic_commons_expansion_doc1e'});
+
+    % Or run the full 5D solved composition & additionality suite:
+    run(which('Run_Policy_Composition_Suite.m'));
 
 To run the full suite from the command line with overrides:
 
     setup_igw_paths();
     Profile_Name = 'NZ_GUiNZ2009';
     Params = struct('dt', 3, 'Rollout_Mode', 'SingleShot');
-    run('pipelines/Run_All_NZ_Intergen_Suite.m');
+    run(which('Run_All_NZ_Intergen_Suite.m'));
 
 ---
 

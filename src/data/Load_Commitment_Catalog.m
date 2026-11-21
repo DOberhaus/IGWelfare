@@ -1,0 +1,51 @@
+function PolicyCatalog = Load_Commitment_Catalog(DataSpec)
+%% PURE LOADER FOR CONVENTION-2 INSTITUTIONAL COMMITMENT CATALOG & BUNDLES
+% File: src/data/Load_Commitment_Catalog.m
+% Loads commitment_catalog.csv and policy_bundles.yaml for DataSpec.Profile_ID,
+% automatically falling back to parent profile (Inherits_From) when a derived
+% profile such as NZ_GUiNZ2009 shares the canonical policy algebra.
+
+if nargin < 1 || isempty(DataSpec)
+    DataSpec = Load_Empirical_Profile('NZ_Dunedin1972');
+elseif ischar(DataSpec) || isstring(DataSpec)
+    DataSpec = Load_Empirical_Profile(char(DataSpec));
+end
+
+igw_root = getappdata(0, 'IGW_ROOT_DIR');
+if isempty(igw_root)
+    igw_root = fileparts(fileparts(fileparts(mfilename('fullpath'))));
+end
+
+cand_dirs = {fullfile(igw_root, 'profiles', DataSpec.Profile_ID, 'policies')};
+if isfield(DataSpec, 'Parent_Profile_ID') && ~isempty(DataSpec.Parent_Profile_ID)
+    cand_dirs{end+1} = fullfile(igw_root, 'profiles', DataSpec.Parent_Profile_ID, 'policies');
+end
+cand_dirs{end+1} = fullfile(igw_root, 'profiles', 'NZ_Dunedin1972', 'policies');
+
+pol_dir = '';
+for k = 1:numel(cand_dirs)
+    if exist(fullfile(cand_dirs{k}, 'commitment_catalog.csv'), 'file') == 2
+        pol_dir = cand_dirs{k};
+        break;
+    end
+end
+if isempty(pol_dir)
+    error('IGWelfare:MissingCommitmentCatalog', 'Could not locate commitment_catalog.csv for profile %s.', DataSpec.Profile_ID);
+end
+
+CatTable   = Read_IGW_CSV(fullfile(pol_dir, 'commitment_catalog.csv'));
+BundleSpec = Read_IGW_YAML(fullfile(pol_dir, 'policy_bundles.yaml'));
+
+PolicyCatalog = struct();
+PolicyCatalog.Profile_ID     = DataSpec.Profile_ID;
+PolicyCatalog.Source_Dir     = pol_dir;
+PolicyCatalog.Catalog_Table  = CatTable;
+PolicyCatalog.Commitment_IDs = CatTable.Commitment_ID(:);
+PolicyCatalog.Domains        = CatTable.Domain(:);
+Meta = BundleSpec.Metadata;
+BundlesOnly = rmfield(BundleSpec, 'Metadata');
+PolicyCatalog.Bundles        = BundlesOnly;
+PolicyCatalog.Default_Core13_PassThrough = Meta.Default_Core13_PassThrough;
+PolicyCatalog.Digest         = IGW_MD5_Hex(struct('Catalog', CatTable, 'Bundles', BundleSpec));
+
+end

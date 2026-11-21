@@ -110,9 +110,43 @@ for r_idx = 1:N_reg
 
         Mass_a_th   = reshape(sum(Dist_5D(:, :, :, :, j_launch), [2, 4]), [n_a1, n_th]);
         parent_mass = max(1e-12, sum(Mass_a_th, 'all'));
-        Diag.MeanTheta3.(reg) = (sum(Mass_a_th, 1) * th_vec(:)) / parent_mass;
 
-        log_h_mean = 0.68 * log(reshape(th_vec, [1, n_th])) + reg_skill_drift(r_idx) - crowd_1D;
+        % Integrate continuous ECE/Kaiako lift, whanau buffer dK_reg, & adolescent lambda_psy
+        % into 5D child skill launch so sub-grid shifts between the 9 th_vec points resolve cleanly:
+        g_ece_5d  = Params.G_ece;
+        if isstruct(g_ece_5d) && isfield(g_ece_5d, hh_type), g_ece_5d = g_ece_5d.(hh_type); end
+        g_ece2_5d = g_ece_5d;
+        if isfield(Params, 'G_ece_stage2')
+            g_ece2_5d = Params.G_ece_stage2;
+            if isstruct(g_ece2_5d) && isfield(g_ece2_5d, hh_type), g_ece2_5d = g_ece2_5d.(hh_type); end
+        end
+        if isfield(Params, 'M_mentor') && isnumeric(Params.M_mentor) && isscalar(Params.M_mentor)
+            M_mentor_5d = Params.M_mentor;
+        else
+            M_mentor_5d = min(1.0, max(0.0, (g_ece2_5d - Params.G_ece1_sched(1)) / max(1e-6, Params.G_ece2_sched(2) - Params.G_ece1_sched(1))));
+        end
+        M_trust_5d = M_mentor_5d * (0.45 + 0.55 * min(1.0, K_reg / 0.35));
+        lam_base   = 0.38;
+        if isfield(Params, 'lambda_psy') && isstruct(Params.lambda_psy) && isfield(Params.lambda_psy, hh_type)
+            lam_base = Params.lambda_psy.(hh_type);
+        end
+        lam_psy_5d   = max(0.22 * 0.38, 0.22 * (lam_base / 0.38) * (1.0 - 0.52 * M_trust_5d) * (1.0 - 0.35 * min(1.0, K_reg / 0.38)));
+        unbuf_5d     = max(0.38 * lam_psy_5d, (1.0 - 0.80 * M_trust_5d) * (1.0 - 0.55 * K_reg));
+        is_low_a     = double(a_dbl < 0.12 * Q_house);
+        is_low_th    = double(reshape(th_vec, [1, n_th]) < 0.85);
+        is_stress_2D = 0.55 * is_low_a + 0.45 * is_low_th;
+        comp_load_2D = is_stress_2D + lam_psy_5d .* (1.0 + 0.65 .* is_stress_2D);
+        stress_pen5d = 0.038 .* comp_load_2D .* unbuf_5d - 0.0159; % Zero-centered at SS0 baseline
+
+        kaiako_defl  = (max(0.50, Q_base) / max(0.50, Q_house)) ^ 0.35;
+        G_ece1_eff   = g_ece_5d * kaiako_defl;
+        ece_lift_5d  = 0.55 * (G_ece1_eff - Params.G_ece1_sched(1)) + 0.04 * (M_mentor_5d - 0.50) + 0.12 * dK_reg;
+
+        th_eff_2D    = reshape(th_vec, [1, n_th]) .* exp(0.45 * ece_lift_5d - 0.45 * stress_pen5d);
+        Diag.MeanTheta3.(reg) = sum(Mass_a_th .* th_eff_2D, 'all') / parent_mass;
+        Diag.MeanTheta2.(reg) = Diag.MeanTheta2.(reg) * exp(0.30 * ece_lift_5d);
+
+        log_h_mean = 0.68 * log(reshape(th_vec, [1, n_th])) + ece_lift_5d - stress_pen5d + reg_skill_drift(r_idx) - crowd_1D;
         diff_log   = reshape(log(h_vec), [n_h, 1, 1]) - reshape(log_h_mean, [1, n_a1, n_th]);
         trans_p    = exp(-0.5 * (diff_log ./ 0.24).^2);
         trans_p    = trans_p ./ max(1e-12, sum(trans_p, 1));
@@ -163,7 +197,11 @@ for r_idx = 1:N_reg
         M_mentor     = min(1.0, max(0.0, (g_ece2_k - Params.G_ece1_sched(1)) / (Params.G_ece2_sched(2) - Params.G_ece1_sched(1))));
         is_stress_4D = double(ic_4D < 0.005) + 0.55 .* double((ic_4D >= 0.005) & (ic_4D < 0.035));
         M_trust_k    = M_mentor * (0.45 + 0.55 * min(1.0, K_reg / 0.35));
-        lambda_psy_k = max(0.22 * 0.38, 0.22 * (1.0 - 0.52 * M_trust_k) * (1.0 - 0.35 * min(1.0, K_reg / 0.38)));
+        lam_base_4d  = 0.38;
+        if isfield(Params, 'lambda_psy') && isstruct(Params.lambda_psy) && isfield(Params.lambda_psy, hh_type)
+            lam_base_4d = Params.lambda_psy.(hh_type);
+        end
+        lambda_psy_k = max(0.22 * 0.38, 0.22 * (lam_base_4d / 0.38) * (1.0 - 0.52 * M_trust_k) * (1.0 - 0.35 * min(1.0, K_reg / 0.38)));
         comp_load_4D = is_stress_4D + lambda_psy_k .* (1.0 + 0.65 .* is_stress_4D);
         unbuf_mult_k = max(0.38 * lambda_psy_k, (1.0 - 0.80 * M_trust_k) * (1.0 - 0.55 * K_reg));
 
@@ -206,10 +244,17 @@ for r_idx = 1:N_reg
     end
 
     % --- B. VECTORIZED $1.6T PROPERTY BEQUEST TRANSITION (Dying Retirees j >= Jr) ---
-    Dist_Ret   = Dist_k(:, :, :, retire_j) .* mort_vec;                % [n_a1, n_h, n_z1, n_ret]
-    beq_mass   = max(1e-12, gather(sum(Dist_Ret, 'all')));
-    ap_idx_4D  = max(1, min(n_a1, round(Pol_k(4, :, :, :, retire_j))));
-    ap_val_4D  = reshape(a_G(ap_idx_4D(:)), size(Dist_Ret));
+    if is_5D && ndims(Dist_raw) == 5
+        mort_5D      = reshape(double(gather(mort_vec)), [1, 1, 1, 1, length(retire_j)]);
+        Dist_Ret_cpu = Dist_5D(:, :, :, :, retire_j) .* mort_5D;
+        ap_flat_cpu  = max(1, min(n_a1, round(reshape(Pol_5D(4, :, :, :, :, retire_j), [], 1))));
+    else
+        Dist_Ret_cpu = double(gather(Dist_k(:, :, :, retire_j) .* mort_vec));
+        ap_flat_cpu  = max(1, min(n_a1, round(double(gather(reshape(Pol_k(4, :, :, :, retire_j), [], 1))))));
+    end
+    dist_ret_cpu = Dist_Ret_cpu(:);
+    beq_mass     = max(1e-12, sum(dist_ret_cpu));
+    ap_val_flat  = a_vec(ap_flat_cpu);
     if isfield(Params, 'Estate_Exemption'), a_exempt = Params.Estate_Exemption; else, a_exempt = 1.80; end % Homestead/working-farm exemption threshold before progressive estate tax tau_b
 
     s_ygr_k    = 1.0;
@@ -219,11 +264,9 @@ for r_idx = 1:N_reg
     yg_base    = Params.YouthGrant_sched(1);
     yg_eff_k   = yg_base + s_ygr_k * (Params.YouthGrant - yg_base);
 
-    estate_4D  = ap_val_4D - Params.tau_b .* max(0, ap_val_4D - a_exempt) + yg_eff_k;
-    total_beq_val = gather(sum(Dist_Ret .* estate_4D, 'all'));
+    estate_flat   = ap_val_flat(:) - Params.tau_b .* max(0, ap_val_flat(:) - a_exempt) + yg_eff_k;
+    total_beq_val = sum(dist_ret_cpu .* estate_flat);
 
-    ap_flat_cpu = gather(ap_idx_4D(:));
-    dist_ret_cpu = gather(Dist_Ret(:));
     possible_est_act = a_vec(:) - Params.tau_b * max(0, a_vec(:) - a_exempt) + Params.YouthGrant;
     [~, map_act]     = min(abs(possible_est_act - a_vec(:)'), [], 2);
     Prob_a_act       = accumarray(map_act(ap_flat_cpu), dist_ret_cpu, [n_a1, 1]) / beq_mass;
@@ -327,10 +370,18 @@ for r_orig = 1:N_reg
     dK_whanau        = Params.K_whanau.(orig_hh) - Params.K_whanau_base.(orig_hh);
     whanau_stay_pull = Params_Mig.tau_home_amenity * 1.80 * dK_whanau;
 
+    v_abr_push = 0.0;
+    if isfield(Params, 'V_Abroad_SkillPrem_Shift') && ~isempty(Params.V_Abroad_SkillPrem_Shift)
+        v_abr_push = v_abr_push + Params.V_Abroad_SkillPrem_Shift;
+    end
+    if isfield(Params, 'V_Abroad_Add') && isstruct(Params.V_Abroad_Add) && isfield(Params.V_Abroad_Add, orig_hh)
+        v_abr_push = v_abr_push + Params.V_Abroad_Add.(orig_hh);
+    end
+
     u_row          = u_target_4x5(r_orig, :);
     u_row(1:N_reg) = u_row(1:N_reg) + 0.18 * (V_norm' - V_norm(r_orig));
-    u_row(r_orig)  = u_row(r_orig)  + 0.65 * whanau_stay_pull;           % Anchors youth in home region
-    u_row(N_reg+1) = u_row(N_reg+1) - reform_pull - whanau_stay_pull;    % Brain drain closes when pull > 0
+    u_row(r_orig)  = u_row(r_orig)  + 0.65 * whanau_stay_pull;                      % Anchors youth in home region
+    u_row(N_reg+1) = u_row(N_reg+1) - reform_pull - whanau_stay_pull + v_abr_push;  % Brain drain closes when pull > 0
 
     exp_u = exp(u_row - max(u_row));
     Pi_mig_4x5(r_orig, :) = exp_u / sum(exp_u);

@@ -19,91 +19,20 @@ if nargin < 2 || isempty(Params)
     Params = struct();
 end
 
-if exist('Load_Empirical_Profile', 'file') == 0 && exist('setup_igw_paths.m', 'file') == 2
+if exist('Compute_Actuarial_Ledger', 'file') == 0 && exist('setup_igw_paths.m', 'file') == 2
     setup_igw_paths(true);
 end
-if isfield(Params, 'DataSpec') && isstruct(Params.DataSpec)
-    DataSpec = Load_Empirical_Profile(Params.DataSpec.Profile_ID);
-elseif isfield(Params, 'Profile_Name') && ~isempty(Params.Profile_Name)
-    DataSpec = Load_Empirical_Profile(Params.Profile_Name);
-else
-    anch_in  = get_param_or_default(Params, 'Calibration_Anchor', 'NZ_Dunedin1972');
-    DataSpec = Load_Empirical_Profile(anch_in);
-end
 
-regions = DataSpec.Regions;
-N_reg   = DataSpec.N_reg;
-
-% -------------------------------------------------------------------------
-% 1. ENSURE NATIONAL & REGIONAL FLOWS EXIST (STANDALONE FALLBACK FROM DATASPEC)
-% -------------------------------------------------------------------------
-Calibration_Anchor = DataSpec.Legacy_Alias;
-if isempty(Out_Cash) || ~isfield(Out_Cash, 'years')
-    Out_Cash = build_default_4region_cash_flows(regions, DataSpec);
-elseif ~isfield(Out_Cash, 'Reg')
-    Out_Cash = split_national_into_4regions(Out_Cash, regions, DataSpec);
-end
-Out.Profile_ID         = DataSpec.Profile_ID;
-Out.Calibration_Anchor = Calibration_Anchor;
-Out.Currency_Unit      = DataSpec.Monetary.Currency_Unit_Billions;
-
-years = Out_Cash.years;
-
-% -------------------------------------------------------------------------
-% 2. TREASURY CIRCULAR 2024/15 & CBAx CONTINUATION PARAMETERS (FROM DATASPEC)
-% -------------------------------------------------------------------------
-Act_Spec  = DataSpec.Actuarial;
-H_window  = get_param_or_default(Params, 'H_window',  Act_Spec.H_Window_Yrs);        % Forward recognition window
-alpha_att = get_param_or_default(Params, 'alpha_att', Act_Spec.Attribution_Haircut); % Attribution haircut
-g_cost    = get_param_or_default(Params, 'g_cost',    Act_Spec.Real_Cost_Growth);    % Real productivity/cost growth
-r_2pct    = get_param_or_default(Params, 'r_2pct',    Act_Spec.Discount_Central);    % Central social discount rate
-r_8pct    = get_param_or_default(Params, 'r_8pct',    Act_Spec.Discount_Sensitivity);% Sensitivity discount rate
-
-% Region-specific Stage-2-to-Adulthood Markov persistence (psi_persist from DataSpec.Reg_Table)
-psi_vec = DataSpec.Reg_Table.psi_persist(:)';
-
-% -------------------------------------------------------------------------
-% 3. COMPUTE ACTUARIAL CONTINUATION VALUATION FOR EACH REGION & NATIONAL
-% -------------------------------------------------------------------------
-for r = 1:N_reg
-    reg = regions{r};
-    Out.Reg.(reg) = compute_single_ledger(Out_Cash.Reg.(reg), years, H_window, alpha_att, ...
-        g_cost, r_2pct, r_8pct, psi_vec(r));
-end
-
-% Sum the 4 regions to guarantee exact spatial additivity at the National level
-Out.years            = years;
-Out.Regions          = regions;
-Out.Cum_Inv          = Out_Cash.Cum_Inv;
-Out.Cum_Savings      = Out_Cash.Cum_Savings;
-Out.Cum_TotFisc      = Out_Cash.Cum_TotFisc;
-Out.Cum_dGDP         = Out_Cash.Cum_dGDP;
-Out.Booked_Sav_2pct  = zeros(size(years));
-Out.Booked_Sav_8pct  = zeros(size(years));
-Out.Booked_Fisc_2pct = zeros(size(years));
-Out.Booked_Fisc_8pct = zeros(size(years));
-Out.Booked_GDP_2pct  = zeros(size(years));
-Out.Booked_GDP_8pct  = zeros(size(years));
-
-for r = 1:N_reg
-    reg = regions{r};
-    Out.Booked_Sav_2pct  = Out.Booked_Sav_2pct  + Out.Reg.(reg).Booked_Sav_2pct;
-    Out.Booked_Sav_8pct  = Out.Booked_Sav_8pct  + Out.Reg.(reg).Booked_Sav_8pct;
-    Out.Booked_Fisc_2pct = Out.Booked_Fisc_2pct + Out.Reg.(reg).Booked_Fisc_2pct;
-    Out.Booked_Fisc_8pct = Out.Booked_Fisc_8pct + Out.Reg.(reg).Booked_Fisc_8pct;
-    Out.Booked_GDP_2pct  = Out.Booked_GDP_2pct  + Out.Reg.(reg).Booked_GDP_2pct;
-    Out.Booked_GDP_8pct  = Out.Booked_GDP_8pct  + Out.Reg.(reg).Booked_GDP_8pct;
-end
-
-% Print Summary Audit Table at Year 5 (t=1) and Year 60 (t=end)
-print_regional_audit_summary(Out, regions);
+% Delegate all cash-flow & Treasury Circular 2024/15 actuarial math to pure ledger engine:
+Out     = Compute_Actuarial_Ledger(Out_Cash, Params, struct('Verbose', true));
+regions = Out.Regions;
+N_reg   = numel(regions);
 
 % -------------------------------------------------------------------------
 % 4. DISPATCH PLOTTING BASED ON RegionOption (DYNAMIC ACROSS DATASPEC.REGIONS)
 % -------------------------------------------------------------------------
-OutputDir  = Resolve_IGW_OutputDir('', DataSpec.Profile_ID);
+OutputDir  = Resolve_IGW_OutputDir('', Out.Profile_ID);
 AnchorTag  = Out.Calibration_Anchor;
-Out.Pop_Shares = DataSpec.Pop_Shares;
 opt_clean  = lower(regexprep(strtrim(char(RegionOption)), '^hh_', ''));
 if strcmp(opt_clean, 'akl') && ismember('Auckland', regions)
     opt_clean = 'auckland';
@@ -114,7 +43,7 @@ if strcmp(opt_clean, 'national')
     plot_two_panel_ledger(Out, sprintf('National Aggregate (All %d Regions)', N_reg), 'National', AnchorTag, OutputDir);
 elseif ~isempty(reg_match_idx)
     r_name = regions{reg_match_idx};
-    r_pct  = 100 * DataSpec.Pop_Shares(reg_match_idx);
+    r_pct  = 100 * Out.Pop_Shares(reg_match_idx);
     plot_two_panel_ledger(Out.Reg.(r_name), sprintf('%s Region (%.1f%% Base Pop)', r_name, r_pct), r_name, AnchorTag, OutputDir);
 else
     plot_all4_regions_dashboard(Out, regions, AnchorTag, OutputDir);
@@ -125,53 +54,7 @@ end
 end
 
 %% ========================================================================
-%  HELPER 1: CORE ACTUARIAL CONTINUATION ENGINE FOR ONE LEDGER
-%  ========================================================================
-function L = compute_single_ledger(CashStruct, years, H_window, alpha_att, g_cost, r_2pct, r_8pct, psi_ann)
-L = CashStruct;
-L.years = years;
-
-% Extend annual flows out to Year 100 so rolling 25-year window at Year 60 is exact
-dt_step  = years(2) - years(1);
-n_ext    = ceil(40 / dt_step);
-yr_ext   = [years, years(end) + (1:n_ext)*dt_step];
-ann_sav  = [CashStruct.Annual_Savings, repmat(CashStruct.Annual_Savings(end), 1, n_ext)];
-ann_fisc = [CashStruct.Annual_TotFisc, repmat(CashStruct.Annual_TotFisc(end), 1, n_ext)];
-ann_gdp  = [CashStruct.Annual_dGDP,    repmat(CashStruct.Annual_dGDP(end),    1, n_ext)];
-
-yr_fine   = 0:1:max(yr_ext);
-sav_fine  = interp1(yr_ext, ann_sav,  yr_fine, 'pchip');
-fisc_fine = interp1(yr_ext, ann_fisc, yr_fine, 'pchip');
-gdp_fine  = interp1(yr_ext, ann_gdp,  yr_fine, 'pchip');
-
-s_vec       = 1:H_window;
-psi_persist = psi_ann .^ s_vec;
-D_2pct      = ((1 + g_cost) ./ (1 + r_2pct)) .^ s_vec;
-D_8pct      = ((1 + g_cost) ./ (1 + r_8pct)) .^ s_vec;
-
-N_pts = length(years);
-L.Booked_Sav_2pct  = zeros(1, N_pts);
-L.Booked_Sav_8pct  = zeros(1, N_pts);
-L.Booked_Fisc_2pct = zeros(1, N_pts);
-L.Booked_Fisc_8pct = zeros(1, N_pts);
-L.Booked_GDP_2pct  = zeros(1, N_pts);
-L.Booked_GDP_8pct  = zeros(1, N_pts);
-
-for i = 2:N_pts
-    y = years(i);
-    idx_fwd = (y + 2) : (y + 1 + H_window);
-    pipeline_maturity = min(1.0, y / 15.0); % Full childhood age pipeline active by Year 15
-    L.Booked_Sav_2pct(i)  = CashStruct.Cum_Savings(i) + (1 - alpha_att) * sum(D_2pct .* psi_persist .* sav_fine(idx_fwd)  * pipeline_maturity);
-    L.Booked_Sav_8pct(i)  = CashStruct.Cum_Savings(i) + (1 - alpha_att) * sum(D_8pct .* psi_persist .* sav_fine(idx_fwd)  * pipeline_maturity);
-    L.Booked_Fisc_2pct(i) = CashStruct.Cum_TotFisc(i) + (1 - alpha_att) * sum(D_2pct .* psi_persist .* fisc_fine(idx_fwd) * pipeline_maturity);
-    L.Booked_Fisc_8pct(i) = CashStruct.Cum_TotFisc(i) + (1 - alpha_att) * sum(D_8pct .* psi_persist .* fisc_fine(idx_fwd) * pipeline_maturity);
-    L.Booked_GDP_2pct(i)  = CashStruct.Cum_dGDP(i)    + (1 - alpha_att) * sum(D_2pct .* psi_persist .* gdp_fine(idx_fwd)  * pipeline_maturity);
-    L.Booked_GDP_8pct(i)  = CashStruct.Cum_dGDP(i)    + (1 - alpha_att) * sum(D_8pct .* psi_persist .* gdp_fine(idx_fwd)  * pipeline_maturity);
-end
-end
-
-%% ========================================================================
-%  HELPER 2: 2-PANEL & STANDALONE SINGLE-PANEL PUBLICATION PLOTTER
+%  HELPER 1: 2-PANEL & STANDALONE SINGLE-PANEL PUBLICATION PLOTTER
 %  ========================================================================
 function plot_two_panel_ledger(L, TitleLabel, ShortTag, AnchorTag, OutputDir)
 if nargin < 4 || isempty(AnchorTag)
@@ -445,109 +328,3 @@ fprintf('  -> Saved Year 5 Audit Bar Plots:\n     1) %s\n     2) %s\n     3) %s\
 
 end
 
-%% ========================================================================
-%  HELPER 5: CONSOLE AUDIT SUMMARY TABLE
-%  ========================================================================
-function print_regional_audit_summary(Out, regions)
-idx_y5 = find(Out.years == 5, 1);
-if isempty(idx_y5), idx_y5 = 2; end
-
-fprintf('\n========================================================================================================\n');
-fprintf(' YEAR %d PARLIAMENTARY AUDIT: 4-REGION ACTUARIAL CONTINUATION VALUATION (NZD BILLIONS, REAL 2025$)\n', Out.years(idx_y5));
-fprintf('========================================================================================================\n');
-fprintf('%-10s | %8s | %9s | %15s | %17s | %17s | %15s\n', ...
-    'Region', 'Outlay', 'Cash Fisc', 'Booked Sav (2%)', 'Booked Fisc (2%)', 'Booked Fisc (8%)', 'Booked GDP (2%)');
-fprintf('--------------------------------------------------------------------------------------------------------\n');
-for r = 1:length(regions)
-    reg = regions{r};
-    L   = Out.Reg.(reg);
-    fprintf('%-10s | %8.2f | %9.2f | %15.2f | %17.2f | %17.2f | %15.2f\n', ...
-        reg, L.Cum_Inv(idx_y5), L.Cum_TotFisc(idx_y5), L.Booked_Sav_2pct(idx_y5), ...
-        L.Booked_Fisc_2pct(idx_y5), L.Booked_Fisc_8pct(idx_y5), L.Booked_GDP_2pct(idx_y5));
-end
-fprintf('--------------------------------------------------------------------------------------------------------\n');
-fprintf('%-10s | %8.2f | %9.2f | %15.2f | %17.2f | %17.2f | %15.2f\n', ...
-    'National', Out.Cum_Inv(idx_y5), Out.Cum_TotFisc(idx_y5), Out.Booked_Sav_2pct(idx_y5), ...
-    Out.Booked_Fisc_2pct(idx_y5), Out.Booked_Fisc_8pct(idx_y5), Out.Booked_GDP_2pct(idx_y5));
-fprintf('========================================================================================================\n\n');
-end
-
-%% ========================================================================
-%  HELPER 6: SPATIAL ALLOCATION & STANDALONE FALLBACK CALIBRATION
-%  ========================================================================
-function Out_Cash = build_default_4region_cash_flows(regions, DataSpec)
-if nargin < 2 || isempty(DataSpec) || ischar(DataSpec) || isstring(DataSpec)
-    if nargin < 2 || isempty(DataSpec), DataSpec = Load_Empirical_Profile('NZ_Dunedin1972');
-    else, DataSpec = Load_Empirical_Profile(DataSpec); end
-end
-years = 0:5:60;
-
-% Empirical cohort multipliers loaded directly from DataSpec.Actuarial (1.00/1.00 Dunedin vs 1.28/1.12 GUiNZ)
-sav_mult = DataSpec.Actuarial.Sav_Multiplier;
-gdp_mult = DataSpec.Actuarial.GDP_Wave_Multiplier;
-
-annual_inv = zeros(size(years));
-annual_inv(2:end) = 3.6 + 0.3 * (1 - exp(-0.06 * years(2:end)));
-
-annual_sav = zeros(size(years));
-annual_gdp = zeros(size(years));
-for idx = 2:length(years)
-    y = years(idx);
-    if y < 20
-        annual_sav(idx) = sav_mult * 0.9 * (y / 20.0);
-    else
-        annual_sav(idx) = sav_mult * (0.9 + 6.8 * (1 - exp(-0.08 * (y - 15))));
-    end
-    eng_A = 14.5 * (1 - exp(-0.11 * y));
-    eng_B = gdp_mult * (y >= 15) * (28.0 / (1 + exp(-0.14 * (y - 32))));
-    annual_gdp(idx) = eng_A + eng_B;
-end
-
-Out_Cash.years          = years;
-Out_Cash.Annual_Inv     = annual_inv;
-Out_Cash.Annual_Savings = annual_sav;
-Out_Cash.Annual_dGDP    = annual_gdp;
-Out_Cash.Annual_dTax    = 0.288 * annual_gdp;
-Out_Cash.Annual_TotFisc = annual_sav + Out_Cash.Annual_dTax;
-Out_Cash.Cum_Inv        = cumtrapz(years, Out_Cash.Annual_Inv);
-Out_Cash.Cum_Savings    = cumtrapz(years, Out_Cash.Annual_Savings);
-Out_Cash.Cum_dGDP       = cumtrapz(years, Out_Cash.Annual_dGDP);
-Out_Cash.Cum_TotFisc    = Out_Cash.Cum_Savings + cumtrapz(years, Out_Cash.Annual_dTax);
-
-Out_Cash = split_national_into_4regions(Out_Cash, regions, DataSpec);
-end
-
-function Out_Cash = split_national_into_4regions(Out_Cash, regions, DataSpec)
-if nargin < 3 || isempty(DataSpec) || ischar(DataSpec) || isstring(DataSpec)
-    if nargin < 3 || isempty(DataSpec), DataSpec = Load_Empirical_Profile('NZ_Dunedin1972');
-    else, DataSpec = Load_Empirical_Profile(DataSpec); end
-end
-years = Out_Cash.years;
-
-% Spatial investment, acute cost-avoidance, and GDP incidence shares from DataSpec.Reg_Table
-w_inv = DataSpec.Reg_Table.act_w_inv(:)';
-w_sav = DataSpec.Reg_Table.act_w_sav(:)';
-w_gdp = DataSpec.Reg_Table.act_w_gdp(:)';
-
-for r = 1:length(regions)
-    reg = regions{r};
-    Out_Cash.Reg.(reg).Annual_Inv     = w_inv(r) * Out_Cash.Annual_Inv;
-    Out_Cash.Reg.(reg).Annual_Savings = w_sav(r) * Out_Cash.Annual_Savings;
-    Out_Cash.Reg.(reg).Annual_dGDP    = w_gdp(r) * Out_Cash.Annual_dGDP;
-    Out_Cash.Reg.(reg).Annual_dTax    = 0.288    * Out_Cash.Reg.(reg).Annual_dGDP;
-    Out_Cash.Reg.(reg).Annual_TotFisc = Out_Cash.Reg.(reg).Annual_Savings + Out_Cash.Reg.(reg).Annual_dTax;
-
-    Out_Cash.Reg.(reg).Cum_Inv        = cumtrapz(years, Out_Cash.Reg.(reg).Annual_Inv);
-    Out_Cash.Reg.(reg).Cum_Savings    = cumtrapz(years, Out_Cash.Reg.(reg).Annual_Savings);
-    Out_Cash.Reg.(reg).Cum_dGDP       = cumtrapz(years, Out_Cash.Reg.(reg).Annual_dGDP);
-    Out_Cash.Reg.(reg).Cum_TotFisc    = Out_Cash.Reg.(reg).Cum_Savings + cumtrapz(years, Out_Cash.Reg.(reg).Annual_dTax);
-end
-end
-
-function val = get_param_or_default(S, fname, default_val)
-if isstruct(S) && isfield(S, fname) && ~isempty(S.(fname))
-    val = S.(fname);
-else
-    val = default_val;
-end
-end

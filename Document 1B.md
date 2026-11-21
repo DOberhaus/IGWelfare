@@ -529,6 +529,41 @@ Finally, note that in `SS1` and `SS2`, the critical disposable-income boundary $
 
 ---
 
+### 3.5 Compositional Policy Algebra & General-Equilibrium Stress-Test of the 2024–2026 Domestic Policy Vector
+
+To evaluate how individual policy adjustments interact across coupled lifecycle, municipal, and civic systems—and to enable researchers to compose arbitrary counterfactual packages without procedural script edits—`IGWelfare` formalizes 15 ongoing domestic institutional commitments (`profiles/NZ_Dunedin1972/policies/commitment_catalog.csv` and `policy_bundles.yaml`, evaluated via `Compose_Policy_Bundle.m` and `Compute_Policy_Composition_Batch.m`). Under **Convention 2 (Natural Policy-Instrument Orientation)**, every commitment `C01`–`C15` carries a neutral statutory identifier and a signed dial $`u_i \in (-\infty, +\infty)`$:
+* **Public Capability, Health, Water, & Civic Stewardship Commitments (`C01–C08`, `C12–C15`):** $`u_i > 0`$ strengthens or expands the institutional commitment; $`u_i < 0`$ retrenches or defers it.
+* **Tax-Threshold, Investor-Visa, & Asset-Expensing Dials (`C09–C11`):** $`u_i > 0`$ enacts personal tax threshold relief (`-tau_l`), foreign investor capital access (`+lambda_col`, `+z_h`, luxury `+Q_k`), or 20% immediate business asset expensing (`-tau_k`).
+
+Re-anchoring the 5D experience-asset 4-Region + `Abroad` engine ($`\Delta t = 3\ \mathrm{yr}, J = 27`$, canonical discount factor $`\beta_{\mathrm{hh}} = 0.985^{\Delta t}`$, $`\beta_{\mathrm{firm}} = 0.9815^{\Delta t}`$ in `Configure_Grid_And_Prefs.m`) to the late-2023 baseline (`baseline_2023`), direct municipal water/rates shifts (`C14`) and cultural/civic adjustments (`C15`) enter at unit statutory scale (`DirectScale = 1.0000`), while macro announcement commitments (`C01–C13`) enter at calibrated pass-through `Core13Scale = 0.5915` (`Run_Policy_Composition_Suite.m`).
+
+#### 3.5.1 Solved 5D Phase-Split 4-Region + `Abroad` Compositional Decomposition ($`\Delta t = 3\ \mathrm{yr}, J = 27`$)
+
+*All figures report Consumption-Equivalent welfare changes (`Delta CE %`) vs. `baseline_2023` (`1.0% CE = NZD 2.38B/yr`; LTFM-anchored baseline = `-16.21% CE`).*
+
+| Policy Bundle (`Compose_Policy_Bundle.m`) | Stage-1 PE (`Nat`) | Stage-3 `Rural` | Stage-3 `Small` | Stage-3 `Large` (Wgtn) | Stage-3 `Auckland` | Stage-3 `National` (`LTFM`) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`1. Retrenchment_10` (`C01–C08, C12–C13 = -1`)** | `-0.64%` | `-2.82%` | `-3.24%` | **`-5.59%`** | `-5.18%` | **`-4.44%`** (`-20.65%`) |
+| **`2. TaxVisaExp_3` (`C09–C11 = +1`)** | `+0.50%` | `+0.67%` | `+0.65%` | `+0.79%` | `+0.64%` | **`+0.69%`** (`-15.52%`) |
+| **`3A. Combined_13` (`1 (+) 2` Composed)** | **`-0.14%`** | `-1.95%` | `-2.55%` | **`-4.82%`** | `-4.55%` | **`-3.73%`** (`-19.94%`) |
+| **`4. WaterShift_C14` (`C14 = -1` Alone)** | `-0.96%` | `-0.88%` | `-0.90%` | **`-1.34%`** | `-0.96%` | **`-1.03%`** (`-17.24%`) |
+| **`5A. CivicCut_C15m` (`C15 = -1` Private Bellman)** | `-0.01%` | `-0.40%` | `-0.39%` | **`-0.62%`** | `-0.39%` | **`-0.45%`** (`-1.74%` 4-Wedge*) |
+| **`3B. Domestic_15` (`1 (+) 2 (+) 4 (+) 5A`)** | `-1.08%` | `-3.07%` | `-3.74%` | **`-6.63%`** | `-5.81%` | **`-5.09%`** (`-21.30%`) |
+| **`5B. CivicInv_Doc1E` (`C15 = +1` Private Bellman)** | `+0.03%` | **`+0.80%`** | `+0.78%` | **`+0.80%`** | `+0.69%` | **`+0.76%`** (`+3.40%` 4-Wedge*) |
+| **`6. Sequenced Reform` (`SS1 -> SS2 + Doc 1E`)** | `+3.26%` | **`+23.73%`** | **`+26.29%`** | **`+28.07%`** | **`+31.44%`** | **`+28.08%`** (`+24.68%` Base) |
+
+*\*Note on Two-Sided Civic Gearing (`Compute_Civic_Gearing_Ledger.m`):* Inside the purely private 5D Bellman and $`4 \times 5`$ migration solver, `C15 = -1` (`CivicCut_C15m`, `+0.07% CE` / `+NZD 0.16B/yr` claimed cash saving) inflicts `-0.45% CE` nationally (`-0.62%` in `Large`), while `C15 = +1` (`CivicInv_Doc1E`, `-0.14% CE` / `-NZD 0.33B/yr` Joiner Passport seed) generates `+0.76% CE` in private household utility alone (`+0.80%` in both `Rural` and `Large`). Including the 4-wedge social-cohesion and *Price of Privilege* externalities (`Table 19E` in [Document 1E](./Document%201E.md)) yields **`-1.74% CE` (`24.9x` downward gearing)** at $`u_{15} = -1`$ versus **`+3.40% CE` (`24.3x` upward gearing)** at $`u_{15} = +1`$.
+
+#### 3.5.2 Three Structural Takeaways from Compositional Stress-Testing
+
+1. **Short-Run Partial-Equilibrium Neutrality vs. Long-Run Intergenerational Reversal (`-0.14%` PE to `-3.73%` IG in `Combined_13`):** In Stage-1 short-run partial equilibrium (holding baseline wages, house prices, redundancy hazards, and skills fixed), upfront PAYE threshold relief (`C09 = +1`) nearly masks central-service retrenchment (`-0.14% CE`). Once general-equilibrium house-price pressure, departmental redundancy risk (`C03 = -1`), and lower `z_h` firm ceilings (`C02 = -1`) compound through the $`4 \times 5`$ intergenerational skill and migration matrix, `Combined_13` drops **`-3.59 pp`** to **`-3.73% CE`** (`-4.82%` in `Large`).
+2. **Urban Housing Crowd-Out & Negative Metro Interaction Wedges (`C01` x `C10` -> *Kaiako* Deflator):** In `Large` regional cities and `Auckland`, composing `Retrenchment_10` with `TaxVisaExp_3` produces negative interaction wedges (`-0.021%` and `-0.010% CE` below their additive sum) because investor-visa luxury housing demand (`C10 = +1`) stacks atop rental interest deductibility (`C01 = -1`) to inflate urban $`Q_k`$, depressing effective early-childhood capacity via $`G_{\mathrm{ece}, s}^{\mathrm{eff}}(Q_k) = G_{\mathrm{ece}, s}(Q_{\mathrm{base}, k} / Q_k)^{\nu_{\mathrm{kaiako}}}`$.
+3. **Metropolitan Pincer on `Large` Cities (`1.30x` National Loss, `2.16x` Rural Loss):** Devolving water debt onto council rates bills while capping general non-water rates (`C14 = -1`, lifting `mu_maint` from `4.00%` to `[4.22%, 4.30%, 4.42%, 4.26%]` in `ReturnFn_SpatialHH.m`) and contracting cultural and municipal civic grants (`C15 = -1`) concentrates losses in `Large` regional cities led by Te Whanganui-a-Tara / Wellington (`-6.63%` raw CE vs. `-5.09%` National and `-3.07%` Rural).
+
+![4-Panel Policy Composition Divergence vs. LTFM & Sequenced Reform](./output/NZ_Dunedin1972/Fig_Coalition2024_vs_LTFM_4Panel_Divergence.png)
+
+---
+
 ## 4. Part IV Cross-Reference: Core Model Output Tables (Tables 1 to 17)
 
 ### 4.1 Table 1: Multiphase 4-Region Daruich (2018) & Lee-Seshadri (2019) Welfare Decomposition ($`SS0 \to SS1 \to SS2`$)

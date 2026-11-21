@@ -1,0 +1,81 @@
+Metadata:
+  Schema_Version: "1.0"
+  Catalog_File: "commitment_catalog.csv"
+  Convention: "Convention_2_Ongoing_Institutional_Commitments"
+  Default_Core13_PassThrough: 0.5915
+
+baseline_2023:
+  Label: "0. Pre-Shock 2023 Baseline Anchor (SS0_2023)"
+  Reanchor_2023: true
+
+retrenchment_and_tenure_10:
+  Label: "1. Central Retrenchment & Rental Tax Deductibility (10 Commitments)"
+  Legacy_Alias: "austerity_landlord_only"
+  C01_tenure_tax_neutrality: -1.0
+  C02_public_rd_and_science_capacity: -1.0
+  C03_core_public_service_workforce: -1.0
+  C04_interisland_rail_ferry_corridor: -1.0
+  C05_acute_hospital_and_clinical_capacity: -1.0
+  C06_early_years_and_care_pay_equity: -1.0
+  C07_tertiary_access_and_adult_upskilling: -1.0
+  C08_smokefree_public_health_excise: -1.0
+  C12_educator_real_remuneration_parity: -1.0
+  C13_retirement_match_and_social_rent_buffer: -1.0
+
+tax_visa_expensing_3:
+  Label: "2. Personal Tax Relief, Investor Visa & 20% Asset Expensing (3 Commitments)"
+  Legacy_Alias: "pro_growth_only"
+  C09_working_age_tax_threshold_relief: 1.0
+  C10_investor_visa_capital_inflow: 1.0
+  C11_accelerated_business_asset_expensing: 1.0
+
+combined_13_commitments:
+  Label: "3A. Combined 13 Central Commitments (Retrenchment + Tax/Visa/Expensing)"
+  Legacy_Alias: "first_13_shocks"
+  C01_tenure_tax_neutrality: -1.0
+  C02_public_rd_and_science_capacity: -1.0
+  C03_core_public_service_workforce: -1.0
+  C04_interisland_rail_ferry_corridor: -1.0
+  C05_acute_hospital_and_clinical_capacity: -1.0
+  C06_early_years_and_care_pay_equity: -1.0
+  C07_tertiary_access_and_adult_upskilling: -1.0
+  C08_smokefree_public_health_excise: -1.0
+  C09_working_age_tax_threshold_relief: 1.0
+  C10_investor_visa_capital_inflow: 1.0
+  C11_accelerated_business_asset_expensing: 1.0
+  C12_educator_real_remuneration_parity: -1.0
+  C13_retirement_match_and_social_rent_buffer: -1.0
+
+water_stewardship_shift:
+  Label: "4. Municipal Water Balance-Sheet Shift & Rates Cap Alone (C14 = -1)"
+  Legacy_Alias: "rates_cap_3_waters"
+  C14_national_water_balance_sheet_stewardship: -1.0
+
+civic_commons_contraction:
+  Label: "5A. Cultural, Youth-Sport & Municipal Civic Contraction Alone (C15 = -1)"
+  Legacy_Alias: "arts_and_civic_cuts"
+  C15_grassroots_arts_sport_and_civic_commons: -1.0
+
+civic_commons_expansion_doc1e:
+  Label: "5B. Document 1E Grassroots Civic & Creative Co-Investment Alone (C15 = +1)"
+  Legacy_Alias: "arts_and_civic_investment"
+  C15_grassroots_arts_sport_and_civic_commons: 1.0
+
+domestic_15_bundle:
+  Label: "3B. Full 15 Domestic Commitments (Central 13 + Water Shift + Civic Contraction)"
+  Legacy_Alias: "all_but_ndc"
+  C01_tenure_tax_neutrality: -1.0
+  C02_public_rd_and_science_capacity: -1.0
+  C03_core_public_service_workforce: -1.0
+  C04_interisland_rail_ferry_corridor: -1.0
+  C05_acute_hospital_and_clinical_capacity: -1.0
+  C06_early_years_and_care_pay_equity: -1.0
+  C07_tertiary_access_and_adult_upskilling: -1.0
+  C08_smokefree_public_health_excise: -1.0
+  C09_working_age_tax_threshold_relief: 1.0
+  C10_investor_visa_capital_inflow: 1.0
+  C11_accelerated_business_asset_expensing: 1.0
+  C12_educator_real_remuneration_parity: -1.0
+  C13_retirement_match_and_social_rent_buffer: -1.0
+  C14_national_water_balance_sheet_stewardship: -1.0
+  C15_grassroots_arts_sport_and_civic_commons: -1.0

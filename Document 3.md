@@ -240,7 +240,7 @@ None of New Zealand's four policy constituencies needs to abandon its core missi
 
 For technical reviewers, Treasury analysts, and coalition partners who wish to inspect the exact regional and cohort numbers underlying the figures in Parts I and II, this appendix provides the complete leave-behind tables exported by `Plot_Counterfactuals_And_MirrorInvestments.m` (`Table 19`) and `Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m` (`Tables 21 & 22`).
 
-### Table A.1: The 11-Layer Constructive Synergy Build-Up (SS2 Long-Run Welfare Gain, CE%)
+#### Table A.1: The 11-Layer Constructive Synergy Build-Up (SS2 Long-Run Welfare Gain, CE%)
 
 | **Constructive Tier & Layer (`Table 19`)** | **Policy Constituency ("Owner Lane")** | **Rural (`+20.63%`)** | **Small (`+22.98%`)** | **Large (`+24.57%`)** | **Auckland (`+27.91%`)** | **National (`+24.70%`)** | **Share of National Prize** |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -260,7 +260,7 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 | *Tier 4 Subtotal (The Fiscal, Super-64 & Demographic Closure Stack)* | *Coalition 4 + Full Loop (Iso `+3.94%` + Wedge `+2.62%`)* | *+5.49%* | *+6.27%* | *+6.59%* | *+7.24%* | **+6.56%** | *26.55%* |
 | **GRAND TOTAL (`SS2_3` Fully Integrated Policy)** | **7 Isolated (`+11.23%`, `45.5%`) + 4 Wedges (`+13.47%`, `54.5%`)** | **+20.63%** | **+22.98%** | **+24.57%** | **+27.91%** | **+24.70%** | **100.0%** |
 
-### Table A.2: The 4 × 4 Coalition Dependency Matrix (`Table 22`)
+#### Table A.2: The 4 × 4 Coalition Dependency Matrix (`Table 22`)
 
 | **Policy Constituency (Row $i$)** | **1. Barnardos & Youth** *(ECE + Tuakana)* | **2. WellBeing Alliance** *(Housing + Grant + Whānau)* | **3. GrowthNZ & Venture** *(Firm Capital + $z_l \to z_h$ Jobs)* | **4. Fiscal Stewards & MBAs** *(Debt-Sinking + PAYE Cut)* | **Total Value Connected to Constituency $i$** *(Own Base + 3 Neighbor Wedges)* |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -274,7 +274,7 @@ For technical reviewers, Treasury analysts, and coalition partners who wish to i
 - **Row-and-Column Matrix Identity:** In *Table A.2*, the sum of the 4 Diagonal Own-Silo Bases (`6.33 + 3.52 + 2.21 + 2.49 = +14.55 pp CE`) plus the 6 unique Off-Diagonal Inter-Coalition Wedges (`2.45 + 2.65 + 1.85 + 1.35 + 0.85 + 1.00 = +10.15 pp CE`) equals **`+24.70% CE`**.
 - **Reconciling the +13.47% Sequential Wedges (Table A.1) with the +10.15% Inter-Coalition Wedges (Table A.2):** In *Table A.1*, each instrument is evaluated standalone (**+11.23% CE** isolated total) and attributes **+13.47% CE** to the 4 sequential wedges. When projected onto the 4 × 4 constituency grid in *Table A.2*, **Wedge 1 (+3.32% CE)** is an *intra-coalition* synergy championed within Coalition 1's own human-potential lane, while the **+10.15% CE** of Off-Diagonal Inter-Coalition Wedges operates across distinct coalition boundaries—combining Wedges 2, 3, and 4 with the avoidance of Tier-1 rent and emigration leakage.
 
-### Table A.3: Quantitative Comparison of the Eight 60-Year Macro & Coalition Trajectories (`Table 21`)
+#### Table A.3: Quantitative Comparison of the Eight 60-Year Macro & Coalition Trajectories (`Table 21`)
 
 | **Trajectory & Policy Regime (`Table 21`)** | **Year 0 (2026) Debt / PAYE** | **Year 25 (2050) Debt / PAYE / CE%** | **Year 60 (2086) Net Debt (% GDP)** | **Year 60 Required PAYE $\tau_l$ (%)** | **Year 60 Household Welfare (CE%)** | **Net Swing vs. Sinking `SS0` LTFM Floor** |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |

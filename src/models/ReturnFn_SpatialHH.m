@@ -14,8 +14,8 @@ scale_dt = dt / 5;
 
 %% 1. FULL-LIFECYCLE ADULT BEN-PORATH HUMAN CAPITAL LAW OF MOTION (h -> hprime)
 % Grid spacing on a_grid_hc = [0.45, 0.65, 0.85, 1.00, 1.20, 1.45, 1.80] reaches 0.35 at top;
-% setting tol_hc = max(0.18, 0.16 * h) guarantees at least one feasible hprime for every (h, Ih):
-tol_hc = max(0.18, 0.16 .* h);
+% setting tol_hc = max(0.21, 0.18 .* h) guarantees at least one feasible hprime even under elevated health delta_hc:
+tol_hc = max(0.21, 0.18 .* h);
 if agej < Jr
     h_expected = (1 - delta_hc) .* h + double(l > 0) .* (0.14 * scale_dt) .* (Ih .^ alpha_I) .* (h .^ alpha_H);
     valid_hc   = ~((l == 0) & (Ih > 0)) ...
