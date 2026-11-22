@@ -9,11 +9,11 @@ Output is deterministic. Only registered quantities are checked; see `QUANTITIES
 | :--- | ---: | ---: | ---: |
 | LINK | 5 | 5 | 0 |
 | SANKEY | 1 | 1 | 0 |
-| DOC_VS_DOC | 14 | 14 | 0 |
-| DOC_VS_CSV | 30 | 30 | 0 |
+| DOC_VS_DOC | 17 | 17 | 0 |
+| DOC_VS_CSV | 23 | 23 | 0 |
 | CSV_VS_CSV | 6 | 6 | 0 |
 | REGISTRY | 0 | 0 | 0 |
-| **Total** | **56** | **56** | **0** |
+| **Total** | **52** | **52** | **0** |
 
 Registry: 37 named quantities, 29 Sankey count patterns; 9 documents scanned.
 
@@ -32,209 +32,193 @@ Registry: 37 named quantities, 29 Sankey count patterns; 9 documents scanned.
   - Cites: Document 1A.md:319
 - **ChildCES_aprimeFn.m** *(known author decision)*
   - referenced file is not in the repository
-  - Reason: File existed in earlier history and is gone; 1B:162 and 1B:1010 name it beside HumanCapital_Lifecycle_aprimeFn.m; author to drop or restore.
-  - Cites: Document 1B.md:162, Document 1B.md:1010
+  - Reason: File was deleted in e48aada (2026-10-19); 1B:162 and 1B:956 still name it beside HumanCapital_Lifecycle_aprimeFn.m; author to drop or restore.
+  - Cites: Document 1B.md:162, Document 1B.md:956
 - **SSankey.m** *(known author decision)*
   - referenced file is not in the repository
-  - Reason: Third-party MATLAB function (Document 2B.md:366), not in the repo; author to state source and version.
-  - Cites: Document 2B.md:366
+  - Reason: Third-party MATLAB function (Document 2B.md:367), not in the repo; author to state source and version.
+  - Cites: Document 2B.md:367
 - **Solve_Spatial_GE_Loop.m** *(known author decision)*
   - referenced file is not in the repository
-  - Reason: Another branch supplies this file; re-run the checker after it merges.
-  - Cites: README.md:72, Document 1B.md:860, Document 2B.md:351, Document 2B.md:400
+  - Reason: Not on upstream/main; the danalytics/ge-scaffold branch supplies it; re-run the checker after it merges.
+  - Cites: README.md:72, Document 2B.md:352, Document 2B.md:401
 - **Table16_Actuarial_Continuation_Audit_Dunedin_22.csv** *(known author decision)*
   - referenced file is not in the repository
-  - Reason: Not committed and no .m file writes it; author to commit the output or reword 1B:34, 1B:798.
-  - Cites: Document 1B.md:34, Document 1B.md:798
+  - Reason: Not committed and no .m file names it; author to commit the output or reword 1B:34, 1B:789.
+  - Cites: Document 1B.md:34, Document 1B.md:789
 
 ## SANKEY: Sankey node / gate counts: stated vs actual
 
 - **fiscal_nodes=28** *(known author decision)*
   - stated 28, actual 29 (CSV rows/gates and HTML blocks)
-  - Reason: Comment-only: Plot_ChildFiscal_SSankey.m lines 2/111/208 and getFiscalRibbonNarratives.m:4 say 28; the code, CSVs and HTML have 29.
-  - Cites: Plot_ChildFiscal_SSankey.m:111, Plot_ChildFiscal_SSankey.m:2, Plot_ChildFiscal_SSankey.m:208, getFiscalRibbonNarratives.m:4
+  - Reason: Comment-only: Plot_ChildFiscal_SSankey.m lines 2/111/205 and getFiscalRibbonNarratives.m:4 say 28; the code, CSVs and HTML have 29.
+  - Cites: Plot_ChildFiscal_SSankey.m:111, Plot_ChildFiscal_SSankey.m:2, Plot_ChildFiscal_SSankey.m:205, getFiscalRibbonNarratives.m:4
 
 ## DOC_VS_DOC: Documents disagree with each other
 
+- **CE_SS2_National_Total_pct** *(known author decision)*
+  - SS2 national long-run welfare gain (CE %): documents state 24.24; 24.70 [matches CSV: Table21, Table19]
+  - Reason: README.md:9 (24.24) was not refreshed in the 8 Nov update; all Documents say 24.70.
+  - Cites: README.md:9 (24.24), Document 1A.md:43 (24.70), Document 1A.md:336 (24.70), Document 1A.md:460 (24.70), Document 1A.md:470 (24.70), Document 1A.md:472 (24.70), Document 1A.md:554 (24.70), Document 1A.md:559 (24.70), Document 1A.md:573 (24.70), Document 1A.md:592 (24.70), Document 1A.md:593 (24.70), Document 1A.md:595 (24.70), Document 1B.md:44 (24.70), Document 1B.md:470 (24.70), Document 1B.md:478 (24.70), Document 1B.md:550 (24.70), Document 1C.md:56 (24.70), Document 1C.md:69 (24.70), Document 1C.md:72 (24.70), Document 2B.md:155 (24.70), Document 2B.md:222 (24.70), Document 2B.md:364 (24.70), Document 3.md:21 (24.70), Document 3.md:76 (24.70), Document 3.md:90 (24.70), Document 3.md:94 (24.70), Document 3.md:103 (24.70), Document 3.md:105 (24.70), Document 3.md:186 (24.70), Document 3.md:194 (24.70), Document 3.md:229 (24.70), Document 3.md:245 (24.70), Document 3.md:261 (24.70), Document 3.md:274 (24.70), Document 3.md:288 (24.70)
+- **CE_SS2_WedgeShare_pct** *(known author decision)*
+  - Wedge share of the SS2 national gain (%): documents state 47.3; 54.5 [matches CSV: Table19]
+  - Reason: README.md:9 (47.3%) was not refreshed; Documents say 54.5% and Table19 gives 54.52%.
+  - Cites: README.md:9 (47.3), Document 1A.md:43 (54.5), Document 1A.md:472 (54.5), Document 1A.md:593 (54.5), Document 1A.md:595 (54.5), Document 1C.md:56 (54.5), Document 1C.md:72 (54.5), Document 2B.md:327 (54.5), Document 3.md:21 (54.5), Document 3.md:103 (54.5), Document 3.md:261 (54.5)
+- **CE_SS2_WedgeSum_pct** *(known author decision)*
+  - SS2 national CE from the 4 synergy wedges (%): documents state 11.46; 13.47 [matches CSV: Table19]
+  - Reason: README.md:9 (+11.46) was not refreshed; Documents say +13.47 and Table19 sums to 13.467.
+  - Cites: README.md:9 (11.46), Document 1A.md:472 (13.47), Document 1A.md:593 (13.47), Document 1A.md:595 (13.47), Document 1C.md:56 (13.47), Document 2B.md:327 (13.47), Document 2B.md:364 (13.47), Document 3.md:21 (13.47), Document 3.md:103 (13.47), Document 3.md:261 (13.47), Document 3.md:275 (13.47)
 - **DepRatio_SS0_Baseline_pct** *(known author decision)*
   - SS0 baseline 65+ dependency ratio (%): documents state 31.80; 31.78
-  - Reason: 31.80 (1A:463) and 31.78 (1B:734) both differ from Table8 (31.82); Table 4.7A mirrors typed fallbacks; author refreshes or not.
-  - Cites: Document 1A.md:463 (31.80), Document 1B.md:734 (31.78)
+  - Reason: 31.80 (1A:464) and 31.78 (1B:725) both differ from Table8 (31.8329); Table 4.7A mirrors typed fallbacks; author refreshes or not.
+  - Cites: Document 1A.md:464 (31.80), Document 1B.md:725 (31.78)
 - **DepRatio_SS2_SuperAge64_pct** *(known author decision)*
-  - SS2 effective fiscal dependency ratio at NZ Super age 64 (%): documents state 29.68 [matches CSV: Table8B, Table8]; 29.66
-  - Reason: 1B:739 (29.66) is the typed fallback in Plot_Fertility_SuperSolvency_2Panel.m:63/66; Table8/8B give 29.68 (1A:469, 1B:478).
-  - Cites: Document 1A.md:469 (29.68), Document 1B.md:478 (29.68), Document 1B.md:739 (29.66)
+  - SS2 effective fiscal dependency ratio at NZ Super age 64 (%): documents state 29.68; 29.66
+  - Reason: 1B:730 (29.66) is the typed fallback in Plot_Fertility_SuperSolvency_2Panel.m:63/66; Table8/8B give 29.6723 (1A:470 and 1B:478 say 29.68).
+  - Cites: Document 1A.md:470 (29.68), Document 1B.md:478 (29.68), Document 1B.md:730 (29.66)
 - **IGE_reduction_FullPackage_pct** *(known author decision)*
   - National IGE reduction from the full package (P0_Plus_GrantE / SS2) (%): documents state 33.4; 37.7
-  - Reason: -33.4% is the First-2000-Days lever alone (1A:351, 1B:605); 1B:40, 1C:58, 2B:221/224 attribute it to the package, 1B:608 gives -37.7%. No CSV carries national IGE.
-  - Cites: Document 1B.md:40 (33.4), Document 1C.md:58 (33.4), Document 2B.md:221 (33.4), Document 2B.md:224 (33.4), Document 1B.md:608 (37.7)
+  - Reason: -33.4% is the First-2000-Days lever alone (1A:352, 1B:596); 1B:40, 1C:58, 2B:222/225 attribute it to the package, 1B:599 gives -37.7%. No CSV carries national IGE.
+  - Cites: Document 1B.md:40 (33.4), Document 1C.md:58 (33.4), Document 2B.md:222 (33.4), Document 2B.md:225 (33.4), Document 1B.md:599 (37.7)
 - **PAYE_CUT_PP_SuperAge64** *(known author decision)*
-  - SS2 PAYE cut below the 22.0% statutory rate at age 64 (percentage points): documents state 3.32; 3.12 [matches CSV: Table21]; 3.15 [matches CSV: Table8B]
-  - Reason: 3.12 (1A:334, 1B:549) follows Table21 (18.88); 3.15 follows Table8B; 3.32 (1A:96) matches no CSV value; follows the rate decision above.
-  - Cites: Document 1A.md:96 (3.32), Document 1A.md:334 (3.12), Document 1B.md:549 (3.12), Document 1A.md:459 (3.15), Document 1A.md:469 (3.15), Document 1B.md:478 (3.15), Document 1B.md:542 (3.15), Document 1B.md:739 (3.15), Document 1C.md:50 (3.15), Document 3.md:223 (3.15), Document 3.md:234 (3.15), Document 3.md:288 (3.15)
+  - SS2 PAYE cut below the 22.0% statutory rate at age 64 (percentage points): documents state 3.32; 3.75 [matches CSV: Table21]
+  - Reason: 1A:96 still says 3.32 pp; every other mention (and Table21) says 3.75 pp. 3.32 is a figure left over from an earlier run; author to update.
+  - Cites: Document 1A.md:96 (3.32), Document 1A.md:334 (3.75), Document 1A.md:460 (3.75), Document 1A.md:470 (3.75), Document 1B.md:478 (3.75), Document 1B.md:541 (3.75), Document 1B.md:548 (3.75), Document 1B.md:730 (3.75), Document 1C.md:50 (3.75), Document 3.md:217 (3.75), Document 3.md:228 (3.75), Document 3.md:288 (3.75)
 - **PAYE_SS0_Drift_pp** *(known author decision)*
   - SS0 PAYE drift above 22.0% (percentage points): documents state 1.61 [matches CSV: Table8]; 1.60
-  - Reason: 1B:734 (+1.60 pp) is part of Table 4.7A, see PAYE_SS0_StatusQuo_Drift_pct.
-  - Cites: Document 1A.md:463 (1.61), Document 1B.md:734 (1.60)
+  - Reason: 1B:725 (+1.60 pp) is part of Table 4.7A, see PAYE_SS0_StatusQuo_Drift_pct.
+  - Cites: Document 1A.md:464 (1.61), Document 1B.md:725 (1.60)
 - **PAYE_SS0_StatusQuo_Drift_pct** *(known author decision)*
   - SS0 status-quo required PAYE rate at NZ Super age 65 (%): documents state 23.61 [matches CSV: Table8, Table8B]; 23.60
-  - Reason: Remaining 23.60 is 1B:734 inside Table 4.7A, which mirrors typed fallbacks in Plot_Fertility_SuperSolvency_2Panel.m:55-67; refresh the whole table or leave.
-  - Cites: Document 1A.md:458 (23.61), Document 1A.md:463 (23.61), Document 1B.md:44 (23.61), Document 1B.md:479 (23.61), Document 1B.md:734 (23.60)
-- **PAYE_SS2_SuperAge64_pct** *(known author decision)*
-  - SS2 required working-age PAYE rate at NZ Super age 64 (%): documents state 18.88 [matches CSV: Table21]; 18.85 [matches CSV: Table8B, Table8]; 18.5
-  - Reason: 18.88 (1A:334/341, 1B:549) matches Table21 Year 60; 18.85 matches Table8/Table8B; 18.5 (1B:66/88) matches neither. Author picks the canonical rate.
-  - Cites: Document 1A.md:334 (18.88), Document 1A.md:341 (18.88), Document 1B.md:549 (18.88), Document 1A.md:341 (18.85), Document 1A.md:459 (18.85), Document 1A.md:469 (18.85), Document 1B.md:44 (18.85), Document 1B.md:470 (18.85), Document 1B.md:478 (18.85), Document 1B.md:542 (18.85), Document 1B.md:739 (18.85), Document 1C.md:50 (18.85), Document 1C.md:62 (18.85), Document 1C.md:70 (18.85), Document 1C.md:102 (18.85), Document 2B.md:155 (18.85), Document 2B.md:256 (18.85), Document 3.md:96 (18.85), Document 3.md:143 (18.85), Document 3.md:223 (18.85), Document 3.md:234 (18.85), Document 3.md:266 (18.85), Document 3.md:303 (18.85), Document 1B.md:66 (18.5), Document 1B.md:88 (18.5)
+  - Reason: Remaining 23.60 is 1B:725 inside Table 4.7A, which mirrors typed fallbacks in Plot_Fertility_SuperSolvency_2Panel.m:50-67; refresh the whole table or leave.
+  - Cites: Document 1A.md:459 (23.61), Document 1A.md:464 (23.61), Document 1B.md:44 (23.61), Document 1B.md:479 (23.61), Document 1B.md:725 (23.60)
+- **PAYE_SS2_SuperAge65_pct** *(known author decision)*
+  - SS2 required working-age PAYE rate at NZ Super age 65 (%): documents state 17.97; 18.57
+  - Reason: 1A:456 still says 18.57% at Age 65; 1A:459 and every other document say 17.97% (CSV Table8B gives 18.5628, which matches neither); author to pick.
+  - Cites: Document 1A.md:72 (17.97), Document 1A.md:327 (17.97), Document 1A.md:342 (17.97), Document 1A.md:459 (17.97), Document 1A.md:469 (17.97), Document 1B.md:44 (17.97), Document 1B.md:66 (17.97), Document 1B.md:470 (17.97), Document 1B.md:479 (17.97), Document 1C.md:62 (17.97), Document 1C.md:69 (17.97), Document 2B.md:155 (17.97), Document 1A.md:456 (18.57)
 - **PSI_sandwich** *(known author decision)*
   - psi_sandwich (sandwich-generation elder-care drag) as written in the text: documents state 0.350; 0.35; 0.28
   - Reason: Two parameters share one symbol: 0.35 = Params.psi_sandwich_wrk_drag (Configure_TimeGrid_Params.m:121); 0.28 = literal in HumanCapital_Lifecycle_aprimeFn.m:38 (2T:73). Author to rename one.
-  - Cites: Document 1B.md:458 (0.350), Document 2B.md:454 (0.350), Document 2B.md:148 (0.35), Document 3.md:108 (0.35), Document 2T.md:73 (0.28)
+  - Cites: Document 1B.md:458 (0.350), Document 2B.md:455 (0.350), Document 2B.md:148 (0.35), Document 3.md:102 (0.35), Document 2T.md:73 (0.28)
 - **SS0_Corner_ic0_pct** *(known author decision)*
   - National SS0 share in the unmitigated i_c = 0 corner (%): documents state 23.2; 24.00
-  - Reason: Doc tables predate the 2026-11-05 Table14/15 regeneration (87 of 90 cells of 1B Table 3.1 differ); re-sync is the author's call.
+  - Reason: 1A:270, 1B:280 (23.2) and 1B:254 (24.00) disagree; neither matches Table14/15 (21.29), which were regenerated after the doc tables were written; re-sync is the author's call.
   - Cites: Document 1A.md:270 (23.2), Document 1B.md:280 (23.2), Document 1B.md:254 (24.00)
 - **SS0_Hardship_Node1_pct** *(known author decision)*
   - National SS0 birth share in material and severe hardship (Node 1) (%): documents state 9.5; 9.80; 9.8
   - Reason: Same as SS0_Corner_ic0_pct.
-  - Cites: Document 1A.md:270 (9.5), Document 1B.md:279 (9.5), Document 1B.md:253 (9.80), Document 2B.md:479 (9.8)
+  - Cites: Document 1A.md:270 (9.5), Document 1B.md:279 (9.5), Document 1B.md:253 (9.80), Document 2B.md:480 (9.8)
 - **SS0_LaunchTier_Core_pct** *(known author decision)*
   - National SS0 adult-launch tier share, Core skill (h3-h5) (%): documents state 54.50; 61.1
-  - Reason: 1B:256 (54.5) vs 1B:282 (61.1); neither matches Table14/15 (64.30).
+  - Reason: 1B:256 (54.5) vs 1B:282 (61.1); neither matches Table14/15 (63.98).
   - Cites: Document 1B.md:256 (54.50), Document 1B.md:282 (61.1)
 - **SS0_LaunchTier_Struggling_pct** *(known author decision)*
   - National SS0 adult-launch tier share, Struggling (h1-h2) (%): documents state 22.00; 23.5
-  - Reason: 1B:256 (22.00) vs 1B:282 (23.5); Table14/15 give 21.95.
+  - Reason: 1B:256 (22.00) vs 1B:282 (23.5); Table14/15 give 21.98.
   - Cites: Document 1B.md:256 (22.00), Document 1B.md:282 (23.5)
 - **SS0_LaunchTier_Thriving_pct** *(known author decision)*
   - National SS0 adult-launch tier share, Thriving (h6-h7) (%): documents state 23.2; 23.50; 15.4; 23.5
-  - Reason: 23.2/23.5 (1A, 1B:256, 1C) vs 15.4 (1B:282); Table14/15 give 13.75.
+  - Reason: 23.2/23.5 (1A, 1B:256, 1C) vs 15.4 (1B:282); Table14/15 give 14.04.
   - Cites: Document 1A.md:72 (23.2), Document 1B.md:256 (23.50), Document 1B.md:282 (15.4), Document 1C.md:58 (23.5), Document 1C.md:67 (23.5)
 - **Struggling_Hyperbolic_Rural_pct** *(known author decision)*
   - Rural struggling-launch share under the hyperbolic-delay scenario (%): documents state 21.3 [matches CSV: Table8]; 21.4
-  - Reason: 1B:735 (21.4) vs 1A:464 and Table8 (21.3); inside Table 4.7A, see above.
-  - Cites: Document 1A.md:464 (21.3), Document 1B.md:735 (21.4)
+  - Reason: 1B:726 (21.4) vs 1A:465 and Table8 (21.3); inside Table 4.7A, see above.
+  - Cites: Document 1A.md:465 (21.3), Document 1B.md:726 (21.4)
 
 ## DOC_VS_CSV: Documents disagree with a committed CSV
 
 - **CE_FiscalStewards_Standalone_Low_pct** *(known author decision)*
   - Fiscal Stewards standalone CE lower bound (%, magnitude); cited column is Table 21: Table21 min CE_AusterityFirst_Pct (magnitude) = 6.8000 vs documents 10.55
-  - Reason: 3.md:234 cites Table 21 (min -6.80) but -10.55 is Table22 Net_In_Sinking_LTFM_CE; Table A.3 (3.md:294-303) has no -10.55 row.
-  - Cites: Document 3.md:234 (10.55)
-- **CE_SS1_National_Total_pct** *(known author decision)*
-  - SS1 national long-run welfare gain (CE %): Table19 sum of SS1_National_CE over 11 layers = 13.6360 vs documents 14.21
-  - Reason: Same as CE_SS2_IsolatedSum_pct (CSV sums to 13.64).
-  - Cites: Document 1A.md:333 (14.21), Document 1B.md:893 (14.21), Document 2B.md:221 (14.21)
-- **CE_SS2_IsolatedSum_pct** *(known author decision)*
-  - SS2 national CE from the 7 isolated factors (%): Table19 sum of SS2_National_CE over Isolated_Factor rows = 12.2013 vs documents 12.79
-  - Reason: Docs appear to show a T1-rescaled Table 19 (x1.048); committed CSV is unscaled.
-  - Cites: Document 1A.md:595 (12.79), Document 1B.md:862 (12.79), Document 1B.md:893 (12.79), Document 3.md:192 (12.79), Document 3.md:269 (12.79), Document 3.md:282 (12.79), Document 3.md:283 (12.79)
+  - Reason: 3.md:228 cites -10.55% as the low end beside Table 21 (min -6.80); -10.55 is Table22 Net_In_Sinking_LTFM_CE, and Table A.3 (3.md:277 onward) has no -10.55 row.
+  - Cites: Document 3.md:228 (10.55)
 - **CE_SS2_National_Total_pct** *(known author decision)*
-  - SS2 national long-run welfare gain (CE %): Table19 sum of SS2_National_CE over 11 layers = 23.1308 vs documents 24.24
-  - Reason: Docs (24.24) agree with Table8B/Table21; Table19 sums to 23.13 (Plot_Counterfactuals rescales to T1 only when T1 exists).
-  - Cites: README.md:9 (24.24), Document 1A.md:43 (24.24), Document 1A.md:336 (24.24), Document 1A.md:459 (24.24), Document 1A.md:469 (24.24), Document 1A.md:471 (24.24), Document 1A.md:553 (24.24), Document 1A.md:558 (24.24), Document 1A.md:574 (24.24), Document 1A.md:594 (24.24), Document 1A.md:595 (24.24), Document 1A.md:597 (24.24), Document 1B.md:44 (24.24), Document 1B.md:478 (24.24), Document 1B.md:551 (24.24), Document 1B.md:878 (24.24), Document 1B.md:892 (24.24), Document 1B.md:893 (24.24), Document 1C.md:56 (24.24), Document 1C.md:69 (24.24), Document 1C.md:72 (24.24), Document 2B.md:155 (24.24), Document 2B.md:221 (24.24), Document 2B.md:363 (24.24), Document 3.md:21 (24.24), Document 3.md:82 (24.24), Document 3.md:96 (24.24), Document 3.md:100 (24.24), Document 3.md:109 (24.24), Document 3.md:111 (24.24), Document 3.md:192 (24.24), Document 3.md:200 (24.24), Document 3.md:235 (24.24), Document 3.md:269 (24.24), Document 3.md:281 (24.24), Document 3.md:303 (24.24)
+  - SS2 national long-run welfare gain (CE %): Table8B age 64 SS2_National_Welfare_CE_Pct = 24.5400 vs documents 24.24, 24.70; Table21 Year 60 CE_Unified_SS1_SS2_Pct = 24.6995 vs documents 24.24; Table19 sum of SS2_National_CE over 11 layers = 24.6995 vs documents 24.24
+  - Reason: Documents (24.70) agree with Table19 and Table21 Year 60 (24.6995); Table8B age 64 (24.54) is written by FertilityBargaining_Module.m, see PAYE_SS2_SuperAge64_pct; README.md:9 says 24.24.
+  - Cites: README.md:9 (24.24), Document 1A.md:43 (24.70), Document 1A.md:336 (24.70), Document 1A.md:460 (24.70), Document 1A.md:470 (24.70), Document 1A.md:472 (24.70), Document 1A.md:554 (24.70), Document 1A.md:559 (24.70), Document 1A.md:573 (24.70), Document 1A.md:592 (24.70), Document 1A.md:593 (24.70), Document 1A.md:595 (24.70), Document 1B.md:44 (24.70), Document 1B.md:470 (24.70), Document 1B.md:478 (24.70), Document 1B.md:550 (24.70), Document 1C.md:56 (24.70), Document 1C.md:69 (24.70), Document 1C.md:72 (24.70), Document 2B.md:155 (24.70), Document 2B.md:222 (24.70), Document 2B.md:364 (24.70), Document 3.md:21 (24.70), Document 3.md:76 (24.70), Document 3.md:90 (24.70), Document 3.md:94 (24.70), Document 3.md:103 (24.70), Document 3.md:105 (24.70), Document 3.md:186 (24.70), Document 3.md:194 (24.70), Document 3.md:229 (24.70), Document 3.md:245 (24.70), Document 3.md:261 (24.70), Document 3.md:274 (24.70), Document 3.md:288 (24.70)
+- **CE_SS2_WedgeShare_pct** *(known author decision)*
+  - Wedge share of the SS2 national gain (%): Table19 wedge sum / total * 100 = 54.5233 vs documents 47.3
+  - Reason: README.md:9 only (see above).
+  - Cites: README.md:9 (47.3)
 - **CE_SS2_WedgeSum_pct** *(known author decision)*
-  - SS2 national CE from the 4 synergy wedges (%): Table19 sum of SS2_National_CE over SYNERGY_WEDGE rows = 10.9295 vs documents 11.46
-  - Reason: Same as CE_SS2_IsolatedSum_pct (CSV 10.93; share 47.25% rounds to the documented 47.3%).
-  - Cites: README.md:9 (11.46), Document 1A.md:471 (11.46), Document 1A.md:595 (11.46), Document 1A.md:597 (11.46), Document 1B.md:893 (11.46), Document 1C.md:56 (11.46), Document 2B.md:326 (11.46), Document 2B.md:363 (11.46), Document 3.md:109 (11.46), Document 3.md:269 (11.46), Document 3.md:282 (11.46)
-- **CashBreakeven_Year** *(known author decision)*
-  - Year in which Net Unrecovered Public Outlay reaches zero (cash breakeven): Table20 last grid year with Net_Unrecovered_Outlay_Mirror_CE < 0 (breakeven must be later) = 20.0000 vs documents 18.8
-  - Reason: Table20 net outlay is still negative at Year 20.0 and 0.00 by 22.5; docs say 18.8 throughout. Author to re-derive or re-run.
-  - Cites: Document 1A.md:43 (18.8), Document 1A.md:94 (18.8), Document 1A.md:96 (18.8), Document 1A.md:499 (18.8), Document 1A.md:539 (18.8), Document 1A.md:571 (18.8), Document 1A.md:572 (18.8), Document 1B.md:901 (18.8), Document 1B.md:908 (18.8), Document 1C.md:50 (18.8), Document 3.md:82 (18.8), Document 3.md:96 (18.8), Document 3.md:186 (18.8), Document 3.md:198 (18.8), Document 3.md:200 (18.8), Document 3.md:221 (18.8)
+  - SS2 national CE from the 4 synergy wedges (%): Table19 sum of SS2_National_CE over SYNERGY_WEDGE rows = 13.4670 vs documents 11.46
+  - Reason: README.md:9 only (see above).
+  - Cites: README.md:9 (11.46)
 - **DepRatio_SS0_Baseline_pct** *(known author decision)*
-  - SS0 baseline 65+ dependency ratio (%): Table8 row 1 DepRatio_65Plus_Pct = 31.8202 vs documents 31.80, 31.78
+  - SS0 baseline 65+ dependency ratio (%): Table8 row 1 DepRatio_65Plus_Pct = 31.8329 vs documents 31.80, 31.78
   - Reason: Same as above.
-  - Cites: Document 1A.md:463 (31.80), Document 1B.md:734 (31.78)
+  - Cites: Document 1A.md:464 (31.80), Document 1B.md:725 (31.78)
 - **DepRatio_SS2_SuperAge64_pct** *(known author decision)*
-  - SS2 effective fiscal dependency ratio at NZ Super age 64 (%): Table8B age 64 SS2_Effective_DepRatio_Pct = 29.6799 vs documents 29.66; Table8 row 6 DepRatio_65Plus_Pct = 29.6799 vs documents 29.66
+  - SS2 effective fiscal dependency ratio at NZ Super age 64 (%): Table8B age 64 SS2_Effective_DepRatio_Pct = 29.6723 vs documents 29.68, 29.66; Table8 row 6 DepRatio_65Plus_Pct = 29.6723 vs documents 29.68, 29.66
   - Reason: Same as above.
-  - Cites: Document 1B.md:739 (29.66)
+  - Cites: Document 1A.md:470 (29.68), Document 1B.md:478 (29.68), Document 1B.md:730 (29.66)
 - **PAYE_CUT_PP_SuperAge64** *(known author decision)*
-  - SS2 PAYE cut below the 22.0% statutory rate at age 64 (percentage points): 22.0 - Table8B age 64 SS2_Required_PAYE_Pct = 3.1464 vs documents 3.32, 3.12; 22.0 - Table21 Year 60 Tax_Unified_SS1_SS2_Pct = 3.1200 vs documents 3.32, 3.15
-  - Reason: Follows the 18.85 vs 18.88 decision; 3.32 at 1A:96 has no CSV derivation (nearest Table8 gap is 2.77 pp).
-  - Cites: Document 1A.md:96 (3.32), Document 1A.md:334 (3.12), Document 1B.md:549 (3.12), Document 1A.md:459 (3.15), Document 1A.md:469 (3.15), Document 1B.md:478 (3.15), Document 1B.md:542 (3.15), Document 1B.md:739 (3.15), Document 1C.md:50 (3.15), Document 3.md:223 (3.15), Document 3.md:234 (3.15), Document 3.md:288 (3.15)
+  - SS2 PAYE cut below the 22.0% statutory rate at age 64 (percentage points): 22.0 - Table8B age 64 SS2_Required_PAYE_Pct = 3.1567 vs documents 3.32, 3.75; 22.0 - Table21 Year 60 Tax_Unified_SS1_SS2_Pct = 3.7500 vs documents 3.32
+  - Reason: Documents (3.75) agree with Table21 Year 60; Table8B gives 3.1567 for the same reason as PAYE_SS2_SuperAge64_pct; 1A:96 (3.32) matches no CSV value.
+  - Cites: Document 1A.md:96 (3.32), Document 1A.md:334 (3.75), Document 1A.md:460 (3.75), Document 1A.md:470 (3.75), Document 1B.md:478 (3.75), Document 1B.md:541 (3.75), Document 1B.md:548 (3.75), Document 1B.md:730 (3.75), Document 1C.md:50 (3.75), Document 3.md:217 (3.75), Document 3.md:228 (3.75), Document 3.md:288 (3.75)
+- **PAYE_CUT_PP_SuperAge65** *(known author decision)*
+  - SS2 PAYE cut below the 22.0% statutory rate at age 65 (percentage points): 22.0 - Table8B age 65 SS2_Required_PAYE_Pct = 3.4372 vs documents 4.03
+  - Reason: Follows PAYE_SS2_SuperAge65_pct (4.03 vs 22.0 - 18.5628 = 3.4372).
+  - Cites: Document 1A.md:459 (4.03), Document 1A.md:469 (4.03), Document 1B.md:479 (4.03)
 - **PAYE_SS0_Drift_pp** *(known author decision)*
-  - SS0 PAYE drift above 22.0% (percentage points): Table8 row 1 Required_LaborTax_Pct - 22.0 = 1.6104 vs documents 1.60
-  - Reason: 1B:734 (+1.60 pp) is part of Table 4.7A, see PAYE_SS0_StatusQuo_Drift_pct.
-  - Cites: Document 1B.md:734 (1.60)
+  - SS0 PAYE drift above 22.0% (percentage points): Table8 row 1 Required_LaborTax_Pct - 22.0 = 1.6132 vs documents 1.60
+  - Reason: 1B:725 (+1.60 pp) is part of Table 4.7A, see PAYE_SS0_StatusQuo_Drift_pct.
+  - Cites: Document 1B.md:725 (1.60)
 - **PAYE_SS0_StatusQuo_Drift_pct** *(known author decision)*
-  - SS0 status-quo required PAYE rate at NZ Super age 65 (%): Table8 row 1 Required_LaborTax_Pct = 23.6104 vs documents 23.60; Table8B age 65 SS0_StatusQuo_Required_PAYE_Pct = 23.6104 vs documents 23.60
-  - Reason: Same as above (1B:734 only).
-  - Cites: Document 1B.md:734 (23.60)
+  - SS0 status-quo required PAYE rate at NZ Super age 65 (%): Table8 row 1 Required_LaborTax_Pct = 23.6132 vs documents 23.60; Table8B age 65 SS0_StatusQuo_Required_PAYE_Pct = 23.6132 vs documents 23.60
+  - Reason: Same as above (1B:725 only).
+  - Cites: Document 1B.md:725 (23.60)
 - **PAYE_SS2_SuperAge64_pct** *(known author decision)*
-  - SS2 required working-age PAYE rate at NZ Super age 64 (%): Table8B age 64 SS2_Required_PAYE_Pct = 18.8536 vs documents 18.88, 18.5; Table8 row 6 Required_LaborTax_Pct = 18.8536 vs documents 18.88, 18.5; Table21 Year 60 Tax_Unified_SS1_SS2_Pct = 18.8800 vs documents 18.85, 18.5
-  - Reason: Same split: Table21 gives 18.88, Table8/Table8B give 18.8536; Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole.m:107 mentions 18.88.
-  - Cites: Document 1A.md:334 (18.88), Document 1A.md:341 (18.88), Document 1B.md:549 (18.88), Document 1B.md:66 (18.5), Document 1B.md:88 (18.5), Document 1A.md:341 (18.85), Document 1A.md:459 (18.85), Document 1A.md:469 (18.85), Document 1B.md:44 (18.85), Document 1B.md:470 (18.85), Document 1B.md:478 (18.85), Document 1B.md:542 (18.85), Document 1B.md:739 (18.85), Document 1C.md:50 (18.85), Document 1C.md:62 (18.85), Document 1C.md:70 (18.85), Document 1C.md:102 (18.85), Document 2B.md:155 (18.85), Document 2B.md:256 (18.85), Document 3.md:96 (18.85), Document 3.md:143 (18.85), Document 3.md:223 (18.85), Document 3.md:234 (18.85), Document 3.md:266 (18.85), Document 3.md:303 (18.85)
+  - SS2 required working-age PAYE rate at NZ Super age 64 (%): Table8B age 64 SS2_Required_PAYE_Pct = 18.8433 vs documents 18.25; Table8 row 6 Required_LaborTax_Pct = 18.8433 vs documents 18.25
+  - Reason: Documents (18.25) agree with Table21 Year 60 (18.25); Table8/Table8B (18.8433) are written by FertilityBargaining_Module.m:324-325, which does not apply psi_retire_T (the -0.64 pp is applied in WelfareDecomposition_4Region.m:109-110). Author aligns the generators.
+  - Cites: Document 1A.md:72 (18.25), Document 1A.md:327 (18.25), Document 1A.md:334 (18.25), Document 1A.md:342 (18.25), Document 1A.md:460 (18.25), Document 1A.md:470 (18.25), Document 1B.md:44 (18.25), Document 1B.md:66 (18.25), Document 1B.md:88 (18.25), Document 1B.md:470 (18.25), Document 1B.md:478 (18.25), Document 1B.md:541 (18.25), Document 1B.md:548 (18.25), Document 1B.md:730 (18.25), Document 1C.md:50 (18.25), Document 1C.md:62 (18.25), Document 1C.md:70 (18.25), Document 1C.md:100 (18.25), Document 2B.md:155 (18.25), Document 2B.md:257 (18.25), Document 3.md:90 (18.25), Document 3.md:137 (18.25), Document 3.md:217 (18.25), Document 3.md:228 (18.25), Document 3.md:258 (18.25), Document 3.md:288 (18.25)
+- **PAYE_SS2_SuperAge65_pct** *(known author decision)*
+  - SS2 required working-age PAYE rate at NZ Super age 65 (%): Table8B age 65 SS2_Required_PAYE_Pct = 18.5628 vs documents 17.97, 18.57
+  - Reason: Documents (17.97) include the -0.64 pp transfer retirement; Table8B (18.5628, FertilityBargaining_Module.m) does not. Same split as PAYE_SS2_SuperAge64_pct.
+  - Cites: Document 1A.md:72 (17.97), Document 1A.md:327 (17.97), Document 1A.md:342 (17.97), Document 1A.md:459 (17.97), Document 1A.md:469 (17.97), Document 1B.md:44 (17.97), Document 1B.md:66 (17.97), Document 1B.md:470 (17.97), Document 1B.md:479 (17.97), Document 1C.md:62 (17.97), Document 1C.md:69 (17.97), Document 2B.md:155 (17.97), Document 1A.md:456 (18.57)
+- **PAYE_SuperAge65_below_SS0_Drift_pp** *(known author decision)*
+  - SS2 age-65 PAYE minimum below the SS0 status-quo drift (percentage points): Table8B age 65 SS0 - SS2 Required PAYE = 5.0505 vs documents 5.64
+  - Reason: Follows PAYE_SS2_SuperAge65_pct (23.61 - 17.97 = 5.64 vs Table8B 5.0505).
+  - Cites: Document 1A.md:459 (5.64)
 - **SS0_Corner_ic0_pct** *(known author decision)*
-  - National SS0 share in the unmitigated i_c = 0 corner (%): Table15 National SS0_Pop_Pct Node 4 = 21.2200 vs documents 23.2, 24.00; Table14 National SS0_Pop_Pct Node 5 = 21.2200 vs documents 23.2, 24.00
-  - Reason: Same as above (CSV 21.22).
+  - National SS0 share in the unmitigated i_c = 0 corner (%): Table15 National SS0_Pop_Pct Node 4 = 21.2900 vs documents 23.2, 24.00; Table14 National SS0_Pop_Pct Node 5 = 21.2900 vs documents 23.2, 24.00
+  - Reason: Same as above (CSV 21.29).
   - Cites: Document 1A.md:270 (23.2), Document 1B.md:280 (23.2), Document 1B.md:254 (24.00)
 - **SS0_Hardship_Node1_pct** *(known author decision)*
-  - National SS0 birth share in material and severe hardship (Node 1) (%): Table15 National SS0_Pop_Pct Node 1 = 8.9400 vs documents 9.5, 9.80, 9.8; Table14 National SS0_Pop_Pct Node 1 = 8.9400 vs documents 9.5, 9.80, 9.8
-  - Reason: Same as above (CSV 8.94).
-  - Cites: Document 1A.md:270 (9.5), Document 1B.md:279 (9.5), Document 1B.md:253 (9.80), Document 2B.md:479 (9.8)
+  - National SS0 birth share in material and severe hardship (Node 1) (%): Table15 National SS0_Pop_Pct Node 1 = 8.9700 vs documents 9.5, 9.80, 9.8; Table14 National SS0_Pop_Pct Node 1 = 8.9700 vs documents 9.5, 9.80, 9.8
+  - Reason: Same as above (CSV 8.97).
+  - Cites: Document 1A.md:270 (9.5), Document 1B.md:279 (9.5), Document 1B.md:253 (9.80), Document 2B.md:480 (9.8)
 - **SS0_LaunchTier_Core_pct** *(known author decision)*
-  - National SS0 adult-launch tier share, Core skill (h3-h5) (%): Table15 National SS0_Pop_Pct 11_Core_Skill_Tier_h3_h5 = 64.3000 vs documents 54.50, 61.1; Table14 National SS0_Pop_Pct 15_Core_Skill_Tier_h3_h5_Launch = 64.3000 vs documents 54.50, 61.1
+  - National SS0 adult-launch tier share, Core skill (h3-h5) (%): Table15 National SS0_Pop_Pct 11_Core_Skill_Tier_h3_h5 = 63.9800 vs documents 54.50, 61.1; Table14 National SS0_Pop_Pct 15_Core_Skill_Tier_h3_h5_Launch = 63.9800 vs documents 54.50, 61.1
   - Reason: Same as above.
   - Cites: Document 1B.md:256 (54.50), Document 1B.md:282 (61.1)
 - **SS0_LaunchTier_Struggling_pct** *(known author decision)*
-  - National SS0 adult-launch tier share, Struggling (h1-h2) (%): Table15 National SS0_Pop_Pct 10_Struggling_Tier_h1_h2 = 21.9500 vs documents 22.00, 23.5; Table14 National SS0_Pop_Pct 14_Struggling_Tier_h1_h2_Launch = 21.9500 vs documents 22.00, 23.5
+  - National SS0 adult-launch tier share, Struggling (h1-h2) (%): Table15 National SS0_Pop_Pct 10_Struggling_Tier_h1_h2 = 21.9800 vs documents 22.00, 23.5; Table14 National SS0_Pop_Pct 14_Struggling_Tier_h1_h2_Launch = 21.9800 vs documents 22.00, 23.5
   - Reason: Same as above.
   - Cites: Document 1B.md:256 (22.00), Document 1B.md:282 (23.5)
 - **SS0_LaunchTier_Thriving_pct** *(known author decision)*
-  - National SS0 adult-launch tier share, Thriving (h6-h7) (%): Table15 National SS0_Pop_Pct 12_Thriving_Tier_h6_h7 = 13.7500 vs documents 23.2, 23.50, 15.4, 23.5; Table14 National SS0_Pop_Pct 16_Thriving_Tier_h6_h7_Launch = 13.7500 vs documents 23.2, 23.50, 15.4, 23.5
+  - National SS0 adult-launch tier share, Thriving (h6-h7) (%): Table15 National SS0_Pop_Pct 12_Thriving_Tier_h6_h7 = 14.0400 vs documents 23.2, 23.50, 15.4, 23.5; Table14 National SS0_Pop_Pct 16_Thriving_Tier_h6_h7_Launch = 14.0400 vs documents 23.2, 23.50, 15.4, 23.5
   - Reason: Same as above.
   - Cites: Document 1A.md:72 (23.2), Document 1B.md:256 (23.50), Document 1B.md:282 (15.4), Document 1C.md:58 (23.5), Document 1C.md:67 (23.5)
 - **Struggling_Hyperbolic_Rural_pct** *(known author decision)*
   - Rural struggling-launch share under the hyperbolic-delay scenario (%): Table8 row 2 Struggling_Pct_Rural = 21.3470 vs documents 21.4
   - Reason: Same as above.
-  - Cites: Document 1B.md:735 (21.4)
-- **T1_SS1_3_Auckland_CE_pct** *(known author decision)*
-  - Table 1 row SS1_3_LongRun_GE_EndoIntergen, Auckland CE (%): Table1 SS1_3_LongRun_GE_EndoIntergen Auckland_CE_Pct = 17.0646 vs documents 17.73, 17.728
-  - Reason: Docs appear to quote an earlier run of Table 1 (about 3-4% above the committed CSV); re-sync or re-run is the author's call.
-  - Cites: Document 1A.md:333 (17.73), Document 1B.md:548 (17.73), Document 1B.md:548 (17.728)
-- **T1_SS1_3_Large_CE_pct** *(known author decision)*
-  - Table 1 row SS1_3_LongRun_GE_EndoIntergen, Large CE (%): Table1 SS1_3_LongRun_GE_EndoIntergen Large_CE_Pct = 13.7794 vs documents 14.38, 14.384
-  - Reason: Docs appear to quote an earlier run of Table 1 (about 3-4% above the committed CSV); re-sync or re-run is the author's call.
-  - Cites: Document 1A.md:333 (14.38), Document 1B.md:548 (14.38), Document 1B.md:548 (14.384)
-- **T1_SS1_3_Rural_CE_pct** *(known author decision)*
-  - Table 1 row SS1_3_LongRun_GE_EndoIntergen, Rural CE (%): Table1 SS1_3_LongRun_GE_EndoIntergen Rural_CE_Pct = 9.1086 vs documents 9.48, 9.479
-  - Reason: Docs appear to quote an earlier run of Table 1 (about 3-4% above the committed CSV); re-sync or re-run is the author's call.
-  - Cites: Document 1A.md:333 (9.48), Document 1B.md:548 (9.48), Document 1B.md:548 (9.479)
-- **T1_SS1_3_Small_CE_pct** *(known author decision)*
-  - Table 1 row SS1_3_LongRun_GE_EndoIntergen, Small CE (%): Table1 SS1_3_LongRun_GE_EndoIntergen Small_CE_Pct = 11.6281 vs documents 12.18, 12.184
-  - Reason: Docs appear to quote an earlier run of Table 1 (about 3-4% above the committed CSV); re-sync or re-run is the author's call.
-  - Cites: Document 1A.md:333 (12.18), Document 1B.md:548 (12.18), Document 1B.md:548 (12.184)
-- **T1_SS2_3_Auckland_CE_pct** *(known author decision)*
-  - Table 1 row SS2_3_LongRun_GE_EndoIntergen, Auckland CE (%): Table1 SS2_3_LongRun_GE_EndoIntergen Auckland_CE_Pct = 27.3686 vs documents 28.70, 28.697
-  - Reason: Docs appear to quote an earlier run of Table 1 (about 3-4% above the committed CSV); re-sync or re-run is the author's call.
-  - Cites: Document 1A.md:336 (28.70), Document 1B.md:551 (28.70), Document 1B.md:551 (28.697)
-- **T1_SS2_3_Large_CE_pct** *(known author decision)*
-  - Table 1 row SS2_3_LongRun_GE_EndoIntergen, Large CE (%): Table1 SS2_3_LongRun_GE_EndoIntergen Large_CE_Pct = 23.2458 vs documents 24.41, 24.414
-  - Reason: Docs appear to quote an earlier run of Table 1 (about 3-4% above the committed CSV); re-sync or re-run is the author's call.
-  - Cites: Document 1A.md:336 (24.41), Document 1B.md:551 (24.41), Document 1B.md:551 (24.414)
-- **T1_SS2_3_Rural_CE_pct** *(known author decision)*
-  - Table 1 row SS2_3_LongRun_GE_EndoIntergen, Rural CE (%): Table1 SS2_3_LongRun_GE_EndoIntergen Rural_CE_Pct = 17.6307 vs documents 18.21, 18.213
-  - Reason: Docs appear to quote an earlier run of Table 1 (about 3-4% above the committed CSV); re-sync or re-run is the author's call.
-  - Cites: Document 1A.md:336 (18.21), Document 1B.md:551 (18.21), Document 1B.md:551 (18.213)
-- **T1_SS2_3_Small_CE_pct** *(known author decision)*
-  - Table 1 row SS2_3_LongRun_GE_EndoIntergen, Small CE (%): Table1 SS2_3_LongRun_GE_EndoIntergen Small_CE_Pct = 20.6523 vs documents 21.75, 21.750
-  - Reason: Docs appear to quote an earlier run of Table 1 (about 3-4% above the committed CSV); re-sync or re-run is the author's call.
-  - Cites: Document 1A.md:336 (21.75), Document 1B.md:551 (21.75), Document 1B.md:551 (21.750)
+  - Cites: Document 1B.md:726 (21.4)
 - **TFR_Baseline_Auckland** *(known author decision)*
-  - Baseline TFR, Auckland: Table7 baseline TFR_Auckland = 1.4759 vs documents 1.47
+  - Baseline TFR, Auckland: Table7 baseline TFR_Auckland = 1.4756 vs documents 1.47
   - Reason: Same as TFR_Baseline_Rural.
-  - Cites: Document 1B.md:734 (1.47)
+  - Cites: Document 1B.md:725 (1.47)
 - **TFR_Baseline_Rural** *(known author decision)*
-  - Baseline TFR, Rural: Table7 baseline TFR_Rural = 1.8847 vs documents 1.90
+  - Baseline TFR, Rural: Table7 baseline TFR_Rural = 1.8832 vs documents 1.90
   - Reason: Table 4.7A TFRs equal typed fallbacks in Plot_Fertility_SuperSolvency_2Panel.m:50-54; Table7 differs by 0.01-0.02.
-  - Cites: Document 1B.md:734 (1.90)
+  - Cites: Document 1B.md:725 (1.90)
 - **TFR_SS2Age64_Auckland** *(known author decision)*
-  - SS2 (Super age 64) TFR, Auckland: Table7 SS2 age 64 TFR_Auckland = 1.6776 vs documents 1.67
+  - SS2 (Super age 64) TFR, Auckland: Table7 SS2 age 64 TFR_Auckland = 1.6780 vs documents 1.67
   - Reason: Same as TFR_Baseline_Rural.
-  - Cites: Document 1B.md:739 (1.67)
+  - Cites: Document 1B.md:730 (1.67)
 - **TFR_SS2Age64_Rural** *(known author decision)*
   - SS2 (Super age 64) TFR, Rural: Table7 SS2 age 64 TFR_Rural = 2.0816 vs documents 2.09
   - Reason: Same as TFR_Baseline_Rural.
-  - Cites: Document 1B.md:739 (2.09)
+  - Cites: Document 1B.md:730 (2.09)
 
 ## CSV_VS_CSV: Committed CSVs disagree with each other
 
@@ -242,20 +226,20 @@ Registry: 37 named quantities, 29 Sankey count patterns; 9 documents scanned.
   - Table21 min CE_AusterityFirst_Pct (magnitude) = 6.8000  vs  Table22 row 4 Net_In_Sinking_LTFM_CE (magnitude) = 10.5500
   - Reason: Same as above.
 - **CE_SS2_National_Total_pct** *(known author decision)*
-  - Table21 Year 60 CE_Unified_SS1_SS2_Pct = 24.2431  vs  Table19 sum of SS2_National_CE over 11 layers = 23.1308
-  - Reason: Table19 (23.13) vs Table21/Table8B (24.24): export without the T1 rescale.
+  - Table8B age 64 SS2_National_Welfare_CE_Pct = 24.5400  vs  Table19 sum of SS2_National_CE over 11 layers = 24.6995
+  - Reason: Table8B (24.54) vs Table19/Table21 (24.6995): same generator split as PAYE_SS2_SuperAge64_pct.
 - **CE_SS2_National_Total_pct** *(known author decision)*
-  - Table8B age 64 SS2_National_Welfare_CE_Pct = 24.2431  vs  Table19 sum of SS2_National_CE over 11 layers = 23.1308
-  - Reason: Table19 (23.13) vs Table21/Table8B (24.24): export without the T1 rescale.
+  - Table8B age 64 SS2_National_Welfare_CE_Pct = 24.5400  vs  Table21 Year 60 CE_Unified_SS1_SS2_Pct = 24.6995
+  - Reason: Table8B (24.54) vs Table19/Table21 (24.6995): same generator split as PAYE_SS2_SuperAge64_pct.
 - **PAYE_CUT_PP_SuperAge64** *(known author decision)*
-  - 22.0 - Table8B age 64 SS2_Required_PAYE_Pct = 3.1464  vs  22.0 - Table21 Year 60 Tax_Unified_SS1_SS2_Pct = 3.1200
-  - Reason: Follows the 18.85 vs 18.88 decision.
+  - 22.0 - Table8B age 64 SS2_Required_PAYE_Pct = 3.1567  vs  22.0 - Table21 Year 60 Tax_Unified_SS1_SS2_Pct = 3.7500
+  - Reason: Follows the Table21 vs Table8B split for PAYE_SS2_SuperAge64_pct.
 - **PAYE_SS2_SuperAge64_pct** *(known author decision)*
-  - Table8 row 6 Required_LaborTax_Pct = 18.8536  vs  Table21 Year 60 Tax_Unified_SS1_SS2_Pct = 18.8800
-  - Reason: Table21 Year 60 (18.88) vs Table8/Table8B (18.8536): generator inconsistency, author's call.
+  - Table8 row 6 Required_LaborTax_Pct = 18.8433  vs  Table21 Year 60 Tax_Unified_SS1_SS2_Pct = 18.2500
+  - Reason: Table21 Year 60 (18.25) vs Table8/Table8B (18.8433): generator inconsistency, see DOC_VS_CSV entry.
 - **PAYE_SS2_SuperAge64_pct** *(known author decision)*
-  - Table8B age 64 SS2_Required_PAYE_Pct = 18.8536  vs  Table21 Year 60 Tax_Unified_SS1_SS2_Pct = 18.8800
-  - Reason: Table21 Year 60 (18.88) vs Table8/Table8B (18.8536): generator inconsistency, author's call.
+  - Table8B age 64 SS2_Required_PAYE_Pct = 18.8433  vs  Table21 Year 60 Tax_Unified_SS1_SS2_Pct = 18.2500
+  - Reason: Table21 Year 60 (18.25) vs Table8/Table8B (18.8433): generator inconsistency, see DOC_VS_CSV entry.
 
 ## REGISTRY: Registry health (patterns that match nothing, extractor errors)
 
