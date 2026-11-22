@@ -1,8 +1,9 @@
 function [prices, res, hist] = Solve_Spatial_GE_Loop(prices0, excess_demand_fn, opts)
 %% SOLVE_SPATIAL_GE_LOOP  TOOLKIT-INDEPENDENT MARKET-CLEARING SOLVER
-% File: Solve_Spatial_GE_Loop.m
+% File: src/solvers/Solve_Spatial_GE_Loop.m
 % 
-% Now wired to WelfareDecomposition_4Region.m and TransPath_4Region_Master.m
+% Now wired to src/models/Compute_WelfareDecomposition_4Region.m and src/models/Compute_TransitionPath_4Region.m
+% (run from pipelines/WelfareDecomposition_4Region.m and pipelines/TransPath_4Region_Master.m)
 % via Params.ge_method ('anderson' | 'broyden' | 'damped' ) and
 % an appropriate Params.ge_closure ( 'neoclassical' | 'keynesian' ).
 % A ge_method of 'none' or a ge_closure of 'fixed_priced' means no GE.
