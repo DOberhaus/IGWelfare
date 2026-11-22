@@ -260,7 +260,7 @@ Yet New Zealand has been quietly spending down its integrity inheritance:
 ### 1. The Population Cohort Sankey: Closing the Four Priced Adverse Exits
 Tracing a representative birth cohort from Birth (Age 0) through the First 2000 Days (Ages 0–5), the Early-Adolescent Gate (Ages 12–14), Adult Skill Launch (Age 20), and Adulthood Fates (Age 30+) reveals how early hardship cascades into adult fiscal and social costs across **four priced exits**:
 
-<img src="./Output_NZ_4Region_Intergen/Fig_ChildFates_5Stage_2Panel_National_Dunedin_22.png" alt="National 5-Stage Population Cohort Fates Sankey" width="100%" style="display: block; width: 100%; margin: 1.2rem auto; break-inside: avoid; page-break-inside: avoid;" />
+<img src="./output/NZ_Dunedin1972/Fig_ChildFates_5Stage_2Panel_National_Dunedin_22.png" alt="National 5-Stage Population Cohort Fates Sankey" width="100%" style="display: block; width: 100%; margin: 1.2rem auto; break-inside: avoid; page-break-inside: avoid;" />
 
 * **Exit 1 — Entry into Oranga Tamariki State Care:** Driven by severe family hardship, housing crowding, and unmitigated parental stress (costing roughly **NZD 180,000 per care-year**).
 * **Exit 2 — Avoidable Paediatric & Adult Hospitalisations:** Driven by cold, damp, crowded housing and chronic early-life stress.
@@ -275,14 +275,14 @@ Every ribbon in a Sankey diagram is, in truth, a biography in motion—sixty tho
 
 *Interactive Sankey Explorer:* The online versions of these Sankey diagrams feature clickable dialogs for every visible ribbon and node, detailing the structural mechanism driving each flow alongside the empirical data and theoretical literature justifying the calculation.
 
- [Interactive Fates SS0](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFates_SS0_National.html)
- [Interactive Fates SS1](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFates_SS1_National.html)
- [Interactive Fates SS2](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFates_SS1_National.html)
+ [Interactive Fates SS0](https://github.com/MichaelTiemann/IGWelfare/output/NZ_Dunedin1972/Interactive_ChildFates_SS0_National.html)
+ [Interactive Fates SS1](https://github.com/MichaelTiemann/IGWelfare/output/NZ_Dunedin1972/Interactive_ChildFates_SS1_National.html)
+ [Interactive Fates SS2](https://github.com/MichaelTiemann/IGWelfare/output/NZ_Dunedin1972/Interactive_ChildFates_SS1_National.html)
 
 ### 2. The 6-Gate Lifecycle Fiscal Sankey & Reconciling Private Parental Commitment
 Our 6-Gate (29-Node) Dollar-Weighted Fiscal Sankey (`Plot_ChildFiscal_SSankey.m`) traces annual per-birth resource and fiscal flows (in real 2025 NZD thousands per year per cohort birth) across two true-scale regimes separated by a vertical regime-break wave at *Gate 5 (Prime Career & Enterprise Sorting, Ages 30–54)*:
 
-<img src="./Output_NZ_4Region_Intergen/Fig_ChildFiscal_6Gate_2Panel_National_Dunedin_22.png" alt="National 5-Stage Population Cohort Fates Sankey" width="100%" style="display: block; width: 100%; margin: 1.2rem auto; break-inside: avoid; page-break-inside: avoid;" />
+<img src="./output/NZ_Dunedin1972/Fig_ChildFiscal_6Gate_2Panel_National_Dunedin_22.png" alt="National 5-Stage Population Cohort Fates Sankey" width="100%" style="display: block; width: 100%; margin: 1.2rem auto; break-inside: avoid; page-break-inside: avoid;" />
 
 #### **Left Regime — Childhood Resource Inputs & Cohort Career Sorting** *(Gates 1–5, Ages 0–54)*:
    - *Childhood Resource Flows (Gates 1–3, Nodes 1–13, Ages 0–17):* Physically separates *Reactive Hardship & Crisis Remediation Outlays* (bottom deep-crimson and burnt-rust blocks: **Node 1** Material & Severe Hardship Tier 3 Support, **Node 2** Residual AHC Paper Support & Landlord Capture, **Node 5** ECE Corner & Benefit Need, **Node 9** Household Unemployment & Truancy Remediation, and **Node 10** Psychosocial CAMHS & ACC ISSC Trauma Care), *Public Developmental Investments* in universal Birth Benefits (**Node 3**), public ECE wraparound (**Nodes 6–7**), schooling (**Node 11**), and Montessori / *Tuakana–Teina* mentoring (**Node 12**, middle blue and emerald-teal blocks), and *Private Parental Commitment* in out-of-pocket cash and unpaid *whānau* care time (**Nodes 4, 8, and 13**, top warm-gold lane).
@@ -305,9 +305,9 @@ Our 6-Gate (29-Node) Dollar-Weighted Fiscal Sankey (`Plot_ChildFiscal_SSankey.m`
 
 *Interactive Sankey Explorer:* The online versions of these Sankey diagrams feature clickable dialogs for every visible ribbon and node, detailing the structural mechanism driving each flow alongside the empirical data and theoretical literature justifying the calculation.
 
- [Interactive Fiscal SS0](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFiscal_SS0_National.html)
- [Interactive Fiscal SS1](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFiscal_SS1_National.html)
- [Interactive Fiscal SS2](https://github.com/MichaelTiemann/IGWelfare/Output_NZ_4Region_Intergen/Interactive_ChildFiscal_SS1_National.html)
+ [Interactive Fiscal SS0](https://github.com/MichaelTiemann/IGWelfare/output/NZ_Dunedin1972/Interactive_ChildFiscal_SS0_National.html)
+ [Interactive Fiscal SS1](https://github.com/MichaelTiemann/IGWelfare/output/NZ_Dunedin1972/Interactive_ChildFiscal_SS1_National.html)
+ [Interactive Fiscal SS2](https://github.com/MichaelTiemann/IGWelfare/output/NZ_Dunedin1972/Interactive_ChildFiscal_SS1_National.html)
 
 ### 3. Lifecycle Vulnerability Gates in the 18-Node Sankey Architecture
 
@@ -336,7 +336,7 @@ Evaluating lifetime Consumption-Equivalent Variation (CE %) under the veil of ig
 | **Phase 2 (`SS2`): 3. Long-Run GE (Endogenous Intergen)** | Second-generation dynastic skill compounding (struggling launch share compressed to 1.5%) + *Kuia/Whānau* scaffolding + permanent brain-drain closure | **+20.63%** | **+22.98%** | **+24.57%** | **+27.91%** | **+24.70%** | **Long-run national welfare rises +24.70% CE (+40.91 pp net swing above the -16.21% CE LTFM baseline sinkhole)** |
 
 
-![Cohort Welfare Transition Path Across 4 Regions](https://raw.githubusercontent.com/MichaelTiemann/IGWelfare/launch/Output_NZ_4Region_Intergen/Fig1_Daruich_Cohort_Welfare_4Region.png)
+![Cohort Welfare Transition Path Across 4 Regions](output/NZ_Dunedin1972/Fig1_Daruich_Cohort_Welfare_4Region.png)
 
 * **Jump 1 ($c = 0$, Phase 1 *SS1* Launch):** The first birth cohort born under the reform experiences an immediate welfare surge as universal First-2,000-Days wraparound ($`G_{\mathrm{ece},1} = 0.110`$), *Montessori / Tuakana–Teina and Graeme Dingle Foundation* adolescent mentoring ($`G_{\mathrm{ece},2} = 0.085`$), the Age-20 Youth Capital Grant ($E = 0.065$), and Guvenen et al. firm capital reallocation take effect.
 * **Jump 2 ($c = +25$, Phase 2 *SS2* Harvest):** A second structural leap occurs 20 to 25 years into the transition when two forces converge: (i) the children of the first reformed cohort become parents themselves—entering parenthood with thriving human capital and higher earnings (the endogenous intergenerational multiplier)—and (ii) the Crown activates the **2050 50/50 Debt-Sinking and Infrastructure Protocol**, retiring sovereign debt, expanding public infrastructure, lowering the NZ Superannuation eligibility age to **64**, and cutting the working-age PAYE tax rate to **18.25% (including -0.64 pp from retiring 85% of the SS1 geographic transfer)** (or **17.97%** if Super is held at Age 65).
@@ -346,7 +346,7 @@ In human terms, Jump 2 ($c = +25$) is the moment the story comes full circle: th
 <br clear="all" />
 
 ### 2. Breaking the Intergenerational Trap: First 2000 Days vs. Late Remediation
-<img src="./Output_NZ_4Region_Intergen/FigE8_LeeSeshadri_4Region_Counterfactuals.png" alt="Lee-Seshadri 4-Region Counterfactuals" align="right" width="68%" style="float: right; width: 68%; margin: 0 0 1rem 1.5rem; break-inside: avoid;" />
+<img src="./output/NZ_Dunedin1972/FigE8_LeeSeshadri_4Region_Counterfactuals.png" alt="Lee-Seshadri 4-Region Counterfactuals" align="right" width="68%" style="float: right; width: 68%; margin: 0 0 1rem 1.5rem; break-inside: avoid;" />
 
 Our multi-stage lifecycle counterfactuals across Rural, Small, Large, and Auckland regions demonstrate why timing is decisive in human capital policy:
 * **Front-Loading Beats Late Remediation:** Increasing early investment in the First 2000 Days cuts the national Intergenerational Elasticity of Earnings (IGE—where lower numbers mean higher social mobility) by **33.4%** (from **0.350 down to 0.233**), whereas spending the exact same public dollars only during late schooling barely moves mobility.
@@ -356,7 +356,7 @@ Our multi-stage lifecycle counterfactuals across Rural, Small, Large, and Auckla
 <br clear="all" />
 
 ### 3. Housing Tenure & Generational Cleavage: Navigating the Political Economy
-<img src="./Output_NZ_4Region_Intergen/Fig2_Kiyotaki_Housing_Estates_4Region.png" alt="Housing Prices, Homeownership, and Estate Flows" align="right" width="68%" style="float: right; width: 68%; margin: 0 0 1rem 1.5rem; break-inside: avoid;" />
+<img src="./output/NZ_Dunedin1972/Fig2_Kiyotaki_Housing_Estates_4Region.png" alt="Housing Prices, Homeownership, and Estate Flows" align="right" width="68%" style="float: right; width: 68%; margin: 0 0 1rem 1.5rem; break-inside: avoid;" />
 
 Decomposing welfare impacts across housing tenure groups clarifies the transition path for different generations:
 * **Young Renters (Ages 20–44):** Achieve the largest immediate and long-run welfare gains (**+9.8% in Rural up to +16.4% in Auckland**), as cooling land overvaluation lowers rents and user costs while the Youth Capital Grant accelerates entry into homeownership (lifting young adult homeownership in Auckland from **28.0% to 41.2%**).
@@ -369,14 +369,14 @@ Decomposing welfare impacts across housing tenure groups clarifies the transitio
 
 To evaluate the distributional incidence of wealth and estate taxation transparently, we compute the reform's lifetime Consumption-Equivalent (CE %) welfare impact and post-reform net worth retention across **10 official survey-anchored Earn + Own (*Annual Household Income + Net Worth*) benchmarks**—drawn directly from the Statistics New Zealand Household Economic Survey (*HES* June 2024/2025 median household income = NZD 119k; median net worth = NZD 529k), Max Rashbrooke's New Zealand wealth percentile tables (`P90`, `P95`, `P98`, `P99`), the Inland Revenue High-Wealth Individuals Research Project (*HWIRP* median net worth = NZD 50M; median economic income = NZD 2.1M), and the *NBR Rich List* median (NZD 140M):
 
-![Fiscal Give vs Economic Gain](https://raw.githubusercontent.com/MichaelTiemann/IGWelfare/launch/Output_NZ_4Region_Intergen/Fig_WealthBrackets_PanelA_GiveVsGain_Dunedin_22.png)
+![Fiscal Give vs Economic Gain](output/NZ_Dunedin1972/Fig_WealthBrackets_PanelA_GiveVsGain_Dunedin_22.png)
 
 **1. Broad-Based Gains Across the Bottom 90%—And Positive-to-Breakeven Incidence Through the 98th Percentile (`Q1 Renter` through `P98`):** Across the first **90% of New Zealand households**—from the **Q1 Hardship Renter (`45k + 12k`, +25.4% CE)**, **Q2 Young Saver (`85k + 115k`, +19.1% CE)**, **Median Income (`120k + 340k`, +15.2% CE)**, and **Median Net Worth (`135k + 530k`, +11.4% CE)** right up to the **Top 10% (`P90: 240k + 2.15M`, +3.6% CE)**—**100% of households come out net positive regardless of portfolio composition**, with even passive property holders at `P90` remaining slightly ahead (**+0.4% CE**). Extending the lens to the **98th percentile (`P98: 450k + 5.20M`)**, the tier-average welfare change is **+0.1% CE**, with active career and operating-business households at `P98` gaining **+4.3% CE** while passive land-heavy portfolios contribute **-4.4% CE**.
 
 **2. The Guvenen "Use-It-Or-Lose-It" Bifurcation Inside the Top 2%—Active Enterprise Builders (`z_h`) vs. Passive Land Portfolios (`z_l`):** Within the top 2% to 0.01% of the wealth distribution, welfare incidence bifurcates by **asset composition and capital productivity** rather than net worth alone:
 * **Active Growth Entrepreneurs & Operating Investors ($`z_h`$, Green Solid Trajectory):** High-net-worth founders, family-enterprise stewards, and growth investors who deploy capital into productive operating businesses benefit from lower corporate and PAYE tax drag, 60 bps cheaper expansion credit, and a deeper domestic pool of skilled graduates ($`h_6\text{--}h_7`$ rising from 23.5% to 65.0% of the cohort)—remaining **net welfare positive at `P99` (`600k + 8.5M`, +3.6% CE) and the `IRD High-Wealth Median` (`2.1M + 50M`, +1.2% CE), and breaking even at the `NBR Rich List Median` (`6.5M + 140M`, -0.1% CE)**.
 
-![Net Worth Resilience Across Survey-Anchored Earn + Own Tiers](https://raw.githubusercontent.com/MichaelTiemann/IGWelfare/launch/Output_NZ_4Region_Intergen/Fig_WealthBrackets_PanelB_WealthResilience_Dunedin_22.png)
+![Net Worth Resilience Across Survey-Anchored Earn + Own Tiers](output/NZ_Dunedin1972/Fig_WealthBrackets_PanelB_WealthResilience_Dunedin_22.png)
 
 * **Passive Residential Land Hoarders ($`z_{\ell}`$, Red Dashed Trajectory):** High-net-worth households whose portfolios are concentrated in leveraged, low-yield residential land bear the direct incidence of metropolitan house-price cooling (-7.5% in *SS1* to -10.5% in *SS2*), the 1.5% annual book-value land/wealth levy above the family-home threshold, and the estate tax—experiencing a net welfare adjustment ranging from **-2.7% CE at `P95` and -4.4% CE at `P98` to -11.2% CE at the `NBR Rich List Median`**.
 
@@ -408,7 +408,7 @@ To evaluate the distributional incidence of wealth and estate taxation transpare
 | **10. NBR Rich List Median** *(P99.99)* | **`6.5M + 140M`** | -14.7% | +8.8% | **-5.9%** | **-0.1%** vs. **-11.2%** | **NZD 126.3M** *(90.2% of base)* |
 
 ### 4. Dynamic Regional Population Shares & Three-Wave Brain-Drain Closure (60-Year Path)
-<img src="./Output_NZ_4Region_Intergen/Fig3_BrainDrain_Cohesion_4Region.png" alt="Brain Drain Closure and Social Cohesion Recovery" align="right" width="68%" style="float: right; width: 68%; margin: 0 0 1rem 1.5rem; break-inside: avoid;" />
+<img src="./output/NZ_Dunedin1972/Fig3_BrainDrain_Cohesion_4Region.png" alt="Brain Drain Closure and Social Cohesion Recovery" align="right" width="68%" style="float: right; width: 68%; margin: 0 0 1rem 1.5rem; break-inside: avoid;" />
 
 Tracking domestic youth sorting and outward emigration across **Rural**, **Small**, **Large**, **Auckland**, and **Abroad** over a 60-year horizon reveals a self-sustaining recovery:
 * **Closing the Trans-Tasman Brain Drain:** Outward emigration of 20–35 year-olds from Large regional cities falls from **23.41% to 18.26%**, Auckland emigration falls from **19.29% to 14.92%**, and the national abroad brain drain drops from **10.93% to 8.56%**—retaining roughly **3,550 additional skilled young Kiwis per year**.
@@ -444,7 +444,7 @@ When a young couple or solo parent is raising children through the **First 2,000
 
 To test how New Zealand Superannuation interacts with fertility bargaining, childhood hardship, and tax solvency, we evaluate our coupled 4-region lifecycle model across every statutory retirement age from **Age 60 to Age 75** (`FigFert_4Region_Bargaining_Solvency.png` below; full sweep in [Document 1B](Document%201B.md), Table 8B):
 
-![4-Region Fertility Bargaining, Whanau Networks & The NZ Super Retirement-Age U-Curve](https://raw.githubusercontent.com/MichaelTiemann/IGWelfare/launch/Output_NZ_4Region_Intergen/FigFert_4Region_Bargaining_Solvency.png)
+![4-Region Fertility Bargaining, Whanau Networks & The NZ Super Retirement-Age U-Curve](output/NZ_Dunedin1972/FigFert_4Region_Bargaining_Solvency.png)
 
 Sweeping the statutory eligibility age reveals a striking **U-curve in required working-age PAYE taxation** and an **Inverted-U in national household welfare**:
 
@@ -512,7 +512,7 @@ Applying this exact ACC and New Zealand Treasury Cost-Benefit Analysis (CBAx) me
 
 Once forward liability reductions and trajectory shifts are recognised at Year 5, the apparent cash deficit vanishes across every region of New Zealand:
 
-![National Crown Fiscal Ledger and Economy-Wide GDP Prize](https://raw.githubusercontent.com/MichaelTiemann/IGWelfare/launch/Output_NZ_4Region_Intergen/Fig_Actuarial_2Panel_National_Dunedin_22.png)
+![National Crown Fiscal Ledger and Economy-Wide GDP Prize](output/NZ_Dunedin1972/Fig_Actuarial_2Panel_National_Dunedin_22.png)
 
 * **Immediate National Fiscal Breakeven at Year 5 (Panel A):** Against the **NZD 9.19B** five-year investment outlay, recognised direct cost avoidance alone (reduced hospital nights, Oranga Tamariki care placements, youth justice, and long-term benefit dependency) reaches **NZD 10.68B** at the 2.0% Treasury discount rate—exceeding the entire public outlay by **1.16x** at the end of the very first parliamentary cycle. Including the Crown's tax revenue share from higher future earnings lifts the Year 5 recognised total fiscal return to **NZD 35.25B** at the 2.0% rate (**3.84x** the outlay) and **NZD 18.25B** (**1.99x** the outlay) even under the punitive 8.0% commercial sensitivity rate.
 * **The National Economy-Wide GDP Prize (Panel B):** While realized cash-basis GDP growth at Year 5 is **NZD 15.30B** (driven by immediate business capital reallocation from the property-to-enterprise tax shift), the recognised 25-year forward GDP prize at Year 5 is **NZD 85.40B** at the 2.0% discount rate and **NZD 48.05B** at the 8.0% sensitivity rate. Over the full 60-year transition, cumulative realized GDP growth reaches **NZD 1,510.7B** (a **6.86x** macroeconomic multiplier on the NZD 220.1B cumulative investment), while the recognised forward GDP prize reaches **NZD 2,095.8B**.
@@ -562,7 +562,7 @@ With both the lifecycle human-capital channels (*Part IV*) and the 2050 Debt-Sin
 
 The Mirror Investment chart below (`Fig_11Layer_Welfare_And_MirrorInvestments_Dunedin_22.png`, exported alongside `Table 20` by `Plot_Counterfactuals_And_MirrorInvestments.m`) plots the gross annual public investment across our four direct expenditure pillars below the zero line (in both `% Consumption-Equivalent` on the left axis and `NZD Billions/yr` on the right axis, where `1.0% CE = NZD 2.38B/yr`) against the 11-layer stacked household welfare gains above the zero line:
 
-![Mirror-Image 11-Layer Welfare Gains vs Annual Public Investments](https://raw.githubusercontent.com/MichaelTiemann/IGWelfare/launch/Output_NZ_4Region_Intergen/Fig_11Layer_Welfare_And_MirrorInvestments_Dunedin_22.png)
+![Mirror-Image 11-Layer Welfare Gains vs Annual Public Investments](output/NZ_Dunedin1972/Fig_11Layer_Welfare_And_MirrorInvestments_Dunedin_22.png)
 
 - **Below the Zero Line — The Four Annual Public Investment Pillars (`-3.30% CE` = `-NZD 7.86B/yr` Peak in `SS1`; Tapering to `-2.62% CE` = `-NZD 6.24B/yr` in `SS2` as Regional Enterprise Retires the Geographic Transfer):**
   1. **-Inv 1: Universal First-2,000-Days & Farm-to-ECE Wraparound** ($\Delta G_{\mathrm{ece},1}$): **-NZD 3.45B/yr** in *SS1* (`-1.45% CE`), stabilizing at **-NZD 3.21B/yr** in *SS2* (`-1.35% CE`).

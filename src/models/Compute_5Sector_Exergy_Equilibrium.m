@@ -1,7 +1,7 @@
 function Out = Compute_5Sector_Exergy_Equilibrium(Params, RegimeCode, Opts)
 %% PURE 5-SECTOR SMALL OPEN ECONOMY, BIOPHYSICAL EXERGY & EXTERNAL BALANCE SOLVER
 % File: src/models/Compute_5Sector_Exergy_Equilibrium.m
-% Implements Document 4 Outer-Loop Macroeconomic Closure (100% CPU-vectorized, 0 time loops):
+% Implements Unified 5-Sector SOE & Exergy Outer-Loop Closure (Document 2A §2.3-2.5, 100% vectorized, 0 time loops):
 %   - Keen, Ayres & Standish (2019) Second-Law exergy activation (e_N = 0.88 vs e_F = 0.30, sigma_KL_X = 0.07)
 %   - Labrousse & Perdereau (2026) 4-region dual-fuel substitution & fossil import bill
 %   - 5-Sector output & labor allocation (S1 Primary, S2 Weightless z_h, S3 Market Non-Tradable & Grid,

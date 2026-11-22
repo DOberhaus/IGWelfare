@@ -1,6 +1,6 @@
 function test_wave6_multisector_soe()
 %% TEST_WAVE6_MULTISECTOR_SOE
-% Regression gate for Wave 6 (Document 4 Phase II 5-Sector SOE, Exergy, Waring,
+% Regression gate for Wave 6 (Unified 5-Sector SOE, Exergy, Waring,
 % Paris NDC, and Public-Asset Stewardship):
 %   1. 5-Sector + Exergy/NDC profile schema, anti-double-counting & inheritance.
 %   2. Outer-loop 5-sector exergy activation, internal S4A reactive->capacitating release & BoP NFA/Y.

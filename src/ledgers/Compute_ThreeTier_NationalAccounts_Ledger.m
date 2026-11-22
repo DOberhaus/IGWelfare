@@ -1,5 +1,5 @@
 function Out = Compute_ThreeTier_NationalAccounts_Ledger(Params, Opts)
-%% PURE THREE-TIER MACROECONOMIC & WARING SATELLITE SCORECARD (DOCUMENT 4, TABLE 3.2)
+%% PURE THREE-TIER MACROECONOMIC & WARING SATELLITE SCORECARD (DOCUMENT 2B, SECTION 5.6)
 % File: src/ledgers/Compute_ThreeTier_NationalAccounts_Ledger.m
 % Strictly separates and reconciles:
 %   Tier 1: Y_SNA (Conventional SNA Market + Paid-Input-Cost GDP; RBNZ/Treasury denominator)

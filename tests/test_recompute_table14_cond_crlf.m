@@ -12,7 +12,7 @@ function test_recompute_table14_cond_crlf()
 here = fileparts(mfilename('fullpath'));
 repo = fileparts(here);
 addpath(fullfile(repo, 'tools'));
-src = fullfile(repo, 'Output_NZ_4Region_Intergen');
+src = fullfile(repo, 'output', 'NZ_Dunedin1972');
 regions = {'National', 'Auckland', 'Large', 'Small', 'Urban', 'Rural'};
 
 tmp = tempname;

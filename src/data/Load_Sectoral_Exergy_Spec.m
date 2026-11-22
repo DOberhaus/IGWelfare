@@ -1,5 +1,5 @@
 function Spec = Load_Sectoral_Exergy_Spec(DataSpecOrID)
-%% PURE LOADER FOR DOCUMENT 4 5-SECTOR SOE, EXERGY, NDC & PUBLIC-ASSET SPEC
+%% PURE LOADER FOR UNIFIED 5-SECTOR SOE, EXERGY, NDC & PUBLIC-ASSET SPEC
 % File: src/data/Load_Sectoral_Exergy_Spec.m
 % Loads profiles/<Profile_ID>/sectors/sectors_2026.csv and exergy_and_ndc.yaml
 % with automatic profile inheritance (e.g., NZ_GUiNZ2009 -> NZ_Dunedin1972),

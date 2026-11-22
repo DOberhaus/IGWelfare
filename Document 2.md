@@ -3,7 +3,7 @@
 
 **Author:** Michael Tiemann ([mdtiemann@gmail.com](mailto:mdtiemann@gmail.com))  
 **Date:** November 2026 | **Code & Replication Repository:** [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)  
-*Companion to [Document 1A](Document%201A.md) (Strategic Monograph), [Document 1B](Document%201B.md) (Empirical Answer Key), [Document 1C](Document%201C.md) (Executive Brief), [Document 1D](Document%201D.md) (Te Kāhui Waka Sequencing), [Document 1E](Document%201E.md) (Grassroots Civic Mycelium), [Document 1F](Document%201F.md) (Citizens' Assembly Compact), [Document 3](Document%203.md) (Leaving Our Silos), and [Document 4](Document%204.md) (5-Sector Biophysical, Care & Public-Asset Economy)*
+*Companion to [Document 1A](Document%201A.md) (Strategic Monograph), [Document 1B](Document%201B.md) (Empirical Answer Key), [Document 1C](Document%201C.md) (Executive Brief), [Document 1D](Document%201D.md) (Te Kāhui Waka Sequencing), [Document 1E](Document%201E.md) (Grassroots Civic Mycelium), [Document 1F](Document%201F.md) (Citizens' Assembly Compact), and [Document 3](Document%203.md) (Leaving Our Silos)*
 
 ---
 

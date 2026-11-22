@@ -10,7 +10,7 @@ end
 
 origDir = pwd();
 tmpDir  = tempname();
-outDir  = fullfile(tmpDir, 'Output_NZ_4Region_Intergen');
+outDir  = fullfile(tmpDir, 'output', 'NZ_Dunedin1972');
 mkdir(tmpDir);
 mkdir(outDir);
 origVis = get(0, 'DefaultFigureVisible');

@@ -5,7 +5,7 @@
 **Author:** Michael Tiemann (mdtiemann@gmail.com)  
 **Date:** November 2026 | **Code & Replication Repository:** [github.com/MichaelTiemann/IGWelfare](https://github.com/MichaelTiemann/IGWelfare)
 
-**Companion Suite Navigation:** [Document 1A (Master Monograph)](./Document%201A.md) | [Document 1B (Empirical Baselines)](./Document%201B.md) | [Document 1C (Executive Case Statement)](./Document%201C.md) | [Document 1D (Te Kāhui Waka Sequencing)](./Document%201D.md) | [Document 2B (Model Architecture)](./Document%202B.md) | [Document 1F (Citizens' Assembly Compact)](./Document%201F.md) | [Document 3 (Leaving Our Silos)](./Document%203.md) | [Document 4 (5-Sector Biophysical & Care Economy)](./Document%204.md)
+**Companion Suite Navigation:** [Document 1A (Master Monograph)](./Document%201A.md) | [Document 1B (Empirical Baselines)](./Document%201B.md) | [Document 1C (Executive Case Statement)](./Document%201C.md) | [Document 1D (Te Kāhui Waka Sequencing)](./Document%201D.md) | [Document 2B (Model Architecture)](./Document%202B.md) | [Document 1F (Citizens' Assembly Compact)](./Document%201F.md) | [Document 3 (Leaving Our Silos)](./Document%203.md)
 
 ---
 
@@ -137,9 +137,9 @@ Rather than inventing an artificial fifth silo wedge—or introducing color bloa
 
 On both our regional constructive attribution chart and our mirror-investment ledger below, we preserve 100% backward compatibility with the **`+24.68% CE` (`SS2`) / `+15.04% CE` (`SS1`) Default Fiscal-Structural Model** (`Table 19`) by drawing a bold matte-charcoal threshold bar across the top of the 11-layer stack—separating the **`DEFAULT MODEL (+24.68% CE)`** below the bar from the **`ARTS & CIVIC ENABLED CAP (+3.40% CE -> +28.08% CE Total)`** stacked immediately above it using the exact same four Wedge colors (`L03`, `L07`, `L08`, `L11`) with crisp diagonal hatching:
 
-![Constructive 11-Layer + Hatched Arts & Civic Cap Attribution](./output/NZ_Dunedin1972/Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png)
+![Constructive 11-Layer + Hatched Arts & Civic Cap Attribution](output/NZ_Dunedin1972/Fig_Counterfactual_8Scenarios_SS1_SS2_Dunedin_22.png)
 
-![Mirror-Image 11-Layer + Hatched Arts & Civic Cap vs. Annual Public Outlays](./output/NZ_Dunedin1972/Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png)
+![Mirror-Image 11-Layer + Hatched Arts & Civic Cap vs. Annual Public Outlays](output/NZ_Dunedin1972/Fig_7Segment_Welfare_And_MirrorInvestments_Dunedin_22.png)
 
 #### Table 1E.1B: Portrait Summary of 15-Row Constructive & Arts-Enabled Attribution (`Table 19E`)
 

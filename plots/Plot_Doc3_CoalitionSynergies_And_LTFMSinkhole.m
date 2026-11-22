@@ -12,7 +12,7 @@ function Out = Plot_Doc3_CoalitionSynergies_And_LTFMSinkhole(Params)
 %        (Diagonal = Standalone Own-Lane Base; Off-Diagonal = Bilateral Synergy Wedges).
 %      - Panel B: Constituency Outcome Comparison (Standalone under LTFM Drift vs.
 %        2-Term Stop-Go Policy Cycling vs. Static Baseline vs. Unified SS1->SS2 Compact).
-%   3) Exports Table21 and Table22 CSVs into Output_NZ_4Region_Intergen/.
+%   3) Exports Table21 and Table22 CSVs into output/<Profile_ID>/.
 
 if nargin < 1 || isempty(Params), Params = struct(); end
 if ~isfield(Params, 'Pop_Weights_4') || ~isfield(Params, 'DataSpec')

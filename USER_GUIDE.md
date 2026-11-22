@@ -76,8 +76,9 @@ Every ongoing institutional commitment in `profiles/<Profile_ID>/policies/commit
     % Or run the full 5D solved composition & additionality suite:
     run(which('Run_Policy_Composition_Suite.m'));
 
-    % Run the Phase II 5-Sector SOE, Exergy, Atkinson-Waring & Public-Asset Stewardship suite:
+    % Run the 5-Sector SOE, Exergy, Atkinson-Waring, Public-Asset Stewardship & Trim-Tab suite:
     run(which('Run_Phase2_5Sector_Suite.m'));
+    Plot_HelmPhysics_TrimTabs_And_CounterSteering(Configure_Model_Params());
 
     % Run the Document 1F Five-Assembly Clearinghouse & 5-Risk Contingency Stress-Test suite:
     run(which('Run_Contingency_Suite.m'));

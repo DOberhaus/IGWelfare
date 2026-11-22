@@ -1,5 +1,5 @@
 function Out = Plot_Phase2_5Sector_Dashboard(Params)
-%% PLOT_PHASE2_5SECTOR_DASHBOARD (DOCUMENT 4 PHASE II MULTISECTOR, EXERGY, WARING & ASSET SUITE)
+%% PLOT_PHASE2_5SECTOR_DASHBOARD (UNIFIED 5-SECTOR SOE, EXERGY, WARING & ASSET SUITE)
 
 if nargin < 1 || isempty(Params) || ~isfield(Params, 'Profile_ID')
     Params = Configure_Model_Params(struct('dt', 3));
@@ -18,7 +18,7 @@ Eq_Ref = L_3T.Trajectories.Phase2_Reform;
 Eq_Def = L_3T.Trajectories.Phase2_Defence_3Pct;
 
 vis_m = IGW_UI_Style('headless_vis');
-fig   = figure('Name', sprintf('Document 4 Phase II: 5-Sector SOE, Exergy, Waring & Asset Stewardship (%s)', AnchorTag), ...
+fig   = figure('Name', sprintf('Unified 5-Sector SOE, Exergy, Waring & Asset Stewardship (%s)', AnchorTag), ...
     'Color', 'w', 'Position', [30, 30, 1840, 1080], 'Visible', vis_m);
 
 pos1 = [0.062, 0.565, 0.405, 0.365];

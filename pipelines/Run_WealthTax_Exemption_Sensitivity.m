@@ -56,14 +56,16 @@ end
 AnchorTag = DS_wt.Legacy_Alias;
 
 app_out = getappdata(0, 'IGW_OUTPUT_DIR');
-if evalin('base', 'exist(''OutputDir'', ''var'')')
+if isfield(Params_In, 'OutputDir') && ~isempty(Params_In.OutputDir)
+    OutputDir = Params_In.OutputDir;
+elseif isfield(Params_In, 'Profile_Name') || isfield(Params_In, 'DataSpec') || isfield(Params_In, 'Calibration_Anchor')
+    OutputDir = fullfile(fileparts(fileparts(mfilename('fullpath'))), 'output', DS_wt.Profile_ID);
+elseif evalin('base', 'exist(''OutputDir'', ''var'')') && ~isempty(evalin('base', 'OutputDir'))
     OutputDir = evalin('base', 'OutputDir');
 elseif ~isempty(app_out)
     OutputDir = app_out;
-elseif isfolder('Output_NZ_4Region_Intergen')
-    OutputDir = 'Output_NZ_4Region_Intergen';
 else
-    OutputDir = fullfile(pwd, 'output', DS_wt.Profile_ID);
+    OutputDir = Resolve_IGW_OutputDir('', DS_wt.Profile_ID);
 end
 if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
 

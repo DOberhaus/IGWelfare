@@ -1,6 +1,6 @@
 function nChanged = recompute_table14_cond(outDir, dryRun, quiet)
 %RECOMPUTE_TABLE14_COND Repair <SS>_CondPerChild_kNZD in the six Table14 CSVs (MATLAB or Octave).
-%   n = recompute_table14_cond()            rewrites the CSVs in ../Output_NZ_4Region_Intergen
+%   n = recompute_table14_cond()            rewrites the CSVs in ../output/NZ_Dunedin1972
 %   n = recompute_table14_cond(dir)         uses another folder
 %   n = recompute_table14_cond(dir, true)   dry run: report only, write nothing
 %   n = recompute_table14_cond(dir, false, true)   quiet: no console output
@@ -29,7 +29,7 @@ function nChanged = recompute_table14_cond(outDir, dryRun, quiet)
 %   endings; a file mixing the two is rejected.
 here = fileparts(mfilename('fullpath'));
 if nargin < 1 || isempty(outDir)
-    outDir = fullfile(fileparts(here), 'Output_NZ_4Region_Intergen');
+    outDir = fullfile(fileparts(here), 'output', 'NZ_Dunedin1972');
 end
 if nargin < 2 || isempty(dryRun), dryRun = false; end
 if nargin < 3 || isempty(quiet), quiet = false; end

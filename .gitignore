@@ -12,3 +12,4 @@ output/*
 output/NZ_Dunedin1972/*
 !output/NZ_Dunedin1972/*.png
 !output/NZ_Dunedin1972/*.csv
+output/**/*.mat

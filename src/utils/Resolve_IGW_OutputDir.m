@@ -11,14 +11,12 @@ if isempty(igw_root)
     igw_root = fileparts(fileparts(here));
 end
 
-if ~isempty(ExplicitDir) && ~strcmp(ExplicitDir, 'Output_NZ_4Region_Intergen')
+if ~isempty(ExplicitDir)
     OutputDir = char(ExplicitDir);
 elseif evalin('base', 'exist(''OutputDir'', ''var'')') && ~isempty(evalin('base', 'OutputDir'))
     OutputDir = evalin('base', 'OutputDir');
 elseif ~isempty(getappdata(0, 'IGW_OUTPUT_DIR'))
     OutputDir = getappdata(0, 'IGW_OUTPUT_DIR');
-elseif exist(fullfile(pwd, 'Output_NZ_4Region_Intergen'), 'dir') == 7 && ~strcmp(pwd, igw_root)
-    OutputDir = fullfile(pwd, 'Output_NZ_4Region_Intergen');
 else
     OutputDir = fullfile(igw_root, 'output', char(Profile_ID));
 end

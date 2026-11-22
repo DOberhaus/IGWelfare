@@ -1,4 +1,4 @@
-%% PHASE II 5-SECTOR SOE, EXERGY, ATKINSON-WARING & PUBLIC-ASSET SUITE (DOCUMENT 4)
+%% UNIFIED 5-SECTOR SOE, EXERGY, ATKINSON-WARING & PUBLIC-ASSET SUITE (DOCUMENTS 2A & 2B)
 % File: pipelines/Run_Phase2_5Sector_Suite.m
 % Executes the outer-loop 5-Sector Small Open Economy, Keen-Labrousse Exergy,
 % Paris NDC / Pine-Saturation, Three-Tier (SNA / Atkinson-Waring / CE%), and
@@ -14,7 +14,7 @@ end
 OutputDir = Resolve_IGW_OutputDir('', Params.Profile_ID);
 AnchorTag = Params.Calibration_Anchor;
 
-fprintf('\n=== 1. DOCUMENT 4 5-SECTOR EMPIRICAL BASELINE ROLLUP ===\n');
+fprintf('\n=== 1. UNIFIED 5-SECTOR SOE EMPIRICAL BASELINE ROLLUP ===\n');
 SecSpec = Load_Sectoral_Exergy_Spec(Params.Profile_ID);
 disp(SecSpec.MacroSector_Table);
 

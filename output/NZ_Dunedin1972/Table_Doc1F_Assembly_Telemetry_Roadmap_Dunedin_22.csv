@@ -1,6 +1,6 @@
 Assembly,Own_Break_Rigid,Own_Break_Cont,Upstream_Dep_Break_Rigid,Upstream_Dep_Break_Cont,Live_Dashboard_Telemetry_KPIs
-A1_EarlyPotential,0.3,0.7,1,2,"IDI Age-5/14 Struggling Exit %, S4A2 Kaiako Retention, S4A Reactive Release kFTE"
+A1_EarlyPotential,0.5,1.1,1.1,2.1,"IDI Age-5/14 Struggling Exit %, S4A2 Kaiako Retention, S4A Reactive Release kFTE"
 A2_Housing_Whanau,1.1,2.1,0.7,1.4,"Metro Price-to-Income Q_k, 17.3%->100% YouthGrant Gate, Kuia Care Hours & T_k Step-Down"
-A3_Civic_Mycelium,0.9,1.7,1.1,2.6,"Joiner Passport Active Uptake %, Vacant-Space Peppercorn Leases, Taiao Sink MtCO2e"
-A4_Enterprise_Tax,1.1,2.4,0.3,0.8,"S2 Weightless Export Share (RER Cushion), K_N Grid Firming & M_olig, LVT-CorpTax Lockstep"
-A5_Sovereign_Infra,0.3,0.8,0.3,0.7,"Yr-5 CBAx 2% ROI (>=3.0x), Yr-3 Drawdown (<=1.6% GDP), NFA/Y & 70/30 Debt-Shield Trigger"
+A3_Civic_Mycelium,0.9,1.8,1.1,2.6,"Joiner Passport Active Uptake %, Vacant-Space Peppercorn Leases, Taiao Sink MtCO2e"
+A4_Enterprise_Tax,1.1,2.6,0.9,1.8,"S2 Weightless Export Share (RER Cushion), K_N Grid Firming & M_olig, LVT-CorpTax Lockstep"
+A5_Sovereign_Infra,1,2,0.5,1.1,"Yr-5 CBAx 2% ROI (>=3.0x), Yr-3 Drawdown (<=1.6% GDP), NFA/Y & 70/30 Debt-Shield Trigger"

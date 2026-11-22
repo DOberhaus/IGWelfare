@@ -65,11 +65,13 @@ if nargin < 4 || isempty(AnchorTag)
     end
 end
 if nargin < 5 || isempty(OutputDir)
-    if isfolder('Output_NZ_4Region_Intergen')
-        OutputDir = 'Output_NZ_4Region_Intergen';
-    else
-        OutputDir = pwd;
+    prof_id = 'NZ_Dunedin1972';
+    if isstruct(Params) && isfield(Params, 'Profile_ID') && ~isempty(Params.Profile_ID)
+        prof_id = Params.Profile_ID;
+    elseif isstruct(Params) && isfield(Params, 'Profile_Name') && ~isempty(Params.Profile_Name)
+        prof_id = Params.Profile_Name;
     end
+    OutputDir = Resolve_IGW_OutputDir('', prof_id);
 end
 
 years = L.years;

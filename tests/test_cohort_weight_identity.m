@@ -14,7 +14,7 @@ function test_cohort_weight_identity()
 %   is too low by a factor pop/1%.
 here = fileparts(mfilename('fullpath'));
 addpath(here);
-outDir = fullfile(fileparts(here), 'Output_NZ_4Region_Intergen');
+outDir = fullfile(fileparts(here), 'output', 'NZ_Dunedin1972');
 TOL = 0.015;
 regions = {'National', 'Auckland', 'Large', 'Small', 'Urban', 'Rural'};
 scens   = {'SS0', 'SS1', 'SS2'};
