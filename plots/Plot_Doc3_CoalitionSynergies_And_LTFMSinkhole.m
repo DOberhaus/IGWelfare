@@ -190,6 +190,7 @@ T21 = table(Yr_Vec, Debt_SS0_LTFM, Tax_SS0_LTFM, CE_SS0_LTFM, ...
 
 csv21 = fullfile(OutputDir, sprintf('Table21_Doc3_LTFM_Sinkhole_Defense_Trajectories_%s.csv', AnchorTag));
 writetable(T21, csv21);
+if ispc, raw_lf = strrep(fileread(csv21), sprintf('\r\n'), sprintf('\n')); fid_lf = fopen(csv21, 'wb'); fwrite(fid_lf, raw_lf, 'char'); fclose(fid_lf); end
 fprintf('  -> Exported Table 21 (LTFM Drift, 3%% GDP Defense & Stop-Go Trajectories) to: %s\n', csv21);
 
 % =========================================================================
@@ -276,7 +277,7 @@ h_sg_thk  = plot(ax2, Yr_Vec, CE_StopGo_Thick, '-', 'Color', [0.12 0.35 0.72], '
     'DisplayName', sprintf('3b. "Stop-Go" 2-Term (6-Yr) Cycle (State-Contingent 12-Yr Sawtooth: %+.2f%% CE)', CE_StopGo_Thick(end)));
 
 h_silo_b = plot(ax2, Yr_Vec, CE_Barnardos_Silo, '-.', 'Color', [0.88 0.55 0.05], 'LineWidth', 2.1, ...
-    'DisplayName', sprintf('4. Barnardos/Youth Silo Alone vs. LTFM Drift (Net %+.2f%% CE: >100%% Offset by Drift)', CE_Barnardos_Silo(end)));
+    'DisplayName', sprintf('4. Children & Youth Silo Alone vs. LTFM Drift (Net %+.2f%% CE: >100%% Offset by Drift)', CE_Barnardos_Silo(end)));
 h_silo_w = plot(ax2, Yr_Vec, CE_WellBeing_Silo, '-.', 'Color', [0.55 0.35 0.70], 'LineWidth', 2.0, ...
     'DisplayName', sprintf('5. WellBeing/Housing Silo Alone vs. LTFM Drift (Net %+.2f%% CE)', CE_WellBeing_Silo(end)));
 h_aus = plot(ax2, Yr_Vec, CE_Aust_First, '--', 'Color', [0.85 0.32 0.08], 'LineWidth', 2.2, ...
@@ -331,7 +332,7 @@ fprintf('  -> Saved Figure 1b (LTFM + Defense Commitment + Policy Cycling) to: %
 % 4. CONSTRUCT THE 2D (4 x 4) COALITION COMPLEMENTARITY & DEPENDENCY MATRIX
 % =========================================================================
 Coalition_Names = { ...
-    '1. Barnardos & Youth (ECE + Tuakana)'; ...
+    '1. Children & Youth (ECE + Tuakana)'; ...
     '2. WellBeing Alliance (Housing + Grant + Whanau)'; ...
     '3. GrowthNZ & Venture (Firm Capital + Jobs)'; ...
     '4. Fiscal Stewards (Debt-Sinking + PAYE Relief)'};
@@ -388,6 +389,7 @@ T22 = table(Coalition_Names, Silo_Static_4, ...
 
 csv22 = fullfile(OutputDir, sprintf('Table22_Doc3_2D_Coalition_Complementarity_Matrix_%s.csv', AnchorTag));
 writetable(T22, csv22);
+if ispc, raw_lf = strrep(fileread(csv22), sprintf('\r\n'), sprintf('\n')); fid_lf = fopen(csv22, 'wb'); fwrite(fid_lf, raw_lf, 'char'); fclose(fid_lf); end
 fprintf('  -> Exported Table 22 (2D Coalition Complementarity Matrix) to: %s\n', csv22);
 
 % =========================================================================
@@ -426,7 +428,7 @@ for r = 1:4
     end
 end
 
-short_names = {'1. Barnardos/Youth', '2. WellBeing/Housing', '3. GrowthNZ/Venture', '4. Fiscal Stewards'};
+short_names = {'1. Children & Youth', '2. WellBeing/Housing', '3. GrowthNZ/Venture', '4. Fiscal Stewards'};
 set(axA, 'XTick', 1:4, 'XTickLabel', short_names, 'XTickLabelRotation', 15, ...
     'YTick', 1:4, 'YTickLabel', short_names, 'FontSize', 9.2, 'FontWeight', 'bold');
 xlim(axA, [0.45, 4.55]); ylim(axA, [0.45, 4.95]);

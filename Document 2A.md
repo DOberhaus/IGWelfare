@@ -53,7 +53,7 @@ while stock endowments (`YouthGrant` *E*) and proportional tax rates ($`\tau_l, 
 
 ---
 
-## 2. Infinite-Horizon Entrepreneurial Firms, Biophysical Exergy, & the 5-Sector Small Open Economy (Lens 3 & Outer GE Closure)
+## 2. Infinite-Horizon Entrepreneurial Firms, Biophysical Exergy, & the 5-Sector Small Open Economy (Aspect 3 & Outer GE Closure)
 
 Following Guvenen, Kambourov, Kuruscu, Ocampo, and Chen (2023), each region *k* contains a unit measure of infinite-horizon entrepreneurial firms (`Firm_Rural`, `Firm_Small`, `Firm_Large`, `Firm_Auckland`) with state vector $`\left(a_f, z_f\right) \in \mathcal{A}_f \times \mathcal{Z}_{f,k}`$, where $`a_f`$ is firm book equity and $`z_f \in \lbrace z_{\ell,k}, z_{h,k} \rbrace`$ is idiosyncratic entrepreneurial productivity evolving via Markov matrix $`\Pi_{f,k}`$.
 
@@ -77,9 +77,9 @@ $$
 
 Replacing distortionary capital income taxation ($`\tau_k`$) with a book-value wealth/land tax ($`\tau_a = 0.015`$) penalizes low-productivity land-banking firms ($`z_{\ell,k}`$) while leaving high-productivity firms ($`z_{h,k}`$) with a higher marginal saving propensity, shifting the stationary equity distribution $`\Gamma_k\left(a_f, z_f\right)`$ toward $`z_{h,k}`$ and raising endogenous regional total factor productivity (reinforced in Rural and Small regions by breaking farm-gate wholesale monopsony and retail duopoly markups [Ref 49] and anchoring 1.60x–2.16x local food-hub procurement multipliers [Ref 56] that shift household labor draws from $z_l$ toward $z_h$, $\Delta \mu_{z,\mathrm{SS2}} = [+0.0408, +0.0307, +0.0170, +0.0102]$) $`Z_k\left(\Gamma_k\right)`$.
 
-### 2.3 Multi-Resolution Macroeconomic Closure: 1-Sector Aggregate Benchmark vs. 5-Sector Open-Economy Engine
+### 2.3 Five-Sector Small-Open-Economy Macroeconomic Closure
 
-`IGWelfare` solves the 60-year multiphase transition path (`SS0 -> SS1 -> SS2`) across four domestic regions (`Rural`, `Small`, `Large`, `Auckland`) plus an endogenous emigration outside option (`Abroad`) at two selectable outer general-equilibrium resolutions: a **1-Sector Aggregate Spatial OLG Benchmark** (`NZ_4Region_Master.m` / `TransPath_4Region_Master.m`) and the full **5-Sector Biophysical-Exergy & Care-Inclusive Small Open Economy** (`Compute_5Sector_Exergy_Equilibrium.m`). Moving from the 1-sector aggregate benchmark to full 5-sector open-economy closure resolves four structural blind spots without adding a single endogenous household state variable:
+`IGWelfare` solves the 60-year multiphase transition path (`SS0 -> SS1 -> SS2`) across four domestic regions (`Rural`, `Small`, `Large`, `Auckland`) plus an endogenous emigration outside option (`Abroad`) within a unified **5-Sector Biophysical-Exergy & Care-Inclusive Small Open Economy** (`NZ_4Region_Master.m`, `TransPath_4Region_Master.m`, and `Compute_5Sector_Exergy_Equilibrium.m`). Closing the heterogeneous-agent spatial OLG core inside the 5-sector open-economy equilibrium resolves four structural macroeconomic requirements without adding a single endogenous household state variable:
 
 1. **The Small Open Economy (SOE) & Tradable Composition Constraint:** Domestic human-capital, housing, and enterprise reforms only overcome the Long-Term Fiscal Model (`LTFM`) sinkhole [Ref 31, 32] when coupled across the human lifecycle ([Document 3](Document%203.md)). Closing the external accounts answers how a land- and emissions-constrained exporter funds an initial capability incubation window—or sustains a **+150% expansion in national defence spending** (from ~1.2% to 3.0% of GDP, `+NZD 8.0B/yr` [Ref 59])—without triggering a current-account blowout, real exchange rate crowding-out, or widening sovereign risk spreads [Ref 4, 10, 40].
 2. **The Biophysical Energy Illusion:** New Zealand routinely conflates an ~85.5%–88.5% renewable *electricity* grid with clean energy independence, ignoring that roughly 60%–68% of total consumer and primary energy consists of fossil fuels—predominantly imported liquid petroleum products (`~NZD 19.5B/yr`) alongside depleting Taranaki gas and thermal coal firming [Ref 39, 46]. Industrial curtailments during 2024–2026 wholesale power spikes demonstrate that energy is not a minor, smoothly substitutable 4% cost share [Ref 9]; it is a physical capacity constraint governed by domestic hydro-firming bottlenecks and vertically integrated gentailer market power [Ref 39, 49].
@@ -159,7 +159,7 @@ $$
 
 ---
 
-## 3. Finite-Horizon Household Problem Across Lenses 1, 2, and 3
+## 3. Finite-Horizon Household Problem Across Aspects 1, 2, and 3
 
 ### 3.1 State Vector, Decision Grids, & Return Function Signature
 
