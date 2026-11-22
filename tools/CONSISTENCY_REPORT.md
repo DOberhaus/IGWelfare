@@ -24,7 +24,7 @@ Registry: 37 named quantities, 29 Sankey count patterns; 9 documents scanned.
 | Child fates | 18 | 5 | 6 Table15 CSVs; 3 HTML explorers |
 | Child fiscal | 29 | 6 | 6 Table14 CSVs; 3 HTML explorers |
 
-## LINK: Broken links and file references
+## LINK: Unresolved links and file references
 
 - **./Document%201B.md#lifecycle-vulnerability-gates-empirical-baselines-unpaid-buffers-and-policy-analogs** *(known author decision)*
   - anchor does not match any heading in the target file
@@ -32,11 +32,11 @@ Registry: 37 named quantities, 29 Sankey count patterns; 9 documents scanned.
   - Cites: Document 1A.md:319
 - **ChildCES_aprimeFn.m** *(known author decision)*
   - referenced file is not in the repository
-  - Reason: File was deleted in e48aada (2026-10-19); 1B:162 and 1B:956 still name it beside HumanCapital_Lifecycle_aprimeFn.m; author to drop or restore.
+  - Reason: File was deleted in e48aada (2026-10-19); 1B:162 and 1B:956 still name it beside HumanCapital_Lifecycle_aprimeFn.m; for the author to decide: drop or restore.
   - Cites: Document 1B.md:162, Document 1B.md:956
 - **SSankey.m** *(known author decision)*
   - referenced file is not in the repository
-  - Reason: Third-party MATLAB function (Document 2B.md:367), not in the repo; author to state source and version.
+  - Reason: Third-party MATLAB function (Document 2B.md:367), not in the repo; for the author to decide: state source and version.
   - Cites: Document 2B.md:367
 - **Solve_Spatial_GE_Loop.m** *(known author decision)*
   - referenced file is not in the repository
@@ -44,7 +44,7 @@ Registry: 37 named quantities, 29 Sankey count patterns; 9 documents scanned.
   - Cites: README.md:72, Document 2B.md:352, Document 2B.md:401
 - **Table16_Actuarial_Continuation_Audit_Dunedin_22.csv** *(known author decision)*
   - referenced file is not in the repository
-  - Reason: Not committed and no .m file names it; author to commit the output or reword 1B:34, 1B:789.
+  - Reason: Not committed and no .m file names it; for the author to decide: commit the output or reword 1B:34, 1B:789.
   - Cites: Document 1B.md:34, Document 1B.md:789
 
 ## SANKEY: Sankey node / gate counts: stated vs actual
@@ -70,7 +70,7 @@ Registry: 37 named quantities, 29 Sankey count patterns; 9 documents scanned.
   - Cites: README.md:9 (11.46), Document 1A.md:472 (13.47), Document 1A.md:593 (13.47), Document 1A.md:595 (13.47), Document 1C.md:56 (13.47), Document 2B.md:327 (13.47), Document 2B.md:364 (13.47), Document 3.md:21 (13.47), Document 3.md:103 (13.47), Document 3.md:261 (13.47), Document 3.md:275 (13.47)
 - **DepRatio_SS0_Baseline_pct** *(known author decision)*
   - SS0 baseline 65+ dependency ratio (%): documents state 31.80; 31.78
-  - Reason: 31.80 (1A:464) and 31.78 (1B:725) both differ from Table8 (31.8329); Table 4.7A mirrors typed fallbacks; author refreshes or not.
+  - Reason: 31.80 (1A:464) and 31.78 (1B:725) both differ from Table8 (31.8329); Table 4.7A mirrors typed fallbacks; for the author to decide whether to refresh.
   - Cites: Document 1A.md:464 (31.80), Document 1B.md:725 (31.78)
 - **DepRatio_SS2_SuperAge64_pct** *(known author decision)*
   - SS2 effective fiscal dependency ratio at NZ Super age 64 (%): documents state 29.68; 29.66
@@ -82,7 +82,7 @@ Registry: 37 named quantities, 29 Sankey count patterns; 9 documents scanned.
   - Cites: Document 1B.md:40 (33.4), Document 1C.md:58 (33.4), Document 2B.md:222 (33.4), Document 2B.md:225 (33.4), Document 1B.md:599 (37.7)
 - **PAYE_CUT_PP_SuperAge64** *(known author decision)*
   - SS2 PAYE cut below the 22.0% statutory rate at age 64 (percentage points): documents state 3.32; 3.75 [matches CSV: Table21]
-  - Reason: 1A:96 still says 3.32 pp; every other mention (and Table21) says 3.75 pp. 3.32 is a figure left over from an earlier run; author to update.
+  - Reason: 1A:96 still says 3.32 pp; every other mention (and Table21) says 3.75 pp. 3.32 differs from them; for the author to decide whether to update.
   - Cites: Document 1A.md:96 (3.32), Document 1A.md:334 (3.75), Document 1A.md:460 (3.75), Document 1A.md:470 (3.75), Document 1B.md:478 (3.75), Document 1B.md:541 (3.75), Document 1B.md:548 (3.75), Document 1B.md:730 (3.75), Document 1C.md:50 (3.75), Document 3.md:217 (3.75), Document 3.md:228 (3.75), Document 3.md:288 (3.75)
 - **PAYE_SS0_Drift_pp** *(known author decision)*
   - SS0 PAYE drift above 22.0% (percentage points): documents state 1.61 [matches CSV: Table8]; 1.60
@@ -94,11 +94,11 @@ Registry: 37 named quantities, 29 Sankey count patterns; 9 documents scanned.
   - Cites: Document 1A.md:459 (23.61), Document 1A.md:464 (23.61), Document 1B.md:44 (23.61), Document 1B.md:479 (23.61), Document 1B.md:725 (23.60)
 - **PAYE_SS2_SuperAge65_pct** *(known author decision)*
   - SS2 required working-age PAYE rate at NZ Super age 65 (%): documents state 17.97; 18.57
-  - Reason: 1A:456 still says 18.57% at Age 65; 1A:459 and every other document say 17.97% (CSV Table8B gives 18.5628, which matches neither); author to pick.
+  - Reason: 1A:456 still says 18.57% at Age 65; 1A:459 and every other document say 17.97% (CSV Table8B gives 18.5628, which matches neither); for the author to decide which to use.
   - Cites: Document 1A.md:72 (17.97), Document 1A.md:327 (17.97), Document 1A.md:342 (17.97), Document 1A.md:459 (17.97), Document 1A.md:469 (17.97), Document 1B.md:44 (17.97), Document 1B.md:66 (17.97), Document 1B.md:470 (17.97), Document 1B.md:479 (17.97), Document 1C.md:62 (17.97), Document 1C.md:69 (17.97), Document 2B.md:155 (17.97), Document 1A.md:456 (18.57)
 - **PSI_sandwich** *(known author decision)*
   - psi_sandwich (sandwich-generation elder-care drag) as written in the text: documents state 0.350; 0.35; 0.28
-  - Reason: Two parameters share one symbol: 0.35 = Params.psi_sandwich_wrk_drag (Configure_TimeGrid_Params.m:121); 0.28 = literal in HumanCapital_Lifecycle_aprimeFn.m:38 (2T:73). Author to rename one.
+  - Reason: Two parameters share one symbol: 0.35 = Params.psi_sandwich_wrk_drag (Configure_TimeGrid_Params.m:121); 0.28 = literal in HumanCapital_Lifecycle_aprimeFn.m:38 (2T:73). For the author to decide: rename one or the other.
   - Cites: Document 1B.md:458 (0.350), Document 2B.md:455 (0.350), Document 2B.md:148 (0.35), Document 3.md:102 (0.35), Document 2T.md:73 (0.28)
 - **SS0_Corner_ic0_pct** *(known author decision)*
   - National SS0 share in the unmitigated i_c = 0 corner (%): documents state 23.2; 24.00
@@ -169,7 +169,7 @@ Registry: 37 named quantities, 29 Sankey count patterns; 9 documents scanned.
   - Cites: Document 1B.md:725 (23.60)
 - **PAYE_SS2_SuperAge64_pct** *(known author decision)*
   - SS2 required working-age PAYE rate at NZ Super age 64 (%): Table8B age 64 SS2_Required_PAYE_Pct = 18.8433 vs documents 18.25; Table8 row 6 Required_LaborTax_Pct = 18.8433 vs documents 18.25
-  - Reason: Documents (18.25) agree with Table21 Year 60 (18.25); Table8/Table8B (18.8433) are written by FertilityBargaining_Module.m:324-325, which does not apply psi_retire_T (the -0.64 pp is applied in WelfareDecomposition_4Region.m:109-110). Author aligns the generators.
+  - Reason: Documents (18.25) agree with Table21 Year 60 (18.25); Table8/Table8B (18.8433) are written by FertilityBargaining_Module.m:324-325, which does not apply psi_retire_T (the -0.64 pp is applied in WelfareDecomposition_4Region.m:109-110). For the author to decide whether to align the generators.
   - Cites: Document 1A.md:72 (18.25), Document 1A.md:327 (18.25), Document 1A.md:334 (18.25), Document 1A.md:342 (18.25), Document 1A.md:460 (18.25), Document 1A.md:470 (18.25), Document 1B.md:44 (18.25), Document 1B.md:66 (18.25), Document 1B.md:88 (18.25), Document 1B.md:470 (18.25), Document 1B.md:478 (18.25), Document 1B.md:541 (18.25), Document 1B.md:548 (18.25), Document 1B.md:730 (18.25), Document 1C.md:50 (18.25), Document 1C.md:62 (18.25), Document 1C.md:70 (18.25), Document 1C.md:100 (18.25), Document 2B.md:155 (18.25), Document 2B.md:257 (18.25), Document 3.md:90 (18.25), Document 3.md:137 (18.25), Document 3.md:217 (18.25), Document 3.md:228 (18.25), Document 3.md:258 (18.25), Document 3.md:288 (18.25)
 - **PAYE_SS2_SuperAge65_pct** *(known author decision)*
   - SS2 required working-age PAYE rate at NZ Super age 65 (%): Table8B age 65 SS2_Required_PAYE_Pct = 18.5628 vs documents 17.97, 18.57
