@@ -49,7 +49,7 @@ Params.j_s2_end       = Params.j_s2_start + Params.n_stage2_steps - 1;
 Params.j_child_launch = min(Params.J, Params.j_s2_end + 1); % j=8 (dt=3), j=5 (dt=5)
 
 %% 3. DEEP PREFERENCES, TECHNOLOGY & TRANSITION HORIZON CONSTANTS
-Params.beta_hh   = 0.985^dt;
+Params.beta_hh   = 0.980^dt;
 Params.beta_firm = 0.9815^dt;
 
 if ~isfield(Params, 'eta_c'),    Params.eta_c    = 2.0;  end % CRRA risk aversion coefficient

@@ -151,6 +151,10 @@ for r_loop = 1:length(Target_Regions)
 
     fates_csv_fname = fullfile(OutputDir, sprintf('Table15_ChildFates_5Stage_Decomp_%s.csv', Target_Region));
     writetable(T_FatesCSV, fates_csv_fname);
+    if ispc
+        raw_lf = strrep(fileread(fates_csv_fname), sprintf('\r\n'), sprintf('\n'));
+        fid_lf = fopen(fates_csv_fname, 'wb'); fwrite(fid_lf, raw_lf, 'char'); fclose(fid_lf);
+    end
     FatesLedger.(Target_Region).Table15_Decomp = T_FatesCSV;
     fprintf('  -> Exported %d-Phase (18-Node) Child Fates CSV to: %s\n', N_phases, fates_csv_fname);
 
@@ -177,7 +181,13 @@ hh_f    = f_all(strncmp(f_all, 'HH_', 3));
 avail_r = erase(hh_f, 'HH_');
 N_reg   = length(avail_r);
 
-all_w   = P_Sim.PTypeWeights(1:N_reg);
+if isfield(P_Sim, 'PTypeWeights') && numel(P_Sim.PTypeWeights) >= N_reg
+    all_w = P_Sim.PTypeWeights(1:N_reg);
+elseif isfield(P_Sim, 'Pop_Weights_4') && numel(P_Sim.Pop_Weights_4) >= N_reg
+    all_w = P_Sim.Pop_Weights_4(1:N_reg);
+else
+    all_w = ones(N_reg, 1) / max(1, N_reg);
+end
 all_w   = all_w(:) / sum(all_w);
 
 if strcmpi(reg_choice, 'National')
@@ -265,7 +275,11 @@ for r_i = 1:length(reg_list)
     w_reg   = pop_weights(r_i);
     hh_type = ['HH_', reg];
 
-    Q_house = P_Sim.Q_reg.(hh_type);
+    if isfield(P_Sim, 'Q_reg') && isstruct(P_Sim.Q_reg) && isfield(P_Sim.Q_reg, hh_type)
+        Q_house = P_Sim.Q_reg.(hh_type);
+    else
+        Q_house = getfield_def(Q_base_Map, reg, 1.50);
+    end
     Q_base  = getfield_def(Q_base_Map, reg, Q_house);
     if is_reform_panel && isfield(Q_base_Map, reg) && abs(Q_house - Q_base) < 1e-3
         Q_house = Q_house * Q_mult_Map.(reg);

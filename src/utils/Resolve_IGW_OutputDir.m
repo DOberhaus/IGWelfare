@@ -17,6 +17,8 @@ elseif evalin('base', 'exist(''OutputDir'', ''var'')') && ~isempty(evalin('base'
     OutputDir = evalin('base', 'OutputDir');
 elseif ~isempty(getappdata(0, 'IGW_OUTPUT_DIR'))
     OutputDir = getappdata(0, 'IGW_OUTPUT_DIR');
+elseif exist(fullfile(pwd, 'output'), 'dir') == 7 && ~strcmp(pwd, igw_root)
+    OutputDir = fullfile(pwd, 'output', char(Profile_ID));
 else
     OutputDir = fullfile(igw_root, 'output', char(Profile_ID));
 end

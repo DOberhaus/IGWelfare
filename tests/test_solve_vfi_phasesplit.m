@@ -45,8 +45,8 @@ Params.j_s2_end       = 3;
 Params.n_stage1_steps = 1;
 Params.n_stage2_steps = 1;
 Params.agej           = 1:J;
-Params.beta_hh        = 0.96 ^ 5;
-Params.beta_firm      = 1.0 / (1.0 + 0.04 * 5.0);
+Params.beta_hh        = 0.980 ^ 5;
+Params.beta_firm      = 0.9815 ^ 5;
 Params.sj             = 0.98 * ones(1, J);
 
 Params.r            = 0.04;  Params.alpha_k     = 0.33; Params.lambda_col = 1.50;

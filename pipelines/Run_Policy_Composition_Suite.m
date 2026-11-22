@@ -2,7 +2,7 @@
 % File: pipelines/Run_Policy_Composition_Suite.m
 % Orchestrates full 5D Phase-Split VFI + 4x5 Endogenous Intergenerational solving
 % across standalone and composed domestic/civic commitment bundles on the canonical
-% 4-tier parameter pipeline (dt = 3, beta_hh = 0.985^dt, beta_firm = 0.9815^dt).
+% 4-tier parameter pipeline (dt = 3, beta_hh = 0.980^dt, beta_firm = 0.9815^dt).
 
 if ~exist('Params', 'var') || ~isstruct(Params)
     Params = struct();

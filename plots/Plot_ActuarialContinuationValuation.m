@@ -70,9 +70,13 @@ if nargin < 5 || isempty(OutputDir)
         prof_id = Params.Profile_ID;
     elseif isstruct(Params) && isfield(Params, 'Profile_Name') && ~isempty(Params.Profile_Name)
         prof_id = Params.Profile_Name;
+    elseif isstruct(Params) && isfield(Params, 'Calibration_Anchor') && ~isempty(Params.Calibration_Anchor)
+        ds_act  = Load_Empirical_Profile(Params.Calibration_Anchor);
+        prof_id = ds_act.Profile_ID;
     end
     OutputDir = Resolve_IGW_OutputDir('', prof_id);
 end
+if ~exist(OutputDir, 'dir'), mkdir(OutputDir); end
 
 years = L.years;
 idx_y5 = find(years == 5, 1);

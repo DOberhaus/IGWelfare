@@ -5,14 +5,21 @@ if has_base_od
     evalin('base', 'clear OutputDir');
     restore_od = onCleanup(@() assignin('base', 'OutputDir', saved_base_od));
 end
+saved_app_od = getappdata(0, 'IGW_OUTPUT_DIR');
+if ~isempty(saved_app_od)
+    rmappdata(0, 'IGW_OUTPUT_DIR');
+    restore_app_od = onCleanup(@() setappdata(0, 'IGW_OUTPUT_DIR', saved_app_od));
+end
 %TEST_HEADLESS_PLOTTING_AND_SUPER_AGE Sanity-check eval_super_age_point and headless
 %   Plot_ActuarialContinuationValuation under both calibration anchors in a temp workspace.
 
 origDir = pwd();
 tmpDir  = tempname();
 outDir  = fullfile(tmpDir, 'output', 'NZ_Dunedin1972');
+outGui  = fullfile(tmpDir, 'output', 'NZ_GUiNZ2009');
 mkdir(tmpDir);
 mkdir(outDir);
+mkdir(outGui);
 origVis = get(0, 'DefaultFigureVisible');
 set(0, 'DefaultFigureVisible', 'off');
 cleanupObj = onCleanup(@() restore_env(origDir, tmpDir, origVis));
@@ -29,7 +36,7 @@ for anchor = {'Dunedin_22', 'MetroSqueeze_GUiNZ'}
     check(isstruct(Out) && strcmp(Out.Calibration_Anchor, anchor{1}), ...
         sprintf('Plot_ActuarialContinuationValuation failed anchor %s', anchor{1}));
 end
-pngs = [dir(fullfile(outDir, '*.png')); dir(fullfile(tmpDir, '*.png'))];
+pngs = [dir(fullfile(outDir, '*.png')); dir(fullfile(outGui, '*.png')); dir(fullfile(tmpDir, '*.png'))];
 check(numel(pngs) >= 8, ...
     sprintf('Expected at least 8 PNG artifacts across both anchors, found %d', numel(pngs)));
 cd(origDir);
