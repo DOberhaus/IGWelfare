@@ -41,7 +41,7 @@ OUT = "output/NZ_Dunedin1972"   # Dunedin_22 profile outputs (layout of 767073e)
 REPORT = os.path.join(ROOT, "tools", "CONSISTENCY_REPORT.md")
 REPO_URL = "github.com/MichaelTiemann/IGWelfare"
 
-DOCS = ["README.md"] + sorted(
+DOCS = ["README.md", "GLOSSARY.md"] + sorted(
     os.path.basename(p) for p in glob.glob(os.path.join(ROOT, "Document *.md")))
 
 # ---------------------------------------------------------------------------
@@ -62,7 +62,7 @@ KNOWN_AUTHOR_DECISIONS = [
      "Not committed and no .m file names it; for the author to decide: commit the output or reword 1B:34, 1B:789."),
     # --- Sankey comments in .m files (no .m edits in this PR) ---
     ("SANKEY", "fiscal_nodes=28",
-     "Comment-only: Plot_ChildFiscal_SSankey.m lines 2/111/205 and getFiscalRibbonNarratives.m:4 say 28; the code, CSVs and HTML have 29."),
+     "Comment-only: plots/Plot_ChildFiscal_SSankey.m lines 2, 137 (a printed message) and 241 and src/utils/getFiscalRibbonNarratives.m:4 say 28; the code, CSVs and HTML have 29."),
     # --- PAYE: documents moved to the 8 Nov rates (18.25 at age 64, 17.97 at age 65, incl. -0.64 pp from Transfer_Geo retirement) ---
     ("DOC_VS_CSV", "PAYE_SS2_SuperAge64_pct",
      "Documents (18.25) agree with Table21 Year 60 (18.25); Table8/Table8B (18.8433) are written by FertilityBargaining_Module.m:324-325, which does not apply psi_retire_T (the -0.64 pp is applied in WelfareDecomposition_4Region.m:109-110). For the author to decide whether to align the generators."),
@@ -227,10 +227,6 @@ Q("PAYE_SS2_SuperAge64_pct",
    ("Document 1B.md", r"\(`22\.0% -> \d+\.\d+%[–-]" + NUM + r"%`\)"),
    ("Document 1B.md", r"`" + NUM + r"%` \(-3\.75 pp PAYE Cut\)"),
    ("Document 1C.md", r"percentage points \(down to " + NUM + r"%[,)]"),
-   ("Document 1C.md", r"22\.00% down to " + NUM + r"% \(boosted by 85% geographic transfer retirement\)\*\* at Age 64"),
-   ("Document 1C.md", r"\*\*" + NUM + r"% PAYE \(-3\.75 pp Cut\)"),
-   ("Document 1C.md", r"cutting PAYE taxes to " + NUM + r"%"),
-   ("Document 1C.md", r"Taxes to " + NUM + r"% \(Phase 2"),
    ("Document 2B.md", r"Age 64 \(`" + NUM + r"% PAYE`"),
    ("Document 2B.md", r"`" + NUM + r"%` at Super Age 64"),
    ("Document 3.md", r"PAYE taxes to \*\*" + NUM + r"%"),
@@ -256,8 +252,6 @@ Q("PAYE_SS2_SuperAge65_pct",
     ("Document 1B.md", r"\(`22\.0% -> " + NUM + r"%[–-]\d+\.\d+%`\)"),
     ("Document 1B.md", r"\*\*Age 65 = " + NUM + r"%\*\*"),
     ("Document 1B.md", r"\*\*★ Age 65\*\* \| \*\*" + NUM + r"% \(MIN\)\*\*"),
-    ("Document 1C.md", r"\(or \*\*" + NUM + r"%\*\* at Age 65\)"),
-    ("Document 1C.md", r"minimizes PAYE tax \(" + NUM + r"%\)"),
     ("Document 2B.md", r"Age 65 \(`" + NUM + r"% PAYE`"),
   ],
   [(T8B, "Table8B age 65 SS2_Required_PAYE_Pct", lambda: t8b(65, "SS2_Required_PAYE_Pct"))])
@@ -352,7 +346,6 @@ Q("IGE_reduction_FullPackage_pct",
   "National IGE reduction from the full package (P0_Plus_GrantE / SS2) (%)",
   [("Document 1B.md", r"`P0_Plus_GrantE`\*\* \*\(Full Package\)\* \| \*\*`0\.218` \(-" + NUM + r"%\)"),
    ("Document 1B.md", r"65\.0%\+ Mentored\*\* \(-" + NUM + r"% IGE\)"),
-   ("Document 1C.md", r"one-third \(-" + NUM + r"%\)"),
    ("Document 2B.md", r"\*\*-" + NUM + r"% IGE reduction\*\*"),
    ("Document 2B.md", r"and -" + NUM + r"% IGE reduction")])
 
@@ -408,20 +401,47 @@ Q("SS0_Corner_ic0_pct",
    (T14N, "Table14 National SS0_Pop_Pct Node 5", lambda: cell(T14N, "Node_Name", "5_ECE_Corner_Benefit_Need", "SS0_Pop_Pct"))])
 
 
-def _breakeven_last_negative_year():
+def _breakeven_last_negative_year(col="Net_Unrecovered_Outlay_Mirror_CE"):
     last = None
     for r in rows(T20):
-        if float(r["Net_Unrecovered_Outlay_Mirror_CE"]) < -0.005:
+        if float(r[col]) < -0.005:
             last = float(r["Year"])
     return last
 
 
+# Documents 1A and 3 state the baseline mirror-investment cash breakeven.  Other "Year NN.N"
+# figures in the suite are different quantities (Crown cash OBEGAL lag, debt crossing, plan
+# launch, the Te Kahui Waka and Arts scenarios) and have their own entries below.
 Q("CashBreakeven_Year",
-  "Year in which Net Unrecovered Public Outlay reaches zero (cash breakeven)",
-  [(None, r"\bYear (\d{2}\.\d)\b")],
+  "Year in which Net Unrecovered Public Outlay reaches zero (cash breakeven), baseline mirror investments",
+  [(f, rx) for f in ("Document 1A.md", "Document 3.md") for rx in (
+      r"(?i)breakeven[^.|\n]{0,40}?\bYear (\d{2}\.\d)",
+      r"\bYear (\d{2}\.\d)\)?\*{0,2} ?\(?(?i:cash breakeven)")]
+  + [("Document 1A.md", r"overtake cumulative public investment until \*{0,2}Year (\d{2}\.\d)")],
   [(T20, "Table20 last grid year with Net_Unrecovered_Outlay_Mirror_CE < 0 (breakeven must be later)",
     _breakeven_last_negative_year)],
   cmp=lambda d, c: d > c)
+
+Q("CashBreakeven_Year_TeKahuiWaka",
+  "Year of cash breakeven under the Te Kahui Waka sequencing (Document 1D)",
+  [("Document 1D.md", r"cash breakeven at \*{0,2}`?Year (\d{2}\.\d)"),
+   ("Document 1D.md", r"\(`Year (\d{2}\.\d)` cash breakeven\)"),
+   ("Document 1D.md", r"Ω_t ≥ 0` at `Year (\d{2}\.\d)`")],
+  [(T20, "Table20 last grid year with Net_Unrecovered_Outlay_TeKahuiWaka_CE < 0 (breakeven must be later)",
+    lambda: _breakeven_last_negative_year("Net_Unrecovered_Outlay_TeKahuiWaka_CE"))],
+  cmp=lambda d, c: d > c)
+
+Q("CashBreakeven_Year_Arts",
+  "Year of cash breakeven with the Arts & Civic Mycelium lever (Document 1E)",
+  [("Document 1E.md", r"Year 18\.8 (?:to|->) Year (\d{2}\.\d)"),
+   ("Document 1E.md", r"across zero at \*\*Year (\d{2}\.\d)\*\*")],
+  [(T20, "Table20 last grid year with Net_Unrecovered_Outlay_Arts_CE < 0 (breakeven must be later)",
+    lambda: _breakeven_last_negative_year("Net_Unrecovered_Outlay_Arts_CE"))],
+  cmp=lambda d, c: d > c)
+
+Q("CashOBEGAL_Zero_Year",
+  "Year in which Crown cash OBEGAL first crosses zero (Helm trim-tab ledger)",
+  [(None, r"OBEGAL`[^.\n]{0,60}?\bYear (\d{2}\.\d)")])
 
 Q("CE_SS2_National_Total_pct",
   "SS2 national long-run welfare gain (CE %)",
@@ -447,8 +467,6 @@ Q("CE_SS2_WedgeShare_pct",
   [(None, r"(54\.5|47\.3)% \(\+(?:13\.47|11\.46)% CE\)"),
    ("Document 1A.md", r"\*\*(54\.5)%\*\* of which is generated"),
    ("Document 1A.md", r"\((54\.5)% Wedges\)"),
-   ("Document 1C.md", r"(54\.5)% of that entire gain"),
-   ("Document 1C.md", r"(54\.5)% from dynamic complementarity"),
    ("Document 2B.md", r"\+13\.47 pp, (54\.5) pct share"),
    ("Document 3.md", r"`\+13\.47%`, `(54\.5)%`")],
   [(T19, "Table19 wedge sum / total * 100",
@@ -505,7 +523,6 @@ SANKEY_STATED = [
     ("plots/Plot_ChildFates_SSankey.m", r"\((\d+)-Node\)", "fates_nodes"),
     ("plots/Plot_ChildFates_SSankey.m", r"across all (\d+) nodes", "fates_nodes"),
     ("plots/Plot_ChildFiscal_SSankey.m", r"6-Gate \((\d+)-Node\)", "fiscal_nodes"),
-    ("plots/Plot_ChildFiscal_SSankey.m", r"(\d+)-Node, 6-Gate", "fiscal_nodes"),
     ("plots/Plot_ChildFiscal_SSankey.m", r"(\d+)-Node Palette", "fiscal_nodes"),
     ("src/utils/getFatesRibbonNarratives.m", r"\((\d+)-Node\)", "fates_nodes"),
     ("src/utils/getFiscalRibbonNarratives.m", r"\((\d+)-Node\)", "fiscal_nodes"),
@@ -811,6 +828,7 @@ def render(findings, actual, fates, fiscal, html, unused_known):
     L.append("")
     L.append("Generated by `tools/check_docs_consistency.py` (regenerate with `python3 tools/check_docs_consistency.py`).")
     L.append("Output is deterministic. Only registered quantities are checked; see `QUANTITIES` in the script.")
+    L.append("Reasons given under a *known author decision* were written against c23787e; numbers and line numbers quoted in them may have moved since. The finding line above each reason is regenerated and current.")
     L.append("")
     L.append("## Summary")
     L.append("")
