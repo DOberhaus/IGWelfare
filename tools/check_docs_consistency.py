@@ -6,7 +6,7 @@ Standard library only.  Not a generic number-diff: it checks
   (a) a CURATED registry of named quantities (QUANTITIES below).  Each
       quantity lists (file, regex-with-one-capture-group) patterns that pull
       the value out of the Markdown documents, and, where a committed CSV in
-      Output_NZ_4Region_Intergen/ carries the same quantity, a CSV extractor;
+      output/NZ_Dunedin1972/ carries the same quantity, a CSV extractor;
   (b) doc-vs-doc and doc-vs-CSV disagreements for those quantities, and
       CSV-vs-CSV disagreements when two committed CSVs give different values;
   (c) broken relative links, broken anchors, file references that do not
@@ -37,7 +37,7 @@ import urllib.parse
 from collections import OrderedDict, defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = "Output_NZ_4Region_Intergen"
+OUT = "output/NZ_Dunedin1972"   # Dunedin_22 profile outputs (layout of 767073e)
 REPORT = os.path.join(ROOT, "tools", "CONSISTENCY_REPORT.md")
 REPO_URL = "github.com/MichaelTiemann/IGWelfare"
 
@@ -502,13 +502,13 @@ SANKEY_STATED = [
     (None, r"(\d+)[- ]Stages?,? \(?\d+[- ]Nodes?", "fates_stages"),
     (None, r"(\d+)[- ]Gates?,? \(?\d+[- ]Nodes?", "fiscal_gates"),
     (None, r"Nodes across (\d+) Gates", "fiscal_gates"),
-    ("Plot_ChildFates_SSankey.m", r"\((\d+)-Node\)", "fates_nodes"),
-    ("Plot_ChildFates_SSankey.m", r"across all (\d+) nodes", "fates_nodes"),
-    ("Plot_ChildFiscal_SSankey.m", r"6-Gate \((\d+)-Node\)", "fiscal_nodes"),
-    ("Plot_ChildFiscal_SSankey.m", r"(\d+)-Node, 6-Gate", "fiscal_nodes"),
-    ("Plot_ChildFiscal_SSankey.m", r"(\d+)-Node Palette", "fiscal_nodes"),
-    ("getFatesRibbonNarratives.m", r"\((\d+)-Node\)", "fates_nodes"),
-    ("getFiscalRibbonNarratives.m", r"\((\d+)-Node\)", "fiscal_nodes"),
+    ("plots/Plot_ChildFates_SSankey.m", r"\((\d+)-Node\)", "fates_nodes"),
+    ("plots/Plot_ChildFates_SSankey.m", r"across all (\d+) nodes", "fates_nodes"),
+    ("plots/Plot_ChildFiscal_SSankey.m", r"6-Gate \((\d+)-Node\)", "fiscal_nodes"),
+    ("plots/Plot_ChildFiscal_SSankey.m", r"(\d+)-Node, 6-Gate", "fiscal_nodes"),
+    ("plots/Plot_ChildFiscal_SSankey.m", r"(\d+)-Node Palette", "fiscal_nodes"),
+    ("src/utils/getFatesRibbonNarratives.m", r"\((\d+)-Node\)", "fates_nodes"),
+    ("src/utils/getFiscalRibbonNarratives.m", r"\((\d+)-Node\)", "fiscal_nodes"),
 ]
 
 
@@ -680,6 +680,22 @@ LINK_RX = re.compile(r"\]\(\s*<?([^)\s>]+)>?(?:\s+\"[^\"]*\")?\s*\)|(?:src|href)
 FILEREF_RX = re.compile(r"(?<![A-Za-z0-9_/.%-])([A-Za-z][A-Za-z0-9_\-]*\*?[A-Za-z0-9_\-]*\.(?:m|csv|png|html))\b")
 
 
+_FILE_INDEX = None
+
+
+def file_index():
+    """Basenames of every file in the working tree (case-sensitive), skipping .git.
+    Documents name scripts and outputs by bare file name; since the move to src/, plots/,
+    pipelines/, profiles/ and output/<profile>/ a bare name resolves if it exists anywhere."""
+    global _FILE_INDEX
+    if _FILE_INDEX is None:
+        _FILE_INDEX = set()
+        for d, dirs, files in os.walk(ROOT):
+            dirs[:] = [x for x in dirs if x != ".git"]
+            _FILE_INDEX.update(files)
+    return _FILE_INDEX
+
+
 def check_links():
     out = []
     broken = defaultdict(list)
@@ -716,9 +732,9 @@ def check_links():
                 if "<" in name:
                     continue
                 if "*" in name:
-                    ok = any(fnmatch.fnmatch(x, name) for d in ("", OUT) for x in os.listdir(os.path.join(ROOT, d)))
+                    ok = any(fnmatch.fnmatch(x, name) for x in file_index())
                 else:
-                    ok = exists_cs(name) or exists_cs(OUT + "/" + name)
+                    ok = name in file_index() or exists_cs(name)
                 if not ok:
                     missing_ref[name].append(cite(f, i))
     for t, c in sorted(broken.items()):
