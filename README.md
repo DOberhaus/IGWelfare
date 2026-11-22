@@ -44,6 +44,7 @@ Before running the code, consult the six companion documents in the repository r
 ### 2. *What Mathematical Tools Do We Use?* (Technical Specification & Methodology)
 * **[Document 2.md](Document%202.md) / [Document 2A.md](Document%202A.md) & [Document 2B.md](Document%202B.md) (*Technical Documentation & Model Specification Guide*):** Complete 8-PType Mixed Finite/Infinite-Horizon Bellman equations, exact $`\Delta t`$-scaling laws, 4-tier epistemic parameter pipeline, and codebase manifest.
 * **[Document 2T.md](Document%202T.md) (*"Thick" vs. "Thin" Numbers in Quantitative Public Policy*):** Standalone technical tutorial on dimension-free state-contingent conditioning—solving comonotonic tail risks on the GPU/multi-core state manifold at zero additional grid-dimension cost.
+* **[GLOSSARY.md](GLOSSARY.md) (*Master Glossary, Ledger Index, & Institutional Reference Guide*):** Single-stop reference mapping all 10 `src/ledgers/` modules, `SS0 / SS1 / SS2` tax-and-spend rules, `Plans A / B / C`, Treasury `OIA 20250878` & `LTFM` / `CBAx` / `ACC` definitions, Nobel Prize foundations, 5 sectors, 3 Aspects, 5 Citizens' Assemblies (`GREEN / AMBER / RED` triggers), navigational-to-control-theory translations, and the International Near-Peer Statistical Abstract.
 
 ### 3. *What Do Our Calculations Mean for Working Together?* (Coalition, Biophysical & Public Synthesis)
 * **[Document 3.md](Document%203.md) (*Leaving Our Silos, Lifting All Boats*):** Maps the 11-layer constructive synergy stack onto New Zealand's four policy constituencies (*Children & Youth*, *WellBeing & Housing*, *GrowthNZ & Venture*, and *Fiscal Stewards*), contrasting standalone silos and 6-year "Stop-Go" political cycles against the Treasury LTFM sinkhole and a 3%-of-GDP defense commitment.
@@ -78,16 +79,20 @@ All declarative calibration data, rollout schedules, policy commitments, and sec
 * **Five-Assembly Clearinghouse & Comonotonic SOE Shock-Frontier Suite (`pipelines/Run_Contingency_Suite.m`):**
   * Reconciles all 15 bilateral Citizens' Assembly contracts (`K01`–`K15`), Two-Key `Sustain_Steps` gates, and continuous comonotonic SOE shock breaking-point frontiers ([Document 1F](Document%201F.md)).
 
-### Running the Automated Test Suite (`26` Tests)
+### Reference Benchmarks & Running the Automated Test Suite (`27` Tests)
 
-Fast, hermetic unit and wave-integration gates live in `tests/` and run in `< 30s` across MATLAB or GNU Octave:
+Measured cold-cache end-to-end wall-clock benchmarks (`beta_hh = 0.980^dt`, `beta_firm = 0.9815^dt`, `dt = 3`, NVIDIA RTX 5090 GPU):
+* **Core 4-Region + `Abroad` 5D/4D OLG Equilibrium, Decomposition & 60-Year Transition (`Run_All_NZ_Intergen_Suite.m`):** `73.93 s` (`1.23 min`) from cold cache.
+* **Full Publication Suite (Core OLG + 5-Sector SOE/Exergy/Trim-Tabs + Five-Assembly Clearinghouse + 42-Panel Sankeys/HTMLs + `GUiNZ` Sensitivity + `27/27` Tests):** `234.07 s` (`3.90 min`) total cold-start wall time.
+
+Fast, hermetic unit and wave-integration gates (`27` tests) live in `tests/` and run in `~30s` across MATLAB or GNU Octave:
 
 * **GNU Octave:** `octave --no-gui --eval "setup_igw_paths(true, true); addpath('tests'); assert(run_all_tests() == 0);"`
 * **MATLAB:** `matlab -batch "setup_igw_paths(true, true); addpath('tests'); assert(run_all_tests() == 0);"`
 
 ---
 
-## 📂 Outputs & Interactive Explorers (`output/<Profile_ID>/` & `output/NZ_Dunedin1972/`)
+## 📂 Outputs & Interactive Explorers (`output/<Profile_ID>/`)
 
 Profile-scoped pipeline runs export figures and CSV tables cleanly to **`output/NZ_Dunedin1972/`** and **`output/NZ_GUiNZ2009/`** (preserving legacy precomputed interactive HTML5 Sankey explorers and baseline snapshots in **[`output/NZ_Dunedin1972/`](output/NZ_Dunedin1972/)**):
 
