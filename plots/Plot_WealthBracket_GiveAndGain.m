@@ -231,21 +231,37 @@ IGW_UI_Style('legend_alpha', lgd1, 0.92);
 
 % --- PANEL B: RETAINED FORTUNE + SOCIAL COHESION ---
 ax2 = subplot('Position', [0.540, 0.165, 0.405, 0.765]);
+try, set(ax2, 'SortMethod', 'childorder'); catch, end
+
+% 1. Draw Right-Axis Log Bars FIRST so they sit strictly in the BACKGROUND on MATLAB HG2 & Octave:
+yyaxis(ax2, 'right'); hold(ax2, 'on');
+bar_retained = bar(ax2, x_idx, PostReform_NetWorth_MNZD, 'BarWidth', 0.36, 'BaseValue', 0.02, ...
+    'FaceColor', [0.17 0.51 0.73], 'EdgeColor', [0.17 0.51 0.73], ...
+    'LineWidth', 0.8, 'DisplayName', 'Absolute Post-Reform Net Worth Resilience (NZD Millions, Right Axis)');
+% Apply translucent alpha on BOTH MATLAB HG2 Bar primitive and GNU Octave patch children:
+try, set(bar_retained, 'FaceAlpha', 0.22, 'EdgeAlpha', 0.42); catch, end
+set(findobj(bar_retained, 'type', 'patch'), 'FaceAlpha', 0.22, 'EdgeAlpha', 0.42);
+set(vfi_active_ax(ax2), 'YScale', 'log');
+ylabel(ax2, 'Absolute Post-Reform Net Worth Resilience (NZD Millions, Log Scale)', 'FontSize', 9.8, 'FontWeight', 'bold');
+ylim(ax2, [0.02, 350]);
+set(vfi_active_ax(ax2), 'YColor', [0.17 0.51 0.73]);
+
+% 2. Draw Left-Axis Shaded Band, Retained-% Curves, and Pill Badges SECOND (strictly in FOREGROUND):
 yyaxis(ax2, 'left'); hold(ax2, 'on');
 
 % Shaded retention/cohesion band between Land Hoarder and Active Entrepreneur retained wealth %
-fill(ax2, [x_idx, fliplr(x_idx)], [Retained_Wealth_zl_Pct', fliplr(Retained_Wealth_zh_Pct')], ...
+h_band = fill(ax2, [x_idx, fliplr(x_idx)], [Retained_Wealth_zl_Pct', fliplr(Retained_Wealth_zh_Pct')], ...
     [0.65 0.85 0.42], 'FaceAlpha', 0.35, 'EdgeColor', 'none', ...
     'DisplayName', 'Retained Net Worth Range (Passive z_l to Active Entrepreneur z_h)');
 
-plot(ax2, x_idx, Retained_Wealth_zh_Pct, '-d', 'Color', [0.00 0.43 0.17], 'MarkerFaceColor', [0.00 0.55 0.22], ...
+h_zh = plot(ax2, x_idx, Retained_Wealth_zh_Pct, '-d', 'Color', [0.00 0.43 0.17], 'MarkerFaceColor', [0.00 0.55 0.22], ...
     'LineWidth', 2.8, 'MarkerSize', 6.5, 'DisplayName', 'Post-Reform Net Worth Retained: Active Entrepreneur z_h (% of Base)');
-plot(ax2, x_idx, Retained_Wealth_Avg_Pct, '-o', 'Color', [0.10 0.10 0.10], 'MarkerFaceColor', 'w', ...
+h_avg = plot(ax2, x_idx, Retained_Wealth_Avg_Pct, '-o', 'Color', [0.10 0.10 0.10], 'MarkerFaceColor', 'w', ...
     'LineWidth', 2.5, 'MarkerSize', 5.5, 'DisplayName', 'Post-Reform Net Worth Retained: Tier Average (% of Base)');
-plot(ax2, x_idx, Retained_Wealth_zl_Pct, '--s', 'Color', [0.80 0.15 0.15], 'MarkerFaceColor', [0.90 0.20 0.20], ...
+h_zl = plot(ax2, x_idx, Retained_Wealth_zl_Pct, '--s', 'Color', [0.80 0.15 0.15], 'MarkerFaceColor', [0.90 0.20 0.20], ...
     'LineWidth', 2.2, 'MarkerSize', 5.5, 'DisplayName', 'Post-Reform Net Worth Retained: Passive Land Hoarder z_l (% of Base)');
 
-yline(ax2, 100.0, 'k:', 'LineWidth', 1.5, 'DisplayName', '100% Baseline Net Worth Parity Line');
+h_par = yline(ax2, 100.0, 'k:', 'LineWidth', 1.5, 'DisplayName', '100% Baseline Net Worth Parity Line');
 
 % High-Contrast Pill Badges for exact NZD retained on Tiers 3 to 10
 % Placed cleanly BELOW the red dashed z_l curve (or above for Tier 3/4) so lines never cross text!
@@ -271,18 +287,15 @@ ylabel(ax2, 'Post-Reform Compounded Net Worth (% of Status Quo Baseline)', 'Font
 ylim(ax2, [68, 172]);
 set(vfi_active_ax(ax2), 'YColor', [0.10 0.10 0.10]);
 
-% Right Axis: Absolute Post-Reform Net Worth Resilience (Log-Scale NZD Millions)
-yyaxis(ax2, 'right'); hold(ax2, 'on');
-bar_retained = bar(ax2, x_idx, PostReform_NetWorth_MNZD, 'BarWidth', 0.36, 'BaseValue', 0.02, ...
-    'FaceColor', [0.17 0.51 0.73], 'EdgeColor', [0.17 0.51 0.73], ...
-    'LineWidth', 0.9, 'DisplayName', 'Absolute Post-Reform Net Worth Resilience (NZD Millions, Right Axis)');
-set(findobj(bar_retained, 'type', 'patch'), 'FaceAlpha', 0.25);
-set(vfi_active_ax(ax2), 'YScale', 'log');
-ylabel(ax2, 'Absolute Post-Reform Net Worth Resilience (NZD Millions, Log Scale)', 'FontSize', 9.8, 'FontWeight', 'bold');
-ylim(ax2, [0.02, 350]);
-set(vfi_active_ax(ax2), 'YColor', [0.17 0.51 0.73]);
-
-yyaxis(ax2, 'left');
+% On GNU Octave (dual-axes vfi_yyaxis_pair), stack transparent left foreground above white right background:
+pair_wb = getappdata(ax2, 'vfi_yyaxis_pair');
+if ~isempty(pair_wb) && isfield(pair_wb, 'right') && ishandle(pair_wb.right)
+    set(pair_wb.right, 'Color', 'w');
+    set(pair_wb.left,  'Color', 'none');
+    ch_wb = get(fig_wb, 'Children');
+    ch_other = ch_wb(ch_wb ~= pair_wb.left & ch_wb ~= pair_wb.right);
+    set(fig_wb, 'Children', [pair_wb.left; pair_wb.right; ch_other]);
+end
 msg_B = sprintf(['Retained Wealth & Increased Social Cohesion After Rebalancing:\n', ...
     '• A Top 1%% household (P99: 600k+8.5M) retains NZD 8.04M (94.6%% of net worth)\n', ...
     '  and NZD 455k/yr in after-tax income (98.5%% if invested in active firms z_h).\n', ...
@@ -300,7 +313,7 @@ xlabel(ax2, 'Survey Benchmark Archetype: Annual Household Income + Net Worth', .
 set(ax2, 'XTick', x_idx, 'XTickLabel', strrep(Tier_Labels, '\n', ' '), 'XTickLabelRotation', 28, 'FontSize', 8.2);
 xlim(ax2, [0.35, N_tiers + 0.65]);
 grid(ax2, 'on'); box(ax2, 'on');
-lgd2 = legend(ax2, 'Location', 'southwest', 'FontSize', 6.7);
+lgd2 = legend(ax2, [h_band, h_zh, h_avg, h_zl, h_par, bar_retained], 'Location', 'southwest', 'FontSize', 6.7);
 IGW_UI_Style('legend_alpha', lgd2, 0.92);
 
 % Export 2-Panel combined figure + 2 individual sibling panels

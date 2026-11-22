@@ -20,7 +20,10 @@ if isempty(igw_root), igw_root = pwd; end
 is_oct = (exist('OCTAVE_VERSION', 'builtin') ~= 0);
 oct_precedence_ok = (~is_oct) || ~isempty(strfind(which('ValueFnIter_InfHorz'), 'VFIToolkit-octave'));
 if ~force_reinit && oct_precedence_ok && isappdata(0, 'IGW_PATHS_READY') ...
-        && isequal(getappdata(0, 'IGW_ROOT_DIR'), igw_root) && exist('Load_Empirical_Profile', 'file') == 2
+        && isequal(getappdata(0, 'IGW_ROOT_DIR'), igw_root) ...
+        && exist('Load_Empirical_Profile', 'file') == 2 ...
+        && exist('Compute_Actuarial_Ledger', 'file') == 2 ...
+        && exist('Compute_Helm_TrimTab_Ledger', 'file') == 2
     return;
 end
 
@@ -42,6 +45,7 @@ for k = 1:numel(rel_dirs)
         addpath(d);
     end
 end
+rehash;
 
 % 2. Selectively mount sibling VFIToolkit-matlab (avoiding .git/ and unused folders)
 vfi_mat_dir = fullfile(igw_root, '..', 'VFIToolkit-matlab');
