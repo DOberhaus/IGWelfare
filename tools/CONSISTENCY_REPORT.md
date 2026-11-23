@@ -219,9 +219,9 @@ Registry: 40 named quantities, 28 Sankey count patterns; 13 documents scanned.
   - Reason: Documents (17.97) include the -0.64 pp transfer retirement; Table8B (18.5628, FertilityBargaining_Module.m) does not. Same split as PAYE_SS2_SuperAge64_pct.
   - Cites: Document 1A.md:72 (17.97), Document 1A.md:327 (17.97), Document 1A.md:342 (17.97), Document 1A.md:459 (17.97), Document 1A.md:469 (17.97), Document 1B.md:44 (17.97), Document 1B.md:66 (17.97), Document 1B.md:470 (17.97), Document 1B.md:479 (17.97), Document 2B.md:155 (17.97), Document 1A.md:456 (18.57)
 - **PAYE_SuperAge65_below_SS0_Drift_pp** *(known author decision)*
-  - SS2 age-65 PAYE minimum below the SS0 status-quo drift (percentage points): Table8B age 65 SS0 - SS2 Required PAYE = 5.0178 vs documents 5.63
+  - SS2 age-65 PAYE minimum below the SS0 status-quo drift (percentage points): Table8B age 65 SS0 - SS2 Required PAYE = 5.0178 vs documents 5.64
   - Reason: Follows PAYE_SS2_SuperAge65_pct (23.61 - 17.97 = 5.64 vs Table8B 5.0505).
-  - Cites: Document 1A.md:459 (5.63)
+  - Cites: Document 1A.md:459 (5.64)
 - **SS0_Corner_ic0_pct** *(known author decision)*
   - National SS0 share in the unmitigated i_c = 0 corner (%): Table15 National SS0_Pop_Pct Node 4 = 22.3900 vs documents 23.2, 24.00; Table14 National SS0_Pop_Pct Node 5 = 22.3900 vs documents 23.2, 24.00
   - Reason: Same as above (CSV 21.29).
