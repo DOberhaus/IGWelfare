@@ -73,8 +73,14 @@ else
     Backend.FlushConsole = @noop_flush;
 end
 
-% Optional persistent worker pool provisioning on GNU Octave:
-if is_oct && isfield(Opts, 'EnsureWorkerPool') && logical(Opts.EnsureWorkerPool)
+% Optional persistent worker pool provisioning / teardown on GNU Octave:
+if is_oct && isfield(Opts, 'StopWorkerPool') && logical(Opts.StopWorkerPool)
+    if exist('vfi_pool', 'file') ~= 0
+        try vfi_pool('stop'); catch, end
+    end
+    Backend.n_workers = 0;
+elseif is_oct && isfield(Opts, 'EnsureWorkerPool') && logical(Opts.EnsureWorkerPool)
+    page_screen_output(0);
     req_w = [];
     if isfield(Opts, 'n_workers') && ~isempty(Opts.n_workers)
         req_w = Opts.n_workers;

@@ -13,7 +13,6 @@ setup_igw_paths(true);
 Backend = Resolve_Compute_Backend();
 
 if Backend.IsOctave
-    page_screen_output(0);
     if is_noninteractive()
         debug_on_error(0);
         debug_on_interrupt(0);
@@ -46,7 +45,7 @@ for k = 1:numel(names)
             slowTag = sprintf('  [SLOW >= %.1fs]', slowWarnSec);
         end
         fprintf('PASS [%6.2fs] %s%s\n', dtSec, names{k}, slowTag);
-        if Backend.IsOctave, fflush(stdout); end
+        Backend.FlushConsole();
         nPass = nPass + 1;
     catch err
         dtSec = toc(tTest);
@@ -58,7 +57,7 @@ for k = 1:numel(names)
             fprintf('FAIL [%6.2fs] %s: %s\n', dtSec, names{k}, msg);
             nFail = nFail + 1;
         end
-        if Backend.IsOctave, fflush(stdout); end
+        Backend.FlushConsole();
     end
 end
 
@@ -71,10 +70,8 @@ end
 if nargout > 0, nFailed = nFail; end
 
 if Backend.IsOctave && (strcmp(forceExit, 'exit') || is_noninteractive())
-    if exist('vfi_pool', 'file') ~= 0
-        try vfi_pool('stop'); catch, end
-    end
-    fflush(stdout);
+    Resolve_Compute_Backend(struct('StopWorkerPool', true));
+    Backend.FlushConsole();
 end
 
 if nFail > 0 && (strcmp(forceExit, 'exit') || is_noninteractive())
