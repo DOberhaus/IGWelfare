@@ -18,7 +18,12 @@ try
         hash_hex = lower(hash('md5', str));
     elseif usejava('jvm')
         md = java.security.MessageDigest.getInstance('MD5');
-        md.update(typecast(uint8(unicode2native(str, 'UTF-8')), 'int8'));
+        if ~isempty(str)
+            raw_bytes = uint8(unicode2native(str, 'UTF-8'));
+            if ~isempty(raw_bytes)
+                md.update(typecast(raw_bytes(:), 'int8'));
+            end
+        end
         hash_hex = lower(reshape(dec2hex(typecast(md.digest(), 'uint8'), 2)', 1, []));
     elseif exist('mMD5', 'file') ~= 0
         md5_fun = @() mMD5(str);

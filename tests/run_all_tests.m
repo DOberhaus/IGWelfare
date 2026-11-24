@@ -45,6 +45,7 @@ for k = 1:numel(names)
             slowTag = sprintf('  [SLOW >= %.1fs]', slowWarnSec);
         end
         fprintf('PASS [%6.2fs] %s%s\n', dtSec, names{k}, slowTag);
+        Backend.FlushConsole();
         nPass = nPass + 1;
     catch err
         dtSec = toc(tTest);
@@ -56,6 +57,7 @@ for k = 1:numel(names)
             fprintf('FAIL [%6.2fs] %s: %s\n', dtSec, names{k}, msg);
             nFail = nFail + 1;
         end
+        Backend.FlushConsole();
     end
 end
 
@@ -67,8 +69,15 @@ else
 end
 if nargout > 0, nFailed = nFail; end
 
+if Backend.IsOctave && (strcmp(forceExit, 'exit') || is_noninteractive())
+    Resolve_Compute_Backend(struct('StopWorkerPool', true));
+    Backend.FlushConsole();
+end
+
 if nFail > 0 && (strcmp(forceExit, 'exit') || is_noninteractive())
     exit(1);
+elseif strcmp(forceExit, 'exit')
+    exit(0);
 end
 end
 
